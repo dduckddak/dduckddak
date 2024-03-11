@@ -41,13 +41,18 @@ const styles = StyleSheet.create({
   },
   buttonstyle: {
     backgroundColor: '#139D78',
-    borderRadius: 5,
-    elevation: 5,
+    borderRadius: 10,
+    shadowColor: '#013b16',
+    elevation: 20,
+    shadowOpacity: 1,
   },
   text: {
     color: 'white',
     textAlign: 'center',
     fontWeight: 'bold',
+    height: 60,
+    textAlignVertical: 'center',
+    fontSize: 20,
   },
 });
 

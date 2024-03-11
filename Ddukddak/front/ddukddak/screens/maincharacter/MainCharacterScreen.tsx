@@ -40,7 +40,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/background.png')}
+      source={require('../../assets/images/background.png')}
       style={styles.imageBackground}
     >
       <View style={styles.flexContainer}>
@@ -79,11 +79,13 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
   },
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
   },
@@ -104,12 +106,13 @@ const styles = StyleSheet.create({
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
+    position: 'absolute',
+    paddingTop: '90%',
+    paddingLeft: '125%',
   },
   dot: {
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
     borderRadius: 30,
     margin: 20,
   },

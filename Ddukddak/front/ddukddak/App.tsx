@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import { useFonts } from 'expo-font';
->>>>>>> front
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import GreenButton from './components/GreenButton';
@@ -129,14 +126,11 @@ export default function App() {
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
         <Stack.Screen name="test" component={Test} />
-<<<<<<< HEAD
         <Stack.Screen
           name="mainrending"
           component={MainRending}
           options={{ headerShown: false }}
         />
-=======
->>>>>>> front
       </Stack.Navigator>
     </NavigationContainer>
   );

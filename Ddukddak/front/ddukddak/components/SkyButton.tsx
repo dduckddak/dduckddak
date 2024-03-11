@@ -8,17 +8,13 @@ import {
   ViewStyle,
 } from 'react-native';
 
-interface GreenButtonProps {
+interface SkyButtonProps {
   style?: StyleProp<ViewStyle>;
   onPress: () => void;
   content: string;
 }
 
-const GreenButton: React.FC<GreenButtonProps> = ({
-  style,
-  onPress,
-  content,
-}) => {
+const SkyButton: React.FC<SkyButtonProps> = ({ style, onPress, content }) => {
   return (
     <View style={style}>
       <Pressable
@@ -40,15 +36,15 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   buttonstyle: {
-    backgroundColor: '#139D78',
+    backgroundColor: '#DBF4FF',
     borderRadius: 5,
     elevation: 5,
   },
   text: {
-    color: 'white',
+    color: 'rgb(45,45,45)',
     textAlign: 'center',
     fontWeight: 'bold',
   },
 });
 
-export default GreenButton;
+export default SkyButton;

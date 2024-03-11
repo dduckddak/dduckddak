@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { useFonts } from 'expo-font';
+>>>>>>> front
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import GreenButton from './components/GreenButton';
@@ -15,6 +19,7 @@ import {
 } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import MainRending from './screens/Rending/MainRending';
+import AppLoading from 'expo-app-loading';
 
 function LogoTitle() {
   return (
@@ -99,6 +104,14 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  const [fontsLoaded] = useFonts({
+    'im-hyemin': require('./assets/fonts/IM_Hyemin-Regular.ttf'),
+    'im-hyemin-bold': require('./assets/fonts/IM_Hyemin-Bold.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -116,33 +129,15 @@ export default function App() {
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
         <Stack.Screen name="test" component={Test} />
+<<<<<<< HEAD
         <Stack.Screen
           name="mainrending"
           component={MainRending}
           options={{ headerShown: false }}
         />
+=======
+>>>>>>> front
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-//     <View style={[styles.container, { flexDirection: 'column' }]}>
-//       <View style={{ flex: 2 }}>
-//         <Text>로고, 뒤로가기 버튼 </Text>
-//       </View>
-//       <View style={{ flex: 8 }}>
-//         <Test />
-//       </View>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     padding: 20,
-//   },
-// });

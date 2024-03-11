@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
+    fontFamily: 'im-hyemin',
   },
   dotsContainer: {
     flexDirection: 'row',

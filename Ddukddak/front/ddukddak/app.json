@@ -32,8 +32,8 @@
         {
           "initialOrientation": "DEFAULT"
         }
-      ]
+      ],
+      "expo-font"
     ]
-
   }
 }

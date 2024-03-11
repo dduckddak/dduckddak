@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import GreenButton from './components/GreenButton';
@@ -15,6 +14,7 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 import * as Font from 'expo-font';
+import MainRending from './screens/Rending/MainRending';
 
 function LogoTitle() {
   return (
@@ -49,7 +49,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+      }}
+    >
       <Text>Home Screen</Text>
       <GreenButton onPress={handlePress} content="나버튼" />
       <Button
@@ -61,7 +68,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         content="초록버튼"
         style={{ width: 200, height: 80 }}
       />
-      <Button title="Go" onPress={() => navigation.navigate('test')} />
+      <Button
+        title="테스트페이지"
+        onPress={() => navigation.navigate('test')}
+      />
+      <Button
+        title="랜딩페이지"
+        onPress={() => navigation.navigate('mainrending')}
+      />
       <Modal
         animationType="fade"
         transparent={true}
@@ -88,19 +102,27 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="home" component={HomeScreen} options={{
-              headerTitle: LogoTitle, // 가운데 로고부분
-              // headerRight: LogoRight,
-            }}/>
+        <Stack.Screen
+          name="home"
+          component={HomeScreen}
+          options={{
+            headerTitle: LogoTitle, // 가운데 로고부분
+            // headerRight: LogoRight,
+          }}
+        />
         <Stack.Screen
           name="MainCharacterScreen"
           component={MainCharacterScreen}
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
-      <Stack.Screen name="test" component={Test} />
+        <Stack.Screen name="test" component={Test} />
+        <Stack.Screen
+          name="mainrending"
+          component={MainRending}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-    
   );
 }
 //     <View style={[styles.container, { flexDirection: 'column' }]}>

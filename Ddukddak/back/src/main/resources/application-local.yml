@@ -1,0 +1,7 @@
+spring:
+    datasource:
+        url: jdbc:mysql://j10e203.p.ssafy.io:3306/ddukddak?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+        username: e203
+        password: e1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+

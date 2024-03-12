@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_seq", nullable = false)
@@ -27,8 +28,8 @@ public class UserEntity {
     @Column(name = "sex", nullable = false, length = 2)
     private String sex;
 
-    @Column(name = "birth", nullable = false, unique = true, length = 20)
-    private String birth;
+    @Column(name = "birth", nullable = false)
+    private Integer birth;
 
     @Column(name = "user_id", nullable = false, length = 20)
     private String userId;

@@ -1,10 +1,7 @@
 import { useFonts } from 'expo-font';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import GreenButton from './components/GreenButton';
-import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
-import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
-// import { StatusBar } from 'expo-status-bar';
+
 import { Button, Image, Modal, StyleSheet, Text, View } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import Test from './screens/Test';
@@ -15,7 +12,13 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 import * as Font from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
+
+import GreenButton from './components/GreenButton';
+import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
+import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
+import TalkSceren from './screens/maincharacter/TalkScreen';
+import FairytaleScreen from './screens/maincharacter/FairytaleScreen';
 
 function LogoTitle() {
   return (
@@ -84,6 +87,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
 const Stack = createNativeStackNavigator();
 
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
 export default function App() {
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   const [fontsLoaded] = useFonts({
@@ -91,9 +96,16 @@ export default function App() {
     'im-hyemin-bold': require('./assets/fonts/IM_Hyemin-Bold.ttf'),
   });
 
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return null;
   }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -111,6 +123,16 @@ export default function App() {
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
         <Stack.Screen name="test" component={Test} />
+        <Stack.Screen
+          name="talk"
+          component={TalkSceren}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="fairy"
+          component={FairytaleScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -4,8 +4,8 @@ import {
   Text,
   Button,
   StyleSheet,
-  TouchableOpacity,
   ImageBackground,
+  Pressable,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -13,14 +13,61 @@ interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const books = [
-  'Book Title 1',
-  'Book Title 2',
-  'Book Title 3',
-  'Book Title 4',
-  'Book Title 5',
-  'Book Title 6',
-  'Book Title 7',
+export const books = [
+  {
+    id: 1,
+    coverName: 'cover-book-title-1.jpg',
+    title: 'Book Title 1',
+    author: 'Author Name 1',
+    synopsis: 'This is the synopsis of Book Title 1. It talks about...',
+  },
+  {
+    id: 2,
+    coverName: 'cover-book-title-2.jpg',
+    title: 'Book Title 2',
+    author: 'Author Name 2',
+    synopsis:
+      'This is the synopsis of Book Title 2. It explores the concept of...',
+  },
+  {
+    id: 3,
+    coverName: 'cover-book-title-3.jpg',
+    title: 'Book Title 3',
+    author: 'Author Name 3',
+    synopsis:
+      'This is the synopsis of Book Title 3. The story revolves around...',
+  },
+  {
+    id: 4,
+    coverName: 'cover-book-title-4.jpg',
+    title: 'Book Title 4',
+    author: 'Author Name 4',
+    synopsis:
+      'This is the synopsis of Book Title 4. It delves into the life of...',
+  },
+  {
+    id: 5,
+    coverName: 'cover-book-title-5.jpg',
+    title: 'Book Title 5',
+    author: 'Author Name 5',
+    synopsis:
+      'This is the synopsis of Book Title 5. A tale of adventure and...',
+  },
+  {
+    id: 6,
+    coverName: 'cover-book-title-6.jpg',
+    title: 'Book Title 6',
+    author: 'Author Name 6',
+    synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
+  },
+  {
+    id: 7,
+    coverName: 'cover-book-title-7.jpg',
+    title: 'Book Title 7',
+    author: 'Author Name 7',
+    synopsis:
+      'This is the synopsis of Book Title 7. A gripping narrative about...',
+  },
 ];
 
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
@@ -38,6 +85,10 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     );
   };
 
+  const goToDetail = (id: number) => {
+    navigation.navigate('detail', { bookId: id });
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/background.png')}
@@ -47,11 +98,11 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         <View style={styles.container}>
           <Button title="<" onPress={previousPage} />
           <View style={styles.textContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('detail')}>
+            <Pressable onPress={() => goToDetail(books[currentPage].id)}>
               <View style={styles.box}>
-                <Text style={styles.text}>{books[currentPage]}</Text>
+                <Text style={styles.text}>{books[currentPage].title}</Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <Button title=">" onPress={nextPage} />
         </View>

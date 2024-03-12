@@ -23,14 +23,14 @@ public class ReviewEntity {
 
     @ManyToOne
     @MapsId("bookId")
-    @JoinColumn(name="book_id")
+    @JoinColumn(name="book_id", nullable = false)
     BookEntity bookEntity;
 
     @ManyToOne
     @MapsId("userSeq")
-    @JoinColumn(name="user_seq")
+    @JoinColumn(name="user_seq", nullable = false)
     UserEntity userEntity;
 
-    @Column(name="is_like")
+    @Column(name="is_like", nullable = false)
     private Boolean isLike;
 }

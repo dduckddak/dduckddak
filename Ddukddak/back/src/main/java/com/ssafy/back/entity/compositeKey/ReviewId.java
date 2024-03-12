@@ -1,5 +1,8 @@
 package com.ssafy.back.entity.compositeKey;
 
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +14,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class ReviewId {
+public class ReviewId implements Serializable {
 
+    @Column(name = "book_id", nullable = false)
     private Integer bookId;
+
+    @Column(name = "user_seq", nullable = false)
     private Integer userSeq;
 
 }

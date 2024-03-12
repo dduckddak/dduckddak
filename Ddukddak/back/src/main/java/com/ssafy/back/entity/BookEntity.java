@@ -25,7 +25,7 @@ public class BookEntity {
     @Column(name = "book_author", nullable = false, length = 10)
     private String bookAuthor;
 
-    @Column(name = "book_story", columnDefinition = "TEXT")
+    @Column(name = "book_story", columnDefinition = "TEXT", nullable = false)
     private String bookStory;
 
 }

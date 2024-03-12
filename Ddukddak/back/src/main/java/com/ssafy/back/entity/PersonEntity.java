@@ -27,7 +27,7 @@ public class PersonEntity {
 
 	@ManyToOne
 	@MapsId("bookId")
-	@JoinColumn(name="book_id")
+	@JoinColumn(name="book_id", nullable = false)
 	BookEntity bookEntity;
 
 	@Column(name = "person_name" , nullable = false, length = 20)

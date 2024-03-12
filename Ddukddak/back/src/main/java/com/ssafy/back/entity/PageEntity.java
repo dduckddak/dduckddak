@@ -26,7 +26,7 @@ public class PageEntity {
 
 	@ManyToOne
 	@MapsId("bookId")
-	@JoinColumn(name="book_id")
+	@JoinColumn(name="book_id", nullable = false)
 	BookEntity bookEntity;
 
 }

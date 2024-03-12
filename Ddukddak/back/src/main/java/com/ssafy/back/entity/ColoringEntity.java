@@ -20,7 +20,7 @@ public class ColoringEntity {
     private Integer coloringId;
 
     @ManyToOne
-    @JoinColumn(name="user_seq")
+    @JoinColumn(name="user_seq", nullable = false)
     UserEntity userEntity;
 
 }

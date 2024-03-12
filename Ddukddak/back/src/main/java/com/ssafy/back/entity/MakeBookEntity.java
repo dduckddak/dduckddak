@@ -23,7 +23,7 @@ public class MakeBookEntity {
     private Integer bookId;
 
     @ManyToOne
-    @JoinColumn(name="user_seq")
+    @JoinColumn(name="user_seq", nullable = false)
     UserEntity userEntity;
 
     @Column(name = "make_book_title", nullable = false , length = 20)

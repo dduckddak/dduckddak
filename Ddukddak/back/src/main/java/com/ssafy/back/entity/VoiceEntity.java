@@ -20,7 +20,7 @@ public class VoiceEntity {
     private Integer voiceId;
 
     @ManyToOne
-    @JoinColumn(name="user_seq")
+    @JoinColumn(name="user_seq", nullable = false)
     UserEntity userEntity;
 
     @Column(name = "voice_name", nullable = false, length = 20)

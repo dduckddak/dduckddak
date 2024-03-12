@@ -20,7 +20,7 @@ public class PhotoEntity {
     private Integer photoId;
 
     @ManyToOne
-    @JoinColumn(name="user_seq")
+    @JoinColumn(name="user_seq", nullable = false)
     UserEntity userEntity;
 
 }

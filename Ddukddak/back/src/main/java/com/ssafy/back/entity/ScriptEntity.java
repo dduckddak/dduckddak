@@ -27,10 +27,10 @@ public class ScriptEntity {
 
 	@ManyToOne
 	@MapsId("bookId")
-	@JoinColumn(name="book_id")
+	@JoinColumn(name="book_id", nullable = false)
 	BookEntity bookEntity;
 
-	@Column(name = "script_content" , columnDefinition = "TEXT")
+	@Column(name = "script_content" , columnDefinition = "TEXT" , nullable = false)
 	private String scriptContent;
 
 	@Column(name = "role" , nullable = false , length = 20)

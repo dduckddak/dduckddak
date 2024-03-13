@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import GreenButton from './components/GreenButton';
@@ -15,6 +14,8 @@ import {
   ParamListBase,
 } from '@react-navigation/native';
 import * as Font from 'expo-font';
+import ColoringScreen from './screens/coloring/ColoringScreen';
+import ColoringDrawScreen from './screens/coloring/ColoringDrawScreen';
 
 function LogoTitle() {
   return (
@@ -62,6 +63,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         style={{ width: 200, height: 80 }}
       />
       <Button title="Go" onPress={() => navigation.navigate('test')} />
+
+      <Button title="색칠" onPress={() => navigation.navigate('coloring')} />
+
       <Modal
         animationType="fade"
         transparent={true}
@@ -89,20 +93,38 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="home" component={HomeScreen} options={{
-              headerTitle: LogoTitle, // 가운데 로고부분
-              // headerRight: LogoRight,
-            }}/>
+          headerTitle: LogoTitle, // 가운데 로고부분
+          // headerRight: LogoRight,
+        }} />
         <Stack.Screen
           name="MainCharacterScreen"
           component={MainCharacterScreen}
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
-      <Stack.Screen name="test" component={Test} />
+        <Stack.Screen name="test" component={Test} />
+        <Stack.Screen
+          name="coloring"
+          component={ColoringScreen}
+          options={{
+            headerShown: false,
+            headerTitle: LogoTitle,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="coloringDraw"
+          component={ColoringDrawScreen}
+          options={{
+            headerShown: false,
+            headerTitle: LogoTitle,
+            headerBackVisible: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-    
   );
 }
+
 //     <View style={[styles.container, { flexDirection: 'column' }]}>
 //       <View style={{ flex: 2 }}>
 //         <Text>로고, 뒤로가기 버튼 </Text>

@@ -5,6 +5,7 @@ import com.ssafy.back.entity.compositeKey.ScriptId;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -25,15 +26,15 @@ public class ScriptEntity {
 	@EmbeddedId
 	private ScriptId scriptId;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("bookId")
-	@JoinColumn(name="book_id", nullable = false)
+	@JoinColumn(name = "book_id", nullable = false)
 	BookEntity bookEntity;
 
-	@Column(name = "script_content" , columnDefinition = "TEXT" , nullable = false)
+	@Column(name = "script_content", columnDefinition = "TEXT", nullable = false)
 	private String scriptContent;
 
-	@Column(name = "role" , nullable = false , length = 20)
+	@Column(name = "role", nullable = false, length = 20)
 	private String role;
 
 }

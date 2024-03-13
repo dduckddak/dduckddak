@@ -4,7 +4,6 @@ import { StatusBar } from 'expo-status-bar';
 
 import { Button, Image, Modal, StyleSheet, Text, View } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import Test from './screens/Test';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   NavigationContainer,
@@ -19,6 +18,9 @@ import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
 import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
 import TalkSceren from './screens/maincharacter/TalkScreen';
 import FairytaleScreen from './screens/maincharacter/FairytaleScreen';
+import MainRending from './screens/Rending/MainRending';
+import Login from './screens/Welcome/Login';
+import Signup from './screens/Welcome/Signup';
 
 function LogoTitle() {
   return (
@@ -45,7 +47,7 @@ interface HomeScreenProps {
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const handlePress = () => {
-    console.log('HomeScreen!');
+    console.log('버튼 눌러짐!');
     setModalVisible(true);
   };
   const closeModal = () => {
@@ -53,7 +55,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 10,
+      }}
+    >
       <Text>Home Screen</Text>
       <GreenButton onPress={handlePress} content="나버튼" />
       <Button
@@ -65,7 +74,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         content="초록버튼"
         style={{ width: 200, height: 80 }}
       />
-      <Button title="Go" onPress={() => navigation.navigate('test')} />
+      <Button
+        title="랜딩페이지"
+        onPress={() => navigation.navigate('mainrending')}
+      />
+      <Button title="로그인" onPress={() => navigation.navigate('login')} />
       <Modal
         animationType="fade"
         transparent={true}
@@ -122,7 +135,6 @@ export default function App() {
           component={MainCharacterScreen}
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
-        <Stack.Screen name="test" component={Test} />
         <Stack.Screen
           name="talk"
           component={TalkSceren}
@@ -133,6 +145,17 @@ export default function App() {
           component={FairytaleScreen}
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="mainrending"
+          component={MainRending}
+          options={{
+            headerShown: false,
+            headerTitle: LogoTitle, // 가운데 로고부분
+            headerRight: LogoRight,
+          }}
+        />
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="signup" component={Signup} />
       </Stack.Navigator>
     </NavigationContainer>
   );

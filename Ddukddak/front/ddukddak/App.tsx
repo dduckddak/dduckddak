@@ -45,13 +45,8 @@ interface HomeScreenProps {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
   const handlePress = () => {
     console.log('버튼 눌러짐!');
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
   };
 
   return (
@@ -63,37 +58,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         gap: 10,
       }}
     >
-      <Text>Home Screen</Text>
-      <GreenButton onPress={handlePress} content="나버튼" />
-      <Button
-        title="Go"
-        onPress={() => navigation.navigate('MainCharacterScreen')}
-      />
+      <Text>MainPage가 될 예정</Text>
       <GreenButton
-        onPress={handlePress}
-        content="초록버튼"
-        style={{ width: 200, height: 80 }}
+        onPress={() => navigation.navigate('MainCharacterScreen')}
+        content="내가 주인공으로 갈 친구"
+        style={{ width: 300, height: 80 }}
       />
       <Button
         title="랜딩페이지"
         onPress={() => navigation.navigate('mainrending')}
       />
       <Button title="로그인" onPress={() => navigation.navigate('login')} />
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <View style={{ backgroundColor: 'white', padding: 20 }}>
-            <Text>나 모달이야</Text>
-            <Button title="Close" onPress={closeModal} />
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };

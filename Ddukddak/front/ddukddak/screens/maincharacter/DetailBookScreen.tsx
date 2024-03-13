@@ -6,6 +6,8 @@ import {
   Pressable,
   Image,
   TouchableOpacity,
+  ImageBackground,
+  Button,
 } from 'react-native';
 import { books } from './MainCharacterScreen';
 import { useNavigation } from '@react-navigation/native';
@@ -26,45 +28,68 @@ function DetailBookScreen({ route }: DetailBookScreenProps) {
   const selectedBook = books.find((book) => book.id === parseInt(bookid));
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.headerText}>이런책이에요 !</Text>
-      <View style={styles.contentContainer}>
-        <View style={styles.bookDetails}>
-          <Text style={styles.detailText}>
-            표지 : {selectedBook?.coverName}
-          </Text>
-          <Text style={styles.detailText}>제목 : {selectedBook?.title}</Text>
-          <Text style={styles.detailText}>저자 : {selectedBook?.author}</Text>
-          <Text style={styles.detailText}>
-            줄거리 : {selectedBook?.synopsis}
-          </Text>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('fairy' as never)}
-          >
-            <Image
-              source={require('../../assets/images/donghwabutton.png')}
-              style={styles.image}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('talk' as never)}
-          >
-            <Image
-              source={require('../../assets/images/talkbutton.png')}
-              style={styles.image}
-            />
-          </TouchableOpacity>
+    <ImageBackground
+      source={require('../../assets/images/detailbookbackground.png')}
+      style={styles.imageBackground}
+    >
+      <View style={styles.container}>
+        <Text style={styles.headerText}>이런책이에요 !</Text>
+        <View style={styles.contentContainer}>
+          <View style={styles.bookDetails}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={selectedBook?.coverImage}
+                style={styles.coverImage}
+              />
+              <View style={styles.buttonsContainer}>
+                <Button title="좋아요" />
+                <Button title="싫어요" />
+              </View>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.detailText}>
+                제목 : {selectedBook?.title}
+              </Text>
+              <Text style={styles.detailText}>
+                저자 : {selectedBook?.author}
+              </Text>
+              <Text style={styles.detailText}>
+                줄거리 : {selectedBook?.synopsis}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('fairy' as never)}
+            >
+              <Image
+                source={require('../../assets/images/donghwabutton.png')}
+                style={styles.image}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('talk' as never)}
+            >
+              <Image
+                source={require('../../assets/images/talkbutton.png')}
+                style={styles.image}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -74,8 +99,13 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     marginVertical: 10,
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '70%',
+  },
   detailText: {
-    fontSize: 30,
+    fontSize: 40,
     fontFamily: 'im-hyemin',
     marginVertical: 10,
   },
@@ -84,39 +114,43 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
+  imageContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 2,
+    justifyContent: 'center',
+  },
   bookDetails: {
-    flex: 3,
-    borderRadius: 10,
+    flex: 1,
+    flexDirection: 'row',
+    borderRadius: 15,
     borderWidth: 1,
-    borderColor: 'rgba(65, 152, 7, 0.5)', // 테두리 색상
-    backgroundColor: 'rgba(65, 152, 7, 0.5)', // 배경색
-    shadowColor: 'rgba(65, 152, 7, 0.5)', // 그림자 색상
-    shadowOffset: { width: 0, height: 2 }, // 그림자 위치
-    shadowOpacity: 0, // 그림자 투명도
-    shadowRadius: 1, // 그림자 반경
-    elevation: 1, // 안드로이드 그림자
+    borderColor: 'rgba(65, 152, 7, 0.5)',
+    backgroundColor: 'rgba(65, 152, 7, 0.5)',
+    shadowColor: 'rgba(65, 152, 7, 0.5)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 10,
+    elevation: 5,
     margin: 10,
     padding: 10,
-  },
-  buttonsContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 20,
   },
   button: {
     padding: 10,
     margin: 10,
     borderRadius: 5,
   },
-  buttonText: {
-    fontSize: 20,
-    color: 'white',
-  },
   image: {
     width: 333,
     height: 210,
     marginTop: 10,
+  },
+  coverImage: {
+    width: '80%',
+    height: '90%',
+    resizeMode: 'contain',
   },
 });
 

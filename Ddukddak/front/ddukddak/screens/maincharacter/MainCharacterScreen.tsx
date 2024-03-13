@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ImageBackground,
   Pressable,
+  Image,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -20,6 +21,7 @@ export const books = [
     title: 'Book Title 1',
     author: 'Author Name 1',
     synopsis: 'This is the synopsis of Book Title 1. It talks about...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
   {
     id: 2,
@@ -28,6 +30,7 @@ export const books = [
     author: 'Author Name 2',
     synopsis:
       'This is the synopsis of Book Title 2. It explores the concept of...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
   {
     id: 3,
@@ -36,6 +39,7 @@ export const books = [
     author: 'Author Name 3',
     synopsis:
       'This is the synopsis of Book Title 3. The story revolves around...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
   {
     id: 4,
@@ -44,6 +48,7 @@ export const books = [
     author: 'Author Name 4',
     synopsis:
       'This is the synopsis of Book Title 4. It delves into the life of...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
   {
     id: 5,
@@ -52,6 +57,7 @@ export const books = [
     author: 'Author Name 5',
     synopsis:
       'This is the synopsis of Book Title 5. A tale of adventure and...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
   {
     id: 6,
@@ -59,6 +65,7 @@ export const books = [
     title: 'Book Title 6',
     author: 'Author Name 6',
     synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
   {
     id: 7,
@@ -67,6 +74,7 @@ export const books = [
     author: 'Author Name 7',
     synopsis:
       'This is the synopsis of Book Title 7. A gripping narrative about...',
+    coverImage: require('../../assets/images/bookcover.png'),
   },
 ];
 
@@ -100,6 +108,11 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           <View style={styles.textContainer}>
             <Pressable onPress={() => goToDetail(books[currentPage].id)}>
               <View style={styles.box}>
+                <Text style={styles.text}>이 책 어때요 ?</Text>
+                <Image
+                  source={books[currentPage].coverImage}
+                  style={styles.bookCover}
+                />
                 <Text style={styles.text}>{books[currentPage].title}</Text>
               </View>
             </Pressable>
@@ -146,14 +159,15 @@ const styles = StyleSheet.create({
   },
   box: {
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'rgba(65, 152, 7, 0.23)',
+    backgroundColor: 'rgba(65, 152, 7, 0.23)',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
     textAlign: 'center',
-    fontFamily: 'im-hyemin',
+    fontFamily: 'im-hyemin-bold',
   },
   dotsContainer: {
     flexDirection: 'row',
@@ -173,6 +187,11 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: '#B3DABF',
+  },
+  bookCover: {
+    width: '100%',
+    height: 100,
+    resizeMode: 'contain',
   },
 });
 

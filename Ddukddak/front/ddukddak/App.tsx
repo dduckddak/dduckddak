@@ -1,19 +1,15 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-import { Button, Image, Modal, StyleSheet, Text, View } from 'react-native';
+import { Image } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  NavigationContainer,
-  NavigationProp,
-  ParamListBase,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-import GreenButton from './components/GreenButton';
+import MainScreen from './screens/Welcome/MainScreen';
 import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
 import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
 import TalkSceren from './screens/maincharacter/TalkScreen';
@@ -21,6 +17,9 @@ import FairytaleScreen from './screens/maincharacter/FairytaleScreen';
 import MainRending from './screens/Rending/MainRending';
 import Login from './screens/Welcome/Login';
 import Signup from './screens/Welcome/Signup';
+import PictureScreen from './screens/picture/PictureScreen';
+import VoiceScreen from './screens/voice/VoiceScreen';
+import MyCreateBookScreen from './screens/maincharacter/MyCreateBookScreen';
 
 function LogoTitle() {
   return (
@@ -40,40 +39,23 @@ function LogoRight() {
   );
 }
 
-interface HomeScreenProps {
-  navigation: NavigationProp<ParamListBase>;
-}
-
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const handlePress = () => {
-    console.log('버튼 눌러짐!');
-  };
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-      }}
-    >
-      <Text>MainPage가 될 예정</Text>
-      <GreenButton
-        onPress={() => navigation.navigate('MainCharacterScreen')}
-        content="내가 주인공으로 갈 친구"
-        style={{ width: 300, height: 80 }}
-      />
-      <Button
-        title="랜딩페이지"
-        onPress={() => navigation.navigate('mainrending')}
-      />
-      <Button title="로그인" onPress={() => navigation.navigate('login')} />
-    </View>
-  );
+// 페이지 만들고 props가 없으면 undefined로 있으면 값에 맞게 적어주기
+// 아니면 에러는 안나지만 타입 빨간줄 뜹니다
+export type RootStackParamList = {
+  home: undefined;
+  detail: { bookId: string };
+  MainCharacterScreen: undefined;
+  talk: undefined;
+  fairy: undefined;
+  mainrending: undefined;
+  login: undefined;
+  signup: undefined;
+  picture: undefined;
+  voice: undefined;
+  mybook: undefined;
 };
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -99,7 +81,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen
           name="home"
-          component={HomeScreen}
+          component={MainScreen}
           options={{
             headerTitle: LogoTitle, // 가운데 로고부분
             // headerRight: LogoRight,
@@ -131,6 +113,9 @@ export default function App() {
         />
         <Stack.Screen name="login" component={Login} />
         <Stack.Screen name="signup" component={Signup} />
+        <Stack.Screen name="picture" component={PictureScreen} />
+        <Stack.Screen name="voice" component={VoiceScreen} />
+        <Stack.Screen name="mybook" component={MyCreateBookScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

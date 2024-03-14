@@ -3,27 +3,27 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   Image,
   TouchableOpacity,
   ImageBackground,
   Button,
 } from 'react-native';
 import { books } from './MainCharacterScreen';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../App';
 
-type DetailBookScreenRouteProp = {
-  params: {
-    bookId: string;
-  };
-};
+type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
+type DetailScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'detail'
+>;
 
-type DetailBookScreenProps = {
-  route: DetailBookScreenRouteProp;
-};
-
-function DetailBookScreen({ route }: DetailBookScreenProps) {
-  const navigation = useNavigation();
+interface DetailBookScreenProps {
+  route: DetailScreenRouteProp;
+  navigation: DetailScreenNavigationProp;
+}
+function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const bookid = route.params.bookId;
   const selectedBook = books.find((book) => book.id === parseInt(bookid));
 

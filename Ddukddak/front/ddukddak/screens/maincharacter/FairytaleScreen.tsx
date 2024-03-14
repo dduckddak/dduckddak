@@ -11,11 +11,12 @@ import {
   Pressable,
   BackHandler,
 } from 'react-native';
+import { NavigationProp } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../../components/GreenButton';
 import SkyButton from '../../components/SkyButton';
 
-function FairytaleScreen({ navigation }) {
+function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
     redHood: { photo: null, voice: null },
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
   },
   textcenter: {
     fontFamily: 'im-hyemin-bold',
-    color: 'rgba(45,45,45)',
+    color: 'black',
     fontSize: 25,
   },
   modalContainer: {

@@ -27,7 +27,7 @@ public class ResponseDto {
 
 	public static ResponseEntity<ResponseDto> databaseError() {
 		ResponseDto responseBody = new ResponseDto(ResponseMessage.DATABASE_ERROR);
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
 	}
 
 	public static ResponseEntity<ResponseDto> validationFail() {

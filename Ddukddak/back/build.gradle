@@ -39,6 +39,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     //Unirest
     implementation 'com.mashape.unirest:unirest-java:1.4.9'
+    //Gson
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 tasks.named('bootBuildImage') {

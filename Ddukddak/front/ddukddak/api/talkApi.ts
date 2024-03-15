@@ -45,7 +45,7 @@ type TalkTriggerResponseGpt = ApiResponse & TalkTriggerResponseDataGpt;
  */
 export const getTalkDetail = async (bookId: string): Promise<TalkDetailResponse> => {
   try {
-    const response = await apiClient.get<TalkDetailResponse>(`/api/v1/talks/${bookId}`);
+    const response = await apiClient.get<TalkDetailResponse>(`/api/v1/talks/${bookId}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -65,7 +65,7 @@ export const getTalkDetail = async (bookId: string): Promise<TalkDetailResponse>
  */
 export const triggerTalk = async (params: TalkTriggerParams): Promise<TalkTriggerResponseUser|TalkTriggerResponseGpt> => {
   try {
-    const response = await apiClient.post<TalkTriggerResponseUser|TalkTriggerResponseGpt>('/api/v1/talks', params);
+    const response = await apiClient.post<TalkTriggerResponseUser|TalkTriggerResponseGpt>('/api/v1/talks/', params);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

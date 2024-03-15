@@ -21,7 +21,7 @@ interface ApiResponse {
  */
 export const signUp = async (): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/sign-up');
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/sign-up/');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -44,7 +44,7 @@ export const checkUserIdDuplicate = async (
   userId: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.get<ApiResponse>('/api/v1/auth/idcheck', {
+    const response = await apiClient.get<ApiResponse>('/api/v1/auth/idcheck/', {
       params: { userId },
     });
     return response.data;
@@ -69,7 +69,7 @@ export const refreshToken = async (
   refreshToken: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/refresh-token', {
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/refresh-token/', {
       refreshToken,
     });
     return response.data;
@@ -96,7 +96,7 @@ export const updateFcmToken = async (
   fcmToken: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/fcmToken', {
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/fcmToken/', {
       userId,
       fcmToken,
     });
@@ -124,7 +124,7 @@ export const login = async (
   userPassword: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/login', {
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/login/', {
       userId,
       userPassword,
     });
@@ -147,7 +147,7 @@ export const login = async (
  */
 export const logout = async (): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/logout');
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/logout/');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

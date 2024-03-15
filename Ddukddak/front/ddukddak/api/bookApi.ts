@@ -50,7 +50,7 @@ type ReviewCreateResponse = ApiResponse;
  */
 export const getBookList = async (): Promise<BookListResponse> => {
   try {
-    const response = await apiClient.get<BookListResponse>('/api/v1/books/list');
+    const response = await apiClient.get<BookListResponse>('/api/v1/books/list/');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -71,7 +71,7 @@ export const getBookList = async (): Promise<BookListResponse> => {
  */
 export const searchBooks = async (searchKeyword: string): Promise<BookSearchResponse> => {
   try {
-    const response = await apiClient.get<BookSearchResponse>(`/api/v1/books/search/${searchKeyword}`);
+    const response = await apiClient.get<BookSearchResponse>(`/api/v1/books/search/${searchKeyword}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -94,7 +94,7 @@ export const searchBooks = async (searchKeyword: string): Promise<BookSearchResp
  */
 export const getBookDetail = async (bookId: string): Promise<BookDetailResponse> => {
   try {
-    const response = await apiClient.get<BookDetailResponse>(`/api/v1/books/${bookId}`);
+    const response = await apiClient.get<BookDetailResponse>(`/api/v1/books/${bookId}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -124,7 +124,7 @@ interface ApiResponse {
  */
 export const createReview = async (params: ReviewCreateParams): Promise<ReviewCreateResponse> => {
   try {
-    const response = await apiClient.post<ReviewCreateResponse>('/api/v1/books/reviews', params);
+    const response = await apiClient.post<ReviewCreateResponse>('/api/v1/books/reviews/', params);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -161,7 +161,7 @@ type ReviewDetailResponse = ApiResponse & ReviewDetailData;
  */
 export const updateReview = async (params: ReviewUpdateParams): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.put<ApiResponse>(`/api/v1/books/reviews/${params.bookId}`, params);
+    const response = await apiClient.put<ApiResponse>(`/api/v1/books/reviews/${params.bookId}/`, params);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -181,7 +181,7 @@ export const updateReview = async (params: ReviewUpdateParams): Promise<ApiRespo
  */
 export const deleteReview = async (bookId: number): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.delete<ApiResponse>(`/api/v1/books/reviews/${bookId}`);
+    const response = await apiClient.delete<ApiResponse>(`/api/v1/books/reviews/${bookId}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -201,7 +201,7 @@ export const deleteReview = async (bookId: number): Promise<ApiResponse> => {
  */
 export const getReviewDetail = async (bookId: string): Promise<ReviewDetailResponse> => {
   try {
-    const response = await apiClient.get<ReviewDetailResponse>(`/api/v1/books/reviews/${bookId}`);
+    const response = await apiClient.get<ReviewDetailResponse>(`/api/v1/books/reviews/${bookId}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

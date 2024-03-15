@@ -38,7 +38,7 @@ type MakeBookDetailResponse = ApiResponse & MakeBookDetailData;
  */
 export const getMakeBookDetail = async (makeBookId: string): Promise<MakeBookDetailResponse> => {
   try {
-    const response = await apiClient.get<MakeBookDetailResponse>(`/api/v1/make-books/${makeBookId}`);
+    const response = await apiClient.get<MakeBookDetailResponse>(`/api/v1/make-books/${makeBookId}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -59,7 +59,7 @@ export const getMakeBookDetail = async (makeBookId: string): Promise<MakeBookDet
  */
 export const deleteMakeBook = async (makeBookId: string): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.delete<ApiResponse>(`/api/v1/make-books/${makeBookId}`);
+    const response = await apiClient.delete<ApiResponse>(`/api/v1/make-books/${makeBookId}/`);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -88,7 +88,7 @@ type MakeBookListResponse = ApiResponse & MakeBookListData;
  */
 export const getMakeBookList = async (): Promise<MakeBookListResponse> => {
   try {
-    const response = await apiClient.get<MakeBookListResponse>('/api/v1/make-books/list');
+    const response = await apiClient.get<MakeBookListResponse>('/api/v1/make-books/list/');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

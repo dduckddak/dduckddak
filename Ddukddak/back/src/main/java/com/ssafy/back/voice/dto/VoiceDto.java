@@ -1,7 +1,5 @@
 package com.ssafy.back.voice.dto;
 
-import com.ssafy.back.entity.VoiceEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,6 @@ import lombok.ToString;
 @ToString
 public class VoiceDto {
 	private int voiceId;
-	private String voiceName;
 
-	public VoiceDto(VoiceEntity entity) {
-		this.voiceId = entity.getVoiceId();
-		this.voiceName = entity.getVoiceName();
-	}
+	private String voiceName;
 }

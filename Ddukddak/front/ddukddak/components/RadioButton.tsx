@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Pressable, ViewStyle, Image } from 'react-native';
-import { Colors } from '../../components/Ui/styles';
+import { Colors } from './Ui/styles';
 
 interface Props {
   isChecked: boolean;

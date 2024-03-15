@@ -10,23 +10,41 @@ import {
   TextInput,
   Pressable,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
-
-function Login({ navigation }) {
+import { NavigationProp } from '@react-navigation/native';
+type Props = {
+  navigation: NavigationProp<any>;
+};
+const Login: React.FC<Props> = ({ navigation }) => {
+  const [userId, setUserId] = useState<string>('');
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
   const handlePress = () => {
-    console.log('HomeScreen!');
+    console.log('버튼누름!');
   };
   // 비밀번호 유효성 검사
-  const validatePassword = (text) => {
-    // 비밀번호는 최소 6자 최대 20자이고, 특수 문자를 포함하지 않아도 됨.
-    const limit = /^[a-zA-Z0-9]{6,20}$/;
-    setIsValidPassword(limit.test(text));
-    setPassword(text);
+  const validatePassword = (): boolean => {
+    const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+    const pwRegex = /^.{6,20}$/;
+
+    if (!idRegex.test(userId)) {
+      Alert.alert(
+        '오류',
+        'ID는 한글과 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',
+      );
+      return false;
+    }
+
+    if (!pwRegex.test(password)) {
+      Alert.alert('오류', '비밀번호는 최소 6자에서 최대 20자여야 합니다.');
+      return false;
+    }
+
+    return true;
   };
 
   return (
@@ -40,12 +58,7 @@ function Login({ navigation }) {
             source={require('../../assets/images/login.png')}
             style={styles.login}
           />
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              { paddingTop: StatusBar.currentHeight },
-            ]}
-          >
+          <View style={[StyleSheet.absoluteFill]}>
             <View style={styles.TopContainer}>
               <View style={styles.flexContainer}>
                 <TextInput
@@ -53,6 +66,7 @@ function Login({ navigation }) {
                   style={styles.inputContainer}
                   value={id}
                   onChangeText={(e) => setId(e)}
+                  accessibilityLabel="아이디 입력"
                 />
               </View>
               <TextInput
@@ -85,7 +99,7 @@ function Login({ navigation }) {
       </ImageBackground>
     </SafeAreaView>
   );
-}
+};
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,

@@ -56,10 +56,12 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
               style={styles.icon}
             />
           </Pressable>
-          <Button
-            title="색칠뚝딱"
-            onPress={() => navigation.navigate('coloring')}
-          />
+          <Pressable onPress={() => navigation.navigate('home')}>
+            <Image
+              source={require('../../assets/images/color.png')}
+              style={styles.icon}
+            />
+          </Pressable>
         </View>
       </View>
     </ImageBackground>
@@ -78,13 +80,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
   },
   leftContainer: {
+    flexDirection: 'column',
     alignItems: 'flex-start',
-    marginLeft: 20,
+    justifyContent: 'flex-end',
   },
   rightContainer: {
+    justifyContent: 'center',
     alignItems: 'flex-end',
     marginRight: 20,
   },
@@ -93,9 +96,9 @@ const styles = StyleSheet.create({
     height: 80,
   },
   icon: {
-    width: 245,
-    height: 100,
-    margin: 10,
+    width: 280,
+    height: 110,
+    margin: 40,
   },
   bookicon: {
     width: 400,

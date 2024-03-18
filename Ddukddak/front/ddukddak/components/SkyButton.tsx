@@ -39,11 +39,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#DBF4FF',
     borderRadius: 5,
     elevation: 5,
+    height: 50,
   },
   text: {
     color: 'rgb(45,45,45)',
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 30,
   },
 });
 

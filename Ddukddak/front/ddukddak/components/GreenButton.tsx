@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontFamily: 'im-hyemin-bold',
     height: 60,
     textAlignVertical: 'center',
     fontSize: 20,

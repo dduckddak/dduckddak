@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import { useFonts } from 'expo-font';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import GreenButton from './components/GreenButton';
+
+import { Image } from 'react-native';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+import MainScreen from './screens/Welcome/MainScreen';
 import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
 import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
-// import { StatusBar } from 'expo-status-bar';
-import { Button, Image, Modal, StyleSheet, Text, View } from 'react-native';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import Test from './screens/Test';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  NavigationContainer,
-  NavigationProp,
-  ParamListBase,
-} from '@react-navigation/native';
-import * as Font from 'expo-font';
-import ColoringScreen from './screens/coloring/ColoringScreen';
-import ColoringDrawScreen from './screens/coloring/ColoringDrawScreen';
+import TalkSceren from './screens/maincharacter/TalkScreen';
+import FairytaleScreen from './screens/maincharacter/FairytaleScreen';
+import MainRending from './screens/Rending/MainRending';
+import Login from './screens/Welcome/Login';
+import Signup from './screens/Welcome/Signup';
+import PictureScreen from './screens/picture/PictureScreen';
+import VoiceScreen from './screens/voice/VoiceScreen';
+import MyCreateBookScreen from './screens/maincharacter/MyCreateBookScreen';
 
 function LogoTitle() {
   return (
@@ -35,114 +39,84 @@ function LogoRight() {
   );
 }
 
-interface HomeScreenProps {
-  navigation: NavigationProp<ParamListBase>;
-}
-
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const handlePress = () => {
-    console.log('HomeScreen!');
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <GreenButton onPress={handlePress} content="나버튼" />
-      <Button
-        title="Go"
-        onPress={() => navigation.navigate('MainCharacterScreen')}
-      />
-      <GreenButton
-        onPress={handlePress}
-        content="초록버튼"
-        style={{ width: 200, height: 80 }}
-      />
-      <Button title="Go" onPress={() => navigation.navigate('test')} />
-
-      <Button title="색칠" onPress={() => navigation.navigate('coloring')} />
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <View style={{ backgroundColor: 'white', padding: 20 }}>
-            <Text>나 모달이야</Text>
-            <Button title="Close" onPress={closeModal} />
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
+// 페이지 만들고 props가 없으면 undefined로 있으면 값에 맞게 적어주기
+// 아니면 에러는 안나지만 타입 빨간줄 뜹니다
+export type RootStackParamList = {
+  home: undefined;
+  detail: { bookId: string };
+  MainCharacterScreen: undefined;
+  talk: undefined;
+  fairy: undefined;
+  mainrending: undefined;
+  login: undefined;
+  signup: undefined;
+  picture: undefined;
+  voice: undefined;
+  mybook: undefined;
 };
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  const [fontsLoaded] = useFonts({
+    'im-hyemin': require('./assets/fonts/IM_Hyemin-Regular.ttf'),
+    'im-hyemin-bold': require('./assets/fonts/IM_Hyemin-Bold.ttf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="home" component={HomeScreen} options={{
-          headerTitle: LogoTitle, // 가운데 로고부분
-          // headerRight: LogoRight,
-        }} />
+        <Stack.Screen
+          name="home"
+          component={MainScreen}
+          options={{
+            headerTitle: LogoTitle, // 가운데 로고부분
+            // headerRight: LogoRight,
+          }}
+        />
         <Stack.Screen
           name="MainCharacterScreen"
           component={MainCharacterScreen}
         />
         <Stack.Screen name="detail" component={DetailBookScreen} />
-        <Stack.Screen name="test" component={Test} />
         <Stack.Screen
-          name="coloring"
-          component={ColoringScreen}
-          options={{
-            headerShown: false,
-            headerTitle: LogoTitle,
-            headerBackVisible: false,
-          }}
+          name="talk"
+          component={TalkSceren}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="coloringDraw"
-          component={ColoringDrawScreen}
+          name="fairy"
+          component={FairytaleScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="mainrending"
+          component={MainRending}
           options={{
             headerShown: false,
-            headerTitle: LogoTitle,
-            headerBackVisible: false,
+            headerTitle: LogoTitle, // 가운데 로고부분
+            headerRight: LogoRight,
           }}
         />
+        <Stack.Screen name="login" component={Login} />
+        <Stack.Screen name="signup" component={Signup} />
+        <Stack.Screen name="picture" component={PictureScreen} />
+        <Stack.Screen name="voice" component={VoiceScreen} />
+        <Stack.Screen name="mybook" component={MyCreateBookScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-//     <View style={[styles.container, { flexDirection: 'column' }]}>
-//       <View style={{ flex: 2 }}>
-//         <Text>로고, 뒤로가기 버튼 </Text>
-//       </View>
-//       <View style={{ flex: 8 }}>
-//         <Test />
-//       </View>
-//       <StatusBar style="auto" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     padding: 20,
-//   },
-// });

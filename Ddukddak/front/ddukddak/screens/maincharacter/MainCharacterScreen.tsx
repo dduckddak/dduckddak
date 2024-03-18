@@ -4,8 +4,9 @@ import {
   Text,
   Button,
   StyleSheet,
-  TouchableOpacity,
   ImageBackground,
+  Pressable,
+  Image,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -13,14 +14,68 @@ interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const books = [
-  'Book Title 1',
-  'Book Title 2',
-  'Book Title 3',
-  'Book Title 4',
-  'Book Title 5',
-  'Book Title 6',
-  'Book Title 7',
+export const books = [
+  {
+    id: 1,
+    coverName: 'cover-book-title-1.jpg',
+    title: 'Book Title 1',
+    author: 'Author Name 1',
+    synopsis: 'This is the synopsis of Book Title 1. It talks about...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
+  {
+    id: 2,
+    coverName: 'cover-book-title-2.jpg',
+    title: 'Book Title 2',
+    author: 'Author Name 2',
+    synopsis:
+      'This is the synopsis of Book Title 2. It explores the concept of...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
+  {
+    id: 3,
+    coverName: 'cover-book-title-3.jpg',
+    title: 'Book Title 3',
+    author: 'Author Name 3',
+    synopsis:
+      'This is the synopsis of Book Title 3. The story revolves around...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
+  {
+    id: 4,
+    coverName: 'cover-book-title-4.jpg',
+    title: 'Book Title 4',
+    author: 'Author Name 4',
+    synopsis:
+      'This is the synopsis of Book Title 4. It delves into the life of...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
+  {
+    id: 5,
+    coverName: 'cover-book-title-5.jpg',
+    title: 'Book Title 5',
+    author: 'Author Name 5',
+    synopsis:
+      'This is the synopsis of Book Title 5. A tale of adventure and...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
+  {
+    id: 6,
+    coverName: 'cover-book-title-6.jpg',
+    title: 'Book Title 6',
+    author: 'Author Name 6',
+    synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
+  {
+    id: 7,
+    coverName: 'cover-book-title-7.jpg',
+    title: 'Book Title 7',
+    author: 'Author Name 7',
+    synopsis:
+      'This is the synopsis of Book Title 7. A gripping narrative about...',
+    coverImage: require('../../assets/images/bookcover.png'),
+  },
 ];
 
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
@@ -38,20 +93,29 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     );
   };
 
+  const goToDetail = (id: number) => {
+    navigation.navigate('detail', { bookId: id });
+  };
+
   return (
     <ImageBackground
-      source={require('../../assets/background.png')}
+      source={require('../../assets/images/background.png')}
       style={styles.imageBackground}
     >
       <View style={styles.flexContainer}>
         <View style={styles.container}>
           <Button title="<" onPress={previousPage} />
           <View style={styles.textContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('detail')}>
+            <Pressable onPress={() => goToDetail(books[currentPage].id)}>
               <View style={styles.box}>
-                <Text style={styles.text}>{books[currentPage]}</Text>
+                <Text style={styles.text}>이 책 어때요 ?</Text>
+                <Image
+                  source={books[currentPage].coverImage}
+                  style={styles.bookCover}
+                />
+                <Text style={styles.text}>{books[currentPage].title}</Text>
               </View>
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <Button title=">" onPress={nextPage} />
         </View>
@@ -79,11 +143,13 @@ const styles = StyleSheet.create({
   },
   flexContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    position: 'relative',
   },
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
   },
@@ -93,23 +159,26 @@ const styles = StyleSheet.create({
   },
   box: {
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: 'rgba(65, 152, 7, 0.23)',
+    backgroundColor: 'rgba(65, 152, 7, 0.23)',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
     textAlign: 'center',
+    fontFamily: 'im-hyemin-bold',
   },
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
+    position: 'absolute',
+    paddingTop: '90%',
+    paddingLeft: '125%',
   },
   dot: {
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
     borderRadius: 30,
     margin: 20,
   },
@@ -118,6 +187,11 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: '#B3DABF',
+  },
+  bookCover: {
+    width: '100%',
+    height: 100,
+    resizeMode: 'contain',
   },
 });
 

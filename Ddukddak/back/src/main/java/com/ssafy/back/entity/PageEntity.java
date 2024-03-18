@@ -4,6 +4,7 @@ import com.ssafy.back.entity.compositeKey.PageId;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -20,13 +21,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageEntity {
-
+	
 	@EmbeddedId
 	private PageId pageId;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("bookId")
-	@JoinColumn(name="book_id", nullable = false)
+	@JoinColumn(name = "book_id", nullable = false)
 	BookEntity bookEntity;
 
 }

@@ -5,19 +5,29 @@ import GreenButton from './components/GreenButton';
 import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
 import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
 // import { StatusBar } from 'expo-status-bar';
-import { Button, Image, Modal, StyleSheet, Text, View } from 'react-native';
+import {
+  Button,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   NavigationContainer,
   NavigationProp,
   ParamListBase,
+  useNavigation,
 } from '@react-navigation/native';
 import * as Font from 'expo-font';
-import MainRending from './screens/Rending/MainRending';
+import MainRending from './screens/MainRending';
 import AppLoading from 'expo-app-loading';
 import Login from './screens/Welcome/Login';
 import Signup from './screens/Welcome/Signup';
+import RendingTwo from './screens/Rending/RendingTwo';
 
 function LogoTitle() {
   return (
@@ -29,11 +39,19 @@ function LogoTitle() {
 }
 
 function LogoRight() {
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.goBack();
+  };
+
   return (
-    <Image
-      style={{ width: 40, height: 40 }}
-      source={require('./assets/images/Back.png')}
-    />
+    <TouchableOpacity onPress={handlePress}>
+      <Image
+        style={{ width: 40, height: 40 }}
+        source={require('./assets/images/Back.png')}
+      />
+    </TouchableOpacity>
   );
 }
 
@@ -109,31 +127,54 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
+        screenOptions={{
+          headerTransparent: true,
+          // headerTitle: LogoTitle, 이건 넣고싶은 곳의 option에 추가해주면 됨
+          // headerRight: LogoRight, 얘도
+          headerBackVisible: false, // 뒤로가기 버튼 숨기기
+          title: '',
+        }}
+      >
+        {/* ------------------------ 제일 첫 화면 ------------------------ */}
         <Stack.Screen
           name="home"
           component={HomeScreen}
           options={{
             headerTitle: LogoTitle, // 가운데 로고부분
-            // headerRight: LogoRight,
           }}
         />
+
+        {/* ------------------------ 내가 주인공 페이지 ------------------------ */}
         <Stack.Screen
           name="MainCharacterScreen"
           component={MainCharacterScreen}
         />
+
+        {/* ------------------------ 책 상세 페이지 ------------------------ */}
         <Stack.Screen name="detail" component={DetailBookScreen} />
+
+        {/* ------------------------ 렌더링 화면 ------------------------ */}
+        <Stack.Screen name="mainrending" component={MainRending} />
+
+        {/* ------------------------ 로그인 페이지 ------------------------ */}
         <Stack.Screen
-          name="mainrending"
-          component={MainRending}
+          name="login"
+          component={Login}
           options={{
-            headerShown: false,
-            headerTitle: LogoTitle, // 가운데 로고부분
             headerRight: LogoRight,
           }}
         />
-        <Stack.Screen name="login" component={Login} />
-        <Stack.Screen name="signup" component={Signup} />
+
+        {/* ------------------------ 회원가입 페이지 ------------------------ */}
+        <Stack.Screen
+          name="signup"
+          component={Signup}
+          options={{
+            headerRight: LogoRight,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

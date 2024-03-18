@@ -111,7 +111,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
         <View style={styles.container}>
           <Image
             source={require('../../assets/images/signup.png')}
-            style={styles.login}
+            style={styles.signup}
           />
           <View
             style={[
@@ -121,16 +121,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
           >
             <View style={styles.TopContainer}>
               <View style={styles.flexContainer}>
-                <Text
-                  style={{
-                    fontFamily: 'im-hyemin-bold',
-                    fontSize: 27,
-                    marginBottom: 5,
-                    marginRight: '7%',
-                  }}
-                >
-                  성별
-                </Text>
+                <Text style={[styles.text, { marginTop: 2 }]}>성별</Text>
                 <RadioGroup
                   radioButtons={radioButtons}
                   onPress={setSelectedId}
@@ -138,17 +129,8 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                   layout="row"
                 />
               </View>
-              <View style={styles.flexContainer}>
-                <Text
-                  style={{
-                    fontFamily: 'im-hyemin-bold',
-                    fontSize: 27,
-                    marginBottom: 5,
-                    marginRight: '7%',
-                  }}
-                >
-                  이름
-                </Text>
+              <View style={[styles.flexContainer, { marginTop: 10 }]}>
+                <Text style={[styles.text, { marginTop: 10 }]}>이름</Text>
                 <TextInput
                   placeholder="이름을 입력해주세요"
                   style={styles.inputContainer}
@@ -157,55 +139,26 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                 />
               </View>
               <View style={styles.flexContainer}>
-                <Text
-                  style={{
-                    fontFamily: 'im-hyemin-bold',
-                    fontSize: 27,
-                    marginBottom: 5,
-                    marginRight: '7%',
-                  }}
-                >
-                  ID
-                </Text>
+                <Text style={[styles.text, { marginTop: 6 }]}>ID</Text>
                 <TextInput
                   placeholder="ID를 입력해주세요"
                   style={styles.inputContainer}
                   value={id}
                   onChangeText={(e) => setId(e)}
                 />
-                <View>
-                  <View style={styles.flexContainer}>
-                    <Text
-                      style={{
-                        fontFamily: 'im-hyemin-bold',
-                        fontSize: 27,
-                        marginBottom: 5,
-                        marginRight: '7%',
-                      }}
-                    >
-                      PW
-                    </Text>
-                    <TextInput
-                      placeholder="비밀번호를 입력해주세요"
-                      style={styles.inputContainer}
-                      value={password}
-                      onChangeText={validatePassword}
-                      secureTextEntry={true}
-                    />
-                  </View>
-                </View>
               </View>
               <View style={styles.flexContainer}>
-                <Text
-                  style={{
-                    fontFamily: 'im-hyemin-bold',
-                    fontSize: 27,
-                    marginBottom: 5,
-                    marginRight: '7%',
-                  }}
-                >
-                  PW 확인
-                </Text>
+                <Text style={[styles.text, { marginTop: 6 }]}>PW</Text>
+                <TextInput
+                  placeholder="비밀번호를 입력해주세요"
+                  style={styles.inputContainer}
+                  value={password}
+                  onChangeText={validatePassword}
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 6 }]}>PW 확인</Text>
                 <TextInput
                   placeholder="비밀번호 확인"
                   style={styles.inputContainer}
@@ -217,14 +170,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                 />
               </View>
               <View style={styles.flexContainer}>
-                <Text
-                  style={{
-                    fontFamily: 'im-hyemin-bold',
-                    fontSize: 27,
-                    marginBottom: 5,
-                    marginRight: '7%',
-                  }}
-                >
+                <Text style={[styles.text, { marginTop: 5, marginBottom: 0 }]}>
                   생년월일
                 </Text>
                 <TextInput
@@ -259,17 +205,17 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
   },
-  login: {
-    marginLeft: 240,
-    height: 600,
-    flex: 1,
+  signup: {
+    marginLeft: 215,
+    marginTop: 45,
+    width: 800,
   },
   maxcontainer: {
     flex: 1,
   },
   TopContainer: {
-    paddingLeft: '27%',
-    paddingTop: '14.5%',
+    paddingLeft: '25%',
+    paddingTop: '18%',
     alignContent: 'center',
     justifyContent: 'center',
   },
@@ -278,14 +224,16 @@ const styles = StyleSheet.create({
     marginLeft: 50,
   },
   text: {
-    fontSize: 24,
-    fontWeight: 'bold',
     fontFamily: 'im-hyemin-bold',
+    fontSize: 25,
+    marginRight: '2.2%',
+    width: 100,
+    textAlign: 'right',
   },
   inputContainer: {
     backgroundColor: '#E8E8E8',
     width: '50%',
-    marginTop: 15,
+    marginBottom: 15,
     height: 50,
     paddingLeft: 15,
     borderRadius: 5,
@@ -309,8 +257,7 @@ const styles = StyleSheet.create({
 
   bottomContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '0.8%',
+    marginTop: 5,
   },
 });
 

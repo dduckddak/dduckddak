@@ -15,9 +15,11 @@ import {
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
+
 type Props = {
   navigation: NavigationProp<any>;
 };
+
 const Login: React.FC<Props> = ({ navigation }) => {
   const [userId, setUserId] = useState<string>('');
   const [id, setId] = useState('');
@@ -61,6 +63,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
           <View style={[StyleSheet.absoluteFill]}>
             <View style={styles.TopContainer}>
               <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 34 }]}>ID</Text>
                 <TextInput
                   placeholder="아이디를 입력해주세요"
                   style={styles.inputContainer}
@@ -69,16 +72,22 @@ const Login: React.FC<Props> = ({ navigation }) => {
                   accessibilityLabel="아이디 입력"
                 />
               </View>
-              <TextInput
-                placeholder="비밀번호를 입력해주세요"
-                style={styles.inputContainer}
-                value={password}
-                onChangeText={(e) => validatePassword(e)}
-                secureTextEntry={true}
-              />
+              <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 34 }]}>PW</Text>
+                <TextInput
+                  placeholder="비밀번호를 입력해주세요"
+                  style={styles.inputContainer}
+                  value={password}
+                  onChangeText={(e) => setPassword(e)}
+                  secureTextEntry={true}
+                />
+              </View>
             </View>
             <View style={styles.middleContainer}>
-              <TouchableOpacity onPress={() => navigation.navigate('signup')}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('signup')}
+                activeOpacity={0.5}
+              >
                 <Text>회원가입</Text>
               </TouchableOpacity>
               <Text>|</Text>
@@ -107,30 +116,34 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   login: {
-    marginTop: 30,
+    marginTop: 90,
     marginLeft: 330,
   },
   container: {
     flex: 1,
   },
   text: {
-    fontSize: 24,
-    fontWeight: 'bold',
     fontFamily: 'im-hyemin-bold',
+    fontSize: 25,
+    marginRight: '2.2%',
+    width: 100,
+    textAlign: 'right',
   },
   inputContainer: {
     backgroundColor: '#E8E8E8',
-    width: '50%',
+    width: '42.5%',
     marginTop: 20,
     height: 60,
     paddingLeft: 20,
+    borderRadius: 5,
   },
   inputText: {
     fontSize: 16,
   },
   TopContainer: {
-    paddingLeft: '37%',
-    paddingTop: '15%',
+    paddingLeft: '27%',
+    fontSize: 24,
+    paddingTop: '20%',
     alignContent: 'center',
     justifyContent: 'center',
   },

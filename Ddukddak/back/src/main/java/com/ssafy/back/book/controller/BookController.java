@@ -3,10 +3,12 @@ package com.ssafy.back.book.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
+import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
 import com.ssafy.back.book.service.BookService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,4 +40,14 @@ public class BookController {
 		return bookService.listBookRecommend();
 	}
 
+	@Operation(
+		summary = "책 검색 목록",
+		description = "검색 키워드를 포함한 책 제목을 가진 리스트를 가져온다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation =  ListBookSearchResponseDto.class))),
+	})
+	@GetMapping("/search/{keyword}")
+	public ResponseEntity<? super ListBookSearchResponseDto> searchBook(@PathVariable String keyword) { return bookService.listBookSearch(keyword);}
 }

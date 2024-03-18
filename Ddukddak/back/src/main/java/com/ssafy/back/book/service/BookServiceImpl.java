@@ -19,9 +19,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.back.book.dto.BookSummarylDto;
+import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
+import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.book.repository.ReviewRepository;
 import com.ssafy.back.common.ResponseDto;
@@ -44,6 +45,24 @@ public class BookServiceImpl implements BookService{
 	private final AmazonS3 amazonS3;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
+
+	@Override
+	public ResponseEntity<? super ListBookSearchResponseDto> listBookSearch(String keyword) {
+		try{
+			List<BookSummaryDto> bookList = bookRepository.findByTitleContains(keyword).stream().map(bookDetail -> {
+				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
+				bookDetail.setCoverImage(imageUrl);
+				return bookDetail;
+			}).toList();
+			logger.info("책 검색 목록 : " + bookList);
+			return ListBookSearchResponseDto.success(bookList);
+
+		}catch (Exception e){
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
 
 	@Override
 	public ResponseEntity<? super ListBookRecommendResponseDto> listBookRecommend() {
@@ -90,7 +109,7 @@ public class BookServiceImpl implements BookService{
 			// 응답 처리
 			logger.info("fast api 응답 : " + response.getBody());
 
-			List<BookSummarylDto> bookList = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
+			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
 				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
 				bookDetail.setCoverImage(imageUrl);
 				return bookDetail;
@@ -100,7 +119,7 @@ public class BookServiceImpl implements BookService{
 			return ListBookRecommendResponseDto.success(bookList);
 		}catch (Exception e){
 			logger.error(ResponseMessage.DATABASE_ERROR);
-			logger.error("Database error.", e);
+			logger.error(e);
 			return ResponseDto.databaseError();
 		}
 	}

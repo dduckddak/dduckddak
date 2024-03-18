@@ -1,7 +1,5 @@
 package com.ssafy.back.book.dto;
 
-import com.ssafy.back.entity.BookEntity;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BookDto {
+public class BookDetailDto {
 	private Integer bookId;
 	private String bookTitle;
-	private String bookAuthor;
-	private String bookStory;
+	private String coverImage;
+
+	public BookDetailDto(Integer bookId, String bookTitle) {
+		this.bookId = bookId;
+		this.bookTitle = bookTitle;
+	}
 }

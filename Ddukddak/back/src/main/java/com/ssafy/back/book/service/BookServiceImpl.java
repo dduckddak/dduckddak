@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,16 +15,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.back.book.dto.BookDto;
+import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.book.repository.ReviewRepository;
+import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.BookEntity;
+import com.ssafy.back.util.MakeKeyUtil;
 import com.ssafy.back.voice.service.VoiceServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -38,9 +42,12 @@ public class BookServiceImpl implements BookService{
 	private final RestTemplate restTemplate; // RestTemplate 주입
 	// ObjectMapper 선언
 	private final ObjectMapper objectMapper;
+	private final AmazonS3 amazonS3;
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
 
 	@Override
-	public ResponseEntity<ListBookRecommendResponseDto> listBookRecommend() {
+	public ResponseEntity<? super ListBookRecommendResponseDto> listBookRecommend() {
 		//테스트 코드
 		int userSeq = 1;
 		try{
@@ -83,21 +90,19 @@ public class BookServiceImpl implements BookService{
 
 			// 응답 처리
 			logger.info("fast api 응답 : " + response.getBody());
-			List<BookEntity> bookEntities = bookRepository.findAllById(bookIds);
-			// BookEntity 목록을 BookDto 목록으로 변환
-			List<BookDto> books = bookEntities.stream().map(entity -> new BookDto(
-				entity.getBookId(),
-				entity.getBookTitle(),
-				entity.getBookAuthor(),
-				entity.getBookStory()
-			)).collect(Collectors.toList());
+
+			List<BookDetailDto> books = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
+				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
+				bookDetail.setCoverImage(imageUrl);
+				return bookDetail;
+			}).collect(Collectors.toList());
 			logger.info("추천 책 목록 : " + books);
 
 			return ListBookRecommendResponseDto.success(books);
 		}catch (Exception e){
 			logger.error(ResponseMessage.DATABASE_ERROR);
 			logger.error("Database error.", e);
+			return ResponseDto.databaseError();
 		}
-		return null;
 	}
 }

@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.data.repository.query.Param;
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.entity.BookEntity;
 
-import io.lettuce.core.dynamic.annotation.Param;
 
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Integer> {

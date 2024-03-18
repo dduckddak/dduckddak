@@ -126,6 +126,7 @@ export default function App() {
         <Stack.Screen
           name="MainCharacterScreen"
           component={MainCharacterScreen}
+          options={{ headerRight: LogoRight }}
         />
 
         {/* ------------------------ 책 상세 페이지 ------------------------ */}
@@ -161,14 +162,30 @@ export default function App() {
         />
 
         {/* ------------------------ 사진뚝딱 페이지 ------------------------ */}
-        <Stack.Screen name="picture" component={PictureScreen} />
+        <Stack.Screen
+          name="picture"
+          component={PictureScreen}
+          options={{ headerRight: LogoRight }}
+        />
 
         {/* ------------------------ 소리뚝딱 페이지 ------------------------ */}
-        <Stack.Screen name="voice" component={VoiceScreen} />
+        <Stack.Screen
+          name="voice"
+          component={VoiceScreen}
+          options={{ headerRight: LogoRight }}
+        />
 
         {/* ------------------------ 내가만든책 페이지 ------------------------ */}
-        <Stack.Screen name="mybook" component={MyCreateBookScreen} />
+        <Stack.Screen
+          name="mybook"
+          component={MyCreateBookScreen}
+          options={{ headerRight: LogoRight }}
+        />
+
+        {/* ------------------------ 소리추가 페이지 ------------------------ */}
         <Stack.Screen name="addvoice" component={AddVoiceScreen} />
+
+        {/* ------------------------ 녹음 페이지 ------------------------ */}
         <Stack.Screen name="record" component={RecordScreen} />
       </Stack.Navigator>
     </NavigationContainer>

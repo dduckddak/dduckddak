@@ -29,10 +29,10 @@ public class BookEntity {
 	@Column(name = "book_id", nullable = false)
 	private Integer bookId;
 
-	@Column(name = "book_title", nullable = false, length = 20)
+	@Column(name = "book_title", nullable = false, length = 30)
 	private String bookTitle;
 
-	@Column(name = "book_author", nullable = false, length = 10)
+	@Column(name = "book_author", nullable = false, length = 30)
 	private String bookAuthor;
 
 	@Column(name = "book_story", columnDefinition = "TEXT", nullable = false)

@@ -67,19 +67,19 @@ public class BookServiceImpl implements BookService{
 			headers.setContentType(MediaType.APPLICATION_JSON);
 
 			// HttpEntity 생성
-			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestMap, headers);
+			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(requestMap, headers);
 
 			// FastAPI 엔드포인트 URL
 			String url = "http://localhost:8000/api/v1/k/recommendations/";
 
 			// POST 요청 보내기
-			ResponseEntity<String> response = restTemplate.postForEntity(url, entity, String.class);
+			ResponseEntity<String> response = restTemplate.postForEntity(url, httpEntity, String.class);
 
 			// 응답 처리
 			logger.info("fast api 응답 : " + response.getBody());
 			// FastAPI로부터 받은 응답을 List<Integer>로 파싱
 			List<Integer> bookIds = objectMapper.readValue(response.getBody(), new TypeReference<List<Integer>>() {});
-			List<BookEntity> bookEntities = bookRepository.findByIdIn(bookIds);
+			List<BookEntity> bookEntities = bookRepository.findByBookIdIn(bookIds);
 			// BookEntity 목록을 BookDto 목록으로 변환
 			List<BookDto> books = bookEntities.stream().map(entity -> new BookDto(
 				entity.getBookId(),

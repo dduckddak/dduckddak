@@ -12,6 +12,7 @@ import com.ssafy.back.voice.dto.VoiceDto;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
-	@Query("select new com.ssafy.back.book.dto.ReviewDto(r.bookId, r.isLike) from ReviewEntity r where r.userEntity.userSeq=:userSeq")
+	// @Query("select new com.ssafy.back.book.dto.ReviewDto(r.bookId, r.isLike) from ReviewEntity r where r.userEntity.userSeq=:userSeq")
+	@Query("select new com.ssafy.back.book.dto.ReviewDto(r.bookEntity.bookId, r.isLike) from ReviewEntity r where r.userEntity.userSeq = :userSeq")
 	List<ReviewDto> findByUserEntity_UserSeq(Integer userSeq);
 }

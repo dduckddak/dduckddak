@@ -10,5 +10,5 @@ import com.ssafy.back.entity.BookEntity;
 
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Integer> {
-	List<BookEntity> findByIdIn(List<Integer> bookIds);
+	List<BookEntity> findByBookIdIn(List<Integer> bookIds);
 }

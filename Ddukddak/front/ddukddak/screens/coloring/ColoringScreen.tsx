@@ -87,20 +87,17 @@ const styles = StyleSheet.create({
     width: Dimensions.get('screen').width * 0.15,
     marginTop:
       Dimensions.get('screen').height * 0.04,
-  }
-  ,
+  },
 
   imageContainer: {
     flex: 1,
     flexDirection: 'column',
     marginVertical: 15,
-
-    // 이미지 컨테이너의 크기 조정이 필요하다면 여기서 조정하세요.
   },
 
   image: {
-    width: Dimensions.get('screen').width / 6, // 정사각형 이미지 유지, 마진 고려
-    height: Dimensions.get('screen').width / 6, // 정사각형 이미지 유지, 마진 고려
+    width: Dimensions.get('screen').width / 6,
+    height: Dimensions.get('screen').width / 6,
     resizeMode: 'cover',
     alignSelf: 'center',
 

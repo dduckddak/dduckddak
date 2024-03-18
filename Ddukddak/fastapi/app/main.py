@@ -14,7 +14,7 @@ class UserPreferences(BaseModel):
 async def test():
     return "test"
 
-@app.post("/api/v1/k/recommendations/")
+@app.post("/api/v1/f/recommendations/")
 async def create_recommendation(preferences: UserPreferences):
     recommendations = get_recommendations(preferences.likes, preferences.dislikes, top_n=7)
     return {"recommendations": recommendations}

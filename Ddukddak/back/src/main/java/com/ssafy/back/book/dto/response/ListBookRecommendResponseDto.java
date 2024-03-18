@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.ssafy.back.book.dto.BookDetailDto;
+import com.ssafy.back.book.dto.BookSummarylDto;
 import com.ssafy.back.common.ResponseDto;
 
 import lombok.AllArgsConstructor;
@@ -18,8 +18,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ListBookRecommendResponseDto extends ResponseDto {
-	private List<BookDetailDto> bookList;
-	public static ResponseEntity<ListBookRecommendResponseDto> success(List<BookDetailDto> bookList) {
+	private List<BookSummarylDto> bookList;
+	public static ResponseEntity<ListBookRecommendResponseDto> success(List<BookSummarylDto> bookList) {
 		ListBookRecommendResponseDto responseBody = new ListBookRecommendResponseDto(bookList);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}

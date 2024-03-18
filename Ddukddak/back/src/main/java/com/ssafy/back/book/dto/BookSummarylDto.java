@@ -11,12 +11,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BookDetailDto {
+public class BookSummarylDto {
 	private Integer bookId;
 	private String bookTitle;
 	private String coverImage;
 
-	public BookDetailDto(Integer bookId, String bookTitle) {
+	public BookSummarylDto(Integer bookId, String bookTitle) {
 		this.bookId = bookId;
 		this.bookTitle = bookTitle;
 	}

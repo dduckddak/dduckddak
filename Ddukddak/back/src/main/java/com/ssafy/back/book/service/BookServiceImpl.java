@@ -19,14 +19,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.back.book.dto.BookDetailDto;
+import com.ssafy.back.book.dto.BookSummarylDto;
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.book.repository.ReviewRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
-import com.ssafy.back.entity.BookEntity;
 import com.ssafy.back.util.MakeKeyUtil;
 import com.ssafy.back.voice.service.VoiceServiceImpl;
 
@@ -91,14 +90,14 @@ public class BookServiceImpl implements BookService{
 			// 응답 처리
 			logger.info("fast api 응답 : " + response.getBody());
 
-			List<BookDetailDto> books = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
+			List<BookSummarylDto> bookList = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
 				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
 				bookDetail.setCoverImage(imageUrl);
 				return bookDetail;
 			}).collect(Collectors.toList());
-			logger.info("추천 책 목록 : " + books);
+			logger.info("추천 책 목록 : " + bookList);
 
-			return ListBookRecommendResponseDto.success(books);
+			return ListBookRecommendResponseDto.success(bookList);
 		}catch (Exception e){
 			logger.error(ResponseMessage.DATABASE_ERROR);
 			logger.error("Database error.", e);

@@ -16,46 +16,43 @@ interface ColoringListScreenProps {
 
 
 const images = [{
-  source: require('../../assets/images/splash.png'),
+  source: require('../../assets/images/coloring/yes_0.jpg'),
   id: '1',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_7.jpg'),
     id: '2',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_13.jpg'),
     id: '3',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_14.jpg'),
     id: '4',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_18.jpg'),
     id: '5',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_20.jpg'),
     id: '6',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_2.jpg'),
     id: '7',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_7.jpg'),
     id: '8',
   },
   {
-    source: require('../../assets/images/splash.png'),
+    source: require('../../assets/images/coloring/yes_17.jpg'),
     id: '9',
   },
 ];
 
-interface Item {
-  item: ImageSourcePropType;
-}
 
 const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
                                                                  navigation,
@@ -68,11 +65,8 @@ const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
       style={styles.imageBackground}
     >
 
-      <SketchbookList images={images}>
+      <SketchbookList images={images} navigation={navigation}>
       </SketchbookList>
-
-
-
 
     </ImageBackground>
   );

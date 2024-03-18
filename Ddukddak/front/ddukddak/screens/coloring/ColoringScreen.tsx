@@ -105,8 +105,6 @@ const styles = StyleSheet.create({
   flatListContentContainer: {
     justifyContent: 'center',
     flexGrow: 1,
-
-
   },
   flatList: {
     width: '100%',

@@ -1,14 +1,15 @@
 import React from 'react';
 import { View, Image, ImageSourcePropType, StyleSheet, Dimensions } from 'react-native';
+import GreenButton from './GreenButton';
 
-
-type MyImage = {
+type SketchImage = {
   source: ImageSourcePropType;
   id: string;
 };
 
+
 interface SketchbookDetailProps {
-  image: MyImage;
+  image: SketchImage;
 }
 
 const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image }) => (
@@ -18,6 +19,11 @@ const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image }) => (
         <Image source={image.source} style={styles.imageStyle} />
       </View>
     </View>
+    <GreenButton
+      content="삭제하기"
+      style={styles.naviBtn}
+     onPress={() => console.log(image.id)}/>
+
 
     <Image
       source={require('../assets/images/sketchbookheader.png')}
@@ -35,7 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
-    height: '75%',
+    height: '80%',
     backgroundColor: 'white',
     borderRadius: 10,
     overflow: 'hidden',
@@ -43,12 +49,12 @@ const styles = StyleSheet.create({
     borderColor: 'black',
   },
   imagesContainer: {
-    width: '95%',
+    width: '80%',
     height: '90%',
   },
   header: {
     position: 'absolute',
-    top: '5%',
+    top: '-7%',
     width: '90%',
     height: 150,
     resizeMode: 'stretch',
@@ -56,8 +62,13 @@ const styles = StyleSheet.create({
   imageStyle: {
     width: '60%',
     height: '100%',
-    resizeMode: 'cover',
+    resizeMode: 'contain',
     alignSelf: 'center',
+  },
+  naviBtn: {
+    width: Dimensions.get('screen').width * 0.15,
+    marginTop:
+      Dimensions.get('screen').height * 0.04,
   },
 });
 

@@ -2,28 +2,33 @@ import React from 'react';
 import {
   View,
   StyleSheet,
-  ImageBackground, Image, FlatList, ImageSourcePropType, Dimensions,
+  ImageBackground, FlatList, ImageSourcePropType, Dimensions,
 } from 'react-native';
 
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import SketchbookDetail from '../../components/SketchbookDetail';
-import GreenButton from '../../components/GreenButton';
 
+
+
+type SketchImage = {
+  source: ImageSourcePropType;
+  id: string;
+};
+
+type ParamListBase = {
+  coloringDetail: SketchImage;
+};
 
 interface ColoringDetailScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
 
-const image = {
-  source: require('../../assets/images/splash.png'),
-  id: '1',
-};
-
-
 const ColoringDetailScreen: React.FC<ColoringDetailScreenProps> = ({
                                                                      navigation,
                                                                    }) => {
+  const route = useRoute<RouteProp<ParamListBase, 'coloringDetail'>>();
+  const image = route.params;
 
   return (
     <ImageBackground

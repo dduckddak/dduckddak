@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Image, ImageSourcePropType, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, ImageSourcePropType, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import GreenButton from './GreenButton';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-const windowWidth = Dimensions.get('window').width;
+// const windowWidth = Dimensions.get('window').width;
 
 type Images = {
   source: ImageSourcePropType;
@@ -10,28 +12,54 @@ type Images = {
 
 interface SketchbookProps {
   images: Images;
+  navigation: NavigationProp<ParamListBase>;
 }
 
-const SketchbookList: React.FC<SketchbookProps> = ({ images }) => (
-  <View style={styles.container}>
-    <View style={styles.innerContainer}>
-      <View style={styles.imagesContainer}>
-        {images.map(({ source, id }) => (
-          <View style={styles.gridItem} key={id}>
-            <Image source={source} style={styles.gridImage} />
-          </View>
-        ))}
-      </View>
-    </View>
 
-    <Image
-      source={require('../assets/images/sketchbookheader.png')}
-      style={styles.header} />
-  </View>
-);
+
+
+const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
+  const handlePress = (item: { source: ImageSourcePropType; id: string; }) => {
+    console.log(item.id); // 아이디가 콘솔에 출력됩니다
+    navigation.navigate('coloringDetail', item); // 이동
+  };
+
+
+  const renderItem = ({ item }: { item: { source: ImageSourcePropType; id: string; } }) => (
+    <TouchableOpacity style={styles.imageContainer} onPress={() => handlePress(item)}>
+      <Image source={item.source} style={styles.image} />
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <FlatList
+          style={styles.flatList}
+          data={images}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={4}
+          contentContainerStyle={styles.flatListContentContainer}
+        />
+      </View>
+      <GreenButton
+        onPress={() => navigation.navigate('coloring')}
+        content="색칠하러 가기"
+        style={styles.naviBtn}
+      />
+
+      <Image
+        source={require('../assets/images/sketchbookheader.png')}
+        style={styles.header} />
+    </View>
+  );
+};
+
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 30,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -56,24 +84,37 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
 
   },
-  gridItem: {
-    width: '25%',
-    height: '49%',
-    padding: '1%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  gridImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+  imageContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    marginVertical: 15,
   },
   header: {
     position: 'absolute',
-    top: '5%',
+    top: '0%',
     width: '90%',
     height: 150,
     resizeMode: 'stretch',
+  },
+  flatList: {
+    width: '100%',
+    height: '100%',
+  },
+  flatListContentContainer: {
+    justifyContent: 'center',
+    flexGrow: 1,
+  },
+  image: {
+    width: Dimensions.get('screen').width / 6,
+    height: Dimensions.get('screen').width / 6,
+    resizeMode: 'cover',
+    alignSelf: 'center',
+
+  },
+  naviBtn: {
+    width: Dimensions.get('screen').width * 0.15,
+    marginTop:
+      Dimensions.get('screen').height * 0.04,
   },
 });
 

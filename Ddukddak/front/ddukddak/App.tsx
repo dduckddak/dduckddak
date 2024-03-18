@@ -1,10 +1,7 @@
 import { useFonts } from 'expo-font';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import GreenButton from './components/GreenButton';
-import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
-import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
-// import { StatusBar } from 'expo-status-bar';
 import {
   Button,
   Image,
@@ -24,10 +21,18 @@ import {
 } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import MainRending from './screens/MainRending';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
+
+import MainScreen from './screens/Welcome/MainScreen';
+import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
+import DetailBookScreen from './screens/maincharacter/DetailBookScreen';
+import TalkSceren from './screens/maincharacter/TalkScreen';
+import FairytaleScreen from './screens/maincharacter/FairytaleScreen';
 import Login from './screens/Welcome/Login';
 import Signup from './screens/Welcome/Signup';
-import RendingTwo from './screens/Rending/RendingTwo';
+import PictureScreen from './screens/picture/PictureScreen';
+import VoiceScreen from './screens/voice/VoiceScreen';
+import MyCreateBookScreen from './screens/maincharacter/MyCreateBookScreen';
 
 function LogoTitle() {
   return (
@@ -55,65 +60,25 @@ function LogoRight() {
   );
 }
 
-interface HomeScreenProps {
-  navigation: NavigationProp<ParamListBase>;
-}
-
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const handlePress = () => {
-    console.log('버튼 눌러짐!');
-    setModalVisible(true);
-  };
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 10,
-      }}
-    >
-      <Text>Home Screen</Text>
-      <GreenButton onPress={handlePress} content="나버튼" />
-      <Button
-        title="Go"
-        onPress={() => navigation.navigate('MainCharacterScreen')}
-      />
-      <GreenButton
-        onPress={handlePress}
-        content="초록버튼"
-        style={{ width: 200, height: 80 }}
-      />
-      <Button
-        title="랜딩페이지"
-        onPress={() => navigation.navigate('mainrending')}
-      />
-      <Button title="로그인" onPress={() => navigation.navigate('login')} />
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={closeModal}
-      >
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <View style={{ backgroundColor: 'white', padding: 20 }}>
-            <Text>나 모달이야</Text>
-            <Button title="Close" onPress={closeModal} />
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
+// 페이지 만들고 props가 없으면 undefined로 있으면 값에 맞게 적어주기
+// 아니면 에러는 안나지만 타입 빨간줄 뜹니다
+export type RootStackParamList = {
+  home: undefined;
+  detail: { bookId: string };
+  MainCharacterScreen: undefined;
+  talk: undefined;
+  fairy: undefined;
+  mainrending: undefined;
+  login: undefined;
+  signup: undefined;
+  picture: undefined;
+  voice: undefined;
+  mybook: undefined;
 };
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -122,9 +87,16 @@ export default function App() {
     'im-hyemin-bold': require('./assets/fonts/IM_Hyemin-Bold.ttf'),
   });
 
+  useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return null;
   }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -140,7 +112,7 @@ export default function App() {
         {/* ------------------------ 제일 첫 화면 ------------------------ */}
         <Stack.Screen
           name="home"
-          component={HomeScreen}
+          component={MainScreen}
           options={{
             headerTitle: LogoTitle, // 가운데 로고부분
           }}
@@ -168,13 +140,30 @@ export default function App() {
         />
 
         {/* ------------------------ 회원가입 페이지 ------------------------ */}
+        <Stack.Screen name="signup" component={Signup} />
+
+        {/* ------------------------ 뚝딱대화 페이지 ------------------------ */}
         <Stack.Screen
-          name="signup"
-          component={Signup}
-          options={{
-            headerRight: LogoRight,
-          }}
+          name="talk"
+          component={TalkSceren}
+          options={{ headerShown: false }}
         />
+
+        {/* ------------------------ 동화뚝딱 페이지 ------------------------ */}
+        <Stack.Screen
+          name="fairy"
+          component={FairytaleScreen}
+          options={{ headerShown: false }}
+        />
+
+        {/* ------------------------ 사진뚝딱 페이지 ------------------------ */}
+        <Stack.Screen name="picture" component={PictureScreen} />
+
+        {/* ------------------------ 소리뚝딱 페이지 ------------------------ */}
+        <Stack.Screen name="voice" component={VoiceScreen} />
+
+        {/* ------------------------ 내가만든책 페이지 ------------------------ */}
+        <Stack.Screen name="mybook" component={MyCreateBookScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

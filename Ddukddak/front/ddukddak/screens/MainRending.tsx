@@ -73,6 +73,11 @@ const MainRending: React.FC = () => {
 
     return startAnimations();
   }, [currentStep]);
+
+  const SkipToPage5 = () => {
+    setCurrentStep(5);
+  };
+
   const RendingPages = () => {
     switch (currentStep) {
       case 1:
@@ -131,9 +136,21 @@ const MainRending: React.FC = () => {
             <View>
               <Text style={{ fontSize: 40 }}></Text>
               <View>
-                <Image source={require('../assets/images/뚝이2.png')} />
+                <Image
+                  source={require('../assets/images/뚝이2.png')}
+                  style={styles.rendingtwo}
+                />
+                <View style={styles.box}>
+                  <Image
+                    source={require('../assets/images/이미지.png')}
+                    style={styles.rendingtwo}
+                  />
+                </View>
               </View>
             </View>
+            <TouchableOpacity onPress={SkipToPage5} style={styles.skipButton}>
+              <Text style={styles.skipText}>Skip</Text>
+            </TouchableOpacity>
           </ImageBackground>
         );
       case 3:
@@ -145,9 +162,15 @@ const MainRending: React.FC = () => {
             <View>
               <Text style={{ fontSize: 40 }}></Text>
               <View>
-                <Image source={require('../assets/images/뚝이2.png')} />
+                <Image
+                  source={require('../assets/images/뚝이2.png')}
+                  style={styles.rendingthree}
+                />
               </View>
             </View>
+            <TouchableOpacity onPress={SkipToPage5} style={styles.skipButton}>
+              <Text style={styles.skipText}>Skip</Text>
+            </TouchableOpacity>
           </ImageBackground>
         );
       case 4:
@@ -157,7 +180,10 @@ const MainRending: React.FC = () => {
             style={styles.imageBackground}
           >
             <View>
-              <Image source={require('../assets/images/뚝이2.png')} />
+              <Image
+                source={require('../assets/images/뚝이2.png')}
+                style={styles.rendingfour}
+              />
             </View>
           </ImageBackground>
         );
@@ -224,6 +250,41 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     position: 'absolute',
+  },
+  box: {
+    borderColor: 'white', // 선 색상을 흰색으로 설정
+    borderWidth: 2,
+    width: 200,
+    height: 150,
+  },
+  rendingtwo: {
+    marginTop: '24%',
+    transform: [{ rotateZ: '-10deg' }],
+    marginLeft: '5%',
+  },
+  rendingthree: {
+    marginTop: '4%',
+    marginLeft: '5%',
+  },
+  rendingfour: {
+    marginTop: '31%',
+    transform: [
+      { scaleX: -1 }, // 좌우 반전
+      { rotateZ: '-10deg' },
+    ],
+    marginLeft: '60%',
+  },
+  skipButton: {
+    position: 'absolute',
+    top: 20, // 버튼의 위치를 조정하세요
+    right: 20, // 버튼의 위치를 조정하세요
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 버튼의 배경색
+    padding: 10,
+    borderRadius: 5,
+  },
+  skipText: {
+    color: 'white', // 버튼 텍스트의 색상
+    fontSize: 16, // 버튼 텍스트의 크기
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { books } from './MainCharacterScreen';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
+import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -26,6 +27,19 @@ interface DetailBookScreenProps {
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const bookid = route.params.bookId;
   const selectedBook = books.find((book) => book.id === parseInt(bookid));
+
+  const [isHappySelected, setIsHappySelected] = useState(false);
+  const [isSadSelected, setIsSadSelected] = useState(false);
+
+  const handleHappyPress = () => {
+    setIsHappySelected((prev) => !prev);
+    setIsSadSelected(false);
+  };
+
+  const handleSadPress = () => {
+    setIsSadSelected((prev) => !prev);
+    setIsHappySelected(false);
+  };
 
   return (
     <ImageBackground
@@ -42,8 +56,28 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>
-                <Button title="좋아요" />
-                <Button title="싫어요" />
+                <TouchableOpacity
+                  onPress={handleHappyPress}
+                  style={styles.buttonStyle}
+                >
+                  <FontAwesome5
+                    name="smile"
+                    size={50}
+                    color={isHappySelected ? 'green' : 'black'}
+                  />
+                  <Text style={styles.text}>재미있어요</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSadPress}
+                  style={styles.buttonStyle}
+                >
+                  <Entypo
+                    name="emoji-sad"
+                    size={50}
+                    color={isSadSelected ? 'red' : 'black'}
+                  />
+                  <Text style={styles.text}>재미없어요</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -101,8 +135,20 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    textAlign: 'center',
+    justifyContent: 'center',
     width: '70%',
+    gap: 20,
+  },
+  buttonStyle: {
+    flexDirection: 'row',
+    borderWidth: 3,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: 'im-hyemin-bold',
   },
   detailText: {
     fontSize: 40,
@@ -149,7 +195,7 @@ const styles = StyleSheet.create({
   },
   coverImage: {
     width: '80%',
-    height: '90%',
+    height: '80%',
     resizeMode: 'contain',
   },
 });

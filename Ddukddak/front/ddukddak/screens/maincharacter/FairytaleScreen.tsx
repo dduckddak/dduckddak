@@ -15,17 +15,21 @@ import { NavigationProp } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../../components/GreenButton';
 import SkyButton from '../../components/SkyButton';
+import CreationModal from '../../components/createBook/renderCreationModal';
 
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
-    redHood: { photo: null, voice: null },
-    wolf: { photo: null, voice: null },
+    main: { photo: null, voice: null },
+    roles: { photo: null, voice: null },
     narration: { voice: null },
     bookName: '',
   });
 
+  // 나갈때 모달
   const [modalVisible, setModalVisible] = useState(false);
+  // 다 만들었을때 모달
+  const [creationModalVisible, setCreationModalVisible] = useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -48,11 +52,11 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   };
 
   const pickImage = async () => {
-    // 이미지 선택 로직
+    navigation.navigate('picture');
   };
 
   const recordVoice = async () => {
-    // 오디오 녹음 로직
+    navigation.navigate('voice');
   };
 
   const handleNextStep = () => {
@@ -61,40 +65,36 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     } else {
       // 여기서 데이터를 서버에 POST 요청
       console.log('Send data to server:', data);
+      setCreationModalVisible(true);
     }
   };
 
-  // 이전 단계로
   const handlePreviousStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
 
+  const buttonComponent = ({ role }: any) => {
+    return (
+      <View style={styles.buttoncontainer}>
+        <Pressable style={styles.button} onPress={pickImage}>
+          <Text style={styles.textcenter}> {role} 얼굴 찾아주기</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={recordVoice}>
+          <Text style={styles.textcenter}>{role} 소리 찾아주기</Text>
+        </Pressable>
+      </View>
+    );
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return (
-          <View style={styles.buttoncontainer}>
-            <Pressable style={styles.button} onPress={pickImage}>
-              <Text style={styles.textcenter}>주인공 얼굴 찾아주기</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={recordVoice}>
-              <Text style={styles.textcenter}>주인공 소리 찾아주기</Text>
-            </Pressable>
-          </View>
-        );
+        return buttonComponent({ role: '주인공' });
+
       case 2:
-        return (
-          <View style={styles.buttoncontainer}>
-            <Pressable style={styles.button} onPress={pickImage}>
-              <Text style={styles.textcenter}>역할 얼굴 찾아주기</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={recordVoice}>
-              <Text style={styles.textcenter}>역할 소리 찾아주기</Text>
-            </Pressable>
-          </View>
-        );
+        return buttonComponent({ role: '역할1' });
       case 3:
         return (
           <View>
@@ -105,11 +105,32 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         );
       case 4:
         return (
-          <View>
-            <TextInput
-              placeholder="책 이름 입력"
-              onChangeText={(text) => setData({ ...data, bookName: text })}
-            />
+          <View style={styles.stepFourContainer}>
+            <View>
+              <TextInput
+                style={styles.textInputStyle}
+                placeholder="책 이름 입력"
+                onChangeText={(text) => setData({ ...data, bookName: text })}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  gap: 10,
+                }}
+              >
+                <GreenButton
+                  onPress={handlePreviousStep}
+                  content="이전"
+                  style={{ width: 100, height: 80, marginTop: 10 }}
+                />
+                <GreenButton
+                  onPress={handleNextStep}
+                  content="나만의 동화 만들기"
+                  style={{ width: 250, height: 80, marginTop: 10 }}
+                />
+              </View>
+            </View>
           </View>
         );
       default:
@@ -128,19 +149,25 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}
         >
           {renderStep()}
+          <CreationModal
+            creationModalVisible={creationModalVisible}
+            setCreationModalVisible={setCreationModalVisible}
+          />
           <View style={{ flexDirection: 'row', gap: 20 }}>
-            {currentStep > 1 && (
+            {currentStep > 1 && currentStep < 4 && (
               <GreenButton
                 onPress={handlePreviousStep}
                 content="이전"
                 style={{ width: 100, height: 80, marginTop: 10 }}
               />
             )}
-            <GreenButton
-              onPress={handleNextStep}
-              content="다 찾았어요"
-              style={{ width: 250, height: 80, marginTop: 10 }}
-            />
+            {currentStep < 4 && (
+              <GreenButton
+                onPress={handleNextStep}
+                content="다 찾았어요"
+                style={{ width: 250, height: 80, marginTop: 10 }}
+              />
+            )}
           </View>
         </View>
       </ImageBackground>
@@ -230,5 +257,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 20,
+  },
+  stepFourContainer: {
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    height: 300,
+    marginHorizontal: 30,
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: 'rgba(183, 227, 153, 0.66)',
+    borderRadius: 15,
+  },
+  textInputStyle: {
+    borderBottomColor: '#519657',
+    borderBottomWidth: 2,
+    width: '100%',
+    padding: 10,
+    marginBottom: 20,
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 18,
   },
 });

@@ -20,6 +20,8 @@ import Signup from './screens/Welcome/Signup';
 import PictureScreen from './screens/picture/PictureScreen';
 import VoiceScreen from './screens/voice/VoiceScreen';
 import MyCreateBookScreen from './screens/maincharacter/MyCreateBookScreen';
+import AddVoiceScreen from './screens/voice/AddVoiceScreen';
+import RecordScreen from './screens/voice/RecordScreen';
 
 function LogoTitle() {
   return (
@@ -53,6 +55,8 @@ export type RootStackParamList = {
   picture: undefined;
   voice: undefined;
   mybook: undefined;
+  addvoice: undefined;
+  record: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -116,6 +120,8 @@ export default function App() {
         <Stack.Screen name="picture" component={PictureScreen} />
         <Stack.Screen name="voice" component={VoiceScreen} />
         <Stack.Screen name="mybook" component={MyCreateBookScreen} />
+        <Stack.Screen name="addvoice" component={AddVoiceScreen} />
+        <Stack.Screen name="record" component={RecordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

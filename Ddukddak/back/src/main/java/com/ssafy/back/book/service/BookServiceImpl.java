@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.back.book.dto.BookDto;
 import com.ssafy.back.book.dto.ReviewDto;
@@ -74,12 +75,15 @@ public class BookServiceImpl implements BookService{
 
 			// POST 요청 보내기
 			ResponseEntity<String> response = restTemplate.postForEntity(url, httpEntity, String.class);
+			JsonNode rootNode = objectMapper.readTree(response.getBody());
+			JsonNode recommendationsNode = rootNode.path("recommendations");
+			List<Integer> bookIds = objectMapper.convertValue(recommendationsNode, new TypeReference<List<Integer>>(){});
 
 			// 응답 처리
 			logger.info("fast api 응답 : " + response.getBody());
 			// FastAPI로부터 받은 응답을 List<Integer>로 파싱
-			List<Integer> bookIds = objectMapper.readValue(response.getBody(), new TypeReference<List<Integer>>() {});
-			List<BookEntity> bookEntities = bookRepository.findByBookIdIn(bookIds);
+			// List<Integer> bookIds = objectMapper.readValue(response.getBody(), new TypeReference<List<Integer>>() {});
+			List<BookEntity> bookEntities = bookRepository.findAllById(bookIds);
 			// BookEntity 목록을 BookDto 목록으로 변환
 			List<BookDto> books = bookEntities.stream().map(entity -> new BookDto(
 				entity.getBookId(),
@@ -92,7 +96,7 @@ public class BookServiceImpl implements BookService{
 			return ListBookRecommendResponseDto.success(books);
 		}catch (Exception e){
 			logger.error(ResponseMessage.DATABASE_ERROR);
-			logger.debug(e);
+			logger.error("Database error.", e);
 		}
 		return null;
 	}

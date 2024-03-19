@@ -177,11 +177,7 @@ export default function App() {
           options={{ headerRight: LogoRight }}
         />
         {/* ------------------------ 진짜 책 페이지 ------------------------ */}
-        <Stack.Screen
-          name="makingBook"
-          component={MakingBook}
-          options={{ headerRight: LogoRight }}
-        />
+        <Stack.Screen name="makingBook" component={MakingBook} />
 
         {/* ------------------------ 소리추가 페이지 ------------------------ */}
         <Stack.Screen name="addvoice" component={AddVoiceScreen} />

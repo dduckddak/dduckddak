@@ -52,13 +52,13 @@ public class BookServiceImpl implements BookService{
 	@Override
 	public ResponseEntity<? super ListBookSearchResponseDto> listBookSearch(String keyword) {
 		try{
-			List<BookSummaryDto> bookList = bookRepository.findByTitleContains(keyword).stream().map(bookDetail -> {
+			List<BookSummaryDto> SearchBookList = bookRepository.findByTitleContains(keyword).stream().map(bookDetail -> {
 				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
 				bookDetail.setCoverImage(imageUrl);
 				return bookDetail;
 			}).toList();
-			logger.info("책 검색 목록 : " + bookList);
-			return ListBookSearchResponseDto.success(bookList);
+			logger.info("책 검색 목록 : " + SearchBookList);
+			return ListBookSearchResponseDto.success(SearchBookList);
 
 		}catch (Exception e){
 			logger.error(ResponseMessage.DATABASE_ERROR);
@@ -87,13 +87,13 @@ public class BookServiceImpl implements BookService{
 		//테스트 코드
 		int userSeq = 1;
 		try{
-			List<BookSummaryDto> listBook = bookRepository.findLikedBooksByUserSeq(userSeq).stream().map(bookDetail -> {
+			List<BookSummaryDto> likeBookList = bookRepository.findLikedBooksByUserSeq(userSeq).stream().map(bookDetail -> {
 				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
 				bookDetail.setCoverImage(imageUrl);
 				return bookDetail;
 			}).toList();
-			logger.info("사용자가 좋아요한 책 목록 : " + listBook);
-			return ListBookLikeResponseDto.success(listBook);
+			logger.info("사용자가 좋아요한 책 목록 : " + likeBookList);
+			return ListBookLikeResponseDto.success(likeBookList);
 		}catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);
 			logger.error(e);

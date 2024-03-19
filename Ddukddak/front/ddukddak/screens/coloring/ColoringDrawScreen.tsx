@@ -13,17 +13,18 @@ interface ColoringDrawScreenProps {
 }
 
 const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) => {
-  const [showModal, setShowModal] = useState(false);
-
-  const initialColor = colorKit.randomRgbColor().hex();
-
-  const selectedColor = useSharedValue(initialColor);
-  const backgroundColorStyle = useAnimatedStyle(() => ({ backgroundColor: selectedColor.value }));
-
-  const onColorSelect = (color: returnedResults) => {
-    'worklet';
-    selectedColor.value = color.hex;
-  };
+  // TODO color picker 수정중
+  // const [showModal, setShowModal] = useState(false);
+  //
+  // const initialColor = colorKit.randomRgbColor().hex();
+  //
+  // const selectedColor = useSharedValue(initialColor);
+  // const backgroundColorStyle = useAnimatedStyle(() => ({ backgroundColor: selectedColor.value }));
+  //
+  // const onColorSelect = (color: returnedResults) => {
+  //   'worklet';
+  //   selectedColor.value = color.hex;
+  // };
 
   return (
 
@@ -31,37 +32,37 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
       source={require('../../assets/images/background.png')}
       style={styles.imageBackground}
     >
-      <TouchableOpacity style={styles.paletteButtonContainer} onPress={() => setShowModal(true)}>
-        <Image
-          source={require('../../assets/images/coloring/palette.png')}
-          style={styles.paletteButton}
-        />
-      </TouchableOpacity>
-      <Modal onRequestClose={() => setShowModal(false)} visible={showModal} animationType='slide'>
-        <Animated.View style={[pickerStyles.container, backgroundColorStyle]}>
-          <View style={pickerStyles.pickerContainer}>
-            <ColorPicker
-              value={selectedColor.value}
-              sliderThickness={25}
-              thumbSize={24}
-              thumbShape='circle'
-              onChange={onColorSelect}
-            >
-              <Panel5 style={pickerStyles.panelStyle} />
+      {/*<TouchableOpacity style={styles.paletteButtonContainer} onPress={() => setShowModal(true)}>*/}
+      {/*  <Image*/}
+      {/*    source={require('../../assets/images/coloring/palette.png')}*/}
+      {/*    style={styles.paletteButton}*/}
+      {/*  />*/}
+      {/*</TouchableOpacity>*/}
+      {/*<Modal onRequestClose={() => setShowModal(false)} visible={showModal} animationType='slide'>*/}
+      {/*  <Animated.View style={[pickerStyles.container, backgroundColorStyle]}>*/}
+      {/*    <View style={pickerStyles.pickerContainer}>*/}
+      {/*      <ColorPicker*/}
+      {/*        value={selectedColor.value}*/}
+      {/*        sliderThickness={25}*/}
+      {/*        thumbSize={24}*/}
+      {/*        thumbShape='circle'*/}
+      {/*        onChange={onColorSelect}*/}
+      {/*      >*/}
+      {/*        <Panel5 style={pickerStyles.panelStyle} />*/}
 
-              <OpacitySlider style={pickerStyles.sliderStyle} adaptSpectrum />
+      {/*        <OpacitySlider style={pickerStyles.sliderStyle} adaptSpectrum />*/}
 
-              <View style={pickerStyles.previewTxtContainer}>
-                <PreviewText style={{ color: '#707070' }} colorFormat='hsla' />
-              </View>
-            </ColorPicker>
-          </View>
+      {/*        <View style={pickerStyles.previewTxtContainer}>*/}
+      {/*          <PreviewText style={{ color: '#707070' }} colorFormat='hsla' />*/}
+      {/*        </View>*/}
+      {/*      </ColorPicker>*/}
+      {/*    </View>*/}
 
-          <Pressable style={pickerStyles.closeButton} onPress={() => setShowModal(false)}>
-            <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>
-          </Pressable>
-        </Animated.View>
-      </Modal>
+      {/*    <Pressable style={pickerStyles.closeButton} onPress={() => setShowModal(false)}>*/}
+      {/*      <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>*/}
+      {/*    </Pressable>*/}
+      {/*  </Animated.View>*/}
+      {/*</Modal>*/}
 
 
       <View style={styles.webviewContainer}>

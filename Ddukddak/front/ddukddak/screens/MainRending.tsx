@@ -8,6 +8,7 @@ import {
   Image,
   Animated,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import GreenButton from '../components/GreenButton';
 
@@ -86,6 +87,9 @@ const MainRending: React.FC = () => {
             source={require('../assets/images/Rendering/Rending.png')}
             style={styles.imageBackground}
           >
+            <TouchableOpacity onPress={SkipToPage5} style={styles.skipButton}>
+              <Text style={styles.skipText}>Skip</Text>
+            </TouchableOpacity>
             <View>
               <Text style={{ fontSize: 40 }}> </Text>
               <View>
@@ -136,21 +140,18 @@ const MainRending: React.FC = () => {
             <View>
               <Text style={{ fontSize: 40 }}></Text>
               <View>
+                <View style={styles.box}>
+                  <Image
+                    source={require('../assets/images/Rendering/이미지.png')}
+                    style={styles.centeredImage}
+                  />
+                </View>
                 <Image
                   source={require('../assets/images/DD/뚝이2.png')}
                   style={styles.rendingtwo}
                 />
-                <View style={styles.box}>
-                  <Image
-                    source={require('../assets/images/Rendering/이미지.png')}
-                    style={styles.rendingtwo}
-                  />
-                </View>
               </View>
             </View>
-            <TouchableOpacity onPress={SkipToPage5} style={styles.skipButton}>
-              <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
           </ImageBackground>
         );
       case 3:
@@ -162,15 +163,18 @@ const MainRending: React.FC = () => {
             <View>
               <Text style={{ fontSize: 40 }}></Text>
               <View>
+                <View style={styles.box}>
+                  <Image
+                    source={require('../assets/images/Rendering/이미지3.png')}
+                    style={styles.centeredImage1}
+                  />
+                </View>
                 <Image
                   source={require('../assets/images/DD/뚝이2.png')}
                   style={styles.rendingthree}
                 />
               </View>
             </View>
-            <TouchableOpacity onPress={SkipToPage5} style={styles.skipButton}>
-              <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
           </ImageBackground>
         );
       case 4:
@@ -180,6 +184,12 @@ const MainRending: React.FC = () => {
             style={styles.imageBackground}
           >
             <View>
+              <View style={styles.box}>
+                <Image
+                  source={require('../assets/images/Rendering/이미지4.png')}
+                  style={styles.centeredImage2}
+                />
+              </View>
               <Image
                 source={require('../assets/images/DD/뚝이2.png')}
                 style={styles.rendingfour}
@@ -196,6 +206,15 @@ const MainRending: React.FC = () => {
             <View>
               <Image source={require('../assets/images/DD/뚝이2.png')} />
             </View>
+            <View style={styles.buttonStyle}>
+              <GreenButton
+                content="로그인"
+                onPress={() => {
+                  navigation.navigate('login' as never);
+                }}
+                style={{ width: '20%' }}
+              />
+            </View>
           </ImageBackground>
         );
       default:
@@ -205,6 +224,7 @@ const MainRending: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       {RendingPages()}
+
       {currentStep > 1 && (
         <TouchableOpacity
           onPress={handlePreviousStep}
@@ -252,10 +272,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   box: {
-    borderColor: 'white', // 선 색상을 흰색으로 설정
-    borderWidth: 2,
-    width: 200,
-    height: 150,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // 새로운 이미지 스타일 추가
+  centeredImage: {
+    marginTop: '70%',
+    width: '100%',
+    height: 350,
+    resizeMode: 'contain',
+  },
+  centeredImage1: {
+    marginTop: '25%',
+    width: '100%',
+    height: 350,
+    resizeMode: 'contain',
+  },
+  centeredImage2: {
+    marginTop: '80%',
+    width: '100%',
+    height: 350,
+    resizeMode: 'contain',
   },
   rendingtwo: {
     marginTop: '24%',
@@ -272,19 +310,27 @@ const styles = StyleSheet.create({
       { scaleX: -1 }, // 좌우 반전
       { rotateZ: '-10deg' },
     ],
-    marginLeft: '60%',
+    marginLeft: '69%',
   },
   skipButton: {
     position: 'absolute',
-    top: 20, // 버튼의 위치를 조정하세요
+    top: '90%', // 버튼의 위치를 조정하세요
     right: 20, // 버튼의 위치를 조정하세요
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // 버튼의 배경색
-    padding: 10,
+    padding: 20,
     borderRadius: 5,
   },
   skipText: {
     color: 'white', // 버튼 텍스트의 색상
     fontSize: 16, // 버튼 텍스트의 크기
+  },
+  buttonStyle: {
+    position: 'absolute', // 절대 위치 사용
+    bottom: 50, // 하단에서부터의 거리
+    left: 0,
+    right: 0, // 좌우로부터 0, 중앙 정렬을 위해
+    justifyContent: 'center',
+    alignItems: 'center', // 내부 텍스트 중앙 정렬
   },
 });
 

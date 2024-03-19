@@ -56,7 +56,7 @@ function RecordScreen() {
             onPress={handlePreviousStep}
             disabled={!recordingStarted || currentScriptIndex === 0}
           >
-            <Image source={require('../../assets/images/before.png')} />
+            <Image source={require('../../assets/images/button/before.png')} />
           </TouchableOpacity>
           <View style={styles.scriptTextContainer}>
             <Text style={styles.text}>
@@ -70,7 +70,7 @@ function RecordScreen() {
               !recordingStarted || currentScriptIndex === scripts.length - 1
             }
           >
-            <Image source={require('../../assets/images/next.png')} />
+            <Image source={require('../../assets/images/button/next.png')} />
           </TouchableOpacity>
         </View>
         <Text style={styles.counterText}>

@@ -43,7 +43,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/detailbookbackground.png')}
+      source={require('../../assets/images/background/detailbookbackground.png')}
       style={styles.imageBackground}
     >
       <View style={styles.container}>
@@ -98,7 +98,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               onPress={() => navigation.navigate('fairy' as never)}
             >
               <Image
-                source={require('../../assets/images/donghwabutton.png')}
+                source={require('../../assets/images/button/donghwabutton.png')}
                 style={styles.image}
               />
             </TouchableOpacity>
@@ -107,7 +107,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               onPress={() => navigation.navigate('talk' as never)}
             >
               <Image
-                source={require('../../assets/images/talkbutton.png')}
+                source={require('../../assets/images/button/talkbutton.png')}
                 style={styles.image}
               />
             </TouchableOpacity>

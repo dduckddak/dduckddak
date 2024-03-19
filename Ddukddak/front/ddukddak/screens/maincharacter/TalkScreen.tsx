@@ -12,7 +12,7 @@ function TalkScreen() {
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
-        source={require('../../assets/images/background.png')}
+        source={require('../../assets/images/background/background.png')}
         style={styles.imageBackground}
       >
         <View>

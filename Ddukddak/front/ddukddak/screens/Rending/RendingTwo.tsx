@@ -25,18 +25,18 @@ const MainRending: React.FC = () => {
         <Text style={{ fontSize: 40 }}></Text>
         <View>
           <Image
-            source={require('../../assets/images/back_button.png')}
+            source={require('../../assets/images/button/back_button.png')}
             style={styles.backbutton}
           />
           <TouchableOpacity onPress={handleNextPress}>
             <Image
-              source={require('../../assets/images/next_button.png')}
+              source={require('../../assets/images/button/next_button.png')}
               style={styles.nextbutton}
             />
           </TouchableOpacity>
         </View>
         <View>
-          <Image source={require('../../assets/images/뚝이2.png')} />
+          <Image source={require('../../assets/images/DD/뚝이2.png')} />
         </View>
       </View>
     </ImageBackground>

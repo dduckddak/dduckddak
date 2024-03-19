@@ -24,7 +24,7 @@ export const books = [
     title: '잭과콩나무',
     author: 'Author Name 1',
     synopsis: 'This is the synopsis of Book Title 1. It talks about...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
 
   {
@@ -34,7 +34,7 @@ export const books = [
     author: 'Author Name 2',
     synopsis:
       'This is the synopsis of Book Title 2. It explores the concept of...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
   {
     id: 3,
@@ -43,7 +43,7 @@ export const books = [
     author: 'Author Name 3',
     synopsis:
       'This is the synopsis of Book Title 3. The story revolves around...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ export const books = [
     author: 'Author Name 4',
     synopsis:
       'This is the synopsis of Book Title 4. It delves into the life of...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
   {
     id: 5,
@@ -61,7 +61,7 @@ export const books = [
     author: 'Author Name 5',
     synopsis:
       'This is the synopsis of Book Title 5. A tale of adventure and...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
   {
     id: 6,
@@ -69,7 +69,7 @@ export const books = [
     title: '책삼',
     author: 'Author Name 6',
     synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
   {
     id: 7,
@@ -78,7 +78,7 @@ export const books = [
     author: 'Author Name 7',
     synopsis:
       'This is the synopsis of Book Title 7. A gripping narrative about...',
-    coverImage: require('../../assets/images/bookcover.png'),
+    coverImage: require('../../assets/images/books/bookcover.png'),
   },
 ];
 
@@ -132,13 +132,13 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.png')}
+      source={require('../../assets/images/background/background.png')}
       style={styles.imageBackground}
     >
       <View style={styles.flexContainer}>
         <View style={styles.container}>
           <TouchableOpacity onPress={previousPage}>
-            <Image source={require('../../assets/images/before.png')} />
+            <Image source={require('../../assets/images/button/before.png')} />
           </TouchableOpacity>
           <View style={styles.textContainer}>
             <Pressable onPress={() => goToDetail(books[currentPage].id)}>
@@ -155,7 +155,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
             </Pressable>
           </View>
           <TouchableOpacity onPress={nextPage}>
-            <Image source={require('../../assets/images/next.png')} />
+            <Image source={require('../../assets/images/button/next.png')} />
           </TouchableOpacity>
         </View>
         <View style={styles.searchButtonAndInputContainer}>

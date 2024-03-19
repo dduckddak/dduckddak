@@ -83,14 +83,14 @@ const MainRending: React.FC = () => {
       case 1:
         return (
           <ImageBackground
-            source={require('../assets/images/Rending.png')}
+            source={require('../assets/images/Rendering/Rending.png')}
             style={styles.imageBackground}
           >
             <View>
               <Text style={{ fontSize: 40 }}> </Text>
               <View>
                 <Animated.Image
-                  source={require('../assets/images/뚝이.png')}
+                  source={require('../assets/images/DD/뚝이.png')}
                   style={[
                     styles.dduck,
                     {
@@ -108,7 +108,7 @@ const MainRending: React.FC = () => {
               </View>
               <View>
                 <Animated.Image
-                  source={require('../assets/images/딱이.png')}
+                  source={require('../assets/images/DD/딱이.png')}
                   style={[
                     styles.ddak,
                     {
@@ -130,19 +130,19 @@ const MainRending: React.FC = () => {
       case 2:
         return (
           <ImageBackground
-            source={require('../assets/images/Rending2.png')}
+            source={require('../assets/images/Rendering/Rending2.png')}
             style={styles.imageBackground}
           >
             <View>
               <Text style={{ fontSize: 40 }}></Text>
               <View>
                 <Image
-                  source={require('../assets/images/뚝이2.png')}
+                  source={require('../assets/images/DD/뚝이2.png')}
                   style={styles.rendingtwo}
                 />
                 <View style={styles.box}>
                   <Image
-                    source={require('../assets/images/이미지.png')}
+                    source={require('../assets/images/Rendering/이미지.png')}
                     style={styles.rendingtwo}
                   />
                 </View>
@@ -156,14 +156,14 @@ const MainRending: React.FC = () => {
       case 3:
         return (
           <ImageBackground
-            source={require('../assets/images/Rending3.png')}
+            source={require('../assets/images/Rendering/Rending3.png')}
             style={styles.imageBackground}
           >
             <View>
               <Text style={{ fontSize: 40 }}></Text>
               <View>
                 <Image
-                  source={require('../assets/images/뚝이2.png')}
+                  source={require('../assets/images/DD/뚝이2.png')}
                   style={styles.rendingthree}
                 />
               </View>
@@ -176,12 +176,12 @@ const MainRending: React.FC = () => {
       case 4:
         return (
           <ImageBackground
-            source={require('../assets/images/Rending4.png')}
+            source={require('../assets/images/Rendering/Rending4.png')}
             style={styles.imageBackground}
           >
             <View>
               <Image
-                source={require('../assets/images/뚝이2.png')}
+                source={require('../assets/images/DD/뚝이2.png')}
                 style={styles.rendingfour}
               />
             </View>
@@ -190,11 +190,11 @@ const MainRending: React.FC = () => {
       case 5:
         return (
           <ImageBackground
-            source={require('../assets/images/Rending5.png')}
+            source={require('../assets/images/Rendering/Rending5.png')}
             style={styles.imageBackground}
           >
             <View>
-              <Image source={require('../assets/images/뚝이2.png')} />
+              <Image source={require('../assets/images/DD/뚝이2.png')} />
             </View>
           </ImageBackground>
         );
@@ -210,7 +210,7 @@ const MainRending: React.FC = () => {
           onPress={handlePreviousStep}
           style={[styles.buttonWrapper, styles.backbutton]}
         >
-          <Image source={require('../assets/images/back_button.png')} />
+          <Image source={require('../assets/images/button/back_button.png')} />
         </TouchableOpacity>
       )}
       {currentStep < 5 && (
@@ -218,7 +218,7 @@ const MainRending: React.FC = () => {
           onPress={handleNextStep}
           style={[styles.buttonWrapper, styles.nextbutton]}
         >
-          <Image source={require('../assets/images/next_button.png')} />
+          <Image source={require('../assets/images/button/next_button.png')} />
         </TouchableOpacity>
       )}
     </View>

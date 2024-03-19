@@ -105,7 +105,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.maxcontainer}>
       <ImageBackground
-        source={require('../../assets/images/background2.png')}
+        source={require('../../assets/images/background/background2.png')}
         style={styles.imageBackground}
       >
         <View style={styles.container}>

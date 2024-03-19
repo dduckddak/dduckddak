@@ -142,7 +142,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
-        source={require('../../assets/images/fairybackground.png')}
+        source={require('../../assets/images/background/fairybackground.png')}
         style={styles.imageBackground}
       >
         <View

@@ -18,31 +18,31 @@ interface Book {
 const bookList: Book[] = [
   {
     title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/book1.png'),
+    coverImage: require('../../assets/images/books/book1.png'),
   },
   {
     title: '내가 만든 책 2',
-    coverImage: require('../../assets/images/book2.png'),
+    coverImage: require('../../assets/images/books/book2.png'),
   },
   {
     title: '내가 만든 책 2',
-    coverImage: require('../../assets/images/book2.png'),
+    coverImage: require('../../assets/images/books/book2.png'),
   },
   {
     title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/book1.png'),
+    coverImage: require('../../assets/images/books/book1.png'),
   },
   {
     title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/book1.png'),
+    coverImage: require('../../assets/images/books/book1.png'),
   },
   {
     title: '내가 만든 책 2',
-    coverImage: require('../../assets/images/book2.png'),
+    coverImage: require('../../assets/images/books/book2.png'),
   },
   {
     title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/book1.png'),
+    coverImage: require('../../assets/images/books/book1.png'),
   },
 ];
 
@@ -59,7 +59,7 @@ const BookItems: React.FC<{ title: string; coverImage: any }> = ({
 const BookListScreen: React.FC = () => {
   return (
     <ImageBackground
-      source={require('../../assets/images/MainBackground.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
       <View>

@@ -56,7 +56,7 @@ function LogoRight() {
     <TouchableOpacity onPress={handlePress}>
       <Image
         style={{ width: 40, height: 40 }}
-        source={require('./assets/images/Back.png')}
+        source={require('./assets/images/button/Back.png')}
       />
     </TouchableOpacity>
   );

@@ -18,7 +18,7 @@ interface MainScreenProps {
 const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   return (
     <ImageBackground
-      source={require('../../assets/images/MainBackground.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
       <View style={styles.mainContainer}>
@@ -36,7 +36,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           />
           <Pressable onPress={() => navigation.navigate('mybook')}>
             <Image
-              source={require('../../assets/images/books.png')}
+              source={require('../../assets/images/Main/books.png')}
               style={styles.bookicon}
             />
           </Pressable>
@@ -46,19 +46,19 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         <View style={styles.rightContainer}>
           <Pressable onPress={() => navigation.navigate('picture')}>
             <Image
-              source={require('../../assets/images/picture.png')}
+              source={require('../../assets/images/Main/picture.png')}
               style={styles.icon}
             />
           </Pressable>
           <Pressable onPress={() => navigation.navigate('voice')}>
             <Image
-              source={require('../../assets/images/voice.png')}
+              source={require('../../assets/images/Main/voice.png')}
               style={styles.icon}
             />
           </Pressable>
           <Pressable onPress={() => navigation.navigate('home')}>
             <Image
-              source={require('../../assets/images/color.png')}
+              source={require('../../assets/images/Main/color.png')}
               style={styles.icon}
             />
           </Pressable>

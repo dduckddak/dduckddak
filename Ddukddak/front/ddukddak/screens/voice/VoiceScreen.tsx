@@ -59,7 +59,7 @@ function VoiceScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/MainBackground.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
       <FlatList

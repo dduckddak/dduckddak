@@ -43,7 +43,7 @@ function PictureScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background.png')}
+      source={require('../../assets/images/background/background.png')}
       style={styles.imageBackground}
     >
       <ScrollView contentContainerStyle={styles.container}>

@@ -52,7 +52,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
-        source={require('../../assets/images/background2.png')}
+        source={require('../../assets/images/background/background2.png')}
         style={styles.imageBackground}
       >
         <View style={styles.container}>

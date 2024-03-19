@@ -8,7 +8,7 @@ function AddVoiceScreen() {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/MainBackground.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.ImageBackground}
     >
       <View style={styles.container}>

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
+import GreenButton from '../../components/GreenButton';
 
 const voiceData = [
   {
@@ -67,9 +68,14 @@ function VoiceScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
       />
-      <Button
-        title="추가하기"
+      <GreenButton
+        content="추가하기"
         onPress={() => navigation.navigate('addvoice' as never)}
       />
     </ImageBackground>
@@ -83,6 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   container: {
     flex: 1,

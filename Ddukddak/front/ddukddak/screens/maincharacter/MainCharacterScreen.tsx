@@ -160,7 +160,6 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         </View>
         <View style={styles.searchButtonAndInputContainer}>
           <Pressable onPress={handleToggleOrSearch}>
-            {/* <FontAwesome name="search" size={36} color="green" /> */}
             <MaterialCommunityIcons
               name="card-search-outline"
               size={100}
@@ -217,7 +216,7 @@ const styles = StyleSheet.create({
   searchButtonAndInputContainer: {
     position: 'absolute',
     right: 10,
-    top: 10,
+    top: 60,
     zIndex: 1,
     flexDirection: 'row-reverse',
     alignItems: 'center',

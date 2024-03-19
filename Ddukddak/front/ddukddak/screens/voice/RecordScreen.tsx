@@ -5,7 +5,9 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
+import GreenButton from '../../components/GreenButton';
 
 function RecordScreen() {
   const scripts = [
@@ -47,30 +49,39 @@ function RecordScreen() {
       source={require('../../assets/images/MainBackground.png')}
       style={styles.ImageBackground}
     >
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={[styles.button, !recordingStarted && styles.disabledButton]}
-          onPress={handlePreviousStep}
-          disabled={!recordingStarted || currentScriptIndex === 0}
-        >
-          <Text style={styles.buttonText}>이전</Text>
-        </TouchableOpacity>
-        <Text style={styles.text}>{scripts[currentScriptIndex].content}</Text>
-        <TouchableOpacity
-          style={[styles.button, !recordingStarted && styles.disabledButton]}
-          onPress={handleNextStep}
-          disabled={
-            !recordingStarted || currentScriptIndex === scripts.length - 1
-          }
-        >
-          <Text style={styles.buttonText}>다음</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.startButton}
+      <View style={styles.outerContainer}>
+        <View style={styles.buttonTextContainer}>
+          <TouchableOpacity
+            style={[styles.button, !recordingStarted && styles.disabledButton]}
+            onPress={handlePreviousStep}
+            disabled={!recordingStarted || currentScriptIndex === 0}
+          >
+            <Image source={require('../../assets/images/before.png')} />
+          </TouchableOpacity>
+          <View style={styles.scriptTextContainer}>
+            <Text style={styles.text}>
+              {scripts[currentScriptIndex].content}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.button, !recordingStarted && styles.disabledButton]}
+            onPress={handleNextStep}
+            disabled={
+              !recordingStarted || currentScriptIndex === scripts.length - 1
+            }
+          >
+            <Image source={require('../../assets/images/next.png')} />
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.counterText}>
+          {scripts[currentScriptIndex].id} / {scripts.length}
+        </Text>
+
+        <GreenButton
+          content="녹음 시작"
           onPress={handleStartRecording}
-        >
-          <Text style={styles.buttonText}>녹음 시작</Text>
-        </TouchableOpacity>
+          style={{ width: '15%', margin: 20 }}
+        />
       </View>
     </ImageBackground>
   );
@@ -84,22 +95,41 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  container: {
+
+  outerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
+  buttonTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  scriptTextContainer: {
+    width: '70%',
+    height: '70%',
+    backgroundColor: '#5FB0CC',
+    borderRadius: 10,
+    justifyContent: 'center',
+  },
+  counterText: {
     fontSize: 20,
+    fontFamily: 'im-hyemin-bold',
+    margin: 10,
+  },
+  text: {
+    fontSize: 36,
     fontFamily: 'im-hyemin-bold',
     color: 'white',
     marginBottom: 20,
     textAlign: 'center',
   },
   button: {
-    backgroundColor: 'green',
     paddingVertical: 10,
     paddingHorizontal: 20,
+    margin: 20,
     borderRadius: 5,
     marginVertical: 5,
   },
@@ -115,6 +145,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   disabledButton: {
-    backgroundColor: 'gray',
+    opacity: 0.5,
   },
 });

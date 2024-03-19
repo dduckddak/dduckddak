@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
+import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
 import com.ssafy.back.book.service.BookService;
@@ -64,5 +65,18 @@ public class BookController {
 	@GetMapping("/{bookId}")
 	public ResponseEntity<? super BookDetailResponseDto> bookDetail(@PathVariable Integer bookId) {
 		return bookService.bookDetail(bookId);
+	}
+
+	@Operation(
+		summary = "좋아요한 책 목록",
+		description = "사용자가 좋아요를 누른 책 목록을 가져온다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation =  BookDetailResponseDto.class))),
+	})
+	@GetMapping("/like")
+	public ResponseEntity<? super ListBookLikeResponseDto> listBookLike() {
+		return bookService.listBookLike();
 	}
 }

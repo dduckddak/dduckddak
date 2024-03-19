@@ -23,6 +23,7 @@ import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
+import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
@@ -74,6 +75,25 @@ public class BookServiceImpl implements BookService{
 			BookDetailDto book = bookRepository.findBookDetailByBookIdAndUserSeq(bookId, userSeq);
 			logger.info("책 상세 : " + book);
 			return BookDetailResponseDto.success(book);
+		}catch (Exception e) {
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
+
+	@Override
+	public ResponseEntity<? super ListBookLikeResponseDto> listBookLike() {
+		//테스트 코드
+		int userSeq = 1;
+		try{
+			List<BookSummaryDto> listBook = bookRepository.findLikedBooksByUserSeq(userSeq).stream().map(bookDetail -> {
+				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
+				bookDetail.setCoverImage(imageUrl);
+				return bookDetail;
+			}).toList();
+			logger.info("사용자가 좋아요한 책 목록 : " + listBook);
+			return ListBookLikeResponseDto.success(listBook);
 		}catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);
 			logger.error(e);

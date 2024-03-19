@@ -24,6 +24,13 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 		"FROM BookEntity b LEFT JOIN ReviewEntity r ON r.bookEntity.bookId = b.bookId AND r.userEntity.userSeq = :userSeq " +
 		"WHERE b.bookId = :bookId")
 	BookDetailDto findBookDetailByBookIdAndUserSeq(@Param("bookId") Integer bookId, @Param("userSeq") Integer userSeq);
+
+	@Query("SELECT new com.ssafy.back.book.dto.BookSummaryDto(b.bookId, b.bookTitle) " +
+		"FROM BookEntity b JOIN ReviewEntity r ON b.bookId = r.bookEntity.bookId " +
+		"WHERE r.userEntity.userSeq = :userSeq AND r.isLike = true")
+	List<BookSummaryDto> findLikedBooksByUserSeq(@Param("userSeq") Integer userSeq);
+
+
 }
 
 

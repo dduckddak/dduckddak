@@ -19,8 +19,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
+import com.ssafy.back.book.dto.response.BookDetailResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
@@ -58,6 +60,21 @@ public class BookServiceImpl implements BookService{
 			return ListBookSearchResponseDto.success(bookList);
 
 		}catch (Exception e){
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
+
+	@Override
+	public ResponseEntity<? super BookDetailResponseDto> bookDetail(Integer bookId) {
+		//테스트 코드
+		int userSeq = 1;
+		try{
+			BookDetailDto book = bookRepository.findBookDetailByBookIdAndUserSeq(bookId, userSeq);
+			logger.info("책 상세 : " + book);
+			return BookDetailResponseDto.success(book);
+		}catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);
 			logger.error(e);
 			return ResponseDto.databaseError();

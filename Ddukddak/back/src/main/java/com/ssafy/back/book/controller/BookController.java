@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.back.book.dto.response.BookDetailResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
 import com.ssafy.back.book.service.BookService;
@@ -50,4 +51,18 @@ public class BookController {
 	})
 	@GetMapping("/search/{keyword}")
 	public ResponseEntity<? super ListBookSearchResponseDto> searchBook(@PathVariable String keyword) { return bookService.listBookSearch(keyword);}
+
+
+	@Operation(
+		summary = "책 상세",
+		description = "책의 저자, 내용, 리뷰 정보를 가져온다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation =  BookDetailResponseDto.class))),
+	})
+	@GetMapping("/{bookId}")
+	public ResponseEntity<? super BookDetailResponseDto> bookDetail(@PathVariable Integer bookId) {
+		return bookService.bookDetail(bookId);
+	}
 }

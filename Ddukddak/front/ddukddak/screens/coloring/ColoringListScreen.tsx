@@ -8,7 +8,7 @@ import {
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
-import SketchbookList from '../../components/SketchbookList';
+import SketchbookList from './sketchbook/SketchbookList';
 
 interface ColoringListScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -61,7 +61,7 @@ const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/background.png')}
+      source={require('../../assets/images/background.png')}
       style={styles.imageBackground}
     >
 
@@ -78,13 +78,6 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
-  }
-  ,
-  flexContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-
   },
 
 });

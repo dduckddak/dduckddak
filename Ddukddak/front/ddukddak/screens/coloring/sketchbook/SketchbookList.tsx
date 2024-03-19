@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, ImageSourcePropType, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
-import GreenButton from './GreenButton';
+import GreenButton from '../../../components/GreenButton';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 // const windowWidth = Dimensions.get('window').width;
@@ -50,7 +50,7 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
       />
 
       <Image
-        source={require('../assets/images/sketchbookheader.png')}
+        source={require('../../../assets/images/sketchbookheader.png')}
         style={styles.header} />
     </View>
   );
@@ -59,7 +59,7 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    marginTop: Dimensions.get('screen').height * 0.04,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
-    height: '65%',
+    height: '70%',
     backgroundColor: 'white',
     borderRadius: 10,
     overflow: 'hidden',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: '0%',
+    top: '-3%',
     width: '90%',
     height: 150,
     resizeMode: 'stretch',

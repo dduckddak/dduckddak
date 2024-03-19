@@ -20,6 +20,10 @@ import Signup from './screens/Welcome/Signup';
 import PictureScreen from './screens/picture/PictureScreen';
 import VoiceScreen from './screens/voice/VoiceScreen';
 import MyCreateBookScreen from './screens/maincharacter/MyCreateBookScreen';
+import ColoringScreen from './screens/coloring/ColoringScreen';
+import ColoringDrawScreen from './screens/coloring/ColoringDrawScreen';
+import ColoringListScreen from './screens/coloring/ColoringListScreen';
+import ColoringDetailScreen from './screens/coloring/ColoringDetailScreen';
 
 function LogoTitle() {
   return (
@@ -53,6 +57,10 @@ export type RootStackParamList = {
   picture: undefined;
   voice: undefined;
   mybook: undefined;
+  coloring: undefined;
+  coloringDraw: undefined;
+  coloringList: undefined;
+  coloringDetail: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -116,6 +124,41 @@ export default function App() {
         <Stack.Screen name="picture" component={PictureScreen} />
         <Stack.Screen name="voice" component={VoiceScreen} />
         <Stack.Screen name="mybook" component={MyCreateBookScreen} />
+        <Stack.Screen
+          name="coloring"
+          component={ColoringScreen}
+          options={{
+            // headerShown: false,
+            headerTitle: LogoTitle,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="coloringDraw"
+          component={ColoringDrawScreen}
+          options={{
+            headerTransparent: true,
+            headerTitle: LogoTitle,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen name="coloringList"
+                      component={ColoringListScreen}
+                      options={{
+                        headerTitle: LogoTitle,
+                        headerTransparent: true,
+                        headerBackVisible: false,
+                      }}
+        />
+
+        <Stack.Screen name="coloringDetail"
+                      component={ColoringDetailScreen}
+                      options={{
+                        headerTitle: LogoTitle,
+                        headerTransparent: true,
+                        headerBackVisible: false,
+                      }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

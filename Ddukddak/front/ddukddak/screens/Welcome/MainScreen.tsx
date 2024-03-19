@@ -58,7 +58,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           </Pressable>
           <Button
             title="색칠뚝딱"
-            onPress={() => navigation.navigate('coloring')}
+            onPress={() => navigation.navigate('coloringList')}
           />
         </View>
       </View>

@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
-import SketchbookDetail from '../../components/SketchbookDetail';
+import SketchbookDetail from './sketchbook/SketchbookDetail';
 
 
 
@@ -32,7 +32,7 @@ const ColoringDetailScreen: React.FC<ColoringDetailScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/background.png')}
+      source={require('../../assets/images/background.png')}
       style={styles.imageBackground}
     >
 

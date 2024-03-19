@@ -14,10 +14,10 @@ interface ColoringScreenProps {
 }
 
 interface Item {
-  item: ImageSourcePropType;
+  item: string;
 }
 
-const images = new Array(12).fill(require('../../assets/images/splash.png'));
+const images = Array.from({length: 12}, (_, i) => `https://pjt-image-bucket.s3.ap-northeast-2.amazonaws.com/ddukddak/color_${(i % 6) + 1}.jpg`);
 
 const ColoringScreen: React.FC<ColoringScreenProps> = ({
                                                          navigation,
@@ -25,13 +25,13 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
 
   const renderItem = ({ item }: Item) => (
     <View style={styles.imageContainer}>
-      <Image source={item} style={styles.image} />
+      <Image source={{uri: item}} style={styles.image} />
     </View>
   );
 
   return (
     <ImageBackground
-      source={require('../../assets/background.png')}
+      source={require('../../assets/images/background.png')}
       style={styles.imageBackground}
     >
       <View style={styles.flexContainer}>

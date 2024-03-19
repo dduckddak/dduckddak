@@ -1,28 +1,13 @@
 import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import GreenButton from './components/GreenButton';
-import {
-  Button,
-  Image,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import {
-  NavigationContainer,
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
-import MainRending from './screens/MainRending';
 import * as SplashScreen from 'expo-splash-screen';
 
+import MainRending from './screens/MainRending';
 import MainScreen from './screens/Welcome/MainScreen';
 import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
 import DetailBookScreen from './screens/maincharacter/DetailBookScreen';

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 // 책 목록 데이터 타입 정의
 interface Book {
@@ -46,17 +47,25 @@ const bookList: Book[] = [
   },
 ];
 
-const BookItems: React.FC<{ title: string; coverImage: any }> = ({
-  title,
-  coverImage,
-}) => (
-  <TouchableOpacity style={styles.bookItem}>
-    <Image source={coverImage} style={styles.coverImage} />
-    <Text style={styles.title}>{title}</Text>
-  </TouchableOpacity>
-);
+const BookItems: React.FC<{
+  title: string;
+  coverImage: any;
+  navigation: any;
+}> = ({ title, coverImage, navigation }) => {
+  const handlePress = () => {
+    navigation.navigate('makingBook', { bookTitle: title });
+  };
+
+  return (
+    <TouchableOpacity style={styles.bookItem} onPress={handlePress}>
+      <Image source={coverImage} style={styles.coverImage} />
+      <Text style={styles.title}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const BookListScreen: React.FC = () => {
+  const navigation = useNavigation();
   return (
     <ImageBackground
       source={require('../../assets/images/background/MainBackground.png')}
@@ -66,7 +75,11 @@ const BookListScreen: React.FC = () => {
         <FlatList
           data={bookList}
           renderItem={({ item }) => (
-            <BookItems title={item.title} coverImage={item.coverImage} />
+            <BookItems
+              title={item.title}
+              coverImage={item.coverImage}
+              navigation={navigation}
+            />
           )}
           keyExtractor={(item, index) => index.toString()}
           numColumns={2}

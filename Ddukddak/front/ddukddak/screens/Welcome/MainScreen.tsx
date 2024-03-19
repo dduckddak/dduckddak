@@ -56,7 +56,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
               style={styles.icon}
             />
           </Pressable>
-          <Pressable onPress={() => navigation.navigate('home')}>
+          <Pressable onPress={() => navigation.navigate('coloringList')}>
             <Image
               source={require('../../assets/images/Main/color.png')}
               style={styles.icon}

@@ -20,6 +20,10 @@ import VoiceScreen from './screens/voice/VoiceScreen';
 import MyCreateBookScreen from './screens/books/MyCreateBookScreen';
 import AddVoiceScreen from './screens/voice/AddVoiceScreen';
 import RecordScreen from './screens/voice/RecordScreen';
+import ColoringScreen from './screens/coloring/ColoringScreen';
+import ColoringDrawScreen from './screens/coloring/ColoringDrawScreen';
+import ColoringListScreen from './screens/coloring/ColoringListScreen';
+import ColoringDetailScreen from './screens/coloring/ColoringDetailScreen';
 
 function LogoTitle() {
   return (
@@ -63,11 +67,16 @@ export type RootStackParamList = {
   mybook: undefined;
   addvoice: undefined;
   record: undefined;
+  coloring: undefined;
+  coloringDraw: undefined;
+  coloringList: undefined;
+  coloringDetail: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => {
+});
 
 export default function App() {
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -78,7 +87,8 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => {
+      });
     }
   }, [fontsLoaded]);
 
@@ -172,6 +182,41 @@ export default function App() {
 
         {/* ------------------------ 녹음 페이지 ------------------------ */}
         <Stack.Screen name="record" component={RecordScreen} />
+        {/*  색칠뚝딱 페이지*/}
+        <Stack.Screen
+          name="coloring"
+          component={ColoringScreen}
+          options={{
+            headerTitle: LogoTitle,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="coloringDraw"
+          component={ColoringDrawScreen}
+          options={{
+            headerTransparent: true,
+            headerTitle: LogoTitle,
+            headerBackVisible: false,
+          }}
+        />
+        <Stack.Screen name="coloringList"
+                      component={ColoringListScreen}
+                      options={{
+                        headerTitle: LogoTitle,
+                        headerTransparent: true,
+                        headerBackVisible: false,
+                      }}
+        />
+
+        <Stack.Screen name="coloringDetail"
+                      component={ColoringDetailScreen}
+                      options={{
+                        headerTitle: LogoTitle,
+                        headerTransparent: true,
+                        headerBackVisible: false,
+                      }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

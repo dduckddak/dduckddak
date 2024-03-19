@@ -23,7 +23,10 @@
     "react": "18.2.0",
     "react-devtools": "^5.0.2",
     "react-native": "0.73.4",
-    "react-native-radio-buttons-group": "^3.1.0"
+    "react-native-radio-buttons-group": "^3.1.0",
+    "react-native-reanimated": "^3.8.1",
+    "react-native-webview": "^13.8.1",
+    "reanimated-color-picker": "^3.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

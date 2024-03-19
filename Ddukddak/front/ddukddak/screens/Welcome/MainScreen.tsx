@@ -36,7 +36,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           />
           <Pressable onPress={() => navigation.navigate('mybook')}>
             <Image
-              source={require('../../assets/images/mybook.png')}
+              source={require('../../assets/images/books.png')}
               style={styles.bookicon}
             />
           </Pressable>
@@ -96,13 +96,12 @@ const styles = StyleSheet.create({
     height: 80,
   },
   icon: {
-    width: 280,
-    height: 110,
+    width: 400,
+    height: 130,
     margin: 40,
   },
   bookicon: {
-    width: 400,
-    height: 130,
-    margin: 10,
+    width: 710,
+    height: 210,
   },
 });

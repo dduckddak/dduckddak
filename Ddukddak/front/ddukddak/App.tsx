@@ -32,7 +32,7 @@ import Login from './screens/Welcome/Login';
 import Signup from './screens/Welcome/Signup';
 import PictureScreen from './screens/picture/PictureScreen';
 import VoiceScreen from './screens/voice/VoiceScreen';
-import MyCreateBookScreen from './screens/maincharacter/MyCreateBookScreen';
+import MyCreateBookScreen from './screens/books/MyCreateBookScreen';
 import AddVoiceScreen from './screens/voice/AddVoiceScreen';
 import RecordScreen from './screens/voice/RecordScreen';
 

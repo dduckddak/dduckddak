@@ -1,45 +1,101 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
-  Text,
+  TextInput,
+  Alert,
   ImageBackground,
   StyleSheet,
   Image,
   SafeAreaView,
-  TextInput,
-  Pressable,
-  TouchableOpacity,
+  StatusBar,
+  Text,
 } from 'react-native';
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group';
 
-function Signup({ navigation }) {
-  const radioButtons: RadioButtonProps[] = useMemo(
-    () => [
-      {
-        id: '1', // acts as primary key, should be unique and non-empty string
-        label: '남자아이',
-        value: 'option1',
-      },
-      {
-        id: '2',
-        label: '여자아이',
-        value: 'option2',
-      },
-    ],
-    [],
-  );
+interface SignUpState {
+  userId: string;
+  password: string;
+  confirmPassword: string;
+  gender: 'male' | 'female' | '';
+  name: string;
+  birthDate: string;
+}
+const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
+  const [signUpState, setSignUpState] = useState<SignUpState>({
+    userId: '',
+    password: '',
+    confirmPassword: '',
+    gender: '',
+    name: '',
+    birthDate: '',
+  });
+
+  const checkUserId = (): boolean => {
+    const isDuplicated = false; // 가정, 실제 앱에서는 서버 요청 필요
+    if (isDuplicated) {
+      Alert.alert('오류', '이미 존재하는 아이디입니다.');
+      return false;
+    }
+    return true;
+  };
+
+  const validateInput = (): boolean => {
+    const { userId, password, confirmPassword } = signUpState;
+    const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+    if (!idRegex.test(userId)) {
+      Alert.alert(
+        '오류',
+        '아이디는 한글과 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',
+      );
+      return false;
+    }
+    if (!checkUserId()) {
+      return false;
+    }
+    const pwRegex = /^.{6,20}$/;
+    if (!pwRegex.test(password)) {
+      Alert.alert('오류', '비밀번호는 최소 6자에서 최대 20자여야 합니다.');
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      Alert.alert('오류', '비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handlePress = () => {
+    if (validateInput()) {
+      // 회원가입 로직
+      navigation.navigate('Login');
+    }
+  };
+
+  const radioButtons: RadioButtonProps[] = [
+    {
+      id: '1',
+      label: '남자아이',
+      value: 'male',
+    },
+    {
+      id: '2',
+      label: '여자아이',
+      value: 'female',
+    },
+  ];
+
   const [selectedId, setSelectedId] = useState<string | undefined>();
+  const [name, setName] = useState('');
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
-  const handlePress = () => {
-    console.log('HomeScreen!');
-  };
+
   // 비밀번호 유효성 검사
-  const validatePassword = (text) => {
+  const validatePassword = (text: string) => {
     // 비밀번호는 최소 6자 최대 20자이고, 특수 문자를 포함하지 않아도 됨.
     const limit = /^[a-zA-Z0-9]{6,20}$/;
     setIsValidPassword(limit.test(text));
@@ -47,15 +103,15 @@ function Signup({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.maxcontainer}>
       <ImageBackground
-        source={require('../../assets/images/background2.png')}
+        source={require('../../assets/images/background/background2.png')}
         style={styles.imageBackground}
       >
         <View style={styles.container}>
           <Image
             source={require('../../assets/images/signup.png')}
-            style={styles.login}
+            style={styles.signup}
           />
           <View
             style={[
@@ -64,27 +120,69 @@ function Signup({ navigation }) {
             ]}
           >
             <View style={styles.TopContainer}>
-              <RadioGroup
-                radioButtons={radioButtons}
-                onPress={setSelectedId}
-                selectedId={selectedId}
-                layout="row"
-              />
               <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 2 }]}>성별</Text>
+                <RadioGroup
+                  radioButtons={radioButtons}
+                  onPress={setSelectedId}
+                  selectedId={selectedId}
+                  layout="row"
+                />
+              </View>
+              <View style={[styles.flexContainer, { marginTop: 10 }]}>
+                <Text style={[styles.text, { marginTop: 10 }]}>이름</Text>
                 <TextInput
-                  placeholder="아이디를 입력해주세요"
+                  placeholder="이름을 입력해주세요"
+                  style={styles.inputContainer}
+                  value={name}
+                  onChangeText={(e) => setName(e)}
+                />
+              </View>
+              <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 6 }]}>ID</Text>
+                <TextInput
+                  placeholder="ID를 입력해주세요"
                   style={styles.inputContainer}
                   value={id}
                   onChangeText={(e) => setId(e)}
                 />
               </View>
-              <TextInput
-                placeholder="비밀번호를 입력해주세요"
-                style={styles.inputContainer}
-                value={password}
-                onChangeText={(e) => validatePassword(e)}
-                secureTextEntry={true}
-              />
+              <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 6 }]}>PW</Text>
+                <TextInput
+                  placeholder="비밀번호를 입력해주세요"
+                  style={styles.inputContainer}
+                  value={password}
+                  onChangeText={validatePassword}
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 6 }]}>PW 확인</Text>
+                <TextInput
+                  placeholder="비밀번호 확인"
+                  style={styles.inputContainer}
+                  value={signUpState.confirmPassword}
+                  onChangeText={(text) =>
+                    setSignUpState({ ...signUpState, confirmPassword: text })
+                  }
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.flexContainer}>
+                <Text style={[styles.text, { marginTop: 5, marginBottom: 0 }]}>
+                  생년월일
+                </Text>
+                <TextInput
+                  placeholder="생년월일을 입력해주세요"
+                  style={styles.inputContainer}
+                  value={signUpState.birthDate}
+                  onChangeText={(text) =>
+                    setSignUpState({ ...signUpState, birthDate: text })
+                  }
+                  secureTextEntry={true}
+                />
+              </View>
             </View>
 
             <View style={styles.bottomContainer}>
@@ -95,47 +193,56 @@ function Signup({ navigation }) {
               />
             </View>
           </View>
-          <StatusBar style="light" />
+          <StatusBar />
         </View>
       </ImageBackground>
     </SafeAreaView>
   );
-}
+};
+
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
-    padding: 30,
   },
-  login: {
-    marginLeft: 240,
-    height: 600,
+  signup: {
+    marginLeft: 215,
+    marginTop: 45,
+    width: 800,
+  },
+  maxcontainer: {
     flex: 1,
+  },
+  TopContainer: {
+    paddingLeft: '25%',
+    paddingTop: '18%',
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   container: {
     flex: 1,
+    marginLeft: 50,
   },
   text: {
-    fontSize: 24,
-    fontWeight: 'bold',
     fontFamily: 'im-hyemin-bold',
+    fontSize: 25,
+    marginRight: '2.2%',
+    width: 100,
+    textAlign: 'right',
   },
   inputContainer: {
     backgroundColor: '#E8E8E8',
     width: '50%',
-    marginTop: 20,
-    height: 40,
-    paddingLeft: 20,
+    marginBottom: 15,
+    height: 50,
+    paddingLeft: 15,
+    borderRadius: 5,
   },
   inputText: {
-    fontSize: 16,
+    fontSize: 25,
+    fontFamily: 'im-hyemin-bold',
   },
-  TopContainer: {
-    paddingLeft: '37%',
-    paddingTop: '15%',
-    alignContent: 'center',
-    justifyContent: 'center',
-  },
+
   flexContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -147,25 +254,10 @@ const styles = StyleSheet.create({
     paddingLeft: '40%',
     paddingTop: '2.5%',
   },
+
   bottomContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '2.5%',
-  },
-  button: {
-    backgroundColor: Colors.green,
-    width: 150,
-    height: 65,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  whiteText: {
-    color: 'white',
-    width: '100%',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    marginTop: 5,
   },
 });
 

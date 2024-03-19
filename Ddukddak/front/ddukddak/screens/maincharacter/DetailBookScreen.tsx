@@ -1,35 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   Image,
   TouchableOpacity,
   ImageBackground,
   Button,
 } from 'react-native';
 import { books } from './MainCharacterScreen';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../App';
+import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 
-type DetailBookScreenRouteProp = {
-  params: {
-    bookId: string;
-  };
-};
+type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
+type DetailScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'detail'
+>;
 
-type DetailBookScreenProps = {
-  route: DetailBookScreenRouteProp;
-};
-
-function DetailBookScreen({ route }: DetailBookScreenProps) {
-  const navigation = useNavigation();
+interface DetailBookScreenProps {
+  route: DetailScreenRouteProp;
+  navigation: DetailScreenNavigationProp;
+}
+function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const bookid = route.params.bookId;
   const selectedBook = books.find((book) => book.id === parseInt(bookid));
 
+  const [isHappySelected, setIsHappySelected] = useState(false);
+  const [isSadSelected, setIsSadSelected] = useState(false);
+
+  const handleHappyPress = () => {
+    setIsHappySelected((prev) => !prev);
+    setIsSadSelected(false);
+  };
+
+  const handleSadPress = () => {
+    setIsSadSelected((prev) => !prev);
+    setIsHappySelected(false);
+  };
+
   return (
     <ImageBackground
-      source={require('../../assets/images/detailbookbackground.png')}
+      source={require('../../assets/images/background/detailbookbackground.png')}
       style={styles.imageBackground}
     >
       <View style={styles.container}>
@@ -42,8 +56,28 @@ function DetailBookScreen({ route }: DetailBookScreenProps) {
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>
-                <Button title="좋아요" />
-                <Button title="싫어요" />
+                <TouchableOpacity
+                  onPress={handleHappyPress}
+                  style={styles.buttonStyle}
+                >
+                  <FontAwesome5
+                    name="smile"
+                    size={50}
+                    color={isHappySelected ? 'green' : 'black'}
+                  />
+                  <Text style={styles.text}>재미있어요</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleSadPress}
+                  style={styles.buttonStyle}
+                >
+                  <Entypo
+                    name="emoji-sad"
+                    size={50}
+                    color={isSadSelected ? 'red' : 'black'}
+                  />
+                  <Text style={styles.text}>재미없어요</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -64,7 +98,7 @@ function DetailBookScreen({ route }: DetailBookScreenProps) {
               onPress={() => navigation.navigate('fairy' as never)}
             >
               <Image
-                source={require('../../assets/images/donghwabutton.png')}
+                source={require('../../assets/images/button/donghwabutton.png')}
                 style={styles.image}
               />
             </TouchableOpacity>
@@ -73,7 +107,7 @@ function DetailBookScreen({ route }: DetailBookScreenProps) {
               onPress={() => navigation.navigate('talk' as never)}
             >
               <Image
-                source={require('../../assets/images/talkbutton.png')}
+                source={require('../../assets/images/button/talkbutton.png')}
                 style={styles.image}
               />
             </TouchableOpacity>
@@ -101,8 +135,20 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    textAlign: 'center',
+    justifyContent: 'center',
     width: '70%',
+    gap: 20,
+  },
+  buttonStyle: {
+    flexDirection: 'row',
+    borderWidth: 3,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    fontFamily: 'im-hyemin-bold',
   },
   detailText: {
     fontSize: 40,
@@ -149,7 +195,7 @@ const styles = StyleSheet.create({
   },
   coverImage: {
     width: '80%',
-    height: '90%',
+    height: '80%',
     resizeMode: 'contain',
   },
 });

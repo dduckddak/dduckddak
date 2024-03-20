@@ -95,7 +95,7 @@ export default BookListScreen;
 const styles = StyleSheet.create({
   bookList: {
     alignItems: 'center',
-    paddingTop: 50,
+    paddingTop: 90,
   },
   bookItem: {
     margin: 20,

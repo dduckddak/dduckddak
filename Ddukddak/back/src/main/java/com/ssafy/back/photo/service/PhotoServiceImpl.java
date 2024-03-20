@@ -49,6 +49,9 @@ public class PhotoServiceImpl implements PhotoService {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+	@Value("${fast-api.url}")
+	private String fastApiUrl;
+
 	@Override
 	@Transactional
 	public ResponseEntity<? super InsertPhotoResponseDto> insertPhoto(InsertPhotoRequestDto request) {
@@ -78,20 +81,23 @@ public class PhotoServiceImpl implements PhotoService {
 
 			amazonS3.putObject(bucket, key, inputStream, metadata);
 
+			inputStream.close();
+
 		} catch (Exception e) {
 			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug(e);
+			logger.debug("Error message", e);
 
 			return InsertPhotoResponseDto.S3error();
 		}
 
 		try {
-			JSONObject bodyJson = new JSONObject();
-			bodyJson.put("userSeq", userSeq);
-			bodyJson.put("photoId", savedPhotoEntity.getPhotoId());
+			JsonObject bodyJson = new JsonObject();
+			bodyJson.addProperty("userSeq", userSeq);
+			bodyJson.addProperty("photoId", savedPhotoEntity.getPhotoId());
 
+			String endpoint = fastApiUrl + "/api/v1/f/extract-face/";
 
-			HttpResponse<String> response = Unirest.post("http://localhost:8000/api/v1/f/extract-face/")
+			HttpResponse<String> response = Unirest.post(endpoint)
 				.header("Content-Type", "application/json")
 				.body(bodyJson.toString())
 				.asString();
@@ -105,7 +111,7 @@ public class PhotoServiceImpl implements PhotoService {
 
 		} catch (Exception e) {
 			logger.error(ResponseMessage.FastApi_ERROR);
-			logger.debug(e);
+			logger.debug("Error message", e);
 
 			return InsertPhotoResponseDto.fastApierror();
 		}

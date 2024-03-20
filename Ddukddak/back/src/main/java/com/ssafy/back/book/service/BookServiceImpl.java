@@ -9,13 +9,17 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
@@ -50,6 +54,9 @@ public class BookServiceImpl implements BookService {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+	@Value("${fast-api.url}")
+	private String fastApiUrl;
+
 	@Override
 	public ResponseEntity<? super ListBookRecommendResponseDto> listBookRecommend() {
 		//테스트 코드
@@ -74,28 +81,33 @@ public class BookServiceImpl implements BookService {
 			requestMap.put("likes", likeList);
 			requestMap.put("dislikes", unLikeList);
 
+			Gson gson = new Gson();
+			String jsonRequestBody = gson.toJson(requestMap);
+
 			// FastAPI 엔드포인트 URL
-			String url = "http://localhost:8000/api/v1/k/recommendations/";
+			String url = fastApiUrl + "/api/v1/f/recommendations/";
 
-			// POST 요청 보내기
-			HttpResponse<String> response = Unirest.post(url)
+			HttpResponse<JsonNode> response = Unirest.post(url)
 				.header("Content-Type", "application/json")
-				.body(new JSONObject(requestMap).toString())
-				.asString();
+				.body(jsonRequestBody)
+				.asJson();
 
-			// 응답 처리
-			System.out.println(response.getBody());
+			// JSON 응답을 String으로 변환
+			String responseBody = response.getBody().toString();
 
-			JSONObject rootNode = new JSONObject(response.getBody());
+			// Gson을 사용하여 JSON 문자열을 JsonObject로 파싱
+			JsonObject responseObject = new Gson().fromJson(responseBody, JsonObject.class);
+
 			List<Integer> bookIds = new ArrayList<>();
-			if (rootNode.has("recommendations")) {
-				for (int i = 0; i < rootNode.getJSONArray("recommendations").length(); i++) {
-					bookIds.add(rootNode.getJSONArray("recommendations").getInt(i));
+			if (responseObject.has("recommendations")) {
+				JsonArray recommendations = responseObject.getAsJsonArray("recommendations");
+				for (JsonElement element : recommendations) {
+					bookIds.add(element.getAsInt());
 				}
 			}
 
-			// 응답 처리
-			logger.info("fast api 응답 : " + response.getBody());
+			// 로그 출력 및 후속 처리
+			logger.info("fast api 응답 : " + responseBody);
 
 			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
 				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();

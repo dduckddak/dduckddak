@@ -18,7 +18,7 @@ interface PhotoApiResponse {
  */
 export const getPhotos = async (): Promise<PhotoApiResponse> => {
   try {
-    const response = await apiClient.get<PhotoApiResponse>('/api/v1/photos/');
+    const response = await apiClient.get<PhotoApiResponse>('/api/v1/photos');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -47,7 +47,7 @@ export const addPhoto = async (params: AddPhotoParams): Promise<PhotoApiResponse
   formData.append('photoFile', params.photoFile);
 
   try {
-    const response = await apiClient.post<PhotoApiResponse>('/api/v1/photos/', formData);
+    const response = await apiClient.post<PhotoApiResponse>('/api/v1/photos', formData);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -73,7 +73,7 @@ interface DeletePhotoParams {
  */
 export const deletePhotos = async (params: DeletePhotoParams): Promise<PhotoApiResponse> => {
   try {
-    const response = await apiClient.delete<PhotoApiResponse>('/api/v1/photos/', { data: params });
+    const response = await apiClient.delete<PhotoApiResponse>('/api/v1/photos', { data: params });
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

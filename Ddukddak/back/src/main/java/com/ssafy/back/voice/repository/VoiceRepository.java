@@ -16,9 +16,9 @@ public interface VoiceRepository extends JpaRepository<VoiceEntity, Integer> {
 	@Query("select new com.ssafy.back.voice.dto.VoiceDto(v.voiceId, v.voiceName) from VoiceEntity v where v.userEntity.userSeq=:userSeq")
 	List<VoiceDto> findByUserEntity_UserSeq(Integer userSeq);
 
-	@Modifying
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("delete from VoiceEntity v where v.voiceId in :ids")
-	int deleteAllById(@Param("ids") List<Integer> ids);
+	void deleteAllById(@Param("ids") List<Integer> ids);
 
 	@Query("SELECT v.voiceModelId FROM VoiceEntity v WHERE v.voiceId = :voiceId")
 	String findVoiceModelIdByVoiceId(@Param("voiceId") Integer voiceId);

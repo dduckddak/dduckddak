@@ -10,18 +10,13 @@ public class MakeKeyUtil {
 	}
 
 	//photoId 이용한 사진 키 제작
-	public static String photo(int photoId) {
-		return "ph" + photoId;
+	public static String photo(int userSeq, int photoId) {
+		return userSeq + "/photo" + "/original/" + photoId;
 	}
 
 	//coloringId 이용한 사진 키 제작
-	public static String coloring(int coloringId) {
-		return "co" + coloringId;
+	public static String coloring(int userSeq, int coloringId) {
+		return userSeq + "/coloring/" + coloringId;
 	}
 
-	//bookId와 페이지 순서를 이용한 페이지 키 제작 ( 얼굴 빈 칸 유무 )
-	public static String page(int bookId, int pegSeq, boolean face) {
-		String str = face?"":"blank";
-		return "df" + bookId + "p" + pegSeq + str;
-	}
 }

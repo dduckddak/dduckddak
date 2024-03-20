@@ -56,7 +56,7 @@ public class ColoringServiceImpl implements ColoringService {
 		try {
 			List<ColoringDto> coloringList = coloringRepository.findByUserEntity_UserSeq(userSeq);
 			coloringList.forEach(coloring -> {
-				String key = MakeKeyUtil.coloring(coloring.getColoringId());
+				String key = MakeKeyUtil.coloring(userSeq, coloring.getColoringId());
 				coloring.setColoringFile(amazonS3.getUrl(bucket, key).toString());
 
 				logger.info(coloring.getColoringId() + " 경로 : " + coloring.getColoringFile());
@@ -83,7 +83,7 @@ public class ColoringServiceImpl implements ColoringService {
 		coloringEntity.getUserEntity().setUserSeq(1);
 
 		int coloringId = coloringRepository.save(coloringEntity).getColoringId();
-		String key = MakeKeyUtil.coloring(coloringId);
+		String key = MakeKeyUtil.coloring(1, coloringId);
 
 		// S3에 색칠 그림 추가
 		try {
@@ -118,7 +118,7 @@ public class ColoringServiceImpl implements ColoringService {
 		//S3에서 색칠 그림 삭제
 		try {
 			request.getColoringIds().forEach(coloringId -> {
-				String key = MakeKeyUtil.coloring(coloringId);
+				String key = MakeKeyUtil.coloring(1, coloringId);
 				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
 				amazonS3.deleteObject(s3request);
 

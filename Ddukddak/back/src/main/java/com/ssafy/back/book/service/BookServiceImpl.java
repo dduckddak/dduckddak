@@ -1,5 +1,6 @@
 package com.ssafy.back.book.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,18 +9,14 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
@@ -39,7 +36,6 @@ import com.ssafy.back.entity.ReviewEntity;
 import com.ssafy.back.entity.compositeKey.ReviewId;
 import com.ssafy.back.util.MakeKeyUtil;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -50,11 +46,6 @@ public class BookServiceImpl implements BookService {
 	private final Logger logger = LogManager.getLogger(BookServiceImpl.class);
 	private final ReviewRepository reviewRepository;
 	private final BookRepository bookRepository;
-	private final RestTemplate restTemplate; // RestTemplate 주입
-	private final EntityManager entityManager;
-
-	// ObjectMapper 선언
-	private final ObjectMapper objectMapper;
 	private final AmazonS3 amazonS3;
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
@@ -83,24 +74,25 @@ public class BookServiceImpl implements BookService {
 			requestMap.put("likes", likeList);
 			requestMap.put("dislikes", unLikeList);
 
-			// HTTP 헤더 설정
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-
-			// HttpEntity 생성
-			HttpEntity<Map<String, Object>> httpEntity = new HttpEntity<>(requestMap, headers);
-
 			// FastAPI 엔드포인트 URL
 			String url = "http://localhost:8000/api/v1/k/recommendations/";
 
 			// POST 요청 보내기
-			ResponseEntity<String> response = restTemplate.postForEntity(url, httpEntity, String.class);
+			HttpResponse<String> response = Unirest.post(url)
+				.header("Content-Type", "application/json")
+				.body(new JSONObject(requestMap).toString())
+				.asString();
 
-			// JSON 응답을 Java 객체로 변환
-			JsonNode rootNode = objectMapper.readTree(response.getBody());
-			JsonNode recommendationsNode = rootNode.path("recommendations");
-			List<Integer> bookIds = objectMapper.convertValue(recommendationsNode, new TypeReference<List<Integer>>() {
-			});
+			// 응답 처리
+			System.out.println(response.getBody());
+
+			JSONObject rootNode = new JSONObject(response.getBody());
+			List<Integer> bookIds = new ArrayList<>();
+			if (rootNode.has("recommendations")) {
+				for (int i = 0; i < rootNode.getJSONArray("recommendations").length(); i++) {
+					bookIds.add(rootNode.getJSONArray("recommendations").getInt(i));
+				}
+			}
 
 			// 응답 처리
 			logger.info("fast api 응답 : " + response.getBody());

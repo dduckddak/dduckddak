@@ -18,8 +18,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
@@ -45,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BookServiceImpl implements BookService {
 
 	private final Logger logger = LogManager.getLogger(BookServiceImpl.class);
@@ -87,16 +88,12 @@ public class BookServiceImpl implements BookService {
 			// FastAPI 엔드포인트 URL
 			String url = fastApiUrl + "/api/v1/f/recommendations/";
 
-			HttpResponse<JsonNode> response = Unirest.post(url)
+			HttpResponse<String> response = Unirest.post(url)
 				.header("Content-Type", "application/json")
 				.body(jsonRequestBody)
-				.asJson();
+				.asString();
 
-			// JSON 응답을 String으로 변환
-			String responseBody = response.getBody().toString();
-
-			// Gson을 사용하여 JSON 문자열을 JsonObject로 파싱
-			JsonObject responseObject = new Gson().fromJson(responseBody, JsonObject.class);
+			JsonObject responseObject = JsonParser.parseString(response.getBody()).getAsJsonObject();
 
 			List<Integer> bookIds = new ArrayList<>();
 			if (responseObject.has("recommendations")) {
@@ -107,7 +104,7 @@ public class BookServiceImpl implements BookService {
 			}
 
 			// 로그 출력 및 후속 처리
-			logger.info("fast api 응답 : " + responseBody);
+			logger.info("fast api 응답 : " + response);
 
 			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
 				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();

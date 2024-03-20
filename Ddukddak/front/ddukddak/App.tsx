@@ -25,6 +25,7 @@ import ColoringDrawScreen from './screens/coloring/ColoringDrawScreen';
 import ColoringListScreen from './screens/coloring/ColoringListScreen';
 import ColoringDetailScreen from './screens/coloring/ColoringDetailScreen';
 import MakingBook from './screens/books/MakingBook';
+import LikeBooks from './screens/books/LikeBooks';
 
 function LogoTitle() {
   return (
@@ -97,6 +98,7 @@ export type RootStackParamList = {
   coloringList: undefined;
   coloringDetail: undefined;
   makingBook: { bookTitle: string };
+  likebooks: { bookId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -167,6 +169,12 @@ export default function App() {
         <Stack.Screen
           name="signup"
           component={Signup}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
+        {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
+        <Stack.Screen
+          name="likebooks"
+          component={LikeBooks}
           options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
         />
 

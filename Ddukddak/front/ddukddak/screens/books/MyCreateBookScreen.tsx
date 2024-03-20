@@ -86,6 +86,10 @@ const BookListScreen: React.FC = () => {
           contentContainerStyle={styles.bookList}
         />
       </View>
+      <Image
+        source={require('../../assets/images/Trash.png')}
+        style={styles.trash}
+      />
     </ImageBackground>
   );
 };
@@ -125,5 +129,12 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
+  },
+  trash: {
+    position: 'absolute',
+    width: 90,
+    height: 90,
+    right: '92.5%',
+    top: '86%',
   },
 });

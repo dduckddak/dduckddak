@@ -1,6 +1,7 @@
 package com.ssafy.back.book.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.entity.ReviewEntity;
+import com.ssafy.back.entity.compositeKey.ReviewId;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
@@ -23,12 +25,12 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
 	void insertReviewNative(@Param("bookId") Integer bookId, @Param("userSeq") Integer userSeq,
 		@Param("isLike") Boolean isLike);
 
-	// @Transactional
-	// ReviewEntity findById(ReviewId reviewId);
+	Optional<ReviewEntity> findById(ReviewId reviewId);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE review SET is_like = :isLike WHERE book_id = :bookId AND user_seq = :userSeq", nativeQuery = true)
 	int updateReviewNative(@Param("bookId") Integer bookId, @Param("userSeq") Integer userSeq,
 		@Param("isLike") Boolean isLike);
+
 }

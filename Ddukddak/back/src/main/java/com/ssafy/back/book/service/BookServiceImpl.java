@@ -3,6 +3,7 @@ package com.ssafy.back.book.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,6 +26,7 @@ import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
 import com.ssafy.back.book.dto.response.CreateReviewResponseDto;
+import com.ssafy.back.book.dto.response.DeleteReviewResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
@@ -33,6 +35,8 @@ import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.book.repository.ReviewRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
+import com.ssafy.back.entity.ReviewEntity;
+import com.ssafy.back.entity.compositeKey.ReviewId;
 import com.ssafy.back.util.MakeKeyUtil;
 
 import jakarta.persistence.EntityManager;
@@ -209,6 +213,29 @@ public class BookServiceImpl implements BookService {
 			// logger.info("reviewEntity : " + reviewEntity.toString());
 			return ResponseDto.success();
 
+		} catch (Exception e) {
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
+
+	@Override
+	public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(Integer bookId) {
+		//테스트 코드
+		Integer userSeq = 1;
+		try {
+			Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(new ReviewId(bookId, userSeq));
+			if (reviewEntityOptional.isPresent()) {
+				ReviewEntity reviewEntity = reviewEntityOptional.get();
+				System.out.println(reviewEntity);
+				reviewRepository.delete(reviewEntity);
+				logger.info("delete reviewEntity : " + reviewEntity.toString());
+				return ResponseDto.success();
+			} else {
+				logger.error(ResponseMessage.DATABASE_ERROR);
+				return ResponseDto.databaseError();
+			}
 		} catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);
 			logger.error(e);

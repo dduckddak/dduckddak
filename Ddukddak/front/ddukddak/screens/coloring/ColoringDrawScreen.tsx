@@ -11,13 +11,14 @@ import {
   Text,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { WebView } from 'react-native-webview';
+import { WebView, WebViewMessageEvent } from 'react-native-webview';
 
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import ColorPicker, { Panel5, OpacitySlider, colorKit, PreviewText } from 'reanimated-color-picker';
 import type { returnedResults } from 'reanimated-color-picker';
 import GreenButton from '../../components/GreenButton';
 import AlertModal from '../../components/AlertModal';
+import axios from 'axios';
 
 
 interface ColoringDrawScreenProps {
@@ -50,10 +51,50 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
     webViewRef.current.postMessage(JSON.stringify(data));
   };
 
+  const handleSave = () => {
+    console.log('저장 실행')
+    const data = {
+      type: 'saveImage',
+    }
+    webViewRef.current.postMessage(JSON.stringify(data));
+  }
+
   const handleClickSaveModal = () => {
     navigation.goBack();
     navigation.goBack();
   }
+
+
+
+
+  const handleMessage = async (event: WebViewMessageEvent) => {
+    const msgData = JSON.parse(event.nativeEvent.data);
+    if (msgData.type === 'saveImage') {
+      const dataUrl = msgData.value;
+      console.log(dataUrl);
+      const base64Response = await fetch(`data:image/png;base64,${dataUrl}`);
+      const blob = await base64Response.blob();
+      console.log(blob);
+
+      let formData = new FormData();
+      formData.append("file", blob, 'image.png');
+
+      // 서버에 요청
+      axios.post("http://127.0.0.1:5000/upload", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+
+    }
+  }
+
 
   return (
 
@@ -108,11 +149,11 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
           source={{ uri: 'http://192.168.30.124:3000' }}
           style={styles.webviewStyle}
           injectedJavaScript={`window.imgSrc = "https://pjt-image-bucket.s3.ap-northeast-2.amazonaws.com/ddukddak/color_1.jpg";`}
-
+          onMessage={handleMessage}
         />
       </View>
 
-      <GreenButton style={styles.saveButtonContainer} onPress={() => setSaveModal(true)} content="저장"/>
+      <GreenButton style={styles.saveButtonContainer} onPress={handleSave} content="저장"/>
       <AlertModal isVisible={saveModal} text={['스케치북에 저장되었어요!']} onConfirm={handleClickSaveModal}/>
     </ImageBackground>
   );
@@ -138,15 +179,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 30,
     right: -85,
-    width: 100, // Size can be adjusted
-    height: 100, // Size can be adjusted
+    width: 100,
+    height: 100,
   },
   sideImageBottom: {
     position: 'absolute',
     top: 150,
     right: -85,
-    width: 100, // Size can be adjusted
-    height: 100, // Size can be adjusted
+    width: 100,
+    height: 100,
   },
   paletteButtonContainer: {
     position: 'absolute',

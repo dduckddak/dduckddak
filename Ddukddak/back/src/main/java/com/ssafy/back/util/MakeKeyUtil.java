@@ -24,4 +24,13 @@ public class MakeKeyUtil {
 		return "default-book/" + bookId + (isFace ? "/nonblank/" : "/blank/") + pageSeq;
 	}
 
+	//대화 상대 역할 기본 이미지
+	public static String subBasic(int bookId) {
+		return "person/" + bookId + "/basic";
+	}
+
+	//대화 상대 역할 대화 이미지
+	public static String subTalk(int bookId) {
+		return "person/" + bookId + "/talk";
+	}
 }

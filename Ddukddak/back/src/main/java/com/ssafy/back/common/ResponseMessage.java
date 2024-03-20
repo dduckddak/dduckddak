@@ -19,5 +19,7 @@ public interface ResponseMessage {
 
 	String FastApi_ERROR = "FastApi error.";
 	String ELEVENLABS_ERROR = "ElevenLabs error.";
+	String FASTAPI_ERROR = "FastAPI error.";
+	String GPT_ERROR = "Gpt error.";
 
 }

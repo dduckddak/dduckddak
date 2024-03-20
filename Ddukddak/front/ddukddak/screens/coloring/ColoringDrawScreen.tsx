@@ -1,11 +1,23 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, ImageBackground, Image, Dimensions, TouchableOpacity, Modal, Pressable, Text } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+  Modal,
+  Pressable,
+  Text,
+} from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { WebView } from 'react-native-webview';
 
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import ColorPicker, { Panel5, OpacitySlider, colorKit, PreviewText } from 'reanimated-color-picker';
 import type { returnedResults } from 'reanimated-color-picker';
+import GreenButton from '../../components/GreenButton';
+import AlertModal from '../../components/AlertModal';
 
 
 interface ColoringDrawScreenProps {
@@ -13,18 +25,35 @@ interface ColoringDrawScreenProps {
 }
 
 const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) => {
-  // TODO color picker 수정중
-  // const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [saveModal, setSaveModal] = useState(false);
+
+  const webViewRef = React.useRef<WebView>(null);
+
+  const initialColor = colorKit.HEX('black');
   //
-  // const initialColor = colorKit.randomRgbColor().hex();
-  //
-  // const selectedColor = useSharedValue(initialColor);
-  // const backgroundColorStyle = useAnimatedStyle(() => ({ backgroundColor: selectedColor.value }));
-  //
-  // const onColorSelect = (color: returnedResults) => {
-  //   'worklet';
-  //   selectedColor.value = color.hex;
-  // };
+  const selectedColor = useSharedValue(initialColor);
+  const backgroundColorStyle = useAnimatedStyle(() => ({ backgroundColor: selectedColor.value }));
+
+  const onColorSelect = (color: returnedResults) => {
+    'worklet';
+    selectedColor.value = color.hex;
+
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    const data = {
+      type: 'colorChange',
+      value: selectedColor.value,
+    };
+    webViewRef.current.postMessage(JSON.stringify(data));
+  };
+
+  const handleClickSaveModal = () => {
+    navigation.goBack();
+    navigation.goBack();
+  }
 
   return (
 
@@ -32,41 +61,40 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
       source={require('../../assets/images/background/background.png')}
       style={styles.imageBackground}
     >
-      {/*<TouchableOpacity style={styles.paletteButtonContainer} onPress={() => setShowModal(true)}>*/}
-      {/*  <Image*/}
-      {/*    source={require('../../assets/images/coloring/palette.png')}*/}
-      {/*    style={styles.paletteButton}*/}
-      {/*  />*/}
-      {/*</TouchableOpacity>*/}
-      {/*<Modal onRequestClose={() => setShowModal(false)} visible={showModal} animationType='slide'>*/}
-      {/*  <Animated.View style={[pickerStyles.container, backgroundColorStyle]}>*/}
-      {/*    <View style={pickerStyles.pickerContainer}>*/}
-      {/*      <ColorPicker*/}
-      {/*        value={selectedColor.value}*/}
-      {/*        sliderThickness={25}*/}
-      {/*        thumbSize={24}*/}
-      {/*        thumbShape='circle'*/}
-      {/*        onChange={onColorSelect}*/}
-      {/*      >*/}
-      {/*        <Panel5 style={pickerStyles.panelStyle} />*/}
+      <TouchableOpacity style={styles.paletteButtonContainer} onPress={() => setShowModal(true)}>
+        <Image
+          source={require('../../assets/images/coloring/palette.png')}
+          style={styles.paletteButton}
+        />
+      </TouchableOpacity>
+      <Modal onRequestClose={() => setShowModal(false)} visible={showModal} animationType="slide">
+        <Animated.View style={[pickerStyles.container, backgroundColorStyle]}>
+          <View style={pickerStyles.pickerContainer}>
+            <ColorPicker
+              value={selectedColor.value}
+              sliderThickness={25}
+              thumbSize={24}
+              thumbShape="circle"
+              onChange={onColorSelect}
+            >
+              <Panel5 style={pickerStyles.panelStyle} />
 
-      {/*        <OpacitySlider style={pickerStyles.sliderStyle} adaptSpectrum />*/}
+              <OpacitySlider style={pickerStyles.sliderStyle} adaptSpectrum />
 
-      {/*        <View style={pickerStyles.previewTxtContainer}>*/}
-      {/*          <PreviewText style={{ color: '#707070' }} colorFormat='hsla' />*/}
-      {/*        </View>*/}
-      {/*      </ColorPicker>*/}
-      {/*    </View>*/}
+              <View style={pickerStyles.previewTxtContainer}>
+                <PreviewText style={{ color: '#707070' }} colorFormat="hex" />
+              </View>
+            </ColorPicker>
+          </View>
 
-      {/*    <Pressable style={pickerStyles.closeButton} onPress={() => setShowModal(false)}>*/}
-      {/*      <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>*/}
-      {/*    </Pressable>*/}
-      {/*  </Animated.View>*/}
-      {/*</Modal>*/}
+          <Pressable style={pickerStyles.closeButton} onPress={handleCloseModal}>
+            <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>
+          </Pressable>
+        </Animated.View>
+      </Modal>
 
 
       <View style={styles.webviewContainer}>
-
         <Image
           source={require('../../assets/images/coloring/coloring_side_dduk.png')}
           style={styles.sideImageTop}
@@ -76,11 +104,16 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
           style={styles.sideImageBottom}
         />
         <WebView
+          ref={webViewRef}
           source={{ uri: 'http://192.168.30.124:3000' }}
           style={styles.webviewStyle}
           injectedJavaScript={`window.imgSrc = "https://pjt-image-bucket.s3.ap-northeast-2.amazonaws.com/ddukddak/color_1.jpg";`}
+
         />
       </View>
+
+      <GreenButton style={styles.saveButtonContainer} onPress={() => setSaveModal(true)} content="저장"/>
+      <AlertModal isVisible={saveModal} text={['스케치북에 저장되었어요!']} onConfirm={handleClickSaveModal}/>
     </ImageBackground>
   );
 };
@@ -125,6 +158,13 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
+  saveButtonContainer: {
+    position: 'absolute',
+    bottom: Dimensions.get('screen').height * 0.05,
+    right: Dimensions.get('screen').width * 0.04,
+    width: 100,
+    height: 60,
+  }
 });
 
 

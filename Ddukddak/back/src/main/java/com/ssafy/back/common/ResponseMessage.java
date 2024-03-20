@@ -13,6 +13,8 @@ public interface ResponseMessage {
 	String DATABASE_ERROR = "Database error.";
 
 	String S3_ERROR = "S3 error.";
+
+	String FastApi_ERROR = "FastApi error.";
 	String ELEVENLABS_ERROR = "ElevenLabs error.";
 
 }

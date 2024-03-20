@@ -95,7 +95,7 @@ public class VoiceServiceImpl implements VoiceService {
 
 			voiceEntity.setVoiceModelId(voiceModelId);
 
-			logger.info(voiceEntity.getVoiceName() + " 추가 : " + voiceModelId);
+			logger.info(voiceEntity.getVoiceName() + " 추가 : " + voiceModelId) ;
 
 			//학습된 목소리를 이용해 미리듣기 음성 생성
 			Gson gson = new Gson();

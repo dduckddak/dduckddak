@@ -10,12 +10,13 @@ public class MakeKeyUtil {
 	}
 
 	//photoId 이용한 사진 키 제작
-	public static String photo(int photoId) {
-		return "ph" + photoId;
+	public static String photo(int userSeq, int photoId) {
+		return userSeq + "/photo" + "/original/" + photoId;
 	}
 
 	//coloringId 이용한 사진 키 제작
-	public static String coloring(int coloringId) {
-		return "co" + coloringId;
+	public static String coloring(int userSeq, int coloringId) {
+		return userSeq + "/coloring/" + coloringId;
 	}
+
 }

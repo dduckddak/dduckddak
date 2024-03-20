@@ -27,6 +27,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
   const [isValidPassword, setIsValidPassword] = useState(false);
   const handlePress = () => {
     console.log('버튼누름!');
+    navigation.navigate('home');
   };
   // 비밀번호 유효성 검사
   const validatePassword = (): boolean => {

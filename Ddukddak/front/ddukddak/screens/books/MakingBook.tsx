@@ -9,8 +9,8 @@ import {
   Dimensions, // Dimensions import 추가
 } from 'react-native';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('screen').width;
+const windowHeight = Dimensions.get('screen').height;
 
 const imagePaths = [
   require('../../assets/images/books/bangmang/0.png'),
@@ -40,7 +40,7 @@ const imagePaths = [
 const captions = [
   '도깨비방망이 시작',
   '옛날 옛날 욕심쟁이 형과',
-  '마음 착한 아우가 살았어',
+  '마음 착한 아우가 살았어요',
   '어느날 아우가 산에서 나무를 하는데 개암이 세개가 뚝 떨어졌어요',
   '“어? 개암이네 이건 부모님과 형님께 드려야겠다”',
   '집에 가려는데 날이 저물어 저녁이 되었어요 “어? 벌써 이렇게 되었나? 서둘러 가야겠다”',
@@ -54,7 +54,7 @@ const captions = [
   '도깨비들은 방망이도 팽개치고 꽁지 빠지게 달렸어요',
   '덕분에 아우는 마을에서 큰 부자가 되었지요.',
   '이 소식을 들은 욕심쟁이 형은 그 길로 개암을 따서 빈집을 찾아갔어요.',
-  '대들보 위에 숨어서 한참을 기다리는데 정말로 도깨비들이 나타났어.',
+  '대들보 위에 숨어서 한참을 기다리는데 정말로 도깨비들이 나타났어요.',
   '“이제 나도 큰 부자가 되겠구나!” 형은 기회를 보다가 개암을 꺼내 꽉 깨물었어요.',
   '“ 그놈이 또왔다!',
   '“저위에 있다! 이번에도 속을줄 알고?” 형대사”어..? 이게 아닌데?”',
@@ -117,7 +117,7 @@ const MakingBook: React.FC = () => {
 };
 
 // 캡션을 최대 20자씩 나오도록 분할하는 함수
-const splitCaption = (caption) => {
+const splitCaption = (caption: string): string => {
   if (caption.length <= 20) return caption;
   const firstLine = caption.slice(0, 26);
   const remainingChars = caption.slice(26);
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   caption: {
     textAlign: 'center',
     position: 'absolute',
-    bottom: 0, // 이미지 아래에 위치
+    bottom: 25, // 이미지 아래에 위치
     width: '100%', // 부모 요소에 꽉 차게 설정
     fontFamily: 'im-hyemin-bold',
     fontSize: 28,

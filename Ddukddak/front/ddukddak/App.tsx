@@ -99,6 +99,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="mainrending"
         // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
         screenOptions={{
           headerTransparent: true,
@@ -108,13 +109,15 @@ export default function App() {
           title: '',
         }}
       >
-        {/* ------------------------ 제일 첫 화면 ------------------------ */}
+        {/* ------------------------ 메인 페이지 ------------------------ */}
         <Stack.Screen
           name="home"
           component={MainScreen}
-          options={{
-            headerTitle: LogoTitle, // 가운데 로고부분
-          }}
+          options={
+            {
+              // headerTitle: LogoTitle, // 가운데 로고부분
+            }
+          }
         />
 
         {/* ------------------------ 내가 주인공 페이지 ------------------------ */}
@@ -140,7 +143,13 @@ export default function App() {
         />
 
         {/* ------------------------ 회원가입 페이지 ------------------------ */}
-        <Stack.Screen name="signup" component={Signup} />
+        <Stack.Screen
+          name="signup"
+          component={Signup}
+          options={{
+            headerRight: LogoRight,
+          }}
+        />
 
         {/* ------------------------ 뚝딱대화 페이지 ------------------------ */}
         <Stack.Screen

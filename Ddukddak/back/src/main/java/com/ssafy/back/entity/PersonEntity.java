@@ -1,14 +1,12 @@
 package com.ssafy.back.entity;
 
-import com.ssafy.back.entity.compositeKey.PersonId;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,14 +20,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PersonEntity {
-	
-	@EmbeddedId
-	private PersonId personId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@MapsId("bookId")
-	@JoinColumn(name = "book_id", nullable = false)
-	BookEntity bookEntity;
+	@Id
+	@Column(name = "book_id", nullable = false)
+	private Integer bookId;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
+	@JoinColumn(name = "book_id")
+	private BookEntity bookEntity;
 
 	@Column(name = "person_name", nullable = false, length = 20)
 	private String personName;

@@ -6,6 +6,9 @@ public interface ResponseMessage {
 
 	String DUPLICATE = "Duplicate.";
 
+	String DUPLICATE_ID = "Duplicate ID.";
+
+
 	String SIGN_IN_FAIL = "Login information mismatch.";
 	String CERTIFICATION_FAIL = "Certification failed.";
 

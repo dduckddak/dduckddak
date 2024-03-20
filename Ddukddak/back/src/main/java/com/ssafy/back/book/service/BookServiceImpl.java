@@ -28,6 +28,7 @@ import com.ssafy.back.book.dto.response.CreateReviewResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
+import com.ssafy.back.book.dto.response.UpdateReviewResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.book.repository.ReviewRepository;
 import com.ssafy.back.common.ResponseDto;
@@ -35,6 +36,7 @@ import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.util.MakeKeyUtil;
 
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -182,6 +184,29 @@ public class BookServiceImpl implements BookService {
 		try {
 			reviewRepository.insertReviewNative(dto.getBookId(), userSeq, dto.isLike());
 			logger.info("User {}'s review for book {} created.", userSeq, dto.getBookId());
+			return ResponseDto.success();
+
+		} catch (Exception e) {
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<? super UpdateReviewResponseDto> updateReview(CreateReviewRequestDto dto) {
+		//테스트 코드
+		Integer userSeq = 1;
+
+		try {
+			reviewRepository.updateReviewNative(dto.getBookId(), userSeq, dto.isLike());
+			logger.info("User {}'s review for book {} updated.", userSeq, dto.getBookId());
+
+			// ReviewEntity reviewEntity = reviewRepository.findById(new ReviewId(dto.getBookId(), userSeq));
+			// reviewEntity.setIsLike(dto.isLike());
+			// reviewRepository.save(reviewEntity);
+			// logger.info("reviewEntity : " + reviewEntity.toString());
 			return ResponseDto.success();
 
 		} catch (Exception e) {

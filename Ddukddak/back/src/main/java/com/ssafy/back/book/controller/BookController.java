@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import com.ssafy.back.book.dto.response.CreateReviewResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
+import com.ssafy.back.book.dto.response.UpdateReviewResponseDto;
 import com.ssafy.back.book.service.BookService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -88,6 +90,11 @@ public class BookController {
 	@PostMapping("/reviews")
 	public ResponseEntity<? super CreateReviewResponseDto> createReview(@RequestBody CreateReviewRequestDto request) {
 		return bookService.createReview(request);
+	}
+
+	@PutMapping("/reviews")
+	public ResponseEntity<? super UpdateReviewResponseDto> updateReview(@RequestBody CreateReviewRequestDto request) {
+		return bookService.updateReview(request);
 	}
 
 }

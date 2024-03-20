@@ -22,4 +22,13 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
 	@Query(value = "INSERT INTO review (book_id, user_seq, is_like) VALUES (:bookId, :userSeq, :isLike)", nativeQuery = true)
 	void insertReviewNative(@Param("bookId") Integer bookId, @Param("userSeq") Integer userSeq,
 		@Param("isLike") Boolean isLike);
+
+	// @Transactional
+	// ReviewEntity findById(ReviewId reviewId);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE review SET is_like = :isLike WHERE book_id = :bookId AND user_seq = :userSeq", nativeQuery = true)
+	int updateReviewNative(@Param("bookId") Integer bookId, @Param("userSeq") Integer userSeq,
+		@Param("isLike") Boolean isLike);
 }

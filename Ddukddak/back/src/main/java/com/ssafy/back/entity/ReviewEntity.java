@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "review")
@@ -21,8 +22,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class ReviewEntity {
-	
+
 	@EmbeddedId
 	private ReviewId id;
 

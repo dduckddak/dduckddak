@@ -19,4 +19,9 @@ public class MakeKeyUtil {
 		return userSeq + "/coloring/" + coloringId;
 	}
 
+	//bookId 를 이용한 동화책 그림 키 제작
+	public static String page(int bookId, int pageSeq, boolean isFace) {
+		return "default-book/" + bookId + (isFace ? "/nonblank/" : "/blank/") + pageSeq;
+	}
+
 }

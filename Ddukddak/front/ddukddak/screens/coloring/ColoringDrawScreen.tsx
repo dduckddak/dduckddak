@@ -20,6 +20,8 @@ import GreenButton from '../../components/GreenButton';
 import AlertModal from '../../components/AlertModal';
 import axios from 'axios';
 
+import * as FileSystem from 'expo-file-system';
+
 
 interface ColoringDrawScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -71,26 +73,41 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
     const msgData = JSON.parse(event.nativeEvent.data);
     if (msgData.type === 'saveImage') {
       const dataUrl = msgData.value;
-      console.log(dataUrl);
-      const base64Response = await fetch(`data:image/png;base64,${dataUrl}`);
-      const blob = await base64Response.blob();
-      console.log(blob);
+      const fileName = `${Date.now()}.png`;
+      const fileUri = FileSystem.documentDirectory + fileName;
+
+
+      await FileSystem.writeAsStringAsync(fileUri, dataUrl, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
 
       let formData = new FormData();
-      formData.append("file", blob, 'image.png');
+      formData.append('image', {
+        uri: fileUri,
+        name: fileName,
+        type: 'image/png',
+      });
+      // console.log(formData);
 
-      // 서버에 요청
-      axios.post("http://127.0.0.1:5000/upload", formData, {
+      const config = {
+        method: 'post',
+        url: 'http://192.168.30.124:5000/upload',
         headers: {
           'Content-Type': 'multipart/form-data'
-        }
-      })
-        .then(response => {
-          console.log(response.data);
+        },
+        data : formData
+      };
+
+      axios(config)
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+          setSaveModal(true);
         })
-        .catch(err => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
         });
+
+      await FileSystem.deleteAsync(fileUri);
 
     }
   }

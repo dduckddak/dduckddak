@@ -4,10 +4,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
+import com.ssafy.back.book.dto.response.CreateReviewResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
@@ -35,7 +39,7 @@ public class BookController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation =  ListBookRecommendResponseDto.class))),
+			content = @Content(schema = @Schema(implementation = ListBookRecommendResponseDto.class))),
 	})
 	@GetMapping("/list")
 	public ResponseEntity<? super ListBookRecommendResponseDto> listBook() {
@@ -48,11 +52,12 @@ public class BookController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation =  ListBookSearchResponseDto.class))),
+			content = @Content(schema = @Schema(implementation = ListBookSearchResponseDto.class))),
 	})
 	@GetMapping("/search/{keyword}")
-	public ResponseEntity<? super ListBookSearchResponseDto> searchBook(@PathVariable String keyword) { return bookService.listBookSearch(keyword);}
-
+	public ResponseEntity<? super ListBookSearchResponseDto> searchBook(@PathVariable String keyword) {
+		return bookService.listBookSearch(keyword);
+	}
 
 	@Operation(
 		summary = "책 상세",
@@ -60,7 +65,7 @@ public class BookController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation =  BookDetailResponseDto.class))),
+			content = @Content(schema = @Schema(implementation = BookDetailResponseDto.class))),
 	})
 	@GetMapping("/{bookId}")
 	public ResponseEntity<? super BookDetailResponseDto> bookDetail(@PathVariable Integer bookId) {
@@ -73,10 +78,16 @@ public class BookController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation =  BookDetailResponseDto.class))),
+			content = @Content(schema = @Schema(implementation = BookDetailResponseDto.class))),
 	})
 	@GetMapping("/like")
 	public ResponseEntity<? super ListBookLikeResponseDto> listBookLike() {
 		return bookService.listBookLike();
 	}
+
+	@PostMapping("/reviews")
+	public ResponseEntity<? super CreateReviewResponseDto> createReview(@RequestBody CreateReviewRequestDto request) {
+		return bookService.createReview(request);
+	}
+
 }

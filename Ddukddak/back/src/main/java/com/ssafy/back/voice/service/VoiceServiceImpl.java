@@ -169,7 +169,7 @@ public class VoiceServiceImpl implements VoiceService {
 
 		//S3에서 미리 듣기 음성 삭제
 		try {
-			request.getVoiceIds().forEach(voiceId -> {
+			request.getDeleteVoiceIds().forEach(voiceId -> {
 				String key = MakeKeyUtil.voice(userSeq, voiceId);
 				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
 				amazonS3.deleteObject(s3request);
@@ -185,7 +185,7 @@ public class VoiceServiceImpl implements VoiceService {
 
 		//ElevenLabs에서 목소리 삭제
 		try {
-			for (Integer voiceId : request.getVoiceIds()) {
+			for (Integer voiceId : request.getDeleteVoiceIds()) {
 				String voiceModelId = voiceRepository.findVoiceModelIdByVoiceId(voiceId);
 				Unirest.delete("https://api.elevenlabs.io/v1/voices/" + voiceModelId)
 					.header("xi-api-key", elevenLabsKey)
@@ -201,9 +201,9 @@ public class VoiceServiceImpl implements VoiceService {
 		}
 
 		//DB에서 지우기
-		voiceRepository.deleteAllById(request.getVoiceIds());
+		voiceRepository.deleteAllById(request.getDeleteVoiceIds());
 
-		logger.info(request.getVoiceIds() + " 삭제 완료");
+		logger.info(request.getDeleteVoiceIds() + " 삭제 완료");
 
 		return ResponseDto.success();
 	}

@@ -117,13 +117,13 @@ public class ColoringServiceImpl implements ColoringService {
 	@Override
 	public ResponseEntity<? super DeleteColoringResponseDto> deleteVoice(DeleteColoringRequestDto request) {
 		//DB에서 지우기
-		coloringRepository.deleteAllById(request.getColoringIds());
+		coloringRepository.deleteAllById(request.getDeleteColoringIds());
 
-		logger.info(request.getColoringIds() + " 삭제 완료");
+		logger.info(request.getDeleteColoringIds() + " 삭제 완료");
 
 		//S3에서 색칠 그림 삭제
 		try {
-			request.getColoringIds().forEach(coloringId -> {
+			request.getDeleteColoringIds().forEach(coloringId -> {
 				String key = MakeKeyUtil.coloring(1, coloringId);
 				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
 				amazonS3.deleteObject(s3request);

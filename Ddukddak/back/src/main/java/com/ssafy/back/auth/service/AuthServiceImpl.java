@@ -7,12 +7,17 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.back.auth.dto.CustomUserDetails;
+import com.ssafy.back.auth.dto.request.FCMTokenRequestDto;
 import com.ssafy.back.auth.dto.request.IdCheckRequestDto;
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
 import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
+import com.ssafy.back.auth.dto.response.FCMTokenResponseDto;
 import com.ssafy.back.auth.dto.response.IdCheckResponseDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
@@ -96,5 +101,22 @@ public class AuthServiceImpl implements AuthService{
 
 		return IdCheckResponseDto.success();
 	}
+
+	@Override
+	public ResponseEntity<? super FCMTokenResponseDto> savedFcmToken(FCMTokenRequestDto dto) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+		String userId = customUserDetails.getUserId();
+
+		UserEntity userEntity = userRepository.findByUserId(userId);
+
+		userEntity.setFcmToken(dto.getFcmToken());
+
+		userRepository.save(userEntity);
+
+		return FCMTokenResponseDto.success();
+	}
+
 
 }

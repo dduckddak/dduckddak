@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String userName = parsedToken.getBody().get("userName", String.class);
             String sex = parsedToken.getBody().get("sex", String.class);
             int birth = parsedToken.getBody().get("birth", Integer.class);
-            int userId = parsedToken.getBody().get("userId", Integer.class);
+            String userId = parsedToken.getBody().get("userId", String.class);
 
 
             CustomUserDetails customUserDetails = new CustomUserDetails(userSeq,userName,sex,birth,userId);

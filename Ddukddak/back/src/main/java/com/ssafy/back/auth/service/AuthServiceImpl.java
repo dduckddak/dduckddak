@@ -2,6 +2,8 @@ package com.ssafy.back.auth.service;
 
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class AuthServiceImpl implements AuthService{
 
 	private final UserRepository userRepository;
 	private final JwtProvider jwtProvider;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	@Override
 	public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
@@ -33,8 +36,11 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public ResponseEntity<? super LoginResponseDto> login(LoginRequestDto dto) {
 
+		// JwtAuthenticationFilter 에서 redis까서 value 가 logouted 인지 확인하기 (블랙리스트 확인)
+
 		UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
 
+		// 아이디 없음
 		if(userEntity == null) return LoginResponseDto.loginFail();
 
 		int userSeq = userEntity.getUserSeq();
@@ -44,11 +50,16 @@ public class AuthServiceImpl implements AuthService{
 		String userId = userEntity.getUserId();
 		String userPassword = userEntity.getUserPassword();
 
+		// 비밀번호 불일치
 		if(!(dto.getUserPassword().equals(userPassword))) return LoginResponseDto.loginFail();
 
 		// 토큰 만들어서 반환, 헤더에 실어주기
 		String accessToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);
 		String refreshToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);
+
+		// redis 에 (refreshToken , userSeq) 저장
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+		valueOperations.set(refreshToken, userId);
 
 		return LoginResponseDto.loginSuccess(accessToken, refreshToken);
 	}

@@ -12,17 +12,22 @@ import lombok.Getter;
 @Getter
 public class LoginResponseDto extends ResponseDto{
 
+	private String accessToken;
+	private String refreshToken;
 
-	public static ResponseEntity<LoginResponseDto> login_success(HttpHeaders headers){
-		LoginResponseDto responseBody = new LoginResponseDto();
-		return ResponseEntity
-			.status(HttpStatus.NOT_FOUND)
-			.headers(headers)
-			.body(responseBody);
+	public LoginResponseDto(String accessToken, String refreshToken){
+		this.accessToken = accessToken;
+		this.refreshToken = refreshToken;
 	}
 
-	public static ResponseEntity<ResponseDto> login_fail(){
+	public static ResponseEntity<LoginResponseDto> loginSuccess(String accessToken, String refreshToken){
+		LoginResponseDto responseBody = new LoginResponseDto(accessToken, refreshToken);
+		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+	}
+
+	public static ResponseEntity<ResponseDto> loginFail(){
 		ResponseDto responseBody = new ResponseDto(ResponseMessage.LOGIN_IN_FAIL);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
 	}
+
 }

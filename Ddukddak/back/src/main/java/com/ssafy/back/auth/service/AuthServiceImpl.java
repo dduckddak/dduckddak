@@ -2,7 +2,6 @@ package com.ssafy.back.auth.service;
 
 import java.time.temporal.ChronoUnit;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,21 +34,23 @@ public class AuthServiceImpl implements AuthService{
 	public ResponseEntity<? super LoginResponseDto> login(LoginRequestDto dto) {
 
 		UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
+
+		if(userEntity == null) return LoginResponseDto.loginFail();
+
 		int userSeq = userEntity.getUserSeq();
 		String userName = userEntity.getUserName();
 		String sex = userEntity.getSex();
 		int birth = userEntity.getBirth();
 		String userId = userEntity.getUserId();
+		String userPassword = userEntity.getUserPassword();
+
+		if(!(dto.getUserPassword().equals(userPassword))) return LoginResponseDto.loginFail();
 
 		// 토큰 만들어서 반환, 헤더에 실어주기
 		String accessToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);
 		String refreshToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("accessToken", accessToken);
-		headers.add("refreshToken", refreshToken);
-
-		return LoginResponseDto.login_success(headers);
+		return LoginResponseDto.loginSuccess(accessToken, refreshToken);
 	}
 
 }

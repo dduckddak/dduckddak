@@ -11,6 +11,7 @@ public interface ResponseMessage {
 
 	String SIGN_IN_FAIL = "Sign In Fail.";
 	String LOGIN_IN_FAIL = "Login In Fail.";
+	String LOGOUT_IN_FAIL = "Logout In Fail.";
 	String CERTIFICATION_FAIL = "Certification failed.";
 
 	String MAIL_FAIL = "Mail send failed.";

@@ -15,6 +15,7 @@ import com.ssafy.back.coloring.dto.request.DeleteColoringRequestDto;
 import com.ssafy.back.coloring.dto.request.InsertColoringRequestDto;
 import com.ssafy.back.coloring.dto.response.DeleteColoringResponseDto;
 import com.ssafy.back.coloring.dto.response.InsertColoringResponseDto;
+import com.ssafy.back.coloring.dto.response.ListColoringBaseResponseDto;
 import com.ssafy.back.coloring.dto.response.ListColoringResponseDto;
 import com.ssafy.back.coloring.service.ColoringService;
 
@@ -83,5 +84,21 @@ public class ColoringController {
 	public ResponseEntity<? super DeleteColoringResponseDto> deleteColoring(
 		@RequestBody DeleteColoringRequestDto request) {
 		return coloringService.deleteVoice(request);
+	}
+
+	@Operation(
+		summary = "색칠 그림 베이스 목록",
+		description = "색칠 그림 베이스 목록을 불러온다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation = ListColoringBaseResponseDto.class))),
+		@ApiResponse(responseCode = "401", description = "토큰 인증 실패."),
+		@ApiResponse(responseCode = "403", description = "리프레쉬 토큰 인증 실패."),
+		@ApiResponse(responseCode = "410", description = "S3 요청 실패.")
+	})
+	@GetMapping("/base")
+	public ResponseEntity<? super ListColoringBaseResponseDto> listColoringBase() {
+		return coloringService.listColoringBase();
 	}
 }

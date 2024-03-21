@@ -1,6 +1,7 @@
 package com.ssafy.back.coloring.service;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,12 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.ssafy.back.coloring.dto.ColoringDto;
 import com.ssafy.back.coloring.dto.request.DeleteColoringRequestDto;
 import com.ssafy.back.coloring.dto.request.InsertColoringRequestDto;
 import com.ssafy.back.coloring.dto.response.DeleteColoringResponseDto;
 import com.ssafy.back.coloring.dto.response.InsertColoringResponseDto;
+import com.ssafy.back.coloring.dto.response.ListColoringBaseResponseDto;
 import com.ssafy.back.coloring.dto.response.ListColoringResponseDto;
 import com.ssafy.back.coloring.repository.ColoringRepository;
 import com.ssafy.back.common.ResponseDto;
@@ -132,5 +137,34 @@ public class ColoringServiceImpl implements ColoringService {
 			DeleteColoringResponseDto.S3error();
 		}
 		return ResponseDto.success();
+	}
+
+	@Override
+	public ResponseEntity<? super ListColoringBaseResponseDto> listColoringBase() {
+		try {
+			//S3로 coloring 폴더 안의 파일 목록 요청
+			ListObjectsV2Request request = new ListObjectsV2Request()
+				.withBucketName(bucket)
+				.withPrefix("coloring/");
+
+			ListObjectsV2Result result = amazonS3.listObjectsV2(request);
+			List<S3ObjectSummary> objects = result.getObjectSummaries();
+
+			List<String> coloringBaseList = new ArrayList<>();
+			objects.forEach(object -> {
+				coloringBaseList.add(amazonS3.getUrl(bucket, object.getKey()).toString());
+			});
+
+			//폴더 객체는 제외
+			coloringBaseList.remove(0);
+
+			return ListColoringBaseResponseDto.success(coloringBaseList);
+
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
+
+			return ListColoringBaseResponseDto.S3error();
+		}
 	}
 }

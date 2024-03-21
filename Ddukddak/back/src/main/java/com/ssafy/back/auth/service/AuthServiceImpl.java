@@ -17,15 +17,19 @@ import com.ssafy.back.auth.dto.request.IdCheckRequestDto;
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
 import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
+import com.ssafy.back.auth.dto.request.TokenRequestDto;
 import com.ssafy.back.auth.dto.response.FCMTokenResponseDto;
 import com.ssafy.back.auth.dto.response.IdCheckResponseDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
+import com.ssafy.back.auth.dto.response.TokenResponseDto;
 import com.ssafy.back.auth.provider.JwtProvider;
 import com.ssafy.back.auth.repository.UserRepository;
 import com.ssafy.back.entity.UserEntity;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -118,5 +122,36 @@ public class AuthServiceImpl implements AuthService{
 		return FCMTokenResponseDto.success();
 	}
 
+	@Override
+	public ResponseEntity<? super TokenResponseDto> createNewToken(TokenRequestDto dto) {
+		/*
+        refreshToken 으로 새로운 Token 요청
+        1. refreshToken 유효한지 검증
+        2. redis 에 refreshToken 있는지 확인
+        3. 있다면, token 들 새로 발급해줘서 던지고, redis에 refreshToken 갈아끼우기
+         */
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+		Jws<Claims> parsedToken = jwtProvider.validateToken(dto.getRefreshToken());
+
+		int userSeq = parsedToken.getBody().get("userId", Integer.class);
+		String userName = parsedToken.getBody().get("userId", String.class);
+		String sex = parsedToken.getBody().get("userId", String.class);
+		int birth = parsedToken.getBody().get("userId", Integer.class);
+		String userId = parsedToken.getBody().get("userId", String.class);
+
+		if(!userId.equals(valueOperations.get(dto.getRefreshToken()))){
+			return TokenResponseDto.refreshTokenNotFound();
+		}
+
+		String accessToken = jwtProvider.createToken(userSeq,userName,sex, birth,userId, 2,ChronoUnit.HOURS);
+		String refreshToken = jwtProvider.createToken(userSeq,userName,sex, birth,userId, 6,ChronoUnit.HOURS);
+
+		redisTemplate.delete(dto.getRefreshToken());
+		valueOperations.set(refreshToken, userId);
+
+		return TokenResponseDto.newTokenSuccess(accessToken, refreshToken);
+
+	}
 
 }

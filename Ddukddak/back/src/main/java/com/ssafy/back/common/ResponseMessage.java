@@ -4,10 +4,11 @@ public interface ResponseMessage {
 	String SUCCESS = "Success.";
 	String VALIDATION_FAIL = "Validation failed.";
 
+	String REFRESH_TOKEN_ERROR = "RefreshToken error.";
+
 	String DUPLICATE = "Duplicate.";
 
 	String DUPLICATE_ID = "Duplicate ID.";
-
 
 	String SIGN_IN_FAIL = "Sign In Fail.";
 	String LOGIN_IN_FAIL = "Login In Fail.";

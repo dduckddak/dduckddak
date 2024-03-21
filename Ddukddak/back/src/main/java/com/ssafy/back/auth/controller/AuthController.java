@@ -11,11 +11,13 @@ import com.ssafy.back.auth.dto.request.IdCheckRequestDto;
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
 import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
+import com.ssafy.back.auth.dto.request.TokenRequestDto;
 import com.ssafy.back.auth.dto.response.FCMTokenResponseDto;
 import com.ssafy.back.auth.dto.response.IdCheckResponseDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
+import com.ssafy.back.auth.dto.response.TokenResponseDto;
 import com.ssafy.back.auth.service.AuthService;
 import com.ssafy.back.voice.dto.response.ListVoiceResponseDto;
 
@@ -95,5 +97,19 @@ public class AuthController {
 	@PostMapping("/fcmToken")
 	public ResponseEntity<? super FCMTokenResponseDto> login(@RequestBody @Valid FCMTokenRequestDto requestBody){
 		return authService.savedFcmToken(requestBody);
+	}
+
+	@Operation(
+		summary = "refreshToken 새롭게 발급",
+		description = "accessToken 만료되었을때, refreshToken 발급 받음"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success."),
+	})
+	@PostMapping("/refresh-token")
+	public ResponseEntity<? super TokenResponseDto> createNewToken(
+		@RequestBody @Valid TokenRequestDto requestBody
+	){
+		return authService.createNewToken(requestBody);
 	}
 }

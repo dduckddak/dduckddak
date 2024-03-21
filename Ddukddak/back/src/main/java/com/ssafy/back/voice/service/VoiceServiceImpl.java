@@ -167,6 +167,22 @@ public class VoiceServiceImpl implements VoiceService {
 		//test코드(user지정)
 		int userSeq = 1;
 
+		//S3에서 미리 듣기 음성 삭제
+		try {
+			request.getVoiceIds().forEach(voiceId -> {
+				String key = MakeKeyUtil.voice(userSeq, voiceId);
+				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
+				amazonS3.deleteObject(s3request);
+
+				logger.info(key + " S3 삭제 완료");
+			});
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
+
+			DeleteVoiceResponseDto.S3error();
+		}
+
 		//ElevenLabs에서 목소리 삭제
 		try {
 			for (Integer voiceId : request.getVoiceIds()) {
@@ -189,21 +205,6 @@ public class VoiceServiceImpl implements VoiceService {
 
 		logger.info(request.getVoiceIds() + " 삭제 완료");
 
-		//S3에서 미리 듣기 음성 삭제
-		try {
-			request.getVoiceIds().forEach(voiceId -> {
-				String key = MakeKeyUtil.voice(userSeq, voiceId);
-				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
-				amazonS3.deleteObject(s3request);
-
-				logger.info(key + " S3 삭제 완료");
-			});
-		} catch (Exception e) {
-			logger.debug(ResponseMessage.S3_ERROR);
-			logger.error(e);
-
-			DeleteVoiceResponseDto.S3error();
-		}
 		return ResponseDto.success();
 	}
 

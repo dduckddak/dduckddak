@@ -44,6 +44,7 @@ public class TalkController {
 		@ApiResponse(responseCode = "401", description = "토큰 인증 실패."),
 		@ApiResponse(responseCode = "403", description = "리프레쉬 토큰 인증 실패."),
 		@ApiResponse(responseCode = "404", description = "DB에 값이 없음."),
+		@ApiResponse(responseCode = "410", description = "S3 요청 실패.")
 	})
 	@GetMapping("/{bookId}")
 	public ResponseEntity<? super StartTalkResponseDto> startTalk(@PathVariable int bookId) {

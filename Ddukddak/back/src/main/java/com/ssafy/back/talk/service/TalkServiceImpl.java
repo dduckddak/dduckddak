@@ -1,5 +1,6 @@
 package com.ssafy.back.talk.service;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.logging.log4j.LogManager;
@@ -64,15 +65,25 @@ public class TalkServiceImpl implements TalkService {
 			return ResponseDto.databaseError();
 		}
 
-		String subBasic = amazonS3.getUrl(bucket, MakeKeyUtil.subBasic(bookId)).toString();
-		String subTalk = amazonS3.getUrl(bucket, MakeKeyUtil.subTalk(bookId)).toString();
+		String basicKey = MakeKeyUtil.subBasic(bookId);
+		String talkKey = MakeKeyUtil.subTalk(bookId);
 
-		logger.info(bookId + " :\n"
-			+ "역할 이름 - " + subName + "\n"
-			+ "기본 이미지 경로 - " + subBasic + "\n"
-			+ "대화 이미지 경로 - " + subTalk);
+		if (amazonS3.doesObjectExist(bucket, basicKey) && amazonS3.doesObjectExist(basicKey, talkKey)) {
+			String subBasic = amazonS3.getUrl(bucket, basicKey).toString();
+			String subTalk = amazonS3.getUrl(bucket, talkKey).toString();
 
-		return StartTalkResponseDto.success(subName, subBasic, subTalk);
+			logger.info(bookId + " :\n"
+				+ "역할 이름 - " + subName + "\n"
+				+ "기본 이미지 경로 - " + subBasic + "\n"
+				+ "대화 이미지 경로 - " + subTalk);
+
+			return StartTalkResponseDto.success(subName, subBasic, subTalk);
+		} else {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error("S3에서 파일을 찾을 수 없습니다.");
+
+			return StartTalkResponseDto.S3error();
+		}
 	}
 
 	@Override
@@ -88,12 +99,10 @@ public class TalkServiceImpl implements TalkService {
 		int userSeq = 1;
 
 		//FastAPI로 요청을 보내고 사용자의 말을 받아옴
-		try {
+		try (InputStream inputStream = request.getTalkFile().getInputStream()) {
 			HttpResponse<String> response = Unirest.post(FastapiURL + "/api/v1/f/stt")
-				.field("file", request.getTalkFile().getInputStream(), request.getTalkFile().getOriginalFilename())
+				.field("file", inputStream, request.getTalkFile().getOriginalFilename())
 				.asString();
-
-			request.getTalkFile().getInputStream().close();
 
 			JsonObject json = JsonParser.parseString(response.getBody()).getAsJsonObject();
 			String results = json.get("result").getAsString();
@@ -179,6 +188,8 @@ public class TalkServiceImpl implements TalkService {
 		}
 
 		//gpt 답변으로 음성 생성
+		InputStream inputStream = null;
+
 		try {
 			Gson gson = new Gson();
 			JsonObject json = new JsonObject();
@@ -196,12 +207,10 @@ public class TalkServiceImpl implements TalkService {
 				.body(gson.toJson(json))
 				.asBinary();
 
-			InputStream inputStream = response.getBody();
+			inputStream = response.getBody();
 
 			// InputStream에서 byte 배열로 변환
 			byte[] audioBytes = inputStream.readAllBytes();
-
-			inputStream.close();
 
 			logger.info(request.getBookId() + " 음성 답변 생성");
 
@@ -213,6 +222,13 @@ public class TalkServiceImpl implements TalkService {
 			logger.error(e);
 
 			return TalkResponseDto.ElevenLabserror();
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close();
+			} catch (IOException ex) {
+				logger.error(ex);
+			}
 		}
 	}
 }

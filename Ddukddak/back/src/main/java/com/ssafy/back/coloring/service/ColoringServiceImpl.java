@@ -28,6 +28,7 @@ import com.ssafy.back.util.MakeKeyUtil;
 
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class ColoringServiceImpl implements ColoringService {
@@ -41,7 +42,6 @@ public class ColoringServiceImpl implements ColoringService {
 	private String bucket;
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super ListColoringResponseDto> listColoring() {
 		//로그인 토큰 유효성 확인
 		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -53,42 +53,44 @@ public class ColoringServiceImpl implements ColoringService {
 
 		//테스트 코드
 		int userSeq = 1;
-		try {
-			List<ColoringDto> coloringList = coloringRepository.findByUserEntity_UserSeq(userSeq);
-			coloringList.forEach(coloring -> {
-				String key = MakeKeyUtil.coloring(userSeq, coloring.getColoringId());
+
+		List<ColoringDto> coloringList = coloringRepository.findByUserEntity_UserSeq(userSeq);
+		for (ColoringDto coloring : coloringList) {
+			String key = MakeKeyUtil.coloring(userSeq, coloring.getColoringId());
+
+			if (amazonS3.doesObjectExist(bucket, key)) {
 				coloring.setColoringFile(amazonS3.getUrl(bucket, key).toString());
 
 				logger.info(coloring.getColoringId() + " 경로 : " + coloring.getColoringFile());
-			});
-			logger.info(coloringList);
 
-			return ListColoringResponseDto.success(coloringList);
+			} else {
+				logger.debug(ResponseMessage.S3_ERROR);
+				logger.error("S3에서 파일을 찾을 수 없습니다.");
 
-		} catch (Exception e) {
-			logger.info(ResponseMessage.S3_ERROR);
-			logger.debug(e);
-
-			return ListColoringResponseDto.S3error();
+				return ListColoringResponseDto.S3error();
+			}
 		}
+
+		logger.info(userSeq + " 색칠 그림 리스트 : " + coloringList);
+
+		return ListColoringResponseDto.success(coloringList);
 	}
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super InsertColoringResponseDto> insertVoice(InsertColoringRequestDto request) {
 		ColoringEntity coloringEntity = new ColoringEntity();
 
-		//test코드(user지정)
+		//test코드()
+		int userSeq = 1;
+
 		coloringEntity.setUserEntity(new UserEntity());
-		coloringEntity.getUserEntity().setUserSeq(1);
+		coloringEntity.getUserEntity().setUserSeq(userSeq);
 
 		int coloringId = coloringRepository.save(coloringEntity).getColoringId();
-		String key = MakeKeyUtil.coloring(1, coloringId);
+		String key = MakeKeyUtil.coloring(userSeq, coloringId);
 
 		// S3에 색칠 그림 추가
-		try {
-			InputStream inputStream = request.getColoringFile().getInputStream();
-
+		try (InputStream inputStream = request.getColoringFile().getInputStream()) {
 			ObjectMetadata metadata = new ObjectMetadata();
 			metadata.setContentLength(inputStream.available());
 			metadata.setContentType("image/jpeg");
@@ -97,18 +99,17 @@ public class ColoringServiceImpl implements ColoringService {
 
 			logger.info(coloringId + " " + key + " 색칠 그림 S3 저장");
 
+			return ResponseDto.success();
+
 		} catch (Exception e) {
-			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug(e);
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
 
 			return InsertColoringResponseDto.S3error();
 		}
-
-		return ResponseDto.success();
 	}
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super DeleteColoringResponseDto> deleteVoice(DeleteColoringRequestDto request) {
 		//DB에서 지우기
 		coloringRepository.deleteAllById(request.getColoringIds());
@@ -125,8 +126,8 @@ public class ColoringServiceImpl implements ColoringService {
 				logger.info(key + " S3 삭제 완료");
 			});
 		} catch (Exception e) {
-			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug(e);
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
 
 			DeleteColoringResponseDto.S3error();
 		}

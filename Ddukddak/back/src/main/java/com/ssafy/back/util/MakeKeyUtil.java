@@ -5,8 +5,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MakeKeyUtil {
 	//voiceId를 이용한 미리듣기 음성 키 제작
-	public static String voice(int voiceId) {
-		return "vo" + voiceId;
+	public static String voice(int userSeq, int voiceId) {
+		return userSeq + "/voice/" + voiceId;
 	}
 
 	//photoId 이용한 사진 키 제작

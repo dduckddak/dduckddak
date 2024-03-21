@@ -1,6 +1,7 @@
 package com.ssafy.back.auth.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
 import com.ssafy.back.auth.dto.response.TokenResponseDto;
 import com.ssafy.back.auth.service.AuthService;
+import com.ssafy.back.photo.dto.response.DeletePhotoResponseDto;
 import com.ssafy.back.voice.dto.response.ListVoiceResponseDto;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -112,4 +114,5 @@ public class AuthController {
 	){
 		return authService.createNewToken(requestBody);
 	}
+
 }

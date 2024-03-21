@@ -33,8 +33,10 @@ import com.ssafy.back.entity.PhotoEntity;
 import com.ssafy.back.entity.UserEntity;
 import com.ssafy.back.entity.VoiceEntity;
 import com.ssafy.back.photo.dto.PhotoDto;
+import com.ssafy.back.photo.dto.request.DeletePhotoRequestDto;
 import com.ssafy.back.photo.dto.request.InsertPhotoRequestDto;
 import com.ssafy.back.photo.dto.request.PhotoRequestDto;
+import com.ssafy.back.photo.dto.response.DeletePhotoResponseDto;
 import com.ssafy.back.photo.dto.response.InsertPhotoResponseDto;
 import com.ssafy.back.photo.dto.response.ListPhotoResponseDto;
 import com.ssafy.back.photo.dto.response.PhotoResponseDto;
@@ -44,7 +46,7 @@ import com.ssafy.back.voice.dto.response.InsertVoiceResponseDto;
 import com.ssafy.back.voice.service.VoiceServiceImpl;
 
 import lombok.RequiredArgsConstructor;
-
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
@@ -142,17 +144,28 @@ public class PhotoServiceImpl implements PhotoService {
 
 		List<PhotoEntity> photoList = photoRepository.findByUserEntity(userEntity);
 
-		List<PhotoDto> photoResult = new ArrayList<>();
-		photoList.stream().forEach(photo -> {
+		List<PhotoDto> photoResult = photoList.stream().map(photo -> {
 			PhotoDto photoDto = new PhotoDto();
 			String url = generatePublicUrl(bucket) + photo(photo.getUserEntity().getUserSeq(), photo.getPhotoId());
 
 			photoDto.setPhotoId(photo.getPhotoId());
 			photoDto.setPhotoFile(url);
 
-			photoResult.add(photoDto);
-		});
+			return photoDto;
+		}).toList();
 
 		return ListPhotoResponseDto.success(photoResult);
+	}
+
+	@Override
+	public ResponseEntity<? super DeletePhotoResponseDto> deletePhoto(DeletePhotoRequestDto dto) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
+		photoRepository.deleteAllById(dto.getPhotoIds());
+
+		return DeletePhotoResponseDto.success();
 	}
 }

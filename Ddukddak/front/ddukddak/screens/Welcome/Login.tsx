@@ -17,6 +17,8 @@ import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
 import { login } from '../../api/userApi';
 
+import * as SecureStore from 'expo-secure-store';
+
 type Props = {
   navigation: NavigationProp<any>;
 };
@@ -26,23 +28,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
-  const handlePress = async () => {
-    // 비밀번호 및 ID 유효성 검사
-    if (validatePassword()) {
-      try {
-        // login 함수 호출
-        const result = await login(id, password);
-        // 로그인 성공 후의 로직, 예: 메인 화면으로 이동
-        console.log('로그인 성공:', result);
-        navigation.navigate('home'); // 로그인 성공 시 홈 화면으로 이동
-      } catch (error) {
-        // 로그인 실패 시의 처리, 예: 알림 메시지 표시
-        Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
-        console.error('로그인 에러:', error);
-      }
-    }
-  };
-  // 비밀번호 유효성 검사
+
   const validatePassword = (): boolean => {
     const idRegex = /^[a-zA-Z0-9]{6,20}$/;
     const pwRegex = /^.{6,20}$/;
@@ -62,6 +48,35 @@ const Login: React.FC<Props> = ({ navigation }) => {
 
     return true;
   };
+
+  const handlePress = async () => {
+    // 비밀번호 및 ID 유효성 검사
+    if (validatePassword()) {
+      try {
+        const result = await login(id, password);
+        const { accessToken, refreshToken } = result;
+
+        if (!('accessToken' in result) || !('refreshToken' in result)) {
+          Alert.alert('로그인 실패', '로그인 응답에서 토큰을 받지 못했습니다.');
+          return;
+        }
+        console.log('로그인 성공:', result);
+
+        if (typeof accessToken === 'string') {
+          await SecureStore.setItemAsync('accessToken', accessToken);
+        }
+        if (typeof refreshToken === 'string') {
+          await SecureStore.setItemAsync('refreshToken', refreshToken);
+        }
+
+        navigation.navigate('home'); // 로그인 성공 시 홈 화면으로 이동
+      } catch (error) {
+        Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
+        console.error('로그인 에러:', error);
+      }
+    }
+  };
+  // 비밀번호 유효성 검사
 
   return (
     <SafeAreaView style={styles.container}>

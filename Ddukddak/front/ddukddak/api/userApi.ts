@@ -3,13 +3,9 @@ import { isAxiosError } from 'axios';
 
 interface ApiResponse {
   message: string;
-  header?: {
-    accessToken?: string;
-    refreshToken?: string;
-  };
+  accessToken?: string;
+  refreshToken?: string;
 }
-
-
 
 interface SignUpRequest {
   userName: string;
@@ -19,7 +15,6 @@ interface SignUpRequest {
   userPassword: string;
 }
 
-
 /**
  * 회원가입
  * @param signUpRequest 회원가입 요청 데이터
@@ -28,9 +23,14 @@ interface SignUpRequest {
  * @returns {Promise<ApiResponse>} "Success." 메시지를 반환합니다.
  * @throws 400 "Bad request." 오류를 반환할 수 있습니다.
  */
-export const signUp = async (signUpRequest: SignUpRequest): Promise<ApiResponse> => {
+export const signUp = async (
+  signUpRequest: SignUpRequest,
+): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/sign-up', signUpRequest);
+    const response = await apiClient.post<ApiResponse>(
+      '/api/v1/auth/sign-up',
+      signUpRequest,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -39,8 +39,6 @@ export const signUp = async (signUpRequest: SignUpRequest): Promise<ApiResponse>
     throw error;
   }
 };
-
-
 
 /**
  * 아이디 중복 확인
@@ -66,7 +64,6 @@ export const checkUserIdDuplicate = async (
   }
 };
 
-
 /**
  * 리프레쉬 토큰
  * @remarks
@@ -79,9 +76,12 @@ export const refreshToken = async (
   refreshToken: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/refresh-token', {
-      refreshToken,
-    });
+    const response = await apiClient.post<ApiResponse>(
+      '/api/v1/auth/refresh-token',
+      {
+        refreshToken,
+      },
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -90,7 +90,6 @@ export const refreshToken = async (
     throw error;
   }
 };
-
 
 /**
  * 알림 - Firebase Cloud Messaging 토큰 업데이트
@@ -106,10 +105,13 @@ export const updateFcmToken = async (
   fcmToken: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/fcmToken', {
-      userId,
-      fcmToken,
-    });
+    const response = await apiClient.post<ApiResponse>(
+      '/api/v1/auth/fcmToken',
+      {
+        userId,
+        fcmToken,
+      },
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -118,7 +120,6 @@ export const updateFcmToken = async (
     throw error;
   }
 };
-
 
 /**
  * 로그인
@@ -146,7 +147,6 @@ export const login = async (
     throw error;
   }
 };
-
 
 /**
  * 로그아웃

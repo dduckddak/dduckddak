@@ -15,6 +15,7 @@ import {
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
+import { login } from '../../api/userApi';
 
 type Props = {
   navigation: NavigationProp<any>;

@@ -10,18 +10,19 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group';
+import { signUp } from '../../api/userApi';
 
 interface SignUpState {
   userId: string;
   password: string;
   confirmPassword: string;
-  gender: 'male' | 'female' | '';
+  gender: string;
   name: string;
   birthDate: string;
 }
+
 const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [signUpState, setSignUpState] = useState<SignUpState>({
     userId: '',
@@ -31,75 +32,66 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
     name: '',
     birthDate: '',
   });
+  const radioButtons: RadioButtonProps[] = [
+    { id: '1', label: '남자아이', value: 'male' },
+    { id: '2', label: '여자아이', value: 'female' },
+  ];
+  const [selectedId, setSelectedId] = useState<string | undefined>();
 
-  const checkUserId = (): boolean => {
-    const isDuplicated = false; // 가정, 실제 앱에서는 서버 요청 필요
-    if (isDuplicated) {
-      Alert.alert('오류', '이미 존재하는 아이디입니다.');
-      return false;
-    }
-    return true;
+  // 사용자 입력 처리 함수
+  const handleInputChange = (name: keyof SignUpState, value: string) => {
+    setSignUpState({ ...signUpState, [name]: value });
   };
 
+  // // onPress에서 선택된 라디오 버튼의 value를 직접 받는 경우의 처리
+  // const handleGenderSelect = (selectedValue: string) => {
+  //   setSignUpState((prevState) => ({ ...prevState, gender: selectedValue }));
+  // };
+
   const validateInput = (): boolean => {
-    const { userId, password, confirmPassword } = signUpState;
+    const { userId, password, confirmPassword, gender, name, birthDate } =
+      signUpState;
     const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+
     if (!idRegex.test(userId)) {
       Alert.alert(
-        '오류',
-        '아이디는 한글과 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',
+        '⚠',
+        '아이디는 한글이나 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',
       );
-      return false;
-    }
-    if (!checkUserId()) {
       return false;
     }
     const pwRegex = /^.{6,20}$/;
     if (!pwRegex.test(password)) {
-      Alert.alert('오류', '비밀번호는 최소 6자에서 최대 20자여야 합니다.');
+      Alert.alert('⚠', '비밀번호는 최소 6자에서 최대 20자여야 합니다.');
       return false;
     }
-
     if (password !== confirmPassword) {
-      Alert.alert('오류', '비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+      Alert.alert('⚠', '비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
       return false;
     }
-
+    if (name === '' || birthDate === '') {
+      Alert.alert('⚠', '모든 필드를 채워주세요.');
+      return false;
+    }
     return true;
   };
-
-  const handlePress = () => {
+  const handleSignUp = async () => {
     if (validateInput()) {
-      // 회원가입 로직
-      navigation.navigate('Login');
+      try {
+        const { userId, password, gender, name, birthDate } = signUpState;
+        const result = await signUp({
+          userId,
+          userPassword: password,
+          userName: name,
+          sex: gender === 'male' ? 'M' : 'F',
+          birth: parseInt(birthDate.replace(/-/g, ''), 10), //  "1990-01-01" -> 19900101
+        });
+        console.log(result); // 성공 결과를 처리합니다.
+        navigation.navigate('login'); // 성공 시 로그인 화면으로 이동
+      } catch (error) {
+        Alert.alert('회원가입 실패', '회원가입 과정에서 문제가 발생했습니다.');
+      }
     }
-  };
-
-  const radioButtons: RadioButtonProps[] = [
-    {
-      id: '1',
-      label: '남자아이',
-      value: 'male',
-    },
-    {
-      id: '2',
-      label: '여자아이',
-      value: 'female',
-    },
-  ];
-
-  const [selectedId, setSelectedId] = useState<string | undefined>();
-  const [name, setName] = useState('');
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [isValidPassword, setIsValidPassword] = useState(false);
-
-  // 비밀번호 유효성 검사
-  const validatePassword = (text: string) => {
-    // 비밀번호는 최소 6자 최대 20자이고, 특수 문자를 포함하지 않아도 됨.
-    const limit = /^[a-zA-Z0-9]{6,20}$/;
-    setIsValidPassword(limit.test(text));
-    setPassword(text);
   };
 
   return (
@@ -134,8 +126,8 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                 <TextInput
                   placeholder="이름을 입력해주세요"
                   style={styles.inputContainer}
-                  value={name}
-                  onChangeText={(e) => setName(e)}
+                  value={signUpState.name}
+                  onChangeText={(text) => handleInputChange('name', text)}
                 />
               </View>
               <View style={styles.flexContainer}>
@@ -143,8 +135,8 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                 <TextInput
                   placeholder="ID를 입력해주세요"
                   style={styles.inputContainer}
-                  value={id}
-                  onChangeText={(e) => setId(e)}
+                  value={signUpState.userId}
+                  onChangeText={(text) => handleInputChange('userId', text)}
                 />
               </View>
               <View style={styles.flexContainer}>
@@ -152,8 +144,8 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                 <TextInput
                   placeholder="비밀번호를 입력해주세요"
                   style={styles.inputContainer}
-                  value={password}
-                  onChangeText={validatePassword}
+                  value={signUpState.password}
+                  onChangeText={(text) => handleInputChange('password', text)}
                   secureTextEntry={true}
                 />
               </View>
@@ -164,7 +156,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                   style={styles.inputContainer}
                   value={signUpState.confirmPassword}
                   onChangeText={(text) =>
-                    setSignUpState({ ...signUpState, confirmPassword: text })
+                    handleInputChange('confirmPassword', text)
                   }
                   secureTextEntry={true}
                 />
@@ -177,23 +169,18 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                   placeholder="생년월일을 입력해주세요"
                   style={styles.inputContainer}
                   value={signUpState.birthDate}
-                  onChangeText={(text) =>
-                    setSignUpState({ ...signUpState, birthDate: text })
-                  }
-                  secureTextEntry={true}
+                  onChangeText={(text) => handleInputChange('birthDate', text)}
                 />
               </View>
             </View>
-
             <View style={styles.bottomContainer}>
               <GreenButton
-                onPress={handlePress}
+                onPress={handleSignUp}
                 content="회원가입"
                 style={{ width: 170, height: 80 }}
               />
             </View>
           </View>
-          <StatusBar />
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -242,7 +229,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'im-hyemin-bold',
   },
-
   flexContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -254,7 +240,6 @@ const styles = StyleSheet.create({
     paddingLeft: '40%',
     paddingTop: '2.5%',
   },
-
   bottomContainer: {
     alignItems: 'center',
     marginTop: 5,

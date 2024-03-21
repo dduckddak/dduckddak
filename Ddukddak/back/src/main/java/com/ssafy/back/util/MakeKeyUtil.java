@@ -33,4 +33,7 @@ public class MakeKeyUtil {
 	public static String subTalk(int bookId) {
 		return "person/" + bookId + "/talk";
 	}
+
+	// S3 public url 뱉음
+	public static String generatePublicUrl(String bucket) { return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/"; }
 }

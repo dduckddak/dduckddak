@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
+import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
+import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
 import com.ssafy.back.auth.service.AuthService;
 
@@ -29,5 +31,10 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<? super LoginResponseDto> login(@RequestBody @Valid LoginRequestDto requestBody){
 		return authService.login(requestBody);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<? super LogoutResponseDto> logout(@RequestBody @Valid LogoutRequestDto requestBody){
+		return authService.logout(requestBody);
 	}
 }

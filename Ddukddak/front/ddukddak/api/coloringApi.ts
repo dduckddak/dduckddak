@@ -18,7 +18,7 @@ interface ColoringApiResponse {
  */
 export const getColorings = async (): Promise<ColoringApiResponse> => {
   try {
-    const response = await apiClient.get<ColoringApiResponse>('/api/v1/colorings/');
+    const response = await apiClient.get<ColoringApiResponse>('/api/v1/colorings');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -46,7 +46,7 @@ export const addColoring = async (params: AddColoringParams): Promise<ColoringAp
   formData.append('coloringFile', params.coloringFile);
 
   try {
-    const response = await apiClient.post<ColoringApiResponse>('/api/v1/colorings/', formData);
+    const response = await apiClient.post<ColoringApiResponse>('/api/v1/colorings', formData);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -72,7 +72,7 @@ interface DeleteColoringParams {
  */
 export const deleteColorings = async (params: DeleteColoringParams): Promise<ColoringApiResponse> => {
   try {
-    const response = await apiClient.delete<ColoringApiResponse>('/api/v1/colorings/', { data: params });
+    const response = await apiClient.delete<ColoringApiResponse>('/api/v1/colorings', { data: params });
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -99,7 +99,7 @@ interface ColoringBaseApiResponse {
  */
 export const getColoringBases = async (): Promise<ColoringBaseApiResponse> => {
   try {
-    const response = await apiClient.get<ColoringBaseApiResponse>('/api/v1/colorings/base/');
+    const response = await apiClient.get<ColoringBaseApiResponse>('/api/v1/colorings/base');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

@@ -11,17 +11,26 @@ interface ApiResponse {
 
 
 
-// TODO 회원가입 input이 아직 확정이 안나서 나중에 수정해야함
+interface SignUpRequest {
+  userName: string;
+  sex: string;
+  birth: number;
+  userId: string;
+  userPassword: string;
+}
+
+
 /**
  * 회원가입
+ * @param signUpRequest 회원가입 요청 데이터
  * @remarks
  * POST 요청을 '/api/v1/auth/sign-up' 엔드포인트에 보냅니다. 성공시 메시지를 반환합니다.
  * @returns {Promise<ApiResponse>} "Success." 메시지를 반환합니다.
  * @throws 400 "Bad request." 오류를 반환할 수 있습니다.
  */
-export const signUp = async (): Promise<ApiResponse> => {
+export const signUp = async (signUpRequest: SignUpRequest): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/sign-up/');
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/sign-up', signUpRequest);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -30,6 +39,7 @@ export const signUp = async (): Promise<ApiResponse> => {
     throw error;
   }
 };
+
 
 
 /**
@@ -44,7 +54,7 @@ export const checkUserIdDuplicate = async (
   userId: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.get<ApiResponse>('/api/v1/auth/idcheck/', {
+    const response = await apiClient.get<ApiResponse>('/api/v1/auth/idcheck', {
       params: { userId },
     });
     return response.data;
@@ -69,7 +79,7 @@ export const refreshToken = async (
   refreshToken: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/refresh-token/', {
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/refresh-token', {
       refreshToken,
     });
     return response.data;
@@ -96,7 +106,7 @@ export const updateFcmToken = async (
   fcmToken: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/fcmToken/', {
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/fcmToken', {
       userId,
       fcmToken,
     });
@@ -124,7 +134,7 @@ export const login = async (
   userPassword: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/login/', {
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/login', {
       userId,
       userPassword,
     });
@@ -147,7 +157,7 @@ export const login = async (
  */
 export const logout = async (): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/logout/');
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/logout');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 import pymysql
 import pandas as pd
+from schemas import ReviewInfo
 
 load_dotenv()
 db_user = os.getenv("DB_USER")
@@ -53,7 +54,10 @@ keyword_df = pd.read_csv('bookKeyword.csv', encoding='CP949', usecols=['book_id'
 merged_df = pd.merge(keyword_df, book_df, on='book_id', how='left')
 merged_df = pd.merge(merged_df, review_df, on='book_id', how='left')
 
-print(merged_df.head())
+# Pydantic 모델 리스트 생성
+review_info_list = [ReviewInfo(**row) for index, row in merged_df.iterrows()]
+for review_info in review_info_list[:10]:
+    print(review_info)
 
 # 각 책의 키워드를 쉼표로 분리하고, 중복을 제거한 후 전체 키워드 개수 계산
 all_keywords = set()
@@ -63,7 +67,7 @@ for keywords in keyword_df['keyword']:
     # 중복을 제거하기 위해 집합에 추가
     all_keywords.update(keyword_list)
 
-# # 전체 키워드 개수 출력
+# 전체 키워드 개수 출력
 # total_keywords_count = len(all_keywords)
 # total_keywords_count
 

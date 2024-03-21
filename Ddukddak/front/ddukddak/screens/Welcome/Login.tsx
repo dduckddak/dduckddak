@@ -26,16 +26,28 @@ const Login: React.FC<Props> = ({ navigation }) => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [isValidPassword, setIsValidPassword] = useState(false);
-  const handlePress = () => {
-    console.log('버튼누름!');
-    navigation.navigate('home');
+  const handlePress = async () => {
+    // 비밀번호 및 ID 유효성 검사
+    if (validatePassword()) {
+      try {
+        // login 함수 호출
+        const result = await login(id, password);
+        // 로그인 성공 후의 로직, 예: 메인 화면으로 이동
+        console.log('로그인 성공:', result);
+        navigation.navigate('home'); // 로그인 성공 시 홈 화면으로 이동
+      } catch (error) {
+        // 로그인 실패 시의 처리, 예: 알림 메시지 표시
+        Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
+        console.error('로그인 에러:', error);
+      }
+    }
   };
   // 비밀번호 유효성 검사
   const validatePassword = (): boolean => {
     const idRegex = /^[a-zA-Z0-9]{6,20}$/;
     const pwRegex = /^.{6,20}$/;
 
-    if (!idRegex.test(userId)) {
+    if (!idRegex.test(id)) {
       Alert.alert(
         '오류',
         'ID는 한글과 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',

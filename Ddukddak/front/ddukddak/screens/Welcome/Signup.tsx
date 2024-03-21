@@ -83,7 +83,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
           userId,
           userPassword: password,
           userName: name,
-          sex: gender === 'male' ? 'M' : 'F',
+          sex: selectedId === '1' ? 'M' : 'F',
           birth: parseInt(birthDate.replace(/-/g, ''), 10), //  "1990-01-01" -> 19900101
         });
         console.log(result); // 성공 결과를 처리합니다.

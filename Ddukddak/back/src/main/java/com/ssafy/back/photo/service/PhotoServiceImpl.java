@@ -164,6 +164,15 @@ public class PhotoServiceImpl implements PhotoService {
 
 		int userSeq = customUserDetails.getUserSeq();
 
+		// userSeq의 사진인지 확인하는 과정 + list가 0이면 success 로 들어감.
+		List<PhotoEntity> photosToDelete = photoRepository.findAllByPhotoIdIn(dto.getPhotoIds());
+		for (PhotoEntity photo : photosToDelete) {
+			if (!photo.getUserEntity().getUserSeq().equals(userSeq)) {
+				// 만약 사진이 해당 사용자의 것이 아니라면, 오류 응답 반환
+				return DeletePhotoResponseDto.NotFounderror();
+			}
+		}
+
 		photoRepository.deleteAllById(dto.getPhotoIds());
 
 		return DeletePhotoResponseDto.success();

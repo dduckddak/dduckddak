@@ -20,4 +20,6 @@ public interface PhotoRepository extends JpaRepository<PhotoEntity, Integer> {
 	@Modifying(clearAutomatically = true, flushAutomatically = true)
 	@Query("delete from PhotoEntity p where p.photoId in :ids")
 	void deleteAllById(@Param("ids") List<Integer> ids);
+
+	List<PhotoEntity> findAllByPhotoIdIn(List<Integer> photoIds);
 }

@@ -4,6 +4,8 @@ public interface ResponseMessage {
 	String SUCCESS = "Success.";
 	String VALIDATION_FAIL = "Validation failed.";
 
+	String MISMATCH = "MisMatch.";
+
 	String REFRESH_TOKEN_ERROR = "RefreshToken error.";
 
 	String DUPLICATE = "Duplicate.";

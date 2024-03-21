@@ -21,4 +21,9 @@ public class DeletePhotoResponseDto extends ResponseDto {
 		ResponseDto responseBody = new ResponseDto(ResponseMessage.S3_ERROR);
 		return ResponseEntity.status(HttpStatus.GONE).body(responseBody);
 	}
+
+	public static ResponseEntity<ResponseDto> NotFounderror() {
+		ResponseDto responseBody = new ResponseDto(ResponseMessage.MISMATCH);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
+	}
 }

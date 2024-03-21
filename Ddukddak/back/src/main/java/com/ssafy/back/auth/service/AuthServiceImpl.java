@@ -56,6 +56,9 @@ public class AuthServiceImpl implements AuthService{
 
 		UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
 
+		userEntity.setFirstLogin(true);
+		userRepository.save(userEntity);
+
 		// 아이디 없음
 		if(userEntity == null) return LoginResponseDto.loginFail();
 

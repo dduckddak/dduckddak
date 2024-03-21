@@ -34,7 +34,7 @@ public class ScriptEntity {
 	@Column(name = "script_content", columnDefinition = "TEXT", nullable = false)
 	private String scriptContent;
 
-	@Column(name = "role", nullable = false, length = 20)
+	@Column(name = "role", length = 1)
 	private String role;
 
 }

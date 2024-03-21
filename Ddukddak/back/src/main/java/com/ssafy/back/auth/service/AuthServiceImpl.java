@@ -2,14 +2,18 @@ package com.ssafy.back.auth.service;
 
 import java.time.temporal.ChronoUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.back.auth.dto.request.IdCheckRequestDto;
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
 import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
+import com.ssafy.back.auth.dto.response.IdCheckResponseDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 
+	private final Logger logger = LogManager.getLogger(AuthServiceImpl.class);
 	private final UserRepository userRepository;
 	private final JwtProvider jwtProvider;
 	private final RedisTemplate<String, String> redisTemplate;
@@ -77,6 +82,20 @@ public class AuthServiceImpl implements AuthService{
 		}
 
 		return LogoutResponseDto.success();
+	}
+
+	@Override
+	public ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto) {
+		try{
+
+			UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
+			if(userEntity != null) return IdCheckResponseDto.duplicateId();
+
+		}catch (Exception e){
+			logger.debug(e);
+		}
+
+		return IdCheckResponseDto.success();
 	}
 
 }

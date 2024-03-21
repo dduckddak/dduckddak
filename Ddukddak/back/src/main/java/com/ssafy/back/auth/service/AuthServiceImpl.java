@@ -8,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
+import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
+import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
 import com.ssafy.back.auth.provider.JwtProvider;
 import com.ssafy.back.auth.repository.UserRepository;
@@ -62,6 +64,19 @@ public class AuthServiceImpl implements AuthService{
 		valueOperations.set(refreshToken, userId);
 
 		return LoginResponseDto.loginSuccess(accessToken, refreshToken);
+	}
+
+	@Override
+	public ResponseEntity<? super LogoutResponseDto> logout(LogoutRequestDto dto) {
+		// redis 에서 refreshToken 있는지 확인함 -> 날리고, accessToken 으로 블랙리스트 처리
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+		if(valueOperations.get(dto.getRefreshToken()) != null){
+			redisTemplate.delete(dto.getRefreshToken());
+			valueOperations.set(dto.getAccessToken(),"loggouted");
+		}
+
+		return LogoutResponseDto.success();
 	}
 
 }

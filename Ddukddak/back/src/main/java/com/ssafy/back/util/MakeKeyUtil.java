@@ -33,4 +33,9 @@ public class MakeKeyUtil {
 	public static String subTalk(int bookId) {
 		return "person/" + bookId + "/talk";
 	}
+
+	//생성 동화 스크립트 음성 키
+	public static String scriptSound(int userSeq, int makeBookId, int pageSeq, int scriptSeq) {
+		return userSeq + "/make-book/" + makeBookId + "/sound/" + pageSeq + "/" + scriptSeq;
+	}
 }

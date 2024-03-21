@@ -2,6 +2,7 @@ package com.ssafy.back.makebook.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,9 +21,11 @@ import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.MakeBookEntity;
+import com.ssafy.back.makebook.dto.MakeBookSummaryDto;
 import com.ssafy.back.makebook.dto.ScriptDto;
 import com.ssafy.back.makebook.dto.request.InsertMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
+import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.repository.MakeBookRepository;
 import com.ssafy.back.makebook.repository.ScriptRepository;
 import com.ssafy.back.util.MakeKeyUtil;
@@ -51,6 +54,31 @@ public class MakeBookServiceImpl implements MakeBookService {
 
 	@Value("${eleven-labs.key}")
 	private String elevenLabsKey;
+
+	@Override
+	public ResponseEntity<? super ListMakeBookResponseDto> listMakeBook() {
+		//테스트 코드
+		int userSeq = 1;
+
+		List<MakeBookSummaryDto> makeBookList = makeBookRepository.findSummaryByUserSeq(userSeq);
+
+		for (MakeBookSummaryDto summary : makeBookList) {
+			String key = MakeKeyUtil.makePageImage(userSeq, summary.getMakeBookId(), 0);
+			if (amazonS3.doesObjectExist(bucket, key)) {
+				summary.setMakeBookCover(amazonS3.getUrl(bucket, key).toString());
+
+				logger.info(summary.getMakeBookId() + " 커버 이미지를 정상적으로 불러왔습니다.");
+
+			} else {
+				logger.debug(ResponseMessage.S3_ERROR);
+				logger.error("S3에서 파일을 찾을 수 없습니다.");
+
+				return ListMakeBookResponseDto.S3error();
+			}
+		}
+
+		return ListMakeBookResponseDto.success(makeBookList);
+	}
 
 	@Override
 	public ResponseEntity<? super InsertMakeBookResponseDto> insertMakeBook(InsertMakeBookRequestDto request) {
@@ -160,7 +188,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 					return InsertMakeBookResponseDto.ElevenLabserror();
 				}
 
-				String key = MakeKeyUtil.scriptSound(userSeq, makeBookId, page, script);
+				String key = MakeKeyUtil.makeScriptSound(userSeq, makeBookId, page, script);
 
 				// S3에 생성된 음성 추가
 				try {

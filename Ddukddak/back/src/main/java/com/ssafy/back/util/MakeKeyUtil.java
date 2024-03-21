@@ -35,7 +35,12 @@ public class MakeKeyUtil {
 	}
 
 	//생성 동화 스크립트 음성 키
-	public static String scriptSound(int userSeq, int makeBookId, int pageSeq, int scriptSeq) {
+	public static String makeScriptSound(int userSeq, int makeBookId, int pageSeq, int scriptSeq) {
 		return userSeq + "/make-book/" + makeBookId + "/sound/" + pageSeq + "/" + scriptSeq;
+	}
+
+	//생성 동화 페이지 키
+	public static String makePageImage(int userSeq, int makeBookId, int pageSeq) {
+		return userSeq + "/make-book/" + makeBookId + "/image/" + pageSeq + ".png";
 	}
 }

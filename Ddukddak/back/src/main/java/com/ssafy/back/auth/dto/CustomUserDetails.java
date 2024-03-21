@@ -12,6 +12,6 @@ public class CustomUserDetails {
     private String userName;
     private String sex;
     private int birth;
-    private int userId;
+    private String userId;
 }
 

@@ -38,9 +38,9 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(request -> request
-                        // .requestMatchers("/api/v1/auth/sign-up","/api/v1/auth/login" ).permitAll()
-                        .requestMatchers("/**").permitAll()
-                        // .anyRequest().authenticated()
+                        .requestMatchers("/api/v1/auth/sign-up","/api/v1/auth/login" ).permitAll()
+                        // .requestMatchers("/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);

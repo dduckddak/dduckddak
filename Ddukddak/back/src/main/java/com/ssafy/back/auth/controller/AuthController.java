@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.back.auth.dto.request.FCMTokenRequestDto;
 import com.ssafy.back.auth.dto.request.IdCheckRequestDto;
 import com.ssafy.back.auth.dto.request.LoginRequestDto;
 import com.ssafy.back.auth.dto.request.LogoutRequestDto;
 import com.ssafy.back.auth.dto.request.SignUpRequestDto;
+import com.ssafy.back.auth.dto.response.FCMTokenResponseDto;
 import com.ssafy.back.auth.dto.response.IdCheckResponseDto;
 import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
@@ -81,5 +83,17 @@ public class AuthController {
 	@PostMapping("/idcheck")
 	public ResponseEntity<? super IdCheckResponseDto> login(@RequestBody @Valid IdCheckRequestDto requestBody){
 		return authService.idCheck(requestBody);
+	}
+
+	@Operation(
+		summary = "fcmToken 발급",
+		description = "사용자 로그인 할 때, fcmToken 발급 받음"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success."),
+	})
+	@PostMapping("/fcmToken")
+	public ResponseEntity<? super FCMTokenResponseDto> login(@RequestBody @Valid FCMTokenRequestDto requestBody){
+		return authService.savedFcmToken(requestBody);
 	}
 }

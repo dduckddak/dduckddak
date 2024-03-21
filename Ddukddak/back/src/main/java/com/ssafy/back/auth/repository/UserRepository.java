@@ -8,4 +8,6 @@ import com.ssafy.back.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 	UserEntity findByUserId(String userId);
+
+	Boolean existsByUserId(String userId);
 }

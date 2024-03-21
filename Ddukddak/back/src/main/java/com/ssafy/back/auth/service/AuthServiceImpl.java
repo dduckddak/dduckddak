@@ -88,8 +88,7 @@ public class AuthServiceImpl implements AuthService{
 	public ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto) {
 		try{
 
-			UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
-			if(userEntity != null) return IdCheckResponseDto.duplicateId();
+			if(userRepository.existsByUserId(dto.getUserId())) return IdCheckResponseDto.duplicateId();
 
 		}catch (Exception e){
 			logger.debug(e);

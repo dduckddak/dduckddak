@@ -59,6 +59,7 @@ public class BookServiceImpl implements BookService {
 	public ResponseEntity<? super ListBookRecommendResponseDto> listBookRecommend() {
 		//테스트 코드
 		int userSeq = 1;
+		List<Integer> bookIds = new ArrayList<>();
 		try {
 			List<ReviewDto> reviewList = reviewRepository.findByUserEntity_UserSeq(userSeq);
 			// 좋아요한 리뷰의 bookId 리스트
@@ -92,7 +93,6 @@ public class BookServiceImpl implements BookService {
 
 			JsonObject responseObject = JsonParser.parseString(response.getBody()).getAsJsonObject();
 
-			List<Integer> bookIds = new ArrayList<>();
 			if (responseObject.has("recommendations")) {
 				JsonArray recommendations = responseObject.getAsJsonArray("recommendations");
 				for (JsonElement element : recommendations) {
@@ -101,7 +101,11 @@ public class BookServiceImpl implements BookService {
 			}
 			// 로그 출력 및 후속 처리
 			logger.info("fast api 응답 : " + response);
-
+		} catch (Exception e) {
+			logger.error(e);
+			return ListBookRecommendResponseDto.HttpRequestError();
+		}
+		try {
 			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds);
 			for (BookSummaryDto book : bookList) {
 				String key = MakeKeyUtil.page(book.getBookId(), 0, true);

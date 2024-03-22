@@ -28,7 +28,7 @@ public class ListBookRecommendResponseDto extends ResponseDto {
 
 	//HTTP 요청 실패
 	public static ResponseEntity<ResponseDto> HttpRequestError() {
-		ResponseDto responseBody = new ResponseDto("fastapi 요청 실패");
+		ResponseDto responseBody = new ResponseDto("fast api 요청 실패");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
 	}
 

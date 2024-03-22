@@ -1,12 +1,14 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
+import * as SecureStore from 'expo-secure-store';
 import * as SplashScreen from 'expo-splash-screen';
 
+// 이 아래는 페이지 이름들입니다
 import MainRending from './screens/MainRending';
 import MainScreen from './screens/Welcome/MainScreen';
 import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
@@ -47,8 +49,10 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     navigation.goBack();
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     navigation.navigate('mainrending' as never);
+    await SecureStore.deleteItemAsync('accessToken');
+    await SecureStore.deleteItemAsync('refreshTocken');
   };
 
   if (isHomeScreen) {
@@ -104,10 +108,26 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
+  const [initialRouteName, setInitialRouteName] = useState<
+    keyof RootStackParamList | undefined
+  >(undefined);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await SecureStore.getItemAsync('accessToken');
+      if (token) {
+        setInitialRouteName('home');
+      } else {
+        setInitialRouteName('mainrending');
+      }
+      SplashScreen.hideAsync().catch(() => {});
+    };
+
+    checkToken();
+  }, []);
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   const [fontsLoaded] = useFonts({
     'im-hyemin': require('./assets/fonts/IM_Hyemin-Regular.ttf'),
@@ -127,7 +147,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="mainrending"
+        initialRouteName={initialRouteName}
         // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
         screenOptions={{
           headerTransparent: true,

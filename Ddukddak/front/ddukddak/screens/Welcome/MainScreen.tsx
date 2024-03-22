@@ -23,12 +23,6 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
       <View style={styles.mainContainer}>
         {/* Left side content */}
         <View style={styles.leftContainer}>
-          <Button
-            title="랜딩페이지"
-            onPress={() => navigation.navigate('mainrending')}
-          />
-          <Button title="로그인" onPress={() => navigation.navigate('login')} />
-
           <Pressable onPress={() => navigation.navigate('maincharacter')}>
             <Image
               source={require('../../assets/images/Main/maincharacter.png')}
@@ -89,10 +83,9 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginRight: 20,
   },
-  greenButton: {
-    width: 300,
-    height: 80,
-  },
+
+  // 내가주인공 말풍선
+  greenButton: { left: 300, top: 40 },
   icon: {
     width: 400,
     height: 130,

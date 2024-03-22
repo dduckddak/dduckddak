@@ -398,23 +398,23 @@ const styles = StyleSheet.create({
   leftContainer: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    // justifyContent: 'flex-end',
   },
   rightContainer: {
     justifyContent: 'center',
     alignItems: 'flex-end',
     marginRight: 20,
   },
-  greenButton: { left: 300 },
+  // 내가주인공 말풍선
+  greenButton: { left: 300, top: 50 },
   icon: {
     width: 400,
     height: 130,
     margin: 40,
   },
   iconOverlay: {
-    padding: 10, // Adjust padding as needed
-    borderRadius: 10, // Adjust for rounded corners if desired
-    zIndex: 11, // Ensure this is higher than the speech bubble but below the front elements
+    padding: 10,
+    borderRadius: 10,
+    zIndex: 11,
   },
   bookicon: {
     width: 710,
@@ -432,9 +432,8 @@ const styles = StyleSheet.create({
   },
   speechBubble: {
     position: 'absolute',
-    right: 1, // Adjust as needed
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark background color for speech bubble
-    borderRadius: 10,
+    right: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 10,
     width: '100%',
     height: '100%',

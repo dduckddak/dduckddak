@@ -2,6 +2,7 @@ package com.ssafy.back.makebook.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -23,7 +27,9 @@ import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.MakeBookEntity;
 import com.ssafy.back.makebook.dto.MakeBookSummaryDto;
 import com.ssafy.back.makebook.dto.ScriptDto;
+import com.ssafy.back.makebook.dto.request.DeleteMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.request.InsertMakeBookRequestDto;
+import com.ssafy.back.makebook.dto.response.DeleteMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.repository.MakeBookRepository;
@@ -216,6 +222,66 @@ public class MakeBookServiceImpl implements MakeBookService {
 				}
 			}
 		}
+		return ResponseDto.success();
+	}
+
+	@Override
+	public ResponseEntity<? super DeleteMakeBookResponseDto> deleteMakeBook(DeleteMakeBookRequestDto request) {
+		//test코드(user지정)
+		int userSeq = 1;
+
+		//S3에서 생성 동화 폴더 삭제
+		try {
+			for (Integer makeBookId : request.getDeleteMakeBookIds()) {
+				String key = MakeKeyUtil.makeBook(userSeq, makeBookId);
+
+				ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request()
+					.withBucketName(bucket)
+					.withPrefix(key);
+
+				ListObjectsV2Result result;
+
+				do {
+					result = amazonS3.listObjectsV2(listObjectsV2Request);
+
+					if (result.getObjectSummaries().isEmpty()) {
+						//해당 생성 동화의 폴더가 S3에 없다면
+						if (!amazonS3.doesObjectExist(bucket, key))
+							throw new Exception("폴더 없음");
+					}
+
+					// 삭제할 객체들의 키 목록 생성
+					List<DeleteObjectsRequest.KeyVersion> keysToDelete = new ArrayList<>();
+
+					result.getObjectSummaries().forEach(objectSummary -> {
+						keysToDelete.add(new DeleteObjectsRequest.KeyVersion(objectSummary.getKey()));
+					});
+
+					// 객체들을 삭제
+					if (!keysToDelete.isEmpty()) {
+						DeleteObjectsRequest multiObjectDeleteRequest = new DeleteObjectsRequest(bucket)
+							.withKeys(keysToDelete)
+							.withQuiet(true);
+						amazonS3.deleteObjects(multiObjectDeleteRequest);
+					}
+
+					// 다음 페이지의 객체들을 가져오기 위한 연속 토큰을 설정
+					listObjectsV2Request.setContinuationToken(result.getNextContinuationToken());
+
+				} while (result.isTruncated());
+
+				logger.info(makeBookId + " : S3 삭제 완료");
+			}
+
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
+
+			return DeleteMakeBookResponseDto.S3error();
+		}
+
+		makeBookRepository.deleteAllById(request.getDeleteMakeBookIds());
+
 		return ResponseDto.success();
 	}
 }

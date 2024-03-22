@@ -2,13 +2,16 @@ package com.ssafy.back.makebook.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.back.makebook.dto.request.DeleteMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.request.InsertMakeBookRequestDto;
+import com.ssafy.back.makebook.dto.response.DeleteMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.service.MakeBookService;
@@ -63,5 +66,22 @@ public class MakeBookController {
 	public ResponseEntity<? super InsertMakeBookResponseDto> insertMakeBook(
 		@RequestBody InsertMakeBookRequestDto request) {
 		return makeBookService.insertMakeBook(request);
+	}
+
+	@Operation(
+		summary = "생성 동화 삭제",
+		description = "사용자의 생성 동화를 삭제한다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success."),
+		@ApiResponse(responseCode = "400", description = "요청 받아야 할 값이 없음."),
+		@ApiResponse(responseCode = "401", description = "토큰 인증 실패."),
+		@ApiResponse(responseCode = "403", description = "리프레쉬 토큰 인증 실패."),
+		@ApiResponse(responseCode = "410", description = "S3 요청 실패.")
+	})
+	@DeleteMapping
+	public ResponseEntity<? super DeleteMakeBookResponseDto> deleteMakeBook(
+		@RequestBody DeleteMakeBookRequestDto request) {
+		return makeBookService.deleteMakeBook(request);
 	}
 }

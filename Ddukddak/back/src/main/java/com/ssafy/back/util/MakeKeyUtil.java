@@ -34,6 +34,11 @@ public class MakeKeyUtil {
 		return "person/" + bookId + "/talk";
 	}
 
+	//생성 동화 폴더 키 생성
+	public static String makeBook(int userSeq, int makeBookId) {
+		return userSeq + "/make-book/" + makeBookId + "/";
+	}
+
 	//생성 동화 스크립트 음성 키
 	public static String makeScriptSound(int userSeq, int makeBookId, int pageSeq, int scriptSeq) {
 		return userSeq + "/make-book/" + makeBookId + "/sound/" + pageSeq + "/" + scriptSeq;

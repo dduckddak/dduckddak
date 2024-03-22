@@ -19,7 +19,7 @@ interface ApiResponse {
  */
 export const getVoices = async (): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.get<ApiResponse>('/api/v1/voices/');
+    const response = await apiClient.get<ApiResponse>('/api/v1/voices');
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -51,7 +51,7 @@ export const addVoice = async (params: AddVoiceParams): Promise<ApiResponse> => 
   formData.append('voiceName', params.voiceName);
 
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/voices/', formData);
+    const response = await apiClient.post<ApiResponse>('/api/v1/voices', formData);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -76,7 +76,7 @@ interface DeleteVoiceParams {
  */
 export const deleteVoices = async (params: DeleteVoiceParams): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.delete<ApiResponse>('/api/v1/voices/', { data: params });
+    const response = await apiClient.delete<ApiResponse>('/api/v1/voices', { data: params });
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -105,7 +105,7 @@ interface PreviewVoiceResponse extends ApiResponse {
  */
 export const previewVoice = async (params: PreviewVoiceParams): Promise<PreviewVoiceResponse> => {
   try {
-    const response = await apiClient.get<PreviewVoiceResponse>('/api/v1/voices/preview/', { params });
+    const response = await apiClient.get<PreviewVoiceResponse>('/api/v1/voices/preview', { params });
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

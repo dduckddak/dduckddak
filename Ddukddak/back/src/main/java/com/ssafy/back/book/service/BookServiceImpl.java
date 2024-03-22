@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -100,17 +99,26 @@ public class BookServiceImpl implements BookService {
 					bookIds.add(element.getAsInt());
 				}
 			}
-
 			// 로그 출력 및 후속 처리
 			logger.info("fast api 응답 : " + response);
 
-			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds).stream().map(bookDetail -> {
-				String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true)).toString();
-				bookDetail.setCoverImage(imageUrl);
-				return bookDetail;
-			}).collect(Collectors.toList());
+			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds);
+			for (BookSummaryDto book : bookList) {
+				String key = MakeKeyUtil.page(book.getBookId(), 0, true);
+				if (amazonS3.doesObjectExist(bucket, key)) {
+					String imageUrl = amazonS3.getUrl(bucket, key).toString();
+					book.setCoverImage(imageUrl);
+				} else {
+					if (amazonS3.doesObjectExist(bucket, "default_book/noImage.png")) {
+						String imageUrl = amazonS3.getUrl(bucket, "default_book/noImage.png").toString();
+						book.setCoverImage(imageUrl);
+					} else {
+						//s3 error
+						return ListBookRecommendResponseDto.S3error();
+					}
+				}
+			}
 			logger.info("추천 책 목록 : " + bookList);
-
 			return ListBookRecommendResponseDto.success(bookList);
 		} catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);
@@ -122,15 +130,22 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public ResponseEntity<? super ListBookSearchResponseDto> listBookSearch(String keyword) {
 		try {
-			List<BookSummaryDto> SearchBookList = bookRepository.findByTitleContains(keyword)
-				.stream()
-				.map(bookDetail -> {
-					String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true))
-						.toString();
-					bookDetail.setCoverImage(imageUrl);
-					return bookDetail;
-				})
-				.toList();
+			List<BookSummaryDto> SearchBookList = bookRepository.findByTitleContains(keyword);
+			for (BookSummaryDto book : SearchBookList) {
+				String key = MakeKeyUtil.page(book.getBookId(), 0, true);
+				if (amazonS3.doesObjectExist(bucket, key)) {
+					String imageUrl = amazonS3.getUrl(bucket, key).toString();
+					book.setCoverImage(imageUrl);
+				} else {
+					if (amazonS3.doesObjectExist(bucket, "default_book/noImage.png")) {
+						String imageUrl = amazonS3.getUrl(bucket, "default_book/noImage.png").toString();
+						book.setCoverImage(imageUrl);
+					} else {
+						//s3 error
+						return ListBookSearchResponseDto.S3error();
+					}
+				}
+			}
 			logger.info("책 검색 목록 : " + SearchBookList);
 			return ListBookSearchResponseDto.success(SearchBookList);
 
@@ -161,15 +176,22 @@ public class BookServiceImpl implements BookService {
 		//테스트 코드
 		int userSeq = 1;
 		try {
-			List<BookSummaryDto> likeBookList = bookRepository.findLikedBooksByUserSeq(userSeq)
-				.stream()
-				.map(bookDetail -> {
-					String imageUrl = amazonS3.getUrl(bucket, MakeKeyUtil.page(bookDetail.getBookId(), 0, true))
-						.toString();
-					bookDetail.setCoverImage(imageUrl);
-					return bookDetail;
-				})
-				.toList();
+			List<BookSummaryDto> likeBookList = bookRepository.findLikedBooksByUserSeq(userSeq);
+			for (BookSummaryDto book : likeBookList) {
+				String key = MakeKeyUtil.page(book.getBookId(), 0, true);
+				if (amazonS3.doesObjectExist(bucket, key)) {
+					String imageUrl = amazonS3.getUrl(bucket, key).toString();
+					book.setCoverImage(imageUrl);
+				} else {
+					if (amazonS3.doesObjectExist(bucket, "default_book/noImage.png")) {
+						String imageUrl = amazonS3.getUrl(bucket, "default_book/noImage.png").toString();
+						book.setCoverImage(imageUrl);
+					} else {
+						//s3 error
+						return ListBookLikeResponseDto.S3error();
+					}
+				}
+			}
 			logger.info("사용자가 좋아요한 책 목록 : " + likeBookList);
 			return ListBookLikeResponseDto.success(likeBookList);
 		} catch (Exception e) {

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.common.ResponseDto;
+import com.ssafy.back.common.ResponseMessage;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,8 +20,14 @@ import lombok.ToString;
 @ToString
 public class ListBookSearchResponseDto extends ResponseDto {
 	private List<BookSummaryDto> bookList;
+
 	public static ResponseEntity<ListBookSearchResponseDto> success(List<BookSummaryDto> bookList) {
 		ListBookSearchResponseDto responseBody = new ListBookSearchResponseDto(bookList);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+	}
+
+	public static ResponseEntity<ResponseDto> S3error() {
+		ResponseDto responseBody = new ResponseDto(ResponseMessage.S3_ERROR);
+		return ResponseEntity.status(HttpStatus.GONE).body(responseBody);
 	}
 }

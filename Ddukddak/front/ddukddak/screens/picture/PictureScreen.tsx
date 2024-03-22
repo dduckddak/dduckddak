@@ -14,15 +14,28 @@ import { MaterialIcons } from '@expo/vector-icons';
 import PictureModal from '../../components/picture/PictureModal';
 import * as ImagePicker from 'expo-image-picker';
 
-interface ImageItem {
+export declare type ImageInfo = {
   uri: string;
-}
+  width: number;
+  height: number;
+  type?: 'image' | 'video';
+  exif?: {
+    [key: string]: any;
+  };
+  base64?: string;
+};
+export declare type ImagePickerResult =
+  | {
+      cancelled: true;
+    }
+  | ({
+      cancelled: false;
+    } & ImageInfo);
 
 function CameraButton() {
   // 안드로이드를 위한 모달 visible 상태값
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const [image, setImage] = useState(null);
 
   const imagePickerOption = {
     mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -34,24 +47,10 @@ function CameraButton() {
 
   const onPickImage = async (pickerResult: ImagePicker.ImagePickerResult) => {
     if (!pickerResult.canceled) {
-      const uri = (pickerResult as ImagePicker.ImagePickerSuccessResult).uri;
+      const uri = (pickerResult as ImagePicker.ImagePickerSuccessResult)
+        .assets[0].uri;
       setSelectedImages((currentImages) => [...currentImages, uri]);
-    }
-  };
-
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    // console.log(result.assets[0].uri);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      console.log(uri);
     }
   };
 
@@ -69,16 +68,12 @@ function CameraButton() {
 
   // 선택 모달 오픈
   const modalOpen = () => {
-    if (Platform.OS === 'android') {
-      setModalVisible(true); // Android 경우, modal visible
-    } else {
-      // iOS에 대한 처리, 필요한 경우 추가
-    }
+    setModalVisible(true);
   };
 
   const renderImageItem = ({ item }: { item: string }) => (
-    <View style={styles.imageContainer}>
-      <Image source={{ uri: item }} style={styles.image} />
+    <View style={styles.card}>
+      <Image source={{ uri: item }} style={styles.cardImage} />
     </View>
   );
 
@@ -96,11 +91,9 @@ function CameraButton() {
           data={selectedImages}
           renderItem={renderImageItem}
           keyExtractor={(item, index) => index.toString()}
-          horizontal={false}
-          numColumns={2}
+          numColumns={4}
         />
       </View>
-      <Button title="test" onPress={pickImage} />
       <PictureModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -137,5 +130,24 @@ const styles = StyleSheet.create({
   cameraButton: {
     alignSelf: 'center',
     marginBottom: 20,
+  },
+  card: {
+    flex: 1,
+    flexDirection: 'row',
+    margin: 10,
+    borderRadius: 10, // 둥근 모서리
+    overflow: 'hidden', // 둥근 모서리와 함께 이미지를 잘라냄
+    // iOS 그림자
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    // Android 그림자
+    elevation: 5,
+  },
+  cardImage: {
+    width: '100%',
+    height: 300,
+    resizeMode: 'cover',
   },
 });

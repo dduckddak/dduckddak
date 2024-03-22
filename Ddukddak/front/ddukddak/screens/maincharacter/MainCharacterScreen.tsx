@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getBookList, BookListData } from '../../api/bookApi';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -88,6 +89,21 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   const [currentPage, setCurrentPage] = useState(0);
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
+
+  const [bookList, setBookList] = useState<BookListData>({});
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const books = await getBookList(); // API 호출
+        setBookList(books); // 가져온 책 목록으로 상태 업데이트
+      } catch (error) {
+        console.error('Failed:', error);
+      }
+    };
+    console.log(bookList);
+    fetchBooks(); // 정의한 비동기 함수 실행
+  }, []);
 
   const handleToggleOrSearch = () => {
     if (showSearch && searchText.trim()) {

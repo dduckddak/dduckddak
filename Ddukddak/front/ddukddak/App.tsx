@@ -70,7 +70,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
   return (
     <TouchableOpacity onPress={handlePress}>
       <Image
-        style={{ width: 100, height: 100 }}
+        style={{ width: 80, height: 80 }}
         source={require('./assets/images/button/Back.png')}
       />
     </TouchableOpacity>

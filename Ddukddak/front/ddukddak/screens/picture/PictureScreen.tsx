@@ -1,36 +1,22 @@
 import React, { useState } from 'react';
 import {
   View,
-  Pressable,
   Platform,
-  Text,
   StyleSheet,
   ImageBackground,
   FlatList,
   Image,
-  Button,
+  Dimensions,
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import PictureModal from '../../components/picture/PictureModal';
 import * as ImagePicker from 'expo-image-picker';
+import GreenButton from '../../components/GreenButton';
 
-export declare type ImageInfo = {
-  uri: string;
-  width: number;
-  height: number;
-  type?: 'image' | 'video';
-  exif?: {
-    [key: string]: any;
-  };
-  base64?: string;
-};
-export declare type ImagePickerResult =
-  | {
-      cancelled: true;
-    }
-  | ({
-      cancelled: false;
-    } & ImageInfo);
+const { width } = Dimensions.get('window');
+
+const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
+const CARD_HEIGHT = CARD_WIDTH;
 
 function CameraButton() {
   // 안드로이드를 위한 모달 visible 상태값
@@ -83,15 +69,23 @@ function CameraButton() {
       style={styles.ImageBackground}
     >
       <View style={styles.container}>
-        <Pressable onPress={modalOpen} style={styles.cameraButton}>
-          <Text style={{ margin: 50 }}>클릭</Text>
-          <MaterialIcons name="camera-alt" color="white" size={24} />
-        </Pressable>
         <FlatList
           data={selectedImages}
           renderItem={renderImageItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <GreenButton
+          content="추가하기"
+          onPress={modalOpen}
+          style={styles.buttonStyle}
+        />
+        <GreenButton
+          content="삭제하기"
+          onPress={modalOpen}
+          style={styles.buttonStyle}
         />
       </View>
       <PictureModal
@@ -127,27 +121,32 @@ const styles = StyleSheet.create({
     height: 200,
     resizeMode: 'cover',
   },
-  cameraButton: {
-    alignSelf: 'center',
-    marginBottom: 20,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center', // 버튼 사이의 공간을 균등하게
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 20, // 하단에서부터의 간격
+    left: 0,
+    right: 0,
+    gap: 30,
+  },
+  buttonStyle: {
+    width: '10%',
+    margin: 30,
   },
   card: {
-    flex: 1,
-    flexDirection: 'row',
-    margin: 10,
-    borderRadius: 10, // 둥근 모서리
-    overflow: 'hidden', // 둥근 모서리와 함께 이미지를 잘라냄
-    // iOS 그림자
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    // Android 그림자
+    marginTop: '5%',
+    marginLeft: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
     elevation: 5,
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
   },
   cardImage: {
     width: '100%',
-    height: 300,
+    height: '100%',
     resizeMode: 'cover',
   },
 });

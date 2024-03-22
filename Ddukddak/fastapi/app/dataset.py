@@ -2,11 +2,10 @@ from dotenv import load_dotenv
 import os
 import pymysql
 import pandas as pd
-from schemas import ReviewInfo
+from schemas import ReviewInfo, ReviewInfoList
 
 load_dotenv()
 db_user = os.getenv("DB_USER")
-print(f"DB_USER: {db_user}")
 
 # 환경 변수에서 데이터베이스 접속 정보 가져오기
 DB_HOST = os.getenv("DB_HOST")
@@ -54,18 +53,21 @@ keyword_df = pd.read_csv('bookKeyword.csv', encoding='CP949', usecols=['book_id'
 merged_df = pd.merge(keyword_df, book_df, on='book_id', how='left')
 merged_df = pd.merge(merged_df, review_df, on='book_id', how='left')
 
-# Pydantic 모델 리스트 생성
-review_info_list = [ReviewInfo(**row) for index, row in merged_df.iterrows()]
-for review_info in review_info_list[:10]:
-    print(review_info)
+# Pydantic 모델 리스트 생성을 ReviewInfoList를 사용해 수정
+review_info_list = ReviewInfoList(reviews=[ReviewInfo(**row) for index, row in merged_df.iterrows()])
+
+# 예시 출력: 전체 리스트의 길이와 처음 10개 아이템을 출력
+# print(f"Total reviews: {len(review_info_list.reviews)}")
+# for review_info in review_info_list.reviews[:10]:
+#     print(review_info)
 
 # 각 책의 키워드를 쉼표로 분리하고, 중복을 제거한 후 전체 키워드 개수 계산
-all_keywords = set()
-for keywords in keyword_df['keyword']:
-    # 쉼표로 분리하고, 공백을 제거한 후 리스트로 변환
-    keyword_list = [keyword.strip() for keyword in keywords.split(',')]
-    # 중복을 제거하기 위해 집합에 추가
-    all_keywords.update(keyword_list)
+# all_keywords = set()
+# for keywords in keyword_df['keyword']:
+#     # 쉼표로 분리하고, 공백을 제거한 후 리스트로 변환
+#     keyword_list = [keyword.strip() for keyword in keywords.split(',')]
+#     # 중복을 제거하기 위해 집합에 추가
+#     all_keywords.update(keyword_list)
 
 # 전체 키워드 개수 출력
 # total_keywords_count = len(all_keywords)

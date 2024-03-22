@@ -21,3 +21,6 @@ class ReviewInfo(BaseModel):
     user_seq: Optional[int] = None
     is_like: Optional[int] = None
     keyword: Optional[str] = None
+
+class ReviewInfoList(BaseModel):
+    reviews: List[ReviewInfo]

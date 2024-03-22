@@ -26,6 +26,7 @@ import ColoringListScreen from './screens/coloring/ColoringListScreen';
 import ColoringDetailScreen from './screens/coloring/ColoringDetailScreen';
 import MakingBook from './screens/books/MakingBook';
 import LikeBooks from './screens/books/LikeBooks';
+import Intro from './screens/Welcome/IntroScreen';
 
 function LogoTitle() {
   return (
@@ -86,6 +87,7 @@ export type RootStackParamList = {
   talk: undefined;
   fairy: undefined;
   mainrending: undefined;
+  intro: undefined;
   login: undefined;
   signup: undefined;
   picture: undefined;
@@ -135,6 +137,33 @@ export default function App() {
           title: '',
         }}
       >
+        {/* ------------------------ 렌더링 화면 ------------------------ */}
+        <Stack.Screen name="mainrending" component={MainRending} />
+
+        {/* ------------------------ 로그인 페이지 ------------------------ */}
+        <Stack.Screen
+          name="login"
+          component={Login}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
+
+        {/* ------------------------ 회원가입 페이지 ------------------------ */}
+        <Stack.Screen
+          name="signup"
+          component={Signup}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
+
+        {/* ------------------------ 인트로 페이지 ------------------------ */}
+        <Stack.Screen
+          name="intro"
+          component={Intro}
+          options={{
+            headerTitle: LogoTitle,
+            headerRight: () => <LogoRight isHomeScreen={true} />,
+          }}
+        />
+
         {/* ------------------------ 메인 페이지 ------------------------ */}
         <Stack.Screen
           name="home"
@@ -155,22 +184,6 @@ export default function App() {
         {/* ------------------------ 책 상세 페이지 ------------------------ */}
         <Stack.Screen name="detail" component={DetailBookScreen} />
 
-        {/* ------------------------ 렌더링 화면 ------------------------ */}
-        <Stack.Screen name="mainrending" component={MainRending} />
-
-        {/* ------------------------ 로그인 페이지 ------------------------ */}
-        <Stack.Screen
-          name="login"
-          component={Login}
-          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
-        />
-
-        {/* ------------------------ 회원가입 페이지 ------------------------ */}
-        <Stack.Screen
-          name="signup"
-          component={Signup}
-          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
-        />
         {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
         <Stack.Screen
           name="likebooks"

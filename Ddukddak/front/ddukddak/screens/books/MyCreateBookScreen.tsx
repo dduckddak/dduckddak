@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -104,13 +105,18 @@ const styles = StyleSheet.create({
   bookItem: {
     margin: 20,
     alignItems: 'center',
-    marginRight: 35,
-    marginLeft: 35,
+    transform: [
+      { translateX: -50 },
+      { translateY: 50 },
+      { perspective: 2000 },
+      { rotate: '15deg' },
+      { scale: 1.2 },
+    ],
   },
   coverImage: {
     flex: 1,
-    width: 500,
-    height: 530,
+    width: Dimensions.get('screen').width * 0.42,
+    height: Dimensions.get('screen').height * 0.64,
     resizeMode: 'cover',
     borderRadius: 10,
     borderWidth: 6,

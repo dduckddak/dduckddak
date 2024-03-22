@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -24,6 +24,8 @@ import ColoringScreen from './screens/coloring/ColoringScreen';
 import ColoringDrawScreen from './screens/coloring/ColoringDrawScreen';
 import ColoringListScreen from './screens/coloring/ColoringListScreen';
 import ColoringDetailScreen from './screens/coloring/ColoringDetailScreen';
+import MakingBook from './screens/books/MakingBook';
+import LikeBooks from './screens/books/LikeBooks';
 
 function LogoTitle() {
   return (
@@ -33,18 +35,42 @@ function LogoTitle() {
     />
   );
 }
+interface LogoRightProps {
+  isHomeScreen: any;
+}
 
-function LogoRight() {
+function LogoRight({ isHomeScreen }: LogoRightProps) {
   const navigation = useNavigation();
 
   const handlePress = () => {
     navigation.goBack();
   };
 
+  const handleLogout = () => {
+    navigation.navigate('mainrending' as never);
+  };
+
+  if (isHomeScreen) {
+    return (
+      <TouchableOpacity onPress={handleLogout}>
+        <Text
+          style={{
+            fontFamily: 'im-hyemin-bold',
+            fontSize: 30,
+            color: '#003C2A',
+          }}
+        >
+          로그아웃
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  // 그 외의 경우 뒤로 가기 버튼을 렌더링
   return (
     <TouchableOpacity onPress={handlePress}>
       <Image
-        style={{ width: 40, height: 40 }}
+        style={{ width: 100, height: 100 }}
         source={require('./assets/images/button/Back.png')}
       />
     </TouchableOpacity>
@@ -71,12 +97,13 @@ export type RootStackParamList = {
   coloringDraw: undefined;
   coloringList: undefined;
   coloringDetail: undefined;
+  makingBook: { bookTitle: string };
+  likebooks: { bookId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-SplashScreen.preventAutoHideAsync().catch(() => {
-});
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -87,8 +114,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {
-      });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 
@@ -99,6 +125,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="mainrending"
         // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
         screenOptions={{
           headerTransparent: true,
@@ -108,12 +135,13 @@ export default function App() {
           title: '',
         }}
       >
-        {/* ------------------------ 제일 첫 화면 ------------------------ */}
+        {/* ------------------------ 메인 페이지 ------------------------ */}
         <Stack.Screen
           name="home"
           component={MainScreen}
           options={{
-            headerTitle: LogoTitle, // 가운데 로고부분
+            headerTitle: LogoTitle,
+            headerRight: () => <LogoRight isHomeScreen={true} />,
           }}
         />
 
@@ -121,7 +149,7 @@ export default function App() {
         <Stack.Screen
           name="MainCharacterScreen"
           component={MainCharacterScreen}
-          options={{ headerRight: LogoRight }}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
         />
 
         {/* ------------------------ 책 상세 페이지 ------------------------ */}
@@ -134,13 +162,21 @@ export default function App() {
         <Stack.Screen
           name="login"
           component={Login}
-          options={{
-            headerRight: LogoRight,
-          }}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
         />
 
         {/* ------------------------ 회원가입 페이지 ------------------------ */}
-        <Stack.Screen name="signup" component={Signup} />
+        <Stack.Screen
+          name="signup"
+          component={Signup}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
+        {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
+        <Stack.Screen
+          name="likebooks"
+          component={LikeBooks}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
 
         {/* ------------------------ 뚝딱대화 페이지 ------------------------ */}
         <Stack.Screen
@@ -160,21 +196,30 @@ export default function App() {
         <Stack.Screen
           name="picture"
           component={PictureScreen}
-          options={{ headerRight: LogoRight }}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
         />
 
         {/* ------------------------ 소리뚝딱 페이지 ------------------------ */}
         <Stack.Screen
           name="voice"
           component={VoiceScreen}
-          options={{ headerRight: LogoRight }}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
         />
 
         {/* ------------------------ 내가만든책 페이지 ------------------------ */}
         <Stack.Screen
           name="mybook"
           component={MyCreateBookScreen}
-          options={{ headerRight: LogoRight }}
+          options={{
+            headerTitle: LogoTitle,
+            headerRight: () => <LogoRight isHomeScreen={false} />,
+          }}
+        />
+        {/* ------------------------ 진짜 책 페이지 ------------------------ */}
+        <Stack.Screen
+          name="makingBook"
+          component={MakingBook}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
         />
 
         {/* ------------------------ 소리추가 페이지 ------------------------ */}
@@ -200,22 +245,24 @@ export default function App() {
             headerBackVisible: false,
           }}
         />
-        <Stack.Screen name="coloringList"
-                      component={ColoringListScreen}
-                      options={{
-                        headerTitle: LogoTitle,
-                        headerTransparent: true,
-                        headerBackVisible: false,
-                      }}
+        <Stack.Screen
+          name="coloringList"
+          component={ColoringListScreen}
+          options={{
+            headerTitle: LogoTitle,
+            headerTransparent: true,
+            headerBackVisible: false,
+          }}
         />
 
-        <Stack.Screen name="coloringDetail"
-                      component={ColoringDetailScreen}
-                      options={{
-                        headerTitle: LogoTitle,
-                        headerTransparent: true,
-                        headerBackVisible: false,
-                      }}
+        <Stack.Screen
+          name="coloringDetail"
+          component={ColoringDetailScreen}
+          options={{
+            headerTitle: LogoTitle,
+            headerTransparent: true,
+            headerBackVisible: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

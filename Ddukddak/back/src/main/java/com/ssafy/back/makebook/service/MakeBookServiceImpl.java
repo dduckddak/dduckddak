@@ -64,6 +64,9 @@ public class MakeBookServiceImpl implements MakeBookService {
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
+	@Value("${fast-api.url}")
+	private String FastapiURL;
+
 	@Value("${eleven-labs.key}")
 	private String elevenLabsKey;
 
@@ -222,7 +225,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 			CreateImageRequestDto createImageRequestDto = new CreateImageRequestDto
 				(userSeq, request.getMainPhoto(), request.getSubPhoto(), request.getBookId(), makeBookId);
 
-			HttpResponse<String> response = Unirest.post("https://api.elevenlabs.io/v1/voices/add")
+			HttpResponse<String> response = Unirest.post(FastapiURL + "api/v1/f/makephoto/")
 				.header("Content-Type", "application/json")
 				.body(gson.toJson(createImageRequestDto))
 				.asString();

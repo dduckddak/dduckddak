@@ -23,32 +23,6 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   const handlePreviousStep = () =>
     setCurrentStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
 
-<<<<<<< HEAD
-        {/* Right side content */}
-        <View style={styles.rightContainer}>
-          <Pressable onPress={() => navigation.navigate('voice')}>
-            <Image
-              source={require('../../assets/images/Main/voice.png')}
-              style={styles.icon}
-            />
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate('picture')}>
-            <Image
-              source={require('../../assets/images/Main/picture.png')}
-              style={styles.icon}
-            />
-          </Pressable>
-
-          <Pressable onPress={() => navigation.navigate('coloringList')}>
-            <Image
-              source={require('../../assets/images/Main/color.png')}
-              style={styles.icon}
-            />
-          </Pressable>
-        </View>
-      </View>
-    </ImageBackground>
-=======
   const handlePress = () => {
     navigation.navigate('MainCharacterScreen');
   };
@@ -459,7 +433,6 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         </TouchableOpacity>
       )}
     </View>
->>>>>>> front
   );
 };
 

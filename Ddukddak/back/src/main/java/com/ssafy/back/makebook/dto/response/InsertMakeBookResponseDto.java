@@ -25,4 +25,9 @@ public class InsertMakeBookResponseDto extends ResponseDto {
 		ResponseDto responseBody = new ResponseDto(ResponseMessage.S3_ERROR);
 		return ResponseEntity.status(HttpStatus.GONE).body(responseBody);
 	}
+
+	public static ResponseEntity<ResponseDto> FastAPIerror() {
+		ResponseDto responseBody = new ResponseDto(ResponseMessage.FASTAPI_ERROR);
+		return ResponseEntity.status(HttpStatus.GONE).body(responseBody);
+	}
 }

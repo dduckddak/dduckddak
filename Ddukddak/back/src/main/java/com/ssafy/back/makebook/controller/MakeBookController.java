@@ -79,7 +79,8 @@ public class MakeBookController {
 		@ApiResponse(responseCode = "401", description = "토큰 인증 실패."),
 		@ApiResponse(responseCode = "403", description = "리프레쉬 토큰 인증 실패."),
 		@ApiResponse(responseCode = "410", description = "ElevenLabs 요청 실패."),
-		@ApiResponse(responseCode = "410", description = "S3 요청 실패.")
+		@ApiResponse(responseCode = "410", description = "S3 요청 실패."),
+		@ApiResponse(responseCode = "410", description = "FastAPI 요청 실패.")
 	})
 	@PostMapping
 	public ResponseEntity<? super InsertMakeBookResponseDto> insertMakeBook(

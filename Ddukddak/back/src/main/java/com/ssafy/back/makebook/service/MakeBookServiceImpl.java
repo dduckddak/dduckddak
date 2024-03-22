@@ -19,12 +19,14 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.MakeBookEntity;
+import com.ssafy.back.makebook.dto.CreateImageRequestDto;
 import com.ssafy.back.makebook.dto.MakeBookDto;
 import com.ssafy.back.makebook.dto.MakeBookPageDto;
 import com.ssafy.back.makebook.dto.MakeBookScriptDto;
@@ -160,7 +162,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 				bookDetail.add(makeBookPage);
 			}
 			return DetailMakeBookResponseDto.success(bookDetail);
-			
+
 		} catch (Exception e) {
 			logger.debug(ResponseMessage.DATABASE_ERROR);
 			logger.error(e);
@@ -207,10 +209,36 @@ public class MakeBookServiceImpl implements MakeBookService {
 		logger.info(userSeq + " 책 생성 : " + makeBookId + " " + makeBookEntity.getMakeBookTitle());
 
 		int bookPage = bookRepository.findBookPage(request.getBookId());
+
 		//사진 처리
-		// {
-		//
-		// }
+		if (request.getMainPhoto() == null)
+			request.setMainPhoto(-1);
+
+		if (request.getSubPhoto() == null)
+			request.setSubPhoto(-1);
+
+		try {
+			Gson gson = new Gson();
+			CreateImageRequestDto createImageRequestDto = new CreateImageRequestDto
+				(userSeq, request.getMainPhoto(), request.getSubPhoto(), request.getBookId(), makeBookId);
+
+			HttpResponse<String> response = Unirest.post("https://api.elevenlabs.io/v1/voices/add")
+				.header("Content-Type", "application/json")
+				.body(gson.toJson(createImageRequestDto))
+				.asString();
+
+			JsonObject json = JsonParser.parseString(response.getBody()).getAsJsonObject();
+			boolean result = json.get("result").getAsBoolean();
+
+			if (!result)
+				throw new Exception("생성 동화 이미지 생성 실패");
+
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.FASTAPI_ERROR);
+			logger.error(e);
+
+			return InsertMakeBookResponseDto.FastAPIerror();
+		}
 
 		//음성 파일 처리
 		for (int page = 1; page <= bookPage; page++) {

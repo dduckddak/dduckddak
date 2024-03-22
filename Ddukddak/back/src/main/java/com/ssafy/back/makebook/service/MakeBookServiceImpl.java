@@ -25,11 +25,15 @@ import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.MakeBookEntity;
+import com.ssafy.back.makebook.dto.MakeBookDto;
+import com.ssafy.back.makebook.dto.MakeBookPageDto;
+import com.ssafy.back.makebook.dto.MakeBookScriptDto;
 import com.ssafy.back.makebook.dto.MakeBookSummaryDto;
 import com.ssafy.back.makebook.dto.ScriptDto;
 import com.ssafy.back.makebook.dto.request.DeleteMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.request.InsertMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.response.DeleteMakeBookResponseDto;
+import com.ssafy.back.makebook.dto.response.DetailMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.repository.MakeBookRepository;
@@ -84,6 +88,85 @@ public class MakeBookServiceImpl implements MakeBookService {
 		}
 
 		return ListMakeBookResponseDto.success(makeBookList);
+	}
+
+	@Override
+	public ResponseEntity<? super DetailMakeBookResponseDto> detailMakeBook(int makeBookId) {
+		//테스트 코드
+		int userSeq = 1;
+
+		List<MakeBookPageDto> bookDetail = new ArrayList<>();
+		MakeBookDto makeBookDto = makeBookRepository.findDetailByMakeBookId(makeBookId);
+		try {
+			//페이지별 상세 정보 추가
+			for (int i = 1; i <= makeBookDto.getBookPage(); i++) {
+				MakeBookPageDto makeBookPage = new MakeBookPageDto();
+
+				//페이지 이미지 경로
+				makeBookPage.setPageImage(
+					amazonS3.getUrl(bucket, MakeKeyUtil.makePageImage(userSeq, makeBookDto.getBookId(), i)).toString());
+
+				//스크립트별 상세 정보 추가
+				List<MakeBookScriptDto> pageDetail = new ArrayList<>();
+				int scriptCount = scriptRepository.findScriptCount(makeBookDto.getBookId(), i);
+
+				for (int j = 1; j <= scriptCount; j++) {
+					MakeBookScriptDto makeBookScript = new MakeBookScriptDto();
+					ScriptDto script = scriptRepository.findByScriptId(makeBookDto.getBookId(), i, j);
+
+					makeBookScript.setScriptContent(script.getScriptContent());
+
+					//스크립트의 음성이 기본 목소리로 고정인 경우
+					if (script.getRole() == null) {
+						makeBookScript.setScriptSound(
+							amazonS3.getUrl(bucket, MakeKeyUtil.bookScriptSound(makeBookDto.getBookId(), i, j))
+								.toString());
+
+					} else {//역할이 있는 경우
+						if (script.getRole().equals("M")) {
+							//음성이 설정되어 있는 경우
+							if (makeBookDto.isMainVoice())
+								makeBookScript.setScriptSound(
+									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+										.toString());
+						}
+
+						if (script.getRole().equals("S")) {
+							if (makeBookDto.isSubVoice())
+								makeBookScript.setScriptSound(
+									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+										.toString());
+						}
+
+						if (script.getRole().equals("N")) {
+							if (makeBookDto.isNarration())
+								makeBookScript.setScriptSound(
+									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+										.toString());
+						}
+
+						//역할별 음성 교체가 가능하지만 설정하지 않은 경우
+						if (makeBookScript.getScriptSound() == null) {
+							makeBookScript.setScriptSound(
+								amazonS3.getUrl(bucket, MakeKeyUtil.bookScriptSound(makeBookDto.getBookId(), i, j))
+									.toString());
+						}
+					}
+
+					pageDetail.add(makeBookScript);
+				}
+				makeBookPage.setPageDetail(pageDetail);
+
+				bookDetail.add(makeBookPage);
+			}
+			return DetailMakeBookResponseDto.success(bookDetail);
+			
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+
+			return ResponseDto.databaseError();
+		}
 	}
 
 	@Override

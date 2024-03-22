@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.back.makebook.dto.request.DeleteMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.request.InsertMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.response.DeleteMakeBookResponseDto;
+import com.ssafy.back.makebook.dto.response.DetailMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.service.MakeBookService;
@@ -48,6 +50,23 @@ public class MakeBookController {
 	@GetMapping
 	public ResponseEntity<? super ListMakeBookResponseDto> listMakeBook() {
 		return makeBookService.listMakeBook();
+	}
+
+	@Operation(
+		summary = "생성 동화 상세",
+		description = "생성 동화 상세 정보를 보내준다."
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation = DetailMakeBookResponseDto.class))),
+		@ApiResponse(responseCode = "400", description = "요청 받아야 할 값이 없음."),
+		@ApiResponse(responseCode = "401", description = "토큰 인증 실패."),
+		@ApiResponse(responseCode = "403", description = "리프레쉬 토큰 인증 실패."),
+		@ApiResponse(responseCode = "404", description = "DB에 값이 없음.")
+	})
+	@GetMapping("/{makeBookId}")
+	public ResponseEntity<? super DetailMakeBookResponseDto> detailMakeBook(@PathVariable int makeBookId) {
+		return makeBookService.detailMakeBook(makeBookId);
 	}
 
 	@Operation(

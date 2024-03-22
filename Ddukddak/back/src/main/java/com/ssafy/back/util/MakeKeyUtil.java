@@ -48,4 +48,9 @@ public class MakeKeyUtil {
 	public static String makePageImage(int userSeq, int makeBookId, int pageSeq) {
 		return userSeq + "/make-book/" + makeBookId + "/image/" + pageSeq + ".png";
 	}
+
+	//기본 동화 스크립트 음성 키
+	public static String bookScriptSound(int bookId, int pageSeq, int scriptSeq) {
+		return "default-book/" + bookId + "/sound/" + pageSeq + "/" + scriptSeq;
+	}
 }

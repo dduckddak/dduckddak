@@ -26,12 +26,10 @@ import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
-import com.ssafy.back.book.dto.response.CreateReviewResponseDto;
-import com.ssafy.back.book.dto.response.DeleteReviewResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
-import com.ssafy.back.book.dto.response.UpdateReviewResponseDto;
+import com.ssafy.back.book.dto.response.ReviewResponseDto;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.book.repository.ReviewRepository;
 import com.ssafy.back.common.ResponseDto;
@@ -182,60 +180,30 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public ResponseEntity<? super CreateReviewResponseDto> createReview(CreateReviewRequestDto dto) {
+	public ResponseEntity<? super ReviewResponseDto> createReview(CreateReviewRequestDto dto) {
 		//테스트 코드
 		int userSeq = 1;
 
 		try {
-			reviewRepository.insertReviewNative(dto.getBookId(), userSeq, dto.isLike());
-			logger.info("User {}'s review for book {} created.", userSeq, dto.getBookId());
-			return ResponseDto.success();
-
-		} catch (Exception e) {
-			logger.error(ResponseMessage.DATABASE_ERROR);
-			logger.error(e);
-			return ResponseDto.databaseError();
-		}
-	}
-
-	@Override
-	@Transactional
-	public ResponseEntity<? super UpdateReviewResponseDto> updateReview(CreateReviewRequestDto dto) {
-		//테스트 코드
-		Integer userSeq = 1;
-
-		try {
-			reviewRepository.updateReviewNative(dto.getBookId(), userSeq, dto.isLike());
-			logger.info("User {}'s review for book {} updated.", userSeq, dto.getBookId());
-
-			// ReviewEntity reviewEntity = reviewRepository.findById(new ReviewId(dto.getBookId(), userSeq));
-			// reviewEntity.setIsLike(dto.isLike());
-			// reviewRepository.save(reviewEntity);
-			// logger.info("reviewEntity : " + reviewEntity.toString());
-			return ResponseDto.success();
-
-		} catch (Exception e) {
-			logger.error(ResponseMessage.DATABASE_ERROR);
-			logger.error(e);
-			return ResponseDto.databaseError();
-		}
-	}
-
-	@Override
-	public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(Integer bookId) {
-		//테스트 코드
-		Integer userSeq = 1;
-		try {
-			Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(new ReviewId(bookId, userSeq));
+			ReviewId reviewId = new ReviewId(dto.getBookId(), userSeq);
+			Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(reviewId);
+			//해당 책에 사용자의 리뷰가 있다
 			if (reviewEntityOptional.isPresent()) {
 				ReviewEntity reviewEntity = reviewEntityOptional.get();
-				System.out.println(reviewEntity);
-				reviewRepository.delete(reviewEntity);
-				logger.info("delete reviewEntity : " + reviewEntity.toString());
-				return ResponseDto.success();
+				if (reviewEntity.getIsLike() == dto.isLike()) { //들어온 값이 있는 리뷰와 같다면
+					reviewRepository.delete(reviewEntity);
+					logger.info("delete reviewEntity : " + reviewEntity.toString());
+					return ReviewResponseDto.deleteSuccess();
+				} else {
+					reviewRepository.updateReviewNative(dto.getBookId(), userSeq, dto.isLike());
+					logger.info("update reviewEntity : " + reviewEntity.toString());
+					return ReviewResponseDto.updateSuccess();
+				}
 			} else {
-				logger.error(ResponseMessage.DATABASE_ERROR);
-				return ResponseDto.databaseError();
+				//해당 책에 사용자의 리뷰가 없다
+				reviewRepository.insertReviewNative(dto.getBookId(), userSeq, dto.isLike());
+				logger.info("User {}'s review for book {} created.", userSeq, dto.getBookId());
+				return ReviewResponseDto.insertSuccess();
 			}
 		} catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);

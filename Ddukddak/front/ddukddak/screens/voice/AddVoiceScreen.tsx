@@ -17,10 +17,13 @@ function AddVoiceScreen() {
           목소리를 추가하기 위해 대사를 읽어줄 수 있겠니?
         </Text>
       </View>
-      <GreenButton
-        content="녹음하러가기"
-        onPress={() => navigation.navigate('record' as never)}
-      />
+      <View style={styles.buttonContainer}>
+        <GreenButton
+          content="녹음하러가기"
+          onPress={() => navigation.navigate('record' as never)}
+          style={styles.buttonStyle}
+        />
+      </View>
     </ImageBackground>
   );
 }
@@ -39,8 +42,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    fontSize: 32,
+    fontSize: 36,
     fontFamily: 'im-hyemin-bold',
-    color: 'white',
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 50, // 원하는 만큼의 여백을 추가할 수 있습니다.
+  },
+  buttonStyle: {
+    width: '20%',
   },
 });

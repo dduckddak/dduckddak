@@ -77,6 +77,7 @@ function VoiceScreen() {
       <GreenButton
         content="추가하기"
         onPress={() => navigation.navigate('addvoice' as never)}
+        style={{ width: '20%', marginBottom: 50 }}
       />
     </ImageBackground>
   );

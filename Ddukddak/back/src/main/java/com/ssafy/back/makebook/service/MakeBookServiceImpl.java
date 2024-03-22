@@ -2,6 +2,7 @@ package com.ssafy.back.makebook.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -21,9 +25,15 @@ import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.MakeBookEntity;
+import com.ssafy.back.makebook.dto.MakeBookDto;
+import com.ssafy.back.makebook.dto.MakeBookPageDto;
+import com.ssafy.back.makebook.dto.MakeBookScriptDto;
 import com.ssafy.back.makebook.dto.MakeBookSummaryDto;
 import com.ssafy.back.makebook.dto.ScriptDto;
+import com.ssafy.back.makebook.dto.request.DeleteMakeBookRequestDto;
 import com.ssafy.back.makebook.dto.request.InsertMakeBookRequestDto;
+import com.ssafy.back.makebook.dto.response.DeleteMakeBookResponseDto;
+import com.ssafy.back.makebook.dto.response.DetailMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.repository.MakeBookRepository;
@@ -78,6 +88,85 @@ public class MakeBookServiceImpl implements MakeBookService {
 		}
 
 		return ListMakeBookResponseDto.success(makeBookList);
+	}
+
+	@Override
+	public ResponseEntity<? super DetailMakeBookResponseDto> detailMakeBook(int makeBookId) {
+		//테스트 코드
+		int userSeq = 1;
+
+		List<MakeBookPageDto> bookDetail = new ArrayList<>();
+		MakeBookDto makeBookDto = makeBookRepository.findDetailByMakeBookId(makeBookId);
+		try {
+			//페이지별 상세 정보 추가
+			for (int i = 1; i <= makeBookDto.getBookPage(); i++) {
+				MakeBookPageDto makeBookPage = new MakeBookPageDto();
+
+				//페이지 이미지 경로
+				makeBookPage.setPageImage(
+					amazonS3.getUrl(bucket, MakeKeyUtil.makePageImage(userSeq, makeBookDto.getBookId(), i)).toString());
+
+				//스크립트별 상세 정보 추가
+				List<MakeBookScriptDto> pageDetail = new ArrayList<>();
+				int scriptCount = scriptRepository.findScriptCount(makeBookDto.getBookId(), i);
+
+				for (int j = 1; j <= scriptCount; j++) {
+					MakeBookScriptDto makeBookScript = new MakeBookScriptDto();
+					ScriptDto script = scriptRepository.findByScriptId(makeBookDto.getBookId(), i, j);
+
+					makeBookScript.setScriptContent(script.getScriptContent());
+
+					//스크립트의 음성이 기본 목소리로 고정인 경우
+					if (script.getRole() == null) {
+						makeBookScript.setScriptSound(
+							amazonS3.getUrl(bucket, MakeKeyUtil.bookScriptSound(makeBookDto.getBookId(), i, j))
+								.toString());
+
+					} else {//역할이 있는 경우
+						if (script.getRole().equals("M")) {
+							//음성이 설정되어 있는 경우
+							if (makeBookDto.isMainVoice())
+								makeBookScript.setScriptSound(
+									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+										.toString());
+						}
+
+						if (script.getRole().equals("S")) {
+							if (makeBookDto.isSubVoice())
+								makeBookScript.setScriptSound(
+									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+										.toString());
+						}
+
+						if (script.getRole().equals("N")) {
+							if (makeBookDto.isNarration())
+								makeBookScript.setScriptSound(
+									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+										.toString());
+						}
+
+						//역할별 음성 교체가 가능하지만 설정하지 않은 경우
+						if (makeBookScript.getScriptSound() == null) {
+							makeBookScript.setScriptSound(
+								amazonS3.getUrl(bucket, MakeKeyUtil.bookScriptSound(makeBookDto.getBookId(), i, j))
+									.toString());
+						}
+					}
+
+					pageDetail.add(makeBookScript);
+				}
+				makeBookPage.setPageDetail(pageDetail);
+
+				bookDetail.add(makeBookPage);
+			}
+			return DetailMakeBookResponseDto.success(bookDetail);
+			
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+
+			return ResponseDto.databaseError();
+		}
 	}
 
 	@Override
@@ -216,6 +305,66 @@ public class MakeBookServiceImpl implements MakeBookService {
 				}
 			}
 		}
+		return ResponseDto.success();
+	}
+
+	@Override
+	public ResponseEntity<? super DeleteMakeBookResponseDto> deleteMakeBook(DeleteMakeBookRequestDto request) {
+		//test코드(user지정)
+		int userSeq = 1;
+
+		//S3에서 생성 동화 폴더 삭제
+		try {
+			for (Integer makeBookId : request.getDeleteMakeBookIds()) {
+				String key = MakeKeyUtil.makeBook(userSeq, makeBookId);
+
+				ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request()
+					.withBucketName(bucket)
+					.withPrefix(key);
+
+				ListObjectsV2Result result;
+
+				do {
+					result = amazonS3.listObjectsV2(listObjectsV2Request);
+
+					if (result.getObjectSummaries().isEmpty()) {
+						//해당 생성 동화의 폴더가 S3에 없다면
+						if (!amazonS3.doesObjectExist(bucket, key))
+							throw new Exception("폴더 없음");
+					}
+
+					// 삭제할 객체들의 키 목록 생성
+					List<DeleteObjectsRequest.KeyVersion> keysToDelete = new ArrayList<>();
+
+					result.getObjectSummaries().forEach(objectSummary -> {
+						keysToDelete.add(new DeleteObjectsRequest.KeyVersion(objectSummary.getKey()));
+					});
+
+					// 객체들을 삭제
+					if (!keysToDelete.isEmpty()) {
+						DeleteObjectsRequest multiObjectDeleteRequest = new DeleteObjectsRequest(bucket)
+							.withKeys(keysToDelete)
+							.withQuiet(true);
+						amazonS3.deleteObjects(multiObjectDeleteRequest);
+					}
+
+					// 다음 페이지의 객체들을 가져오기 위한 연속 토큰을 설정
+					listObjectsV2Request.setContinuationToken(result.getNextContinuationToken());
+
+				} while (result.isTruncated());
+
+				logger.info(makeBookId + " : S3 삭제 완료");
+			}
+
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
+
+			return DeleteMakeBookResponseDto.S3error();
+		}
+
+		makeBookRepository.deleteAllById(request.getDeleteMakeBookIds());
+
 		return ResponseDto.success();
 	}
 }

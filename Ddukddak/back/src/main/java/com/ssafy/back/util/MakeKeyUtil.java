@@ -35,7 +35,14 @@ public class MakeKeyUtil {
 	}
 
 	// S3 public url 뱉음
-	public static String generatePublicUrl(String bucket) { return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/"; }
+	public static String generatePublicUrl(String bucket) {
+		return "https://" + bucket + ".s3.ap-northeast-2.amazonaws.com/";
+	}
+
+	//생성 동화 폴더 키 생성
+	public static String makeBook(int userSeq, int makeBookId) {
+		return userSeq + "/make-book/" + makeBookId + "/";
+	}
 
 	//생성 동화 스크립트 음성 키
 	public static String makeScriptSound(int userSeq, int makeBookId, int pageSeq, int scriptSeq) {
@@ -47,4 +54,8 @@ public class MakeKeyUtil {
 		return userSeq + "/make-book/" + makeBookId + "/image/" + pageSeq + ".png";
 	}
 
+	//기본 동화 스크립트 음성 키
+	public static String bookScriptSound(int bookId, int pageSeq, int scriptSeq) {
+		return "default-book/" + bookId + "/sound/" + pageSeq + "/" + scriptSeq;
+	}
 }

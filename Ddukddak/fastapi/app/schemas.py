@@ -7,9 +7,11 @@ class UserPreferences(BaseModel):
     dislikes: List[int]
 
 class MakePhoto(BaseModel):
+    userSeq : int
     mainPhoto : int
     subPhoto : int
     bookId : int
+    generatedId : int
 
 class ExtractPhoto(BaseModel):
     userSeq : int

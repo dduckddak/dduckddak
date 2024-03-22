@@ -1,8 +1,5 @@
-package com.ssafy.back.voice.dto.request;
+package com.ssafy.back.makebook.dto;
 
-import java.util.List;
-
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class DeleteVoiceRequestDto {
-	@NotNull
-	private List<Integer> deleteVoiceIds;
+public class ScriptDto {
+	private String role;
+	private String scriptContent;
 }

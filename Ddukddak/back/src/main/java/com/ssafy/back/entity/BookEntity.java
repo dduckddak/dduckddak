@@ -39,12 +39,12 @@ public class BookEntity {
 	@Column(name = "book_story", columnDefinition = "TEXT", nullable = false)
 	private String bookStory;
 
+	@Column(name = "book_page", nullable = false)
+	private Integer bookPage;
+
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<MakeBookEntity> makeBookEntities = new ArrayList<>();
-
-	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
-	private List<PageEntity> pageEntities = new ArrayList<>();
-
+	
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ReviewEntity> reviewEntities = new ArrayList<>();
 

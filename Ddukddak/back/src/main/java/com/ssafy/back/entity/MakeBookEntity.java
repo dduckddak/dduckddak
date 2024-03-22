@@ -21,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MakeBookEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "make_book_id", nullable = false)
@@ -37,4 +37,21 @@ public class MakeBookEntity {
 
 	@Column(name = "make_book_title", nullable = false, length = 20)
 	private String makeBookTitle;
+
+	@Column(name = "main_voice", nullable = false)
+	private boolean mainVoice;
+
+	@Column(name = "sub_voice", nullable = false)
+	private boolean subVoice;
+
+	@Column(name = "narration", nullable = false)
+	private boolean narration;
+
+	public MakeBookEntity(int bookId, int userSeq, String makeBookTitle) {
+		this.bookEntity = new BookEntity();
+		this.userEntity = new UserEntity();
+		this.bookEntity.setBookId(bookId);
+		this.userEntity.setUserSeq(userSeq);
+		this.makeBookTitle = makeBookTitle;
+	}
 }

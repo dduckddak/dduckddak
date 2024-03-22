@@ -16,5 +16,5 @@ import lombok.ToString;
 @ToString
 public class DeleteColoringRequestDto {
 	@NotNull
-	private List<Integer> coloringIds;
+	private List<Integer> deleteColoringIds;
 }

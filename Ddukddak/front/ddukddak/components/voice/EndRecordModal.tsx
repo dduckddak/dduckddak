@@ -66,14 +66,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalBox: {
-    width: '100%',
+    width: '80%',
     backgroundColor: '#2B98BB',
-    borderRadius: 4,
+    borderRadius: 10,
     elevation: 2,
-    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 100,
   },
   button: {
     width: '20%',
@@ -81,12 +79,17 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-    marginBottom: 20,
+    margin: 10,
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 50,
   },
   input: {
     backgroundColor: '#fff',
-    width: '80%',
-    padding: 10,
-    marginBottom: 20,
+    width: '60%',
+    padding: 20,
+    margin: 20,
+    fontSize: 20,
+    fontFamily: 'im-hyemin-bold',
+    borderRadius: 10,
   },
 });

@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   searchButtonAndInputContainer: {
     position: 'absolute',
     right: 10,
-    top: 60,
+    top: 80,
     zIndex: 1,
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -299,6 +299,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#C5E1C9',
     width: 500,
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 20,
   },
 });
 

@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   ImageBackground: {
     flex: 1,
     resizeMode: 'cover',
-    justifyContent: 'center', // 중앙 정렬을 위해 추가
+    justifyContent: 'center',
   },
   container: {
     flex: 1,
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    marginBottom: 50, // 원하는 만큼의 여백을 추가할 수 있습니다.
+    marginBottom: 50,
   },
   buttonStyle: {
     width: '20%',

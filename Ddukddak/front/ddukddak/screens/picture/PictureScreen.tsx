@@ -1,66 +1,92 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
-  Platform,
   StyleSheet,
   ImageBackground,
   FlatList,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import PictureModal from '../../components/picture/PictureModal';
-import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../../components/GreenButton';
+import ImagePickerComponent from '../../components/picture/ImagePicker';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getPhotos } from '../../api/photoApi';
 
 const { width } = Dimensions.get('window');
 
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
-function CameraButton() {
-  // 안드로이드를 위한 모달 visible 상태값
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+function PictureScreen() {
+  const [images, setImages] = useState<{ uri: string; selected: boolean }[]>(
+    [],
+  );
+  const [deleteMode, setDeleteMode] = useState(false);
 
-  const imagePickerOption = {
-    mediaTypes: ImagePicker.MediaTypeOptions.All,
-    allowsEditing: true,
-    aspect: [4, 3] as [number, number],
-    quality: 1,
-    base64: Platform.OS === 'android',
-  };
+  useEffect(() => {
+    const fetchPhotos = async () => {
+      try {
+        const response = await getPhotos();
+        if (response.photoList) {
+          setImages(
+            response.photoList.map((photo) => ({
+              uri: photo.photoFile,
+              selected: false,
+              id: photo.photoId,
+            })),
+          );
+        }
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          Alert.alert('사진 목록을 불러오는데 실패했습니다.', error.message);
+        } else {
+          console.log('알 수 없는 에러', error);
+        }
+      }
+    };
 
-  const onPickImage = async (pickerResult: ImagePicker.ImagePickerResult) => {
-    if (!pickerResult.canceled) {
-      const uri = (pickerResult as ImagePicker.ImagePickerSuccessResult)
-        .assets[0].uri;
-      setSelectedImages((currentImages) => [...currentImages, uri]);
-      console.log(uri);
+    fetchPhotos();
+  }, []);
+
+  // 이미지 선택 로직
+  const toggleImageSelected = (index: number) => {
+    // 삭제 모드일 때만 선택 가능
+    if (deleteMode) {
+      setImages((images) =>
+        images.map((img, i) =>
+          i === index ? { ...img, selected: !img.selected } : img,
+        ),
+      );
     }
   };
 
-  // 카메라 촬영
-  const onLaunchCamera = async () => {
-    const result = await ImagePicker.launchCameraAsync(imagePickerOption);
-    onPickImage(result);
+  const handleImageSelected = (uri: string) => {
+    setImages((prevImages) => [...prevImages, { uri, selected: false }]);
   };
 
-  // 갤러리에서 사진 선택
-  const onLaunchImageLibrary = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync(imagePickerOption);
-    onPickImage(result);
+  const onDelete = () => {
+    if (!deleteMode) {
+      setDeleteMode(true); // 삭제 모드 활성화
+    } else {
+      setImages((images) => images.filter((img) => !img.selected));
+      setDeleteMode(false); // 삭제 모드 해제
+    }
   };
 
-  // 선택 모달 오픈
-  const modalOpen = () => {
-    setModalVisible(true);
-  };
-
-  const renderImageItem = ({ item }: { item: string }) => (
-    <View style={styles.card}>
-      <Image source={{ uri: item }} style={styles.cardImage} />
-    </View>
+  const renderImageItem = ({
+    item,
+    index,
+  }: {
+    item: { uri: string; selected: boolean };
+    index: number;
+  }) => (
+    <TouchableOpacity
+      style={[styles.card, item.selected && styles.selected]}
+      onPress={() => toggleImageSelected(index)}
+    >
+      <Image source={{ uri: item.uri }} style={styles.cardImage} />
+    </TouchableOpacity>
   );
 
   return (
@@ -70,7 +96,7 @@ function CameraButton() {
     >
       <View style={styles.container}>
         <FlatList
-          data={selectedImages}
+          data={images}
           renderItem={renderImageItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
@@ -78,27 +104,17 @@ function CameraButton() {
       </View>
       <View style={styles.buttonContainer}>
         <GreenButton
-          content="추가하기"
-          onPress={modalOpen}
+          content={deleteMode ? '선택삭제' : '삭제하기'}
+          onPress={onDelete}
           style={styles.buttonStyle}
         />
-        <GreenButton
-          content="삭제하기"
-          onPress={modalOpen}
-          style={styles.buttonStyle}
-        />
+        <ImagePickerComponent onImageSelected={handleImageSelected} />
       </View>
-      <PictureModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onLaunchCamera={onLaunchCamera}
-        onLaunchImageLibrary={onLaunchImageLibrary}
-      />
     </ImageBackground>
   );
 }
 
-export default CameraButton;
+export default PictureScreen;
 
 const styles = StyleSheet.create({
   ImageBackground: {
@@ -111,22 +127,12 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
   },
-  imageContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    margin: 5,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-  },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center', // 버튼 사이의 공간을 균등하게
+    justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 20, // 하단에서부터의 간격
+    bottom: 20,
     left: 0,
     right: 0,
     gap: 30,
@@ -148,5 +154,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+  },
+  selected: {
+    borderColor: 'blue',
+    borderWidth: 2,
   },
 });

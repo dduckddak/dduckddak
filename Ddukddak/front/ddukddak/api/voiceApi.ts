@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 import { isAxiosError } from 'axios';
 
-interface ApiResponse {
+export interface ApiResponse {
   message: string;
   voiceList?: {
     voiceId: number;

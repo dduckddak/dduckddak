@@ -226,3 +226,25 @@ export const getReviewDetail = async (
     throw error;
   }
 };
+
+
+/**
+ * 좋아요 한 책 목록을 가져오기 (BookList랑 데이터 값 똑같아서 그대로 사용)
+ * @remarks
+ * GET 요청을 '/api/v1/books/like' 엔드포인트에 보냅니다. 성공시 메시지와 함께 좋아요 한 책 목록을 반환합니다.
+ * @returns {Promise<BookListResponse>} "Success" 메시지와 함께 LikeBookList를 반환합니다.
+ * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
+ */
+export const getLikeList = async (): Promise<BookListResponse> => {
+  try {
+    const response = await apiClient.get<BookListResponse>(
+      '/api/v1/books/like',
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};

@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.book.repository.BookRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
@@ -72,8 +75,11 @@ public class MakeBookServiceImpl implements MakeBookService {
 
 	@Override
 	public ResponseEntity<? super ListMakeBookResponseDto> listMakeBook() {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		List<MakeBookSummaryDto> makeBookList = makeBookRepository.findSummaryByUserSeq(userSeq);
 
@@ -97,8 +103,11 @@ public class MakeBookServiceImpl implements MakeBookService {
 
 	@Override
 	public ResponseEntity<? super DetailMakeBookResponseDto> detailMakeBook(int makeBookId) {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		List<MakeBookPageDto> bookDetail = new ArrayList<>();
 		MakeBookDto makeBookDto = makeBookRepository.findDetailByMakeBookId(makeBookId);
@@ -176,8 +185,11 @@ public class MakeBookServiceImpl implements MakeBookService {
 
 	@Override
 	public ResponseEntity<? super InsertMakeBookResponseDto> insertMakeBook(InsertMakeBookRequestDto request) {
-		//test
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		MakeBookEntity makeBookEntity = new MakeBookEntity(request.getBookId(), userSeq, request.getMakeBookTitle());
 
@@ -341,8 +353,11 @@ public class MakeBookServiceImpl implements MakeBookService {
 
 	@Override
 	public ResponseEntity<? super DeleteMakeBookResponseDto> deleteMakeBook(DeleteMakeBookRequestDto request) {
-		//test코드(user지정)
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		//S3에서 생성 동화 폴더 삭제
 		try {

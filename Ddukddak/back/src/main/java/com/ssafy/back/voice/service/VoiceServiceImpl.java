@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.UserEntity;
@@ -53,16 +56,11 @@ public class VoiceServiceImpl implements VoiceService {
 
 	@Override
 	public ResponseEntity<? super ListVoiceResponseDto> listVoice() {
-		//로그인 토큰 유효성 확인
-		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		// if (authentication == null || !(authentication.getPrincipal() instanceof LoginUserDto)) {
-		// 	return ResponseDto.jwtTokenFail();
-		// }
-		// LoginUserDto loginUser = (LoginUserDto)authentication.getPrincipal();
-		// int userSeq =loginUser.getUserSeq();
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-		//테스트 코드
-		int userSeq = 1;
+		int userSeq = customUserDetails.getUserSeq();
 
 		List<VoiceDto> voiceList = voiceRepository.findByUserEntity_UserSeq(userSeq);
 
@@ -72,8 +70,11 @@ public class VoiceServiceImpl implements VoiceService {
 
 	@Override
 	public ResponseEntity<? super InsertVoiceResponseDto> insertVoice(InsertVoiceRequestDto request) {
-		//test코드(user지정)
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		VoiceEntity voiceEntity = new VoiceEntity();
 		voiceEntity.setVoiceName(request.getVoiceName());
@@ -164,8 +165,11 @@ public class VoiceServiceImpl implements VoiceService {
 
 	@Override
 	public ResponseEntity<? super DeleteVoiceResponseDto> deleteVoice(DeleteVoiceRequestDto request) {
-		//test코드(user지정)
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		//S3에서 미리 듣기 음성 삭제
 		try {
@@ -210,8 +214,11 @@ public class VoiceServiceImpl implements VoiceService {
 
 	@Override
 	public ResponseEntity<? super PreviewVoiceResponseDto> previewVoice(int voiceId) {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		String key = MakeKeyUtil.voice(userSeq, voiceId);
 

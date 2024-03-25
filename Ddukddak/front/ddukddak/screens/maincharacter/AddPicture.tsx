@@ -18,7 +18,7 @@ const { width } = Dimensions.get('screen');
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
-function PictureScreen() {
+function AddPicture() {
   const [images, setImages] = useState<{ uri: string; selected: boolean }[]>(
     [],
   );
@@ -114,7 +114,7 @@ function PictureScreen() {
   );
 }
 
-export default PictureScreen;
+export default AddPicture;
 
 const styles = StyleSheet.create({
   ImageBackground: {

@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
-import { getVoices, ApiResponse } from '../../api/voiceApi';
 
 const voiceDataa = [
   {
@@ -41,21 +40,6 @@ const voiceDataa = [
 
 function VoiceScreen() {
   const navigation = useNavigation();
-  const [voiceData, setVoiceData] = useState<ApiResponse['voiceList']>([]);
-
-  useEffect(() => {
-    // 컴포넌트가 마운트될 때 목소리 목록을 불러옵니다.
-    const fetchVoices = async () => {
-      try {
-        const response = await getVoices();
-        setVoiceData(response.voiceList || []);
-      } catch (error) {
-        console.error('목소리 목록을 불러오는 데 실패했습니다:', error);
-      }
-    };
-
-    fetchVoices();
-  }, []);
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity onPress={() => console.log(item.name)}>

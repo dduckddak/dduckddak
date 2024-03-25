@@ -28,10 +28,10 @@ public class SwaggerConfig {
 
 	@Bean
 	public OpenAPI openAPI() {
-		Server localServer = new Server().url("http://localhost:8080").description("Local HTTP Server");
-		Server httpsServer = new Server().url("https://j10e203.p.ssafy.io").description("Test HTTPS Server");
+		// Server localServer = new Server().url("http://localhost:8080").description("Local HTTP Server");
+		// Server httpsServer = new Server().url("https://j10e203.p.ssafy.io").description("Test HTTPS Server");
 		return new OpenAPI()
-			.servers(Arrays.asList(httpsServer, localServer))
+			// .servers(Arrays.asList(httpsServer, localServer))
 			.components(new Components().addSecuritySchemes("JWT",bearerAuth))
 			.addSecurityItem(addSecurityItem)
 			.info(apiInfo());
@@ -39,7 +39,7 @@ public class SwaggerConfig {
 
 	private Info apiInfo() {
 		return new Info()
-			.title("뚝딱뚝딱 Swegger")
+			.title("뚝딱뚝딱 Swagger")
 			.description("대규모 프로젝트.")
 			.version("1.0.0");
 	}

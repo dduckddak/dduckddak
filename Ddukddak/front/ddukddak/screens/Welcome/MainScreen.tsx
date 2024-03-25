@@ -25,6 +25,10 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         <View style={styles.leftContainer}>
           <Pressable onPress={() => navigation.navigate('maincharacter')}>
             <Image
+              source={require('../../assets/images/DD/딱이.png')}
+              style={styles.ddak2}
+            />
+            <Image
               source={require('../../assets/images/Main/maincharacter.png')}
               style={styles.greenButton}
             />
@@ -94,5 +98,13 @@ const styles = StyleSheet.create({
   bookicon: {
     width: 710,
     height: 210,
+  },
+  ddak2: {
+    position: 'absolute',
+    left: '3%',
+    top: '31%',
+    width: 350,
+    height: 400,
+    zIndex: 20,
   },
 });

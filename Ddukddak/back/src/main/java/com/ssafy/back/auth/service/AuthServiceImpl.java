@@ -24,6 +24,7 @@ import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
 import com.ssafy.back.auth.dto.response.TokenResponseDto;
+import com.ssafy.back.auth.dto.response.UserInfoResponseDto;
 import com.ssafy.back.auth.provider.JwtProvider;
 import com.ssafy.back.auth.repository.UserRepository;
 import com.ssafy.back.entity.UserEntity;
@@ -162,6 +163,19 @@ public class AuthServiceImpl implements AuthService {
 		valueOperations.set(refreshToken, userId);
 
 		return TokenResponseDto.newTokenSuccess(accessToken, refreshToken);
+
+	}
+
+	@Override
+	public ResponseEntity<? super UserInfoResponseDto> getUserInfo() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+
+		String userName = customUserDetails.getUserName();
+		String sex = customUserDetails.getSex();
+		int birth = customUserDetails.getBirth();
+
+		return UserInfoResponseDto.userInfoSuccess(userName, sex, birth);
 
 	}
 

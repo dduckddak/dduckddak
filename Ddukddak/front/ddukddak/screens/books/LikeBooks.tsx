@@ -1,5 +1,5 @@
-import { NavigationProp } from '@react-navigation/native';
-import React, { useState } from 'react';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,13 +10,17 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  Image,
 } from 'react-native';
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 
+import { getLikeBookList, LikeBookListData } from '../../api/bookApi';
+
 interface Book {
   id: number;
   title: string;
+  image: string;
 }
 type Props = {
   navigation: NavigationProp<any>;
@@ -33,10 +37,32 @@ const books: Book[] = [
   { id: 8, title: '책 8' },
   { id: 9, title: '책 9' },
   { id: 10, title: '책 10' },
+  { id: 11, title: '책 11' },
 ];
 
 const BookSelectionScreen = () => {
   const [selectedBooks, setSelectedBooks] = useState<number[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
+  const navigation = useNavigation();
+
+  const fetchLikeBooks = async () => {
+    try {
+      const likeBookListResponse = await getLikeBookList();
+      if (likeBookListResponse.bookList) {
+        const fetchedBooks = likeBookListResponse.bookList.map((book) => ({
+          id: book.bookId,
+          title: book.bookTitle,
+          image: book.coverImage,
+        }));
+        setBooks(fetchedBooks);
+      }
+    } catch (error) {
+      console.error('에러에러 삐용삐용', error);
+    }
+  };
+  useEffect(() => {
+    fetchLikeBooks();
+  }, []);
 
   const toggleSelection = (bookId: number) => {
     if (selectedBooks.includes(bookId)) {
@@ -62,6 +88,7 @@ const BookSelectionScreen = () => {
       ]}
       onPress={() => toggleSelection(item.id)}
     >
+      <Image source={{ uri: item.image }} style={styles.bookImage} />
       <Text style={styles.bookTitle}>{item.title}</Text>
     </TouchableOpacity>
   );
@@ -110,16 +137,23 @@ const styles = StyleSheet.create({
   flatListContent: {
     alignItems: 'center',
     // margin: 10,
+    paddingBottom: 40,
   },
   bookItem: {
     margin: 10,
-    marginTop: 40,
+    marginTop: 50,
     alignItems: 'center',
     backgroundColor: '#ddd',
     borderRadius: 5,
-    width: Dimensions.get('window').width * 0.22,
+    width: Dimensions.get('screen').width * 0.22,
     height: 300,
     justifyContent: 'center',
+  },
+  bookImage: {
+    width: '100%',
+    height: '100%', // 이미지가 전체 컨테이너의 80%를 차지하도록 설정
+    resizeMode: 'cover',
+    borderRadius: 5,
   },
   bookTitle: {
     textAlign: 'center',
@@ -134,7 +168,7 @@ const styles = StyleSheet.create({
   },
   green: {
     margin: 20,
-    width: Dimensions.get('window').width * 0.15,
+    width: Dimensions.get('screen').width * 0.15,
     alignSelf: 'center',
   },
 });

@@ -53,7 +53,7 @@ public class WebSecurityConfig {
     protected CorsConfigurationSource configurationSource() {
 
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        // corsConfiguration.addAllowedOrigin("http://j10e203.p.ssafy.io:8090");
+        corsConfiguration.addAllowedOrigin("http://j10e203.p.ssafy.io:8090");
         corsConfiguration.addAllowedOrigin("http://localhost:8081");
         corsConfiguration.addAllowedOrigin("https://j10e203.p.ssafy.io");
         corsConfiguration.addAllowedMethod("*");

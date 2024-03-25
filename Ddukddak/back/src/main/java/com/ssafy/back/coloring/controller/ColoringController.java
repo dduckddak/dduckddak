@@ -63,10 +63,10 @@ public class ColoringController {
 		@ApiResponse(responseCode = "403", description = "리프레쉬 토큰 인증 실패."),
 		@ApiResponse(responseCode = "410", description = "S3 요청 실패.")
 	})
-	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping
 	public ResponseEntity<? super InsertColoringResponseDto> uploadColoring(
-		@ModelAttribute InsertColoringRequestDto request) {
-		return coloringService.insertVoice(request);
+		@RequestBody InsertColoringRequestDto request) {
+		return coloringService.insertColoring(request);
 	}
 
 	@Operation(
@@ -83,7 +83,7 @@ public class ColoringController {
 	@DeleteMapping
 	public ResponseEntity<? super DeleteColoringResponseDto> deleteColoring(
 		@RequestBody DeleteColoringRequestDto request) {
-		return coloringService.deleteVoice(request);
+		return coloringService.deleteColoring(request);
 	}
 
 	@Operation(

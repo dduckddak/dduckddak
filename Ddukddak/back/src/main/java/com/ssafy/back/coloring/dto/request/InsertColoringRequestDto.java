@@ -17,6 +17,6 @@ import lombok.ToString;
 @ToString
 public class InsertColoringRequestDto {
 	@NotNull
-	@Schema(description = "업로드할 파일", format = "binary")
-	private MultipartFile coloringFile;
+	@Schema(description = "업로드할 파일")
+	private String coloringFile;
 }

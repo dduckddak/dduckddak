@@ -12,9 +12,9 @@ import com.ssafy.back.coloring.dto.response.ListColoringResponseDto;
 public interface ColoringService {
 	ResponseEntity<? super ListColoringResponseDto> listColoring();
 
-	ResponseEntity<? super InsertColoringResponseDto> insertVoice(InsertColoringRequestDto request);
+	ResponseEntity<? super InsertColoringResponseDto> insertColoring(InsertColoringRequestDto request);
 
-	ResponseEntity<? super DeleteColoringResponseDto> deleteVoice(DeleteColoringRequestDto request);
+	ResponseEntity<? super DeleteColoringResponseDto> deleteColoring(DeleteColoringRequestDto request);
 
 	ResponseEntity<? super ListColoringBaseResponseDto> listColoringBase();
 }

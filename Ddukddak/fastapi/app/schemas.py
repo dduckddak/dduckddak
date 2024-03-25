@@ -24,3 +24,11 @@ class ReviewInfo(BaseModel):
 
 class ReviewInfoList(BaseModel):
     reviews: List[ReviewInfo]
+
+class BookInfo(BaseModel):
+    book_id: int
+    book_title: Optional[str] = None
+    book_author: Optional[str] = None
+
+class BookInfoList(BaseModel):
+    books: List[BookInfo]

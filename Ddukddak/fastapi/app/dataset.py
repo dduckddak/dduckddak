@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 import pymysql
 import pandas as pd
-from schemas import ReviewInfo, ReviewInfoList
+from schemas import ReviewInfo, ReviewInfoList, BookInfo, BookInfoList
 
 load_dotenv()
 db_user = os.getenv("DB_USER")
@@ -26,9 +26,9 @@ connection = pymysql.connect(
 
 
 try:
-    # book 테이블 조회
+    # 데이터베이스에서 book 테이블 조회
     with connection.cursor() as cursor:
-        sql = "SELECT book_id, book_author FROM book"
+        sql = "SELECT book_id, book_author, book_title FROM book" 
         cursor.execute(sql)
         book_data = cursor.fetchall()
     book_df = pd.DataFrame(book_data)
@@ -48,13 +48,24 @@ finally:
 # bookKeyword.csv 파일에서 'book_id'와 'keyword' 열만 읽기
 keyword_df = pd.read_csv('bookKeyword.csv', encoding='CP949', usecols=['book_id', 'keyword'])
 
-
 # book_id를 기준으로 데이터 합치기
 merged_df = pd.merge(keyword_df, book_df, on='book_id', how='left')
 merged_df = pd.merge(merged_df, review_df, on='book_id', how='left')
 
 # Pydantic 모델 리스트 생성을 ReviewInfoList를 사용해 수정
 review_info_list = ReviewInfoList(reviews=[ReviewInfo(**row) for index, row in merged_df.iterrows()])
+
+# BookInfoList 생성
+book_info_list = []
+for index, row in book_df.iterrows():
+    book_info = BookInfo(
+        book_id=row['book_id'],
+        book_title=row['book_title'],
+        book_author=row['book_author']
+    )
+    book_info_list.append(book_info)
+
+book_info_list_schema = BookInfoList(books=book_info_list)
 
 # 예시 출력: 전체 리스트의 길이와 처음 10개 아이템을 출력
 # print(f"Total reviews: {len(review_info_list.reviews)}")

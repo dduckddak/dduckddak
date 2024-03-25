@@ -88,16 +88,6 @@ public class TalkServiceImpl implements TalkService {
 
 	@Override
 	public ResponseEntity<? super SttResponseDto> stt(SttRequestDto request) {
-		//로그인 토큰 유효성 확인
-		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		// if (authentication == null || !(authentication.getPrincipal() instanceof LoginUserDto)) {
-		// 	return ResponseDto.jwtTokenFail();
-		// }
-		// LoginUserDto loginUser = (LoginUserDto)authentication.getPrincipal();
-		// int userSeq =loginUser.getUserSeq();
-		//테스트 코드
-		int userSeq = 1;
-
 		//FastAPI로 요청을 보내고 사용자의 말을 받아옴
 		try (InputStream inputStream = request.getTalkFile().getInputStream()) {
 			HttpResponse<String> response = Unirest.post(FastapiURL + "/api/v1/f/stt")

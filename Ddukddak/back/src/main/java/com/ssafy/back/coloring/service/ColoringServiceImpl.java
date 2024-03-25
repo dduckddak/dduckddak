@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.coloring.dto.ColoringDto;
 import com.ssafy.back.coloring.dto.request.DeleteColoringRequestDto;
 import com.ssafy.back.coloring.dto.request.InsertColoringRequestDto;
@@ -48,16 +51,11 @@ public class ColoringServiceImpl implements ColoringService {
 
 	@Override
 	public ResponseEntity<? super ListColoringResponseDto> listColoring() {
-		//로그인 토큰 유효성 확인
-		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		// if (authentication == null || !(authentication.getPrincipal() instanceof LoginUserDto)) {
-		// 	return ResponseDto.jwtTokenFail();
-		// }
-		// LoginUserDto loginUser = (LoginUserDto)authentication.getPrincipal();
-		// int userSeq =loginUser.getUserSeq();
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-		//테스트 코드
-		int userSeq = 1;
+		int userSeq = customUserDetails.getUserSeq();
 
 		List<ColoringDto> coloringList = coloringRepository.findByUserEntity_UserSeq(userSeq);
 		for (ColoringDto coloring : coloringList) {
@@ -83,11 +81,13 @@ public class ColoringServiceImpl implements ColoringService {
 
 	@Override
 	public ResponseEntity<? super InsertColoringResponseDto> insertVoice(InsertColoringRequestDto request) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
 		ColoringEntity coloringEntity = new ColoringEntity();
-
-		//test코드()
-		int userSeq = 1;
-
 		coloringEntity.setUserEntity(new UserEntity());
 		coloringEntity.getUserEntity().setUserSeq(userSeq);
 
@@ -116,6 +116,12 @@ public class ColoringServiceImpl implements ColoringService {
 
 	@Override
 	public ResponseEntity<? super DeleteColoringResponseDto> deleteVoice(DeleteColoringRequestDto request) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
 		//DB에서 지우기
 		coloringRepository.deleteAllById(request.getDeleteColoringIds());
 
@@ -124,7 +130,7 @@ public class ColoringServiceImpl implements ColoringService {
 		//S3에서 색칠 그림 삭제
 		try {
 			request.getDeleteColoringIds().forEach(coloringId -> {
-				String key = MakeKeyUtil.coloring(1, coloringId);
+				String key = MakeKeyUtil.coloring(userSeq, coloringId);
 				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
 				amazonS3.deleteObject(s3request);
 

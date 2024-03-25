@@ -11,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
@@ -21,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
@@ -60,8 +63,12 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public ResponseEntity<? super ListBookRecommendResponseDto> listBookRecommend() {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
 		try {
 			List<ReviewDto> reviewList = reviewRepository.findByUserEntity_UserSeq(userSeq);
 			// 좋아요한 리뷰의 bookId 리스트
@@ -145,8 +152,12 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public ResponseEntity<? super BookDetailResponseDto> bookDetail(Integer bookId) {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
 		try {
 			BookDetailDto book = bookRepository.findBookDetailByBookIdAndUserSeq(bookId, userSeq);
 			logger.info("책 상세 : " + book);
@@ -160,8 +171,12 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public ResponseEntity<? super ListBookLikeResponseDto> listBookLike() {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
 		try {
 			List<BookSummaryDto> likeBookList = bookRepository.findLikedBooksByUserSeq(userSeq)
 				.stream()
@@ -183,8 +198,11 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public ResponseEntity<? super CreateReviewResponseDto> createReview(CreateReviewRequestDto dto) {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		try {
 			reviewRepository.insertReviewNative(dto.getBookId(), userSeq, dto.isLike());
@@ -201,8 +219,11 @@ public class BookServiceImpl implements BookService {
 	@Override
 	@Transactional
 	public ResponseEntity<? super UpdateReviewResponseDto> updateReview(CreateReviewRequestDto dto) {
-		//테스트 코드
-		Integer userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		try {
 			reviewRepository.updateReviewNative(dto.getBookId(), userSeq, dto.isLike());
@@ -223,8 +244,12 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(Integer bookId) {
-		//테스트 코드
-		Integer userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+		
 		try {
 			Optional<ReviewEntity> reviewEntityOptional = reviewRepository.findById(new ReviewId(bookId, userSeq));
 			if (reviewEntityOptional.isPresent()) {

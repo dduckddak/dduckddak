@@ -15,6 +15,7 @@ import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
 import com.ssafy.back.auth.dto.response.TokenResponseDto;
+import com.ssafy.back.auth.dto.response.UserInfoResponseDto;
 
 public interface AuthService {
 	ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto);
@@ -28,4 +29,6 @@ public interface AuthService {
 	ResponseEntity<? super FCMTokenResponseDto> savedFcmToken(FCMTokenRequestDto dto);
 
 	ResponseEntity<? super TokenResponseDto> createNewToken(TokenRequestDto dto);
+
+	ResponseEntity<? super UserInfoResponseDto> getUserInfo();
 }

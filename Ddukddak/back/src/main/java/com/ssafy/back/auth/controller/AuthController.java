@@ -2,6 +2,7 @@ package com.ssafy.back.auth.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import com.ssafy.back.auth.dto.response.LoginResponseDto;
 import com.ssafy.back.auth.dto.response.LogoutResponseDto;
 import com.ssafy.back.auth.dto.response.SignUpResponseDto;
 import com.ssafy.back.auth.dto.response.TokenResponseDto;
+import com.ssafy.back.auth.dto.response.UserInfoResponseDto;
 import com.ssafy.back.auth.service.AuthService;
 import com.ssafy.back.photo.dto.response.DeletePhotoResponseDto;
 import com.ssafy.back.voice.dto.response.ListVoiceResponseDto;
@@ -113,6 +115,19 @@ public class AuthController {
 		@RequestBody @Valid TokenRequestDto requestBody
 	){
 		return authService.createNewToken(requestBody);
+	}
+
+	@Operation(
+		summary = "사용자 정보 반환",
+		description = "이름,성별,생년월일 반환"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation = UserInfoResponseDto.class))),
+	})
+	@GetMapping("/user-info")
+	public ResponseEntity<? super UserInfoResponseDto> getUserInfo(){
+		return authService.getUserInfo();
 	}
 
 }

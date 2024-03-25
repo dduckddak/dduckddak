@@ -56,12 +56,6 @@ public class AuthServiceImpl implements AuthService{
 
 		UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
 		boolean firstLogin = userEntity.getFirstLogin();
-		// 회원가입할때 firstLogin -> true,
-		// firstLogin 이 true 이면, 처음으로 로그인 하러 온 것
-		if(firstLogin == true) {
-			userEntity.setFirstLogin(false);
-			userRepository.save(userEntity);
-		}
 
 		// 아이디 없음
 		if(userEntity == null) return LoginResponseDto.loginFail();
@@ -75,6 +69,13 @@ public class AuthServiceImpl implements AuthService{
 
 		// 비밀번호 불일치
 		if(!(dto.getUserPassword().equals(userPassword))) return LoginResponseDto.loginFail();
+
+		// 회원가입할때 firstLogin -> true,
+		// firstLogin 이 true 이면, 처음으로 로그인 하러 온 것
+		if(firstLogin == true) {
+			userEntity.setFirstLogin(false);
+			userRepository.save(userEntity);
+		}
 
 		// 토큰 만들어서 반환, 헤더에 실어주기
 		String accessToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);

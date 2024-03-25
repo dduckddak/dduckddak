@@ -137,10 +137,10 @@ public class AuthServiceImpl implements AuthService{
 
 		Jws<Claims> parsedToken = jwtProvider.validateToken(dto.getRefreshToken());
 
-		int userSeq = parsedToken.getBody().get("userId", Integer.class);
-		String userName = parsedToken.getBody().get("userId", String.class);
-		String sex = parsedToken.getBody().get("userId", String.class);
-		int birth = parsedToken.getBody().get("userId", Integer.class);
+		int userSeq = parsedToken.getBody().get("userSeq", Integer.class);
+		String userName = parsedToken.getBody().get("userName", String.class);
+		String sex = parsedToken.getBody().get("sex", String.class);
+		int birth = parsedToken.getBody().get("birth", Integer.class);
 		String userId = parsedToken.getBody().get("userId", String.class);
 
 		if(!userId.equals(valueOperations.get(dto.getRefreshToken()))){

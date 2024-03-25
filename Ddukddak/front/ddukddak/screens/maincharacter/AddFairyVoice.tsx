@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -17,8 +16,8 @@ interface Voice {
   voiceName: string;
 }
 
-function VoiceScreen() {
-  const navigation = useNavigation();
+function AddVoice({ route, navigation }: any) {
+  const { role } = route.params;
 
   const [voiceData, setVoiceData] = useState<Voice[]>([]);
 
@@ -89,6 +88,7 @@ function VoiceScreen() {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      <Text>{role}의 목소리 찾아주기</Text>
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -108,7 +108,7 @@ function VoiceScreen() {
   );
 }
 
-export default VoiceScreen;
+export default AddVoice;
 
 const styles = StyleSheet.create({
   imageBackground: {

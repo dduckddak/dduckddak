@@ -3,7 +3,6 @@ import {
   View,
   TextInput,
   Text,
-  Button,
   ImageBackground,
   StyleSheet,
   StatusBar,
@@ -16,13 +15,28 @@ import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../../components/GreenButton';
 import SkyButton from '../../components/SkyButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
+import Fairystore from '../../store/Fairystore';
 
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const {
+    mainImageUri,
+    mainVoiceUri,
+    rolesImageUri,
+    rolesVoiceUri,
+    narrationVoiceUri,
+    bookName,
+    setMainImageUri,
+    setMainVoiceUri,
+    setRolesImageUri,
+    setRolesVoiceUri,
+    setNarrationVoiceUri,
+    setBookName,
+  } = Fairystore();
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
-    main: { photo: null, voice: null },
-    roles: { photo: null, voice: null },
-    narration: { voice: null },
+    main: { photo: null as string | null, voice: null as string | null },
+    roles: { photo: null as string | null, voice: null as string | null },
+    narration: { voice: null as string | null },
     bookName: '',
   });
 
@@ -50,13 +64,39 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     setModalVisible(false); // 모달 닫기
     navigation.goBack(); // 뒤로가기
   };
-
-  const pickImage = async () => {
-    navigation.navigate('picture');
+  const updateSelectedImage = (uri: any) => {
+    setData((prevData) => ({
+      ...prevData,
+      main: { ...prevData.main, photo: uri },
+      roles: { ...prevData.roles, voice: uri },
+      narration: { ...prevData.roles, voice: uri },
+      bookName: '',
+    }));
   };
 
-  const recordVoice = async () => {
-    navigation.navigate('voice');
+  const pickImage = async (role: string) => {
+    // 선택된 사진을 처리하는 콜백 함수
+    const onPictureSelected = (uri: string) => {
+      setData((prevData) => {
+        const newData = { ...prevData };
+        if (role === '주인공') {
+          newData.main.photo = uri;
+        } else if (role === '역할1') {
+          newData.roles.photo = uri; // 'roles' 구조에 맞게 조정이 필요할 수 있음
+        }
+        // 여기에 다른 역할에 대한 처리를 추가할 수 있습니다.
+        return newData;
+      });
+    };
+
+    navigation.navigate('addfairypicture', {
+      role,
+      onPictureSelected: updateSelectedImage,
+    });
+  };
+
+  const recordVoice = async (role: string) => {
+    navigation.navigate('addfairyvoice', { role });
   };
 
   const handleNextStep = () => {
@@ -78,14 +118,18 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const buttonComponent = ({ role }: any) => {
     return (
       <View style={styles.buttoncontainer}>
-        <Pressable style={styles.button} onPress={pickImage}>
+        <Pressable style={styles.button} onPress={() => pickImage(role)}>
           <Text style={styles.textcenter}> {role} 얼굴 찾아주기</Text>
         </Pressable>
-        <Pressable style={styles.button} onPress={recordVoice}>
+        <Pressable style={styles.button} onPress={() => recordVoice(role)}>
           <Text style={styles.textcenter}>{role} 소리 찾아주기</Text>
         </Pressable>
       </View>
     );
+  };
+
+  const handleBookNameChange = (name: string) => {
+    setBookName(name); // 사용자가 입력한 책 이름을 저장
   };
 
   const renderStep = () => {
@@ -98,7 +142,10 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
       case 3:
         return (
           <View>
-            <Pressable style={styles.button} onPress={recordVoice}>
+            <Pressable
+              style={styles.button}
+              onPress={() => recordVoice('내래이션')}
+            >
               <Text style={styles.textcenter}>내레이션 목소리 녹음</Text>
             </Pressable>
           </View>
@@ -110,7 +157,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
               <TextInput
                 style={styles.textInputStyle}
                 placeholder="책 이름 입력"
-                onChangeText={(text) => setData({ ...data, bookName: text })}
+                value={data.bookName || ''}
+                onChangeText={handleBookNameChange}
               />
               <View
                 style={{

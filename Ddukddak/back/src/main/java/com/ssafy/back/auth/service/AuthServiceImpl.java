@@ -28,6 +28,7 @@ import com.ssafy.back.auth.dto.response.UserInfoResponseDto;
 import com.ssafy.back.auth.provider.JwtProvider;
 import com.ssafy.back.auth.repository.UserRepository;
 import com.ssafy.back.entity.UserEntity;
+import com.ssafy.back.util.PasswordHashUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -45,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
 		UserEntity userEntity = new UserEntity(dto);
+		//비밀번호 해싱
+		userEntity.setUserPassword(PasswordHashUtil.hashPassword(userEntity.getUserPassword()));
 		userRepository.save(userEntity);
 
 		return SignUpResponseDto.success();
@@ -70,12 +73,12 @@ public class AuthServiceImpl implements AuthService {
 		String userPassword = userEntity.getUserPassword();
 
 		// 비밀번호 불일치
-		if (!(dto.getUserPassword().equals(userPassword)))
+		if (!(PasswordHashUtil.hashPassword(dto.getUserPassword()).equals(userPassword)))
 			return LoginResponseDto.loginFail();
 
 		// 회원가입할때 firstLogin -> true,
 		// firstLogin 이 true 이면, 처음으로 로그인 하러 온 것
-		if(firstLogin == true) {
+		if (firstLogin == true) {
 			userEntity.setFirstLogin(false);
 			userRepository.save(userEntity);
 		}
@@ -169,7 +172,7 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public ResponseEntity<? super UserInfoResponseDto> getUserInfo() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
 		String userName = customUserDetails.getUserName();
 		String sex = customUserDetails.getSex();

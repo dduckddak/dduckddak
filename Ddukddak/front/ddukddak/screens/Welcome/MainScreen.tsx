@@ -23,7 +23,7 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
       <View style={styles.mainContainer}>
         {/* Left side content */}
         <View style={styles.leftContainer}>
-          <Pressable onPress={() => navigation.navigate('maincharacter')}>
+          <Pressable onPress={() => navigation.navigate('MainCharacterScreen')}>
             <Image
               source={require('../../assets/images/DD/딱이.png')}
               style={styles.ddak2}

@@ -19,6 +19,9 @@ interface MainScreenProps {
 
 const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
+
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
   const handleNextStep = () =>
     setCurrentStep((prevStep) => (prevStep < 6 ? prevStep + 1 : prevStep));
   const handlePreviousStep = () =>
@@ -77,10 +80,17 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
               </View>
 
               <View style={styles.speechBubble}>
-                <Image
-                  source={require('../../assets/images/Main/딱이zip.gif')}
-                  style={styles.ddak}
-                />
+                {selectedId === 1 ? (
+                  <Image
+                    source={require('../../assets/images/Main/뚝이zip.gif')}
+                    style={styles.ddak}
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/images/Main/딱이zip.gif')}
+                    style={styles.ddak}
+                  />
+                )}
                 <Image
                   source={require('../../assets/images/Main/ballon.png')}
                   style={styles.ballon}

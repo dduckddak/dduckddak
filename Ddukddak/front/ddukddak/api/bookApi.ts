@@ -50,12 +50,36 @@ type ReviewCreateResponse = ApiResponse;
 
 type LikeBookListResponse = ApiResponse & LikeBookListData;
 
+type PostLikeBooksResponse = ApiResponse;
+
 /**
  * 선호도 조사 책 목록 가져오기*/
 export const getLikeBookList = async (): Promise<LikeBookListResponse> => {
   try {
     const response = await apiClient.get<LikeBookListResponse>(
       '/api/v1/books/choice-list',
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};
+
+interface LikeBooksParams {
+  choiceBookList: number[];
+}
+
+// 선호도 조사 책 선택목록 보내기
+export const postLikeBooks = async (
+  params: LikeBooksParams,
+): Promise<PostLikeBooksResponse> => {
+  try {
+    const response = await apiClient.post<PostLikeBooksResponse>(
+      '/api/v1/books/choice-list',
+      params,
     );
     return response.data;
   } catch (error) {

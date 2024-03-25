@@ -5,7 +5,7 @@ interface ApiResponse {
   message: string;
 }
 
-interface BookListData {
+export interface BookListData {
   bookList?: {
     bookId: string;
     bookTitle: string;
@@ -13,7 +13,7 @@ interface BookListData {
   }[];
 }
 
-interface BookSearchData {
+export interface BookSearchData {
   searchBookList?: {
     bookId: string;
     bookTitle: string;
@@ -23,7 +23,7 @@ interface BookSearchData {
   }[];
 }
 
-interface BookDetailData {
+export interface BookDetailData {
   book: {
     bookTitle: string;
     bookAuthor: string;
@@ -31,7 +31,6 @@ interface BookDetailData {
     coverImage: string;
   };
 }
-
 
 type BookListResponse = ApiResponse & BookListData;
 
@@ -50,7 +49,9 @@ type ReviewCreateResponse = ApiResponse;
  */
 export const getBookList = async (): Promise<BookListResponse> => {
   try {
-    const response = await apiClient.get<BookListResponse>('/api/v1/books/list');
+    const response = await apiClient.get<BookListResponse>(
+      '/api/v1/books/list',
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -59,7 +60,6 @@ export const getBookList = async (): Promise<BookListResponse> => {
     throw error;
   }
 };
-
 
 /**
  * 책 검색
@@ -69,9 +69,13 @@ export const getBookList = async (): Promise<BookListResponse> => {
  * @returns {Promise<BookSearchResponse>} "Success" 메시지와 함께 searchBookList를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-export const searchBooks = async (searchKeyword: string): Promise<BookSearchResponse> => {
+export const searchBooks = async (
+  searchKeyword: string,
+): Promise<BookSearchResponse> => {
   try {
-    const response = await apiClient.get<BookSearchResponse>(`/api/v1/books/search/${searchKeyword}`);
+    const response = await apiClient.get<BookSearchResponse>(
+      `/api/v1/books/search/${searchKeyword}`,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -80,9 +84,6 @@ export const searchBooks = async (searchKeyword: string): Promise<BookSearchResp
     throw error;
   }
 };
-
-
-
 
 /**
  * 책 상세 정보 가져오기
@@ -92,9 +93,13 @@ export const searchBooks = async (searchKeyword: string): Promise<BookSearchResp
  * @returns {Promise<BookDetailResponse>} "Success" 메시지와 함께 book를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
-export const getBookDetail = async (bookId: string): Promise<BookDetailResponse> => {
+export const getBookDetail = async (
+  bookId: string,
+): Promise<BookDetailResponse> => {
   try {
-    const response = await apiClient.get<BookDetailResponse>(`/api/v1/books/${bookId}`);
+    const response = await apiClient.get<BookDetailResponse>(
+      `/api/v1/books/${bookId}`,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -103,7 +108,6 @@ export const getBookDetail = async (bookId: string): Promise<BookDetailResponse>
     throw error;
   }
 };
-
 
 interface ReviewCreateParams {
   bookId: number;
@@ -122,9 +126,14 @@ interface ApiResponse {
  * @returns {Promise<ReviewCreateResponse>} "Success" 메시지를 반환합니다.
  * @throws 400 "Bad request." 또는 401 "Certification failed.", 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
-export const createReview = async (params: ReviewCreateParams): Promise<ReviewCreateResponse> => {
+export const createReview = async (
+  params: ReviewCreateParams,
+): Promise<ReviewCreateResponse> => {
   try {
-    const response = await apiClient.post<ReviewCreateResponse>('/api/v1/books/reviews', params);
+    const response = await apiClient.post<ReviewCreateResponse>(
+      '/api/v1/books/reviews',
+      params,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -133,10 +142,6 @@ export const createReview = async (params: ReviewCreateParams): Promise<ReviewCr
     throw error;
   }
 };
-
-
-
-
 
 interface ReviewUpdateParams {
   bookId: number;
@@ -159,9 +164,14 @@ type ReviewDetailResponse = ApiResponse & ReviewDetailData;
  * @returns {Promise<ReviewCreateResponse>} "Success" 메시지를 반환합니다.
  * @throws 400 "Bad request." 또는 401 "Certification failed.", 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
-export const updateReview = async (params: ReviewUpdateParams): Promise<ApiResponse> => {
+export const updateReview = async (
+  params: ReviewUpdateParams,
+): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.put<ApiResponse>(`/api/v1/books/reviews/${params.bookId}`, params);
+    const response = await apiClient.put<ApiResponse>(
+      `/api/v1/books/reviews/${params.bookId}`,
+      params,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -181,7 +191,9 @@ export const updateReview = async (params: ReviewUpdateParams): Promise<ApiRespo
  */
 export const deleteReview = async (bookId: number): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.delete<ApiResponse>(`/api/v1/books/reviews/${bookId}`);
+    const response = await apiClient.delete<ApiResponse>(
+      `/api/v1/books/reviews/${bookId}`,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -199,9 +211,35 @@ export const deleteReview = async (bookId: number): Promise<ApiResponse> => {
  * @returns {Promise<ReviewDetailResponse>} "Success" 메시지와 함께 review를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
-export const getReviewDetail = async (bookId: string): Promise<ReviewDetailResponse> => {
+export const getReviewDetail = async (
+  bookId: string,
+): Promise<ReviewDetailResponse> => {
   try {
-    const response = await apiClient.get<ReviewDetailResponse>(`/api/v1/books/reviews/${bookId}`);
+    const response = await apiClient.get<ReviewDetailResponse>(
+      `/api/v1/books/reviews/${bookId}`,
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};
+
+
+/**
+ * 좋아요 한 책 목록을 가져오기 (BookList랑 데이터 값 똑같아서 그대로 사용)
+ * @remarks
+ * GET 요청을 '/api/v1/books/like' 엔드포인트에 보냅니다. 성공시 메시지와 함께 좋아요 한 책 목록을 반환합니다.
+ * @returns {Promise<BookListResponse>} "Success" 메시지와 함께 LikeBookList를 반환합니다.
+ * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
+ */
+export const getLikeList = async (): Promise<BookListResponse> => {
+  try {
+    const response = await apiClient.get<BookListResponse>(
+      '/api/v1/books/like',
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

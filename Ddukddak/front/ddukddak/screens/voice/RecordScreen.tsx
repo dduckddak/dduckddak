@@ -6,8 +6,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
+import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
+import EndRecordModal from '../../components/voice/EndRecordModal';
 
 function RecordScreen() {
   const scripts = [
@@ -26,7 +29,13 @@ function RecordScreen() {
   ];
 
   const [currentScriptIndex, setCurrentScriptIndex] = useState(0);
-  const [recordingStarted, setRecordingStarted] = useState(false);
+  const [recording, setRecording] = useState<Audio.Recording | undefined>(
+    undefined,
+  );
+  const [voiceUri, setVoiceUri] = useState<string | null>('');
+  const [recordingStartTime, setRecordingStartTime] = useState(0);
+  const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleNextStep = () => {
     if (currentScriptIndex < scripts.length - 1) {
@@ -40,9 +49,74 @@ function RecordScreen() {
     }
   };
 
-  const handleStartRecording = () => {
-    setRecordingStarted(true);
+  async function startRecording() {
+    const { status } = await Audio.requestPermissionsAsync();
+    try {
+      if (status !== 'granted') {
+        console.error('권한 거절');
+        return;
+      }
+
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log('녹음 시작하는 중..');
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY,
+      );
+      setRecording(recording);
+      console.log('녹음 시작');
+
+      setRecordingStartTime(Date.now());
+    } catch (err) {
+      console.error('녹음 실패', err);
+    }
+    const timer = setTimeout(() => {
+      stopRecording();
+    }, 10000);
+    setTimerId(timer);
+  }
+
+  async function stopRecording() {
+    if (recording) {
+      if (timerId) clearTimeout(timerId);
+      const elapsedTime = Date.now() - recordingStartTime;
+      if (elapsedTime < 3000) {
+        Alert.alert(
+          '녹음이 너무 짧습니다',
+          '녹음은 최소 3초 이상이어야 합니다.',
+        );
+        return;
+      }
+
+      console.log('녹음 종료');
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+      console.log('요기다', uri);
+      setVoiceUri(uri);
+      setRecording(undefined);
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      });
+      setModalVisible(true);
+    } else {
+      console.log('No active recording to stop.');
+    }
+  }
+
+  const handleModalClose = () => {
+    setModalVisible(false); // 모달 닫기
   };
+
+  const handleCompletePress = () => {
+    // 여기에 완료 버튼이 눌렸을 때의 로직
+    console.log('완료 버튼이 눌렸습니다.');
+    setModalVisible(false);
+  };
+
+  const recordingStarted = recording !== undefined;
 
   return (
     <ImageBackground
@@ -78,9 +152,15 @@ function RecordScreen() {
         </Text>
 
         <GreenButton
-          content="녹음 시작"
-          onPress={handleStartRecording}
+          content={recording ? '녹음 종료' : '녹음 시작'}
+          onPress={recording ? stopRecording : startRecording}
           style={{ width: '15%', margin: 20 }}
+        />
+        <EndRecordModal
+          visible={modalVisible}
+          onClose={handleModalClose}
+          recordingUri={voiceUri} // 녹음된 URI를 넘깁니다
+          CompletePress={handleCompletePress}
         />
       </View>
     </ImageBackground>

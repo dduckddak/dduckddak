@@ -1,8 +1,7 @@
 import apiClient from './apiClient';
 import { isAxiosError } from 'axios';
 
-
-interface ApiResponse {
+export interface ApiResponse {
   message: string;
   voiceList?: {
     voiceId: number;
@@ -29,9 +28,6 @@ export const getVoices = async (): Promise<ApiResponse> => {
   }
 };
 
-
-
-
 interface AddVoiceParams {
   voiceFile: File;
   voiceName: string;
@@ -45,13 +41,18 @@ interface AddVoiceParams {
  * @returns {Promise<ApiResponse>} "Success" 메시지를 반환합니다.
  * @throws 400 "Bad request." 또는 401 "Certification failed.", 403 "RefreshToken error.", 410 "ElevenLabs error.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-export const addVoice = async (params: AddVoiceParams): Promise<ApiResponse> => {
+export const addVoice = async (
+  params: AddVoiceParams,
+): Promise<ApiResponse> => {
   const formData = new FormData();
   formData.append('voiceFile', params.voiceFile);
   formData.append('voiceName', params.voiceName);
 
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/voices', formData);
+    const response = await apiClient.post<ApiResponse>(
+      '/api/v1/voices',
+      formData,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -60,7 +61,6 @@ export const addVoice = async (params: AddVoiceParams): Promise<ApiResponse> => 
     throw error;
   }
 };
-
 
 interface DeleteVoiceParams {
   deleteVoiceIds: number[];
@@ -74,9 +74,13 @@ interface DeleteVoiceParams {
  * @returns {Promise<ApiResponse>} "Success" 메시지를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not found.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-export const deleteVoices = async (params: DeleteVoiceParams): Promise<ApiResponse> => {
+export const deleteVoices = async (
+  params: DeleteVoiceParams,
+): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.delete<ApiResponse>('/api/v1/voices', { data: params });
+    const response = await apiClient.delete<ApiResponse>('/api/v1/voices', {
+      data: params,
+    });
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -94,7 +98,6 @@ interface PreviewVoiceResponse extends ApiResponse {
   previewFile?: string;
 }
 
-
 /**
  * 음성 미리듣기
  * @remarks
@@ -103,9 +106,14 @@ interface PreviewVoiceResponse extends ApiResponse {
  * @returns {Promise<PreviewVoiceResponse>} "Success" 메시지와 미리듣기 파일의 경로를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not found.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-export const previewVoice = async (params: PreviewVoiceParams): Promise<PreviewVoiceResponse> => {
+export const previewVoice = async (
+  params: PreviewVoiceParams,
+): Promise<PreviewVoiceResponse> => {
   try {
-    const response = await apiClient.get<PreviewVoiceResponse>('/api/v1/voices/preview', { params });
+    const response = await apiClient.get<PreviewVoiceResponse>(
+      '/api/v1/voices/preview',
+      { params },
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -114,4 +122,3 @@ export const previewVoice = async (params: PreviewVoiceParams): Promise<PreviewV
     throw error;
   }
 };
-

@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,10 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 
-const voiceData = [
+const voiceDataa = [
   {
     id: 1,
     name: 'Voice 1',
@@ -64,19 +63,19 @@ function VoiceScreen() {
       style={styles.imageBackground}
     >
       <FlatList
-        data={voiceData}
+        data={voiceDataa}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: 'center',
-          alignItems: 'center',
         }}
       />
       <GreenButton
         content="추가하기"
         onPress={() => navigation.navigate('addvoice' as never)}
+        style={{ width: '20%', marginBottom: 50 }}
       />
     </ImageBackground>
   );

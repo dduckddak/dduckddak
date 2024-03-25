@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  Button,
   StyleSheet,
   ImageBackground,
   Pressable,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getBookList, BookListData, searchBooks } from '../../api/bookApi';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -89,6 +89,21 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
 
+  const [bookList, setBookList] = useState<BookListData>({});
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const books = await getBookList();
+        setBookList(books); 
+      } catch (error) {
+        console.error('Failed:', error);
+      }
+    };
+    console.log(bookList);
+    fetchBooks();
+  }, []);
+
   const handleToggleOrSearch = () => {
     if (showSearch && searchText.trim()) {
       // 검색창이 표시되어 있고, 검색어가 입력된 상태에서 검색 실행
@@ -101,20 +116,30 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     }
   };
 
-  const handleSearch = () => {
-    if (searchText.trim() === '') {
-      alert('검색어를 입력해주세요.');
-      return;
-    }
-    const foundBook = books.find((book) => book.title.includes(searchText));
+const handleSearch = async () => {
+  if (searchText.trim() === '') {
+    alert('검색어를 입력해주세요.');
+    return;
+  }
+  
+  try {
+    // searchBooks 함수를 호출하여 검색 결과를 받아옵니다.
+    const response = await searchBooks(searchText.trim());
+    
+    // 검색 결과 중 첫 번째 책을 가져옵니다. (검색 결과가 있을 경우)
+    const foundBook = response.searchBookList ? response.searchBookList[0] : null;
+
     if (foundBook) {
-      console.log(foundBook);
-      navigation.navigate('detail', { bookId: foundBook.id });
-      setSearchText('');
+      navigation.navigate('detail', { bookId: foundBook.bookId });
+      setSearchText(''); // 검색 후 입력 필드 초기화
     } else {
       alert('일치하는 책이 없습니다.');
     }
-  };
+  } catch (error) {
+    console.error('filed:', error);
+    alert('검색 중 오류가 발생했습니다.');
+  }
+};
 
   const nextPage = () => {
     setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % books.length);
@@ -176,6 +201,11 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
             />
           )}
         </View>
+        <View style={styles.Likebutton}>
+          <Pressable onPress={() => navigation.navigate('likeList')}>
+            <MaterialCommunityIcons name="heart-box-outline" size={100} color="red" />
+          </Pressable>
+        </View>
         <View style={styles.dotsContainer}>
           {books.map((_, index) => (
             <View
@@ -216,10 +246,16 @@ const styles = StyleSheet.create({
   searchButtonAndInputContainer: {
     position: 'absolute',
     right: 10,
-    top: 60,
+    top: 80,
     zIndex: 1,
     flexDirection: 'row-reverse',
     alignItems: 'center',
+  },
+  Likebutton: {
+    position: 'absolute',
+    left: 10,
+    top: 80,
+    zIndex: 1,
   },
   box: {
     borderWidth: 1,
@@ -284,6 +320,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#C5E1C9',
     width: 500,
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 20,
   },
 });
 

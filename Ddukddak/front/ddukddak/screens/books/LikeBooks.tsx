@@ -15,7 +15,7 @@ import {
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 
-import { getLikeBookList, LikeBookListData } from '../../api/bookApi';
+import { getLikeBookList, postLikeBooks } from '../../api/bookApi';
 
 interface Book {
   id: number;
@@ -72,14 +72,22 @@ const BookSelectionScreen = () => {
     }
   };
 
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     if (selectedBooks.length > 0) {
-      console.log('Selected Books: ', selectedBooks);
+      try {
+        const params = {
+          choiceBookList: selectedBooks,
+        };
+        const response = await postLikeBooks(params);
+        console.log('Response:', response);
+        navigation.navigate('intro' as never);
+      } catch (error) {
+        console.error('에러 발생:', error);
+      }
     } else {
       alert('적어도 1개 이상의 책을 선택해야 합니다.');
     }
   };
-
   const renderItem = ({ item }: { item: Book }) => (
     <TouchableOpacity
       style={[

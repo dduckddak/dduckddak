@@ -72,7 +72,7 @@ interface DeleteVoiceParams {
  * DELETE 요청을 '/api/v1/voices' 엔드포인트에 보냅니다. 성공시 메시지를 반환합니다.
  * @param {DeleteVoiceParams} params 삭제할 목소리의 ID 목록
  * @returns {Promise<ApiResponse>} "Success" 메시지를 반환합니다.
- * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not found.", 410 "S3 error." 오류를 반환할 수 있습니다.
+ * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not found.", 410 "ElevenLabs error.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
 export const deleteVoices = async (params: DeleteVoiceParams): Promise<ApiResponse> => {
   try {
@@ -86,26 +86,21 @@ export const deleteVoices = async (params: DeleteVoiceParams): Promise<ApiRespon
   }
 };
 
-interface PreviewVoiceParams {
-  voiceId: number;
-}
-
 interface PreviewVoiceResponse extends ApiResponse {
   previewFile?: string;
 }
 
-
 /**
  * 음성 미리듣기
  * @remarks
- * GET 요청을 '/api/v1/voices/preview' 엔드포인트에 보냅니다. 성공시 메시지와 미리듣기 파일의 경로를 반환합니다.
- * @param {PreviewVoiceParams} params 미리 들어볼 음성의 ID 정보
+ * GET 요청을 '/api/v1/voices/{voiceId}' 엔드포인트에 보냅니다. 성공시 메시지와 미리듣기 파일의 경로를 반환합니다.
+ * @path {number} voiceId 미리 들어볼 음성의 ID 정보
  * @returns {Promise<PreviewVoiceResponse>} "Success" 메시지와 미리듣기 파일의 경로를 반환합니다.
- * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not found.", 410 "S3 error." 오류를 반환할 수 있습니다.
+ * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-export const previewVoice = async (params: PreviewVoiceParams): Promise<PreviewVoiceResponse> => {
+export const previewVoice = async (voiceId: number): Promise<PreviewVoiceResponse> => {
   try {
-    const response = await apiClient.get<PreviewVoiceResponse>('/api/v1/voices/preview', { params });
+    const response = await apiClient.get<PreviewVoiceResponse>('/api/v1/voices/' + voiceId);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

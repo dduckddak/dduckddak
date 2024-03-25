@@ -1,5 +1,6 @@
 package com.ssafy.back.voice.service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.UserEntity;
@@ -34,6 +38,7 @@ import com.ssafy.back.voice.repository.VoiceRepository;
 
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class VoiceServiceImpl implements VoiceService {
@@ -50,18 +55,12 @@ public class VoiceServiceImpl implements VoiceService {
 	private String elevenLabsKey;
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super ListVoiceResponseDto> listVoice() {
-		//로그인 토큰 유효성 확인
-		// Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		// if (authentication == null || !(authentication.getPrincipal() instanceof LoginUserDto)) {
-		// 	return ResponseDto.jwtTokenFail();
-		// }
-		// LoginUserDto loginUser = (LoginUserDto)authentication.getPrincipal();
-		// int userSeq =loginUser.getUserSeq();
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-		//테스트 코드
-		int userSeq = 1;
+		int userSeq = customUserDetails.getUserSeq();
 
 		List<VoiceDto> voiceList = voiceRepository.findByUserEntity_UserSeq(userSeq);
 
@@ -70,17 +69,21 @@ public class VoiceServiceImpl implements VoiceService {
 	}
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super InsertVoiceResponseDto> insertVoice(InsertVoiceRequestDto request) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
 		VoiceEntity voiceEntity = new VoiceEntity();
 		voiceEntity.setVoiceName(request.getVoiceName());
 
-		//test코드(user지정)
 		voiceEntity.setUserEntity(new UserEntity());
-		voiceEntity.getUserEntity().setUserSeq(1);
+		voiceEntity.getUserEntity().setUserSeq(userSeq);
 
 		//미리듣기 음성 저장
-		InputStream inputStream;
+		InputStream inputStream = null;
 
 		try {
 			//목소리를 ElevenLabs에 추가하고 voice_id를 얻어옴
@@ -95,7 +98,7 @@ public class VoiceServiceImpl implements VoiceService {
 
 			voiceEntity.setVoiceModelId(voiceModelId);
 
-			logger.info(voiceEntity.getVoiceName() + " 추가 : " + voiceModelId) ;
+			logger.info(voiceEntity.getVoiceName() + " 추가 : " + voiceModelId);
 
 			//학습된 목소리를 이용해 미리듣기 음성 생성
 			Gson gson = new Gson();
@@ -116,14 +119,21 @@ public class VoiceServiceImpl implements VoiceService {
 			logger.info(voiceEntity.getVoiceName() + " 미리듣기 음성 생성");
 
 		} catch (Exception e) {
-			logger.error(ResponseMessage.ELEVENLABS_ERROR);
-			logger.debug(e);
+			logger.debug(ResponseMessage.ELEVENLABS_ERROR);
+			logger.error(e);
+
+			try {
+				if (inputStream != null)
+					inputStream.close();
+			} catch (IOException ex) {
+				logger.error(ex);
+			}
 
 			return InsertVoiceResponseDto.ElevenLabserror();
 		}
 
 		int voiceId = voiceRepository.save(voiceEntity).getVoiceId();
-		String key = MakeKeyUtil.voice(voiceId);
+		String key = MakeKeyUtil.voice(userSeq, voiceId);
 
 		// S3에 미리듣기 추가
 		try {
@@ -135,22 +145,51 @@ public class VoiceServiceImpl implements VoiceService {
 
 			logger.info(voiceEntity.getVoiceName() + " " + key + " 미리듣기 음성 S3 저장");
 
+			return ResponseDto.success();
+
 		} catch (Exception e) {
-			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug(e);
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
 
 			return InsertVoiceResponseDto.S3error();
-		}
 
-		return ResponseDto.success();
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close();
+			} catch (IOException ex) {
+				logger.error(ex);
+			}
+		}
 	}
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super DeleteVoiceResponseDto> deleteVoice(DeleteVoiceRequestDto request) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
+		//S3에서 미리 듣기 음성 삭제
+		try {
+			request.getDeleteVoiceIds().forEach(voiceId -> {
+				String key = MakeKeyUtil.voice(userSeq, voiceId);
+				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
+				amazonS3.deleteObject(s3request);
+
+				logger.info(key + " S3 삭제 완료");
+			});
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
+
+			DeleteVoiceResponseDto.S3error();
+		}
+
 		//ElevenLabs에서 목소리 삭제
 		try {
-			for (Integer voiceId : request.getVoiceIds()) {
+			for (Integer voiceId : request.getDeleteVoiceIds()) {
 				String voiceModelId = voiceRepository.findVoiceModelIdByVoiceId(voiceId);
 				Unirest.delete("https://api.elevenlabs.io/v1/voices/" + voiceModelId)
 					.header("xi-api-key", elevenLabsKey)
@@ -159,48 +198,41 @@ public class VoiceServiceImpl implements VoiceService {
 				logger.info(voiceId + "-" + voiceModelId + "ElevenLabs 삭제 완료");
 			}
 		} catch (Exception e) {
-			logger.error(ResponseMessage.ELEVENLABS_ERROR);
-			logger.debug(e);
+			logger.debug(ResponseMessage.ELEVENLABS_ERROR);
+			logger.error(e);
 
 			return DeleteVoiceResponseDto.ElevenLabserror();
 		}
 
 		//DB에서 지우기
-		voiceRepository.deleteAllById(request.getVoiceIds());
+		voiceRepository.deleteAllById(request.getDeleteVoiceIds());
 
-		logger.info(request.getVoiceIds() + " 삭제 완료");
+		logger.info(request.getDeleteVoiceIds() + " 삭제 완료");
 
-		//S3에서 미리 듣기 음성 삭제
-		try {
-			request.getVoiceIds().forEach(voiceId -> {
-				String key = MakeKeyUtil.voice(voiceId);
-				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
-				amazonS3.deleteObject(s3request);
-
-				logger.info(key + " S3 삭제 완료");
-			});
-		} catch (Exception e) {
-			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug(e);
-
-			DeleteVoiceResponseDto.S3error();
-		}
 		return ResponseDto.success();
 	}
 
 	@Override
 	public ResponseEntity<? super PreviewVoiceResponseDto> previewVoice(int voiceId) {
-		try {
-			String key = MakeKeyUtil.voice(voiceId);
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+
+		String key = MakeKeyUtil.voice(userSeq, voiceId);
+
+		//S3에 실제로 있는 경우
+		if (amazonS3.doesObjectExist(bucket, key)) {
 			String previewFile = amazonS3.getUrl(bucket, key).toString();
 
 			logger.info(voiceId + " 미리듣기 음성 : " + previewFile);
 
 			return PreviewVoiceResponseDto.success(previewFile);
 
-		} catch (Exception e) {
-			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug(e);
+		} else {//없는 경우
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error("S3에서 파일을 찾을 수 없습니다.");
 
 			return PreviewVoiceResponseDto.S3error();
 		}

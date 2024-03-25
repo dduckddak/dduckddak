@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "book_id", nullable = false)
@@ -38,19 +39,18 @@ public class BookEntity {
 	@Column(name = "book_story", columnDefinition = "TEXT", nullable = false)
 	private String bookStory;
 
+	@Column(name = "book_page", nullable = false)
+	private Integer bookPage;
+
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<MakeBookEntity> makeBookEntities = new ArrayList<>();
-
-	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
-	private List<PageEntity> pageEntities = new ArrayList<>();
-
-	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
-	private List<PersonEntity> personEntities = new ArrayList<>();
-
+	
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ScriptEntity> scriptEntities = new ArrayList<>();
 
+	@OneToOne(mappedBy = "bookEntity", fetch = FetchType.LAZY)
+	private PersonEntity personEntity = new PersonEntity();
 }

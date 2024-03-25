@@ -3,6 +3,8 @@ package com.ssafy.back.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ssafy.back.auth.dto.request.SignUpRequestDto;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,7 +40,7 @@ public class UserEntity {
 	@Column(name = "birth", nullable = false)
 	private Integer birth;
 
-	@Column(name = "user_id", nullable = false, length = 20)
+	@Column(name = "user_id", nullable = false, unique = true, length = 20)
 	private String userId;
 
 	@Column(name = "user_password", nullable = false, length = 30)
@@ -64,5 +66,15 @@ public class UserEntity {
 
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
 	private List<ReviewEntity> ReviewEntities = new ArrayList<>();
+
+	public UserEntity(SignUpRequestDto dto){
+		this.userName = dto.getUserName();
+		this.sex = dto.getSex();
+		this.birth = dto.getBirth();
+		this.userId = dto.getUserId();
+		this.userPassword = dto.getUserPassword();
+		this.firstLogin = false;
+		this.fcmToken = "";
+	}
 
 }

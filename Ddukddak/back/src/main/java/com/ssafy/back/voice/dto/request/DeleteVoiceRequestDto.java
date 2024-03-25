@@ -16,5 +16,5 @@ import lombok.ToString;
 @ToString
 public class DeleteVoiceRequestDto {
 	@NotNull
-	private List<Integer> voiceIds;
+	private List<Integer> deleteVoiceIds;
 }

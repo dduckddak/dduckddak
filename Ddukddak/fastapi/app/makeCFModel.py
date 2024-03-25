@@ -21,7 +21,7 @@ data = Dataset.load_from_df(df[['user_seq', 'book_id', 'rating']], reader)
 
 # 데이터를 훈련 세트와 테스트 세트로 분할
 trainset, testset = train_test_split(data, test_size=0.2)
-
+ 
 # SVD 모델 인스턴스화 및 훈련
 model = SVD()
 model.fit(trainset)

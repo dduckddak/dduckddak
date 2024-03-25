@@ -51,6 +51,6 @@ def get_cb_recommendations(user_seq, n=30):
     return cb_recommended_books
 
 # 사용자 ID를 예시로 추천 실행
-user_seq = 1  # 사용자 ID 예시
-recommended_books = get_cb_recommendations(user_seq, n=30)
-print(f"추천된 책 ID 목록: {recommended_books}")
+# user_seq = 1  # 사용자 ID 예시
+# recommended_books = get_cb_recommendations(user_seq, n=30)
+# print(f"추천된 책 ID 목록: {recommended_books}")

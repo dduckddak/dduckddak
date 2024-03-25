@@ -2,23 +2,19 @@ package com.ssafy.back.book.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
-import com.ssafy.back.book.dto.response.CreateReviewResponseDto;
-import com.ssafy.back.book.dto.response.DeleteReviewResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
-import com.ssafy.back.book.dto.response.UpdateReviewResponseDto;
+import com.ssafy.back.book.dto.response.ReviewResponseDto;
 import com.ssafy.back.book.service.BookService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -90,42 +86,42 @@ public class BookController {
 	}
 
 	@Operation(
-		summary = "리뷰 생성",
-		description = "책의 리뷰를 생성한다."
+		summary = "리뷰",
+		description = "리뷰가 있다면 생성하거나 수정하고 없다면 삭제한다."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation = CreateReviewResponseDto.class))),
+			content = @Content(schema = @Schema(implementation = ReviewResponseDto.class))),
 	})
 	@PostMapping("/reviews")
-	public ResponseEntity<? super CreateReviewResponseDto> createReview(@RequestBody CreateReviewRequestDto request) {
+	public ResponseEntity<? super ReviewResponseDto> createReview(@RequestBody CreateReviewRequestDto request) {
 		return bookService.createReview(request);
 	}
 
-	@Operation(
-		summary = "리뷰 수정",
-		description = "책의 리뷰를 수정한다."
-	)
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation = UpdateReviewResponseDto.class))),
-	})
-	@PutMapping("/reviews")
-	public ResponseEntity<? super UpdateReviewResponseDto> updateReview(@RequestBody CreateReviewRequestDto request) {
-		return bookService.updateReview(request);
-	}
-
-	@Operation(
-		summary = "리뷰 삭제",
-		description = "책의 리뷰를 삭제한다."
-	)
-	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "Success.",
-			content = @Content(schema = @Schema(implementation = UpdateReviewResponseDto.class))),
-	})
-	@DeleteMapping("/reviews/{bookId}")
-	public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(@PathVariable Integer bookId) {
-		return bookService.deleteReview(bookId);
-	}
+	// @Operation(
+	// 	summary = "리뷰 수정",
+	// 	description = "책의 리뷰를 수정한다."
+	// )
+	// @ApiResponses(value = {
+	// 	@ApiResponse(responseCode = "200", description = "Success.",
+	// 		content = @Content(schema = @Schema(implementation = UpdateReviewResponseDto.class))),
+	// })
+	// @PutMapping("/reviews")
+	// public ResponseEntity<? super UpdateReviewResponseDto> updateReview(@RequestBody CreateReviewRequestDto request) {
+	// 	return bookService.updateReview(request);
+	// }
+	//
+	// @Operation(
+	// 	summary = "리뷰 삭제",
+	// 	description = "책의 리뷰를 삭제한다."
+	// )
+	// @ApiResponses(value = {
+	// 	@ApiResponse(responseCode = "200", description = "Success.",
+	// 		content = @Content(schema = @Schema(implementation = UpdateReviewResponseDto.class))),
+	// })
+	// @DeleteMapping("/reviews/{bookId}")
+	// public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(@PathVariable Integer bookId) {
+	// 	return bookService.deleteReview(bookId);
+	// }
 
 }

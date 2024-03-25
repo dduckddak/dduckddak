@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
 	private final Logger logger = LogManager.getLogger(AuthServiceImpl.class);
 	private final UserRepository userRepository;
@@ -58,7 +58,8 @@ public class AuthServiceImpl implements AuthService{
 		boolean firstLogin = userEntity.getFirstLogin();
 
 		// 아이디 없음
-		if(userEntity == null) return LoginResponseDto.loginFail();
+		if (userEntity.getUserId() == null)
+			return LoginResponseDto.loginFail();
 
 		int userSeq = userEntity.getUserSeq();
 		String userName = userEntity.getUserName();
@@ -68,7 +69,8 @@ public class AuthServiceImpl implements AuthService{
 		String userPassword = userEntity.getUserPassword();
 
 		// 비밀번호 불일치
-		if(!(dto.getUserPassword().equals(userPassword))) return LoginResponseDto.loginFail();
+		if (!(dto.getUserPassword().equals(userPassword)))
+			return LoginResponseDto.loginFail();
 
 		// 회원가입할때 firstLogin -> true,
 		// firstLogin 이 true 이면, 처음으로 로그인 하러 온 것
@@ -78,8 +80,8 @@ public class AuthServiceImpl implements AuthService{
 		}
 
 		// 토큰 만들어서 반환, 헤더에 실어주기
-		String accessToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);
-		String refreshToken = jwtProvider.createToken(userSeq,userName,sex,birth,userId,30, ChronoUnit.DAYS);
+		String accessToken = jwtProvider.createToken(userSeq, userName, sex, birth, userId, 30, ChronoUnit.DAYS);
+		String refreshToken = jwtProvider.createToken(userSeq, userName, sex, birth, userId, 30, ChronoUnit.DAYS);
 
 		// redis 에 (refreshToken , userSeq) 저장
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -93,9 +95,9 @@ public class AuthServiceImpl implements AuthService{
 		// redis 에서 refreshToken 있는지 확인함 -> 날리고, accessToken 으로 블랙리스트 처리
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-		if(valueOperations.get(dto.getRefreshToken()) != null){
+		if (valueOperations.get(dto.getRefreshToken()) != null) {
 			redisTemplate.delete(dto.getRefreshToken());
-			valueOperations.set(dto.getAccessToken(),"loggouted");
+			valueOperations.set(dto.getAccessToken(), "loggouted");
 		}
 
 		return LogoutResponseDto.success();
@@ -103,11 +105,12 @@ public class AuthServiceImpl implements AuthService{
 
 	@Override
 	public ResponseEntity<? super IdCheckResponseDto> idCheck(IdCheckRequestDto dto) {
-		try{
+		try {
 
-			if(userRepository.existsByUserId(dto.getUserId())) return IdCheckResponseDto.duplicateId();
+			if (userRepository.existsByUserId(dto.getUserId()))
+				return IdCheckResponseDto.duplicateId();
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			logger.debug(e);
 		}
 
@@ -117,7 +120,7 @@ public class AuthServiceImpl implements AuthService{
 	@Override
 	public ResponseEntity<? super FCMTokenResponseDto> savedFcmToken(FCMTokenRequestDto dto) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
 		String userId = customUserDetails.getUserId();
 
@@ -148,12 +151,12 @@ public class AuthServiceImpl implements AuthService{
 		int birth = parsedToken.getBody().get("birth", Integer.class);
 		String userId = parsedToken.getBody().get("userId", String.class);
 
-		if(!userId.equals(valueOperations.get(dto.getRefreshToken()))){
+		if (!userId.equals(valueOperations.get(dto.getRefreshToken()))) {
 			return TokenResponseDto.refreshTokenNotFound();
 		}
 
-		String accessToken = jwtProvider.createToken(userSeq,userName,sex, birth,userId, 2,ChronoUnit.HOURS);
-		String refreshToken = jwtProvider.createToken(userSeq,userName,sex, birth,userId, 6,ChronoUnit.HOURS);
+		String accessToken = jwtProvider.createToken(userSeq, userName, sex, birth, userId, 2, ChronoUnit.HOURS);
+		String refreshToken = jwtProvider.createToken(userSeq, userName, sex, birth, userId, 6, ChronoUnit.HOURS);
 
 		redisTemplate.delete(dto.getRefreshToken());
 		valueOperations.set(refreshToken, userId);

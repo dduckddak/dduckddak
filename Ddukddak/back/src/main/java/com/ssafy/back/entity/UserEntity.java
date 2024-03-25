@@ -43,7 +43,7 @@ public class UserEntity {
 	@Column(name = "user_id", nullable = false, unique = true, length = 20)
 	private String userId;
 
-	@Column(name = "user_password", nullable = false, length = 30)
+	@Column(name = "user_password", nullable = false, length = 255)
 	private String userPassword;
 
 	@Column(name = "first_login", nullable = false)
@@ -67,7 +67,7 @@ public class UserEntity {
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
 	private List<ReviewEntity> ReviewEntities = new ArrayList<>();
 
-	public UserEntity(SignUpRequestDto dto){
+	public UserEntity(SignUpRequestDto dto) {
 		this.userName = dto.getUserName();
 		this.sex = dto.getSex();
 		this.birth = dto.getBirth();

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  Dimensions,
+  Animated,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -52,14 +54,41 @@ const BookItems: React.FC<{
   coverImage: any;
   navigation: any;
 }> = ({ title, coverImage, navigation }) => {
+  const CharrrrAnimation = useRef(new Animated.Value(1)).current;
+  useEffect(() => {
+    return () => CharrrrAnimation.removeAllListeners();
+  });
+
   const handlePress = () => {
-    navigation.navigate('makingBook', { bookTitle: title });
+    CharrrrAnimation.setValue(1);
+    // CharrrrAnimation.addListener(({ value }) => console.log(value));
+
+    setTimeout(() => {
+      CharrrrAnimation.stopAnimation();
+    }, 1000);
+
+    Animated.timing(CharrrrAnimation, {
+      toValue: 2,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start(() => {
+      CharrrrAnimation.setValue(1);
+      navigation.navigate('makingBook', { bookTitle: title });
+    });
   };
 
   return (
     <TouchableOpacity style={styles.bookItem} onPress={handlePress}>
-      <Image source={coverImage} style={styles.coverImage} />
-      <Text style={styles.title}>{title}</Text>
+      <Animated.View
+        style={[
+          {
+            transform: [{ scale: CharrrrAnimation }],
+          },
+        ]}
+      >
+        <Image source={coverImage} style={styles.coverImage} />
+        <Text style={styles.title}>{title}</Text>
+      </Animated.View>
     </TouchableOpacity>
   );
 };
@@ -104,17 +133,16 @@ const styles = StyleSheet.create({
   bookItem: {
     margin: 20,
     alignItems: 'center',
-    marginRight: 35,
-    marginLeft: 35,
   },
   coverImage: {
-    flex: 1,
-    width: 500,
-    height: 530,
+    // flex: 1,
+    width: Dimensions.get('screen').width * 0.4,
+    height: Dimensions.get('screen').height * 0.64,
     resizeMode: 'cover',
     borderRadius: 10,
     borderWidth: 6,
     borderColor: '#A16A4A',
+    zIndex: 20,
   },
   title: {
     fontFamily: 'im-hyemin-bold',

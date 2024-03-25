@@ -80,7 +80,6 @@ const MakingBook: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        {/* 이미지와 캡션을 매핑하여 렌더링 */}
         {imagePaths
           .slice(currentIndex, currentIndex + 2)
           .map((imagePath, index) => (

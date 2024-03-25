@@ -1,12 +1,14 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
+import * as SecureStore from 'expo-secure-store';
 import * as SplashScreen from 'expo-splash-screen';
 
+// 이 아래는 페이지 이름들입니다
 import MainRending from './screens/MainRending';
 import MainScreen from './screens/Welcome/MainScreen';
 import MainCharacterScreen from './screens/maincharacter/MainCharacterScreen';
@@ -26,6 +28,7 @@ import ColoringListScreen from './screens/coloring/ColoringListScreen';
 import ColoringDetailScreen from './screens/coloring/ColoringDetailScreen';
 import MakingBook from './screens/books/MakingBook';
 import LikeBooks from './screens/books/LikeBooks';
+import Intro from './screens/Welcome/IntroScreen';
 
 function LogoTitle() {
   return (
@@ -46,8 +49,10 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     navigation.goBack();
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     navigation.navigate('mainrending' as never);
+    await SecureStore.deleteItemAsync('accessToken');
+    await SecureStore.deleteItemAsync('refreshTocken');
   };
 
   if (isHomeScreen) {
@@ -86,6 +91,7 @@ export type RootStackParamList = {
   talk: undefined;
   fairy: undefined;
   mainrending: undefined;
+  intro: undefined;
   login: undefined;
   signup: undefined;
   picture: undefined;
@@ -102,10 +108,26 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
+  const [initialRouteName, setInitialRouteName] = useState<
+    keyof RootStackParamList | undefined
+  >(undefined);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await SecureStore.getItemAsync('accessToken');
+      if (token) {
+        setInitialRouteName('home');
+      } else {
+        setInitialRouteName('mainrending');
+      }
+      SplashScreen.hideAsync().catch(() => {});
+    };
+
+    checkToken();
+  }, []);
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   const [fontsLoaded] = useFonts({
     'im-hyemin': require('./assets/fonts/IM_Hyemin-Regular.ttf'),
@@ -125,7 +147,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="mainrending"
+        initialRouteName={initialRouteName}
         // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
         screenOptions={{
           headerTransparent: true,
@@ -135,6 +157,33 @@ export default function App() {
           title: '',
         }}
       >
+        {/* ------------------------ 렌더링 화면 ------------------------ */}
+        <Stack.Screen name="mainrending" component={MainRending} />
+
+        {/* ------------------------ 로그인 페이지 ------------------------ */}
+        <Stack.Screen
+          name="login"
+          component={Login}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
+
+        {/* ------------------------ 회원가입 페이지 ------------------------ */}
+        <Stack.Screen
+          name="signup"
+          component={Signup}
+          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+        />
+
+        {/* ------------------------ 인트로 페이지 ------------------------ */}
+        <Stack.Screen
+          name="intro"
+          component={Intro}
+          options={{
+            headerTitle: LogoTitle,
+            headerRight: () => <LogoRight isHomeScreen={true} />,
+          }}
+        />
+
         {/* ------------------------ 메인 페이지 ------------------------ */}
         <Stack.Screen
           name="home"
@@ -155,22 +204,6 @@ export default function App() {
         {/* ------------------------ 책 상세 페이지 ------------------------ */}
         <Stack.Screen name="detail" component={DetailBookScreen} />
 
-        {/* ------------------------ 렌더링 화면 ------------------------ */}
-        <Stack.Screen name="mainrending" component={MainRending} />
-
-        {/* ------------------------ 로그인 페이지 ------------------------ */}
-        <Stack.Screen
-          name="login"
-          component={Login}
-          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
-        />
-
-        {/* ------------------------ 회원가입 페이지 ------------------------ */}
-        <Stack.Screen
-          name="signup"
-          component={Signup}
-          options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
-        />
         {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
         <Stack.Screen
           name="likebooks"

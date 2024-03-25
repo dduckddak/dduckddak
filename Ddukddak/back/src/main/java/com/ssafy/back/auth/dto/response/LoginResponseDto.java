@@ -14,14 +14,16 @@ public class LoginResponseDto extends ResponseDto{
 
 	private String accessToken;
 	private String refreshToken;
+	private Boolean firstLogin;
 
-	public LoginResponseDto(String accessToken, String refreshToken){
+	public LoginResponseDto(String accessToken, String refreshToken, Boolean firstLogin){
 		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
+		this.firstLogin = firstLogin;
 	}
 
-	public static ResponseEntity<LoginResponseDto> loginSuccess(String accessToken, String refreshToken){
-		LoginResponseDto responseBody = new LoginResponseDto(accessToken, refreshToken);
+	public static ResponseEntity<LoginResponseDto> loginSuccess(String accessToken, String refreshToken, Boolean firstLogin){
+		LoginResponseDto responseBody = new LoginResponseDto(accessToken, refreshToken, firstLogin);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 

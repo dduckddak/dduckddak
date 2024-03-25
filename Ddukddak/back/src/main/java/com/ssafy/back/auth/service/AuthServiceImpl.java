@@ -55,9 +55,13 @@ public class AuthServiceImpl implements AuthService{
 		// JwtAuthenticationFilter 에서 redis까서 value 가 logouted 인지 확인하기 (블랙리스트 확인)
 
 		UserEntity userEntity = userRepository.findByUserId(dto.getUserId());
-
-		userEntity.setFirstLogin(true);
-		userRepository.save(userEntity);
+		boolean firstLogin = userEntity.getFirstLogin();
+		// 회원가입할때 firstLogin -> true,
+		// firstLogin 이 true 이면, 처음으로 로그인 하러 온 것
+		if(firstLogin == true) {
+			userEntity.setFirstLogin(false);
+			userRepository.save(userEntity);
+		}
 
 		// 아이디 없음
 		if(userEntity == null) return LoginResponseDto.loginFail();
@@ -80,7 +84,7 @@ public class AuthServiceImpl implements AuthService{
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 		valueOperations.set(refreshToken, userId);
 
-		return LoginResponseDto.loginSuccess(accessToken, refreshToken);
+		return LoginResponseDto.loginSuccess(accessToken, refreshToken, firstLogin);
 	}
 
 	@Override

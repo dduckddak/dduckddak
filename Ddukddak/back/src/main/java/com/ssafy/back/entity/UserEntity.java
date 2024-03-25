@@ -73,7 +73,7 @@ public class UserEntity {
 		this.birth = dto.getBirth();
 		this.userId = dto.getUserId();
 		this.userPassword = dto.getUserPassword();
-		this.firstLogin = false;
+		this.firstLogin = true;
 		this.fcmToken = "";
 	}
 

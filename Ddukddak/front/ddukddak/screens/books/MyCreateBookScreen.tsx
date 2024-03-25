@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -11,43 +11,14 @@ import {
   Animated,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Colors } from '../../components/Ui/styles';
 
-// 책 목록 데이터 타입 정의
+import { getMakeBookList, MakeBookListData } from '../../api/makeBookApi';
+
 interface Book {
   title: string;
   coverImage: any; // 이미지 소스는 any 타입으로 설정
 }
-
-const bookList: Book[] = [
-  {
-    title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/books/book1.png'),
-  },
-  {
-    title: '내가 만든 책 2',
-    coverImage: require('../../assets/images/books/book2.png'),
-  },
-  {
-    title: '내가 만든 책 2',
-    coverImage: require('../../assets/images/books/book2.png'),
-  },
-  {
-    title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/books/book1.png'),
-  },
-  {
-    title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/books/book1.png'),
-  },
-  {
-    title: '내가 만든 책 2',
-    coverImage: require('../../assets/images/books/book2.png'),
-  },
-  {
-    title: '내가 만든 책 1',
-    coverImage: require('../../assets/images/books/book1.png'),
-  },
-];
 
 const BookItems: React.FC<{
   title: string;
@@ -94,7 +65,24 @@ const BookItems: React.FC<{
 };
 
 const BookListScreen: React.FC = () => {
+  const [makeBookList, setMakeBookList] = useState<MakeBookListData[]>([]);
+
+  const fetchMakeBooks = async () => {
+    try {
+      const makeBooksResponse = await getMakeBookList();
+      setMakeBookList(makeBooksResponse);
+      console.log('makebooks', makeBooksResponse);
+    } catch (error) {
+      console.log('에러!', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMakeBooks();
+  }, []);
+
   const navigation = useNavigation();
+
   return (
     <ImageBackground
       source={require('../../assets/images/background/MainBackground.png')}
@@ -102,11 +90,11 @@ const BookListScreen: React.FC = () => {
     >
       <View>
         <FlatList
-          data={bookList}
+          data={makeBookList}
           renderItem={({ item }) => (
             <BookItems
-              title={item.title}
-              coverImage={item.coverImage}
+              title={makeBookList.makeBookTitle}
+              coverImage={makeBookList.makeBookCover}
               navigation={navigation}
             />
           )}
@@ -135,23 +123,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   coverImage: {
-    // flex: 1,
     width: Dimensions.get('screen').width * 0.4,
-    height: Dimensions.get('screen').height * 0.64,
+    height: Dimensions.get('screen').height * 0.65,
     resizeMode: 'cover',
     borderRadius: 10,
     borderWidth: 6,
-    borderColor: '#A16A4A',
+    borderColor: Colors.green,
     zIndex: 20,
   },
   title: {
     fontFamily: 'im-hyemin-bold',
-    fontSize: 50,
+    fontSize: 45,
     marginTop: 5,
     textAlign: 'center',
     textShadowColor: 'white',
     textShadowOffset: { width: 5, height: 4 },
-    textShadowRadius: 3, // 블러
+    textShadowRadius: 3,
   },
   imageBackground: {
     flex: 1,

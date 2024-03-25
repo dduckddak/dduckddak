@@ -116,6 +116,14 @@ public class BookController {
 		return bookService.listBookChoice();
 	}
 
+	@Operation(
+		summary = "선호도 조사 책 목록 선택",
+		description = "선택해 온 책 목록에 좋아요 리뷰를 생성한다. "
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation = ChoiceBookResponseDto.class))),
+	})
 	@PostMapping("/choice-list")
 	public ResponseEntity<? super ChoiceBookResponseDto> createChoiceList(@RequestBody ChoiceBookListRequestDto requestDto){
 		return bookService.choiceBook(requestDto);

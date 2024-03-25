@@ -1,7 +1,6 @@
 import apiClient from './apiClient';
 import { isAxiosError } from 'axios';
 
-
 interface ApiResponse {
   message: string;
 }
@@ -27,7 +26,6 @@ interface MakeBookDetailData {
 
 type MakeBookDetailResponse = ApiResponse & MakeBookDetailData;
 
-
 /**
  * 동화뚝딱 상세 정보 가져오기
  * @remarks
@@ -36,9 +34,13 @@ type MakeBookDetailResponse = ApiResponse & MakeBookDetailData;
  * @returns {Promise<MakeBookDetailResponse>} "Success" 메시지와 함께 makeBookDetail를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-export const getMakeBookDetail = async (makeBookId: string): Promise<MakeBookDetailResponse> => {
+export const getMakeBookDetail = async (
+  makeBookId: string,
+): Promise<MakeBookDetailResponse> => {
   try {
-    const response = await apiClient.get<MakeBookDetailResponse>(`/api/v1/make-books/${makeBookId}`);
+    const response = await apiClient.get<MakeBookDetailResponse>(
+      `/api/v1/make-books/${makeBookId}`,
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
@@ -48,7 +50,6 @@ export const getMakeBookDetail = async (makeBookId: string): Promise<MakeBookDet
   }
 };
 
-
 /**
  * 동화뚝딱 삭제
  * @remarks
@@ -57,10 +58,12 @@ export const getMakeBookDetail = async (makeBookId: string): Promise<MakeBookDet
  * @returns {Promise<ApiResponse>} "Success." 메시지를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
-export const deleteMakeBook = async (makeBookIds: number[]): Promise<ApiResponse> => {
+export const deleteMakeBook = async (
+  makeBookIds: number[],
+): Promise<ApiResponse> => {
   try {
     const response = await apiClient.delete<ApiResponse>(`/api/v1/make-books`, {
-      data: { makeBookIds } // DELETE 메서드의 본문에 makeBookId 배열을 담아 전송
+      data: { makeBookIds }, // DELETE 메서드의 본문에 makeBookId 배열을 담아 전송
     });
     return response.data;
   } catch (error) {
@@ -71,7 +74,7 @@ export const deleteMakeBook = async (makeBookIds: number[]): Promise<ApiResponse
   }
 };
 
-interface MakeBookListData {
+export interface MakeBookListData {
   makeBookList?: {
     bookId: number;
     makeBookTitle: string;
@@ -90,7 +93,9 @@ type MakeBookListResponse = ApiResponse & MakeBookListData;
  */
 export const getMakeBookList = async (): Promise<MakeBookListResponse> => {
   try {
-    const response = await apiClient.get<MakeBookListResponse>('/api/v1/make-books/list');
+    const response = await apiClient.get<MakeBookListResponse>(
+      '/api/v1/make-books',
+    );
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

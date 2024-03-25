@@ -27,7 +27,6 @@ const Login: React.FC<Props> = ({ navigation }) => {
   const [idInput, setIdInput] = useState('');
   const [pwdInput, setPwdInput] = useState('');
 
-
   const validatePassword = (): boolean => {
     const idRegex = /^[a-zA-Z0-9]{6,20}$/;
     const pwRegex = /^.{6,20}$/;
@@ -92,8 +91,6 @@ const Login: React.FC<Props> = ({ navigation }) => {
           });
         }
       }
-
-
     } catch (error) {
       Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
       console.error('로그인 에러:', error);

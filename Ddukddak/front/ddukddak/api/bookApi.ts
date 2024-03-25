@@ -32,6 +32,14 @@ export interface BookDetailData {
   };
 }
 
+export interface LikeBookListData {
+  bookList?: {
+    bookId: number;
+    bookTitle: string;
+    coverImage: string;
+  }[];
+}
+
 type BookListResponse = ApiResponse & BookListData;
 
 type BookSearchResponse = ApiResponse & BookSearchData;
@@ -39,6 +47,48 @@ type BookSearchResponse = ApiResponse & BookSearchData;
 type BookDetailResponse = ApiResponse & BookDetailData;
 
 type ReviewCreateResponse = ApiResponse;
+
+type LikeBookListResponse = ApiResponse & LikeBookListData;
+
+type PostLikeBooksResponse = ApiResponse;
+
+/**
+ * 선호도 조사 책 목록 가져오기*/
+export const getLikeBookList = async (): Promise<LikeBookListResponse> => {
+  try {
+    const response = await apiClient.get<LikeBookListResponse>(
+      '/api/v1/books/choice-list',
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};
+
+interface LikeBooksParams {
+  choiceBookList: number[];
+}
+
+// 선호도 조사 책 선택목록 보내기
+export const postLikeBooks = async (
+  params: LikeBooksParams,
+): Promise<PostLikeBooksResponse> => {
+  try {
+    const response = await apiClient.post<PostLikeBooksResponse>(
+      '/api/v1/books/choice-list',
+      params,
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};
 
 /**
  * 추천 책 목록을 가져오기
@@ -226,7 +276,6 @@ export const getReviewDetail = async (
     throw error;
   }
 };
-
 
 /**
  * 좋아요 한 책 목록을 가져오기 (BookList랑 데이터 값 똑같아서 그대로 사용)

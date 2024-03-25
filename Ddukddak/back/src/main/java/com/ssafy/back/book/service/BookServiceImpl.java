@@ -1,6 +1,7 @@
 package com.ssafy.back.book.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +27,11 @@ import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
 import com.ssafy.back.book.dto.ReviewDto;
+import com.ssafy.back.book.dto.request.ChoiceBookListRequestDto;
 import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
+import com.ssafy.back.book.dto.response.ChoiceBookResponseDto;
+import com.ssafy.back.book.dto.response.ListBookChoiceResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
@@ -252,4 +256,61 @@ public class BookServiceImpl implements BookService {
 			return ResponseDto.databaseError();
 		}
 	}
+
+	@Override
+	public ResponseEntity<? super ListBookChoiceResponseDto> listBookChoice() {
+		//첫 선택 책 id
+		Integer[] books = new Integer[]{121, 34, 3, 37, 122, 39, 9, 42, 43, 20, 88, 57, 26, 123, 28, 80};
+		ArrayList<Integer> bookIds = new ArrayList<>(Arrays.asList(books));
+
+		try {
+			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds);
+			for (BookSummaryDto book : bookList) {
+				String key = MakeKeyUtil.page(book.getBookId(), 0, true);
+				if (amazonS3.doesObjectExist(bucket, key)) {
+					String imageUrl = amazonS3.getUrl(bucket, key).toString();
+					book.setCoverImage(imageUrl);
+				} else {
+					if (amazonS3.doesObjectExist(bucket, "default_book/noImage.png")) {
+						String imageUrl = amazonS3.getUrl(bucket, "default_book/noImage.png").toString();
+						book.setCoverImage(imageUrl);
+					} else {
+						//s3 error
+						return ListBookRecommendResponseDto.S3error();
+					}
+				}
+			}
+			logger.info("선택 책 목록 : " + bookList);
+			return ListBookChoiceResponseDto.success(bookList);
+		} catch (Exception e) {
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
+
+	@Override
+	public ResponseEntity<? super ChoiceBookResponseDto> choiceBook(ChoiceBookListRequestDto dto) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
+		List<Integer> bookIds = dto.getChoiceBookList();
+
+		try {
+			bookIds.forEach(bookId -> {
+				reviewRepository.insertReviewNative(bookId, userSeq, true);
+				System.out.println(bookId);
+				logger.info("User {}'s review for book {} created.", userSeq, bookId);
+				});
+			return ChoiceBookResponseDto.success();
+
+		} catch (Exception e) {
+			logger.error(ResponseMessage.DATABASE_ERROR);
+			logger.error(e);
+			return ResponseDto.databaseError();
+		}
+	}
+
 }

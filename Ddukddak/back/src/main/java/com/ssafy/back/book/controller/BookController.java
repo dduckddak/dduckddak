@@ -1,5 +1,7 @@
 package com.ssafy.back.book.controller;
 
+import java.util.ArrayList;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.back.book.dto.request.ChoiceBookListRequestDto;
 import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
+import com.ssafy.back.book.dto.response.ChoiceBookResponseDto;
+import com.ssafy.back.book.dto.response.ListBookChoiceResponseDto;
 import com.ssafy.back.book.dto.response.ListBookLikeResponseDto;
 import com.ssafy.back.book.dto.response.ListBookRecommendResponseDto;
 import com.ssafy.back.book.dto.response.ListBookSearchResponseDto;
@@ -98,30 +103,29 @@ public class BookController {
 		return bookService.createReview(request);
 	}
 
-	// @Operation(
-	// 	summary = "리뷰 수정",
-	// 	description = "책의 리뷰를 수정한다."
-	// )
-	// @ApiResponses(value = {
-	// 	@ApiResponse(responseCode = "200", description = "Success.",
-	// 		content = @Content(schema = @Schema(implementation = UpdateReviewResponseDto.class))),
-	// })
-	// @PutMapping("/reviews")
-	// public ResponseEntity<? super UpdateReviewResponseDto> updateReview(@RequestBody CreateReviewRequestDto request) {
-	// 	return bookService.updateReview(request);
-	// }
-	//
-	// @Operation(
-	// 	summary = "리뷰 삭제",
-	// 	description = "책의 리뷰를 삭제한다."
-	// )
-	// @ApiResponses(value = {
-	// 	@ApiResponse(responseCode = "200", description = "Success.",
-	// 		content = @Content(schema = @Schema(implementation = UpdateReviewResponseDto.class))),
-	// })
-	// @DeleteMapping("/reviews/{bookId}")
-	// public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(@PathVariable Integer bookId) {
-	// 	return bookService.deleteReview(bookId);
-	// }
+	@Operation(
+		summary = "선호도 조사 책 목록",
+		description = "첫 로그인시 사용자의 선호도를 조사할 책 목록을 불러온다. "
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation = ListBookChoiceResponseDto.class))),
+	})
+	@GetMapping("/choice-list")
+	public ResponseEntity<? super ListBookChoiceResponseDto> choiceList(){
+		return bookService.listBookChoice();
+	}
 
+	@Operation(
+		summary = "선호도 조사 책 목록 선택",
+		description = "선택해 온 책 목록에 좋아요 리뷰를 생성한다. "
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Success.",
+			content = @Content(schema = @Schema(implementation = ChoiceBookResponseDto.class))),
+	})
+	@PostMapping("/choice-list")
+	public ResponseEntity<? super ChoiceBookResponseDto> createChoiceList(@RequestBody ChoiceBookListRequestDto requestDto){
+		return bookService.choiceBook(requestDto);
+	}
 }

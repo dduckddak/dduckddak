@@ -69,7 +69,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
           await SecureStore.setItemAsync('refreshToken', refreshToken);
         }
 
-        navigation.navigate('intro'); // 로그인 성공 시 홈 화면으로 이동
+        navigation.navigate('likebooks'); // 로그인 성공 시 홈 화면으로 이동
       } catch (error) {
         Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
         console.error('로그인 에러:', error);

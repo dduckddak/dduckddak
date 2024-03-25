@@ -31,6 +31,9 @@ import MakingBook from './screens/books/MakingBook';
 import LikeBooks from './screens/books/LikeBooks';
 import Intro from './screens/Welcome/IntroScreen';
 import LikeListScreen from './screens/maincharacter/LikeListScreen';
+import { AppInitializer } from './components/AppInitializer';
+import { getUserInfo } from './api/userApi';
+import { useUserStore } from './store/userStore';
 
 function LogoTitle() {
   return (
@@ -40,6 +43,7 @@ function LogoTitle() {
     />
   );
 }
+
 interface LogoRightProps {
   isHomeScreen: any;
 }
@@ -111,26 +115,18 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => {
+});
 
 export default function App() {
-  const [initialRouteName, setInitialRouteName] = useState<
-    keyof RootStackParamList | undefined
-  >(undefined);
+  const [initialRouteName, setInitialRouteName] = React.useState<keyof RootStackParamList>();
 
   useEffect(() => {
-    const checkToken = async () => {
-      const token = await SecureStore.getItemAsync('accessToken');
-      if (token) {
-        setInitialRouteName('home');
-      } else {
-        setInitialRouteName('mainrending');
-      }
-      SplashScreen.hideAsync().catch(() => {});
-    };
-
-    checkToken();
+    SplashScreen.hideAsync().catch(() => {
+    });
   }, []);
+
+
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
   const [fontsLoaded] = useFonts({
     'im-hyemin': require('./assets/fonts/IM_Hyemin-Regular.ttf'),
@@ -139,7 +135,8 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => {
+      });
     }
   }, [fontsLoaded]);
 
@@ -149,8 +146,9 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <AppInitializer setInitialRouteName={setInitialRouteName} />
       <NavigationContainer>
-        <Stack.Navigator
+        {initialRouteName && <Stack.Navigator
           initialRouteName={initialRouteName}
           // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
           screenOptions={{
@@ -311,7 +309,7 @@ export default function App() {
               headerBackVisible: false,
             }}
           />
-        </Stack.Navigator>
+        </Stack.Navigator>}
       </NavigationContainer>
     </GestureHandlerRootView>
   );

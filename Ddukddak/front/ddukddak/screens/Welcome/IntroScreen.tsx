@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import MainScreen from './MainScreen';
+import * as SecureStore from 'expo-secure-store';
 
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -30,6 +31,14 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const handlePress = () => {
     navigation.navigate('MainCharacterScreen');
   };
+
+
+  useEffect(() => {
+    const setIntroCheck = async () => {
+      await SecureStore.setItemAsync('introChecked', "true");
+    }
+    setIntroCheck();
+  }, []);
 
   const YourComponent: React.FC<{ currentStep: number }> = ({
     currentStep,

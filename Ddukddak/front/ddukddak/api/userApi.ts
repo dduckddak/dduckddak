@@ -15,6 +15,22 @@ interface SignUpRequest {
   userPassword: string;
 }
 
+type UserInfo = {
+  message: string;
+  birth?: string;
+  firstLogin?: boolean;
+  userName?: string;
+  sex?: string;
+};
+
+
+interface LoginResponse {
+  message: string;
+  accessToken?: string;
+  refreshToken?: string;
+  firstLogin?: boolean;
+}
+
 /**
  * 회원가입
  * @param signUpRequest 회원가입 요청 데이터
@@ -127,15 +143,15 @@ export const updateFcmToken = async (
  * POST 요청을 '/api/v1/auth/login' 엔드포인트에 보냅니다. 성공시 메시지와 헤더를 반환합니다.
  * @param {string} userId 로그인할 사용자 ID
  * @param {string} userPassword 사용자 비밀번호
- * @returns {Promise<ApiResponse>} "Success." 메시지와 함께 accessToken, refreshToken을 반환합니다.
+ * @returns {Promise<LoginResponse>} "Success." 메시지와 함께 accessToken, refreshToken을 반환합니다.
  * @throws 400 "Bad request." 또는 404 "Not found." 오류를 반환할 수 있습니다.
  */
 export const login = async (
   userId: string,
   userPassword: string,
-): Promise<ApiResponse> => {
+): Promise<LoginResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse>('/api/v1/auth/login', {
+    const response = await apiClient.post<LoginResponse>('/api/v1/auth/login', {
       userId,
       userPassword,
     });
@@ -162,6 +178,26 @@ export const logout = async (): Promise<ApiResponse> => {
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw error.response.data;
+    }
+    throw error;
+  }
+};
+
+
+/**
+ * 유저정보 받아오기
+ * @remarks
+ * GET 요청을 '/api/v1/auth/user-info' 엔드포인트에 보냅니다. 성공 시 message와 유저 정보를 반환합니다.
+ * @returns {Promise<UserInfo>} message와 유저 정보를 반환합니다.
+ * @throws 401 "Certification failed." 또는 403 "RefreshToken error." 오류를 반환할 수 있습니다.
+ */
+export const getUserInfo = async (): Promise<UserInfo> => {
+  try {
+    const response = await apiClient.get<UserInfo>('/api/v1/auth/user-info');
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data);
     }
     throw error;
   }

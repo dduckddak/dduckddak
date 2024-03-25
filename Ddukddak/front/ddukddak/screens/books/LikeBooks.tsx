@@ -26,20 +26,6 @@ type Props = {
   navigation: NavigationProp<any>;
 };
 
-// const books: Book[] = [
-//   { id: 1, title: '책 1' },
-//   { id: 2, title: '책 2' },
-//   { id: 3, title: '책 3' },
-//   { id: 4, title: '책 4' },
-//   { id: 5, title: '책 5' },
-//   { id: 6, title: '책 6' },
-//   { id: 7, title: '책 7' },
-//   { id: 8, title: '책 8' },
-//   { id: 9, title: '책 9' },
-//   { id: 10, title: '책 10' },
-//   { id: 11, title: '책 11' },
-// ];
-
 const BookSelectionScreen = () => {
   const [selectedBooks, setSelectedBooks] = useState<number[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
@@ -80,6 +66,7 @@ const BookSelectionScreen = () => {
         };
         const response = await postLikeBooks(params);
         console.log('Response:', response);
+        // 처음로그인 한 사람만 책 고르는 페이지로 왔을테니까 무조건 인트로로 가면됨
         navigation.navigate('intro' as never);
       } catch (error) {
         console.error('에러 발생:', error);

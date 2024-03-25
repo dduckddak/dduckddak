@@ -21,7 +21,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.bavocado.ddukddak"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -49,6 +54,12 @@
       ],
       "expo-font",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "ef343ebb-045c-49a3-9582-cd48a212bfa9"
+      }
+    },
+    "owner": "bavocado"
   }
 }

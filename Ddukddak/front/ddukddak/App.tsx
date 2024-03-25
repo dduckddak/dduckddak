@@ -151,7 +151,7 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="mainrending"
+          initialRouteName={initialRouteName}
           // 여기서 모든 navigator 옵션 동일하게 지정해줄 수 있음
           screenOptions={{
             headerTransparent: true,
@@ -161,6 +161,33 @@ export default function App() {
             title: '',
           }}
         >
+          {/* ------------------------ 렌더링 화면 ------------------------ */}
+          <Stack.Screen name="mainrending" component={MainRending} />
+
+          {/* ------------------------ 로그인 페이지 ------------------------ */}
+          <Stack.Screen
+            name="login"
+            component={Login}
+            options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+          />
+
+          {/* ------------------------ 회원가입 페이지 ------------------------ */}
+          <Stack.Screen
+            name="signup"
+            component={Signup}
+            options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
+          />
+
+          {/* ------------------------ 인트로 페이지 ------------------------ */}
+          <Stack.Screen
+            name="intro"
+            component={Intro}
+            options={{
+              headerTitle: LogoTitle,
+              headerRight: () => <LogoRight isHomeScreen={true} />,
+            }}
+          />
+
           {/* ------------------------ 메인 페이지 ------------------------ */}
           <Stack.Screen
             name="home"
@@ -181,22 +208,6 @@ export default function App() {
           {/* ------------------------ 책 상세 페이지 ------------------------ */}
           <Stack.Screen name="detail" component={DetailBookScreen} />
 
-          {/* ------------------------ 렌더링 화면 ------------------------ */}
-          <Stack.Screen name="mainrending" component={MainRending} />
-
-          {/* ------------------------ 로그인 페이지 ------------------------ */}
-          <Stack.Screen
-            name="login"
-            component={Login}
-            options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
-          />
-
-          {/* ------------------------ 회원가입 페이지 ------------------------ */}
-          <Stack.Screen
-            name="signup"
-            component={Signup}
-            options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
-          />
           {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
           <Stack.Screen
             name="likebooks"

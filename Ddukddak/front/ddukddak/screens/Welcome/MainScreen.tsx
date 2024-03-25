@@ -1,19 +1,18 @@
 import React from 'react';
 import {
   View,
-  Text,
   Pressable,
-  Button,
   Image,
   ImageBackground,
   StyleSheet,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import GreenButton from '../../components/GreenButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+
+
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
+
 const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   return (
     <ImageBackground

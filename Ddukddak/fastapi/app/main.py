@@ -1,7 +1,8 @@
 from fastapi import FastAPI, APIRouter, File, UploadFile
-from schemas import UserPreferences, MakePhoto, ExtractPhoto  # 현재 디렉터리 내 schemas.py에서 클래스 가져오기
-from recommendations import get_recommendations
 from makephoto import get_extract_face_photo, make_fairytale_photo, set_yes_photo
+from schemas import MakePhoto, ExtractPhoto  # 현재 디렉터리 내 schemas.py에서 클래스 가져오기
+from hybridRecommendations import hybrid_recommendations
+from makephoto import make_fairytale_photo
 from stt import stt
 
 app = FastAPI(swagger_ui=True)
@@ -13,9 +14,9 @@ router = APIRouter(prefix="/api/v1/f", tags=["api"])
 async def test():
     return "test"
 
-@router.post("/recommendations/", tags=["api"])
-async def create_recommendation(preferences: UserPreferences):
-    recommendations = get_recommendations(preferences.likes, preferences.dislikes, top_n=7)
+@router.get("/recommendations/{userSeq}", tags=["api"])
+async def create_recommendation(userSeq: int):
+    recommendations = hybrid_recommendations(user_seq=userSeq)
     return {"recommendations": recommendations}
 
 @router.post("/makephoto/", tags=["api"])
@@ -37,3 +38,4 @@ async def startStt(file: UploadFile = File(...)):
 
 # 앱에 라우터 추가
 app.include_router(router)
+

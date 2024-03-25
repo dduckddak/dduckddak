@@ -28,10 +28,10 @@ public class SwaggerConfig {
 
 	@Bean
 	public OpenAPI openAPI() {
-		// Server localServer = new Server().url("http://localhost:8080").description("Local HTTP Server");
-		// Server httpsServer = new Server().url("https://j10e203.p.ssafy.io").description("Test HTTPS Server");
+		Server localServer = new Server().url("http://localhost:8080").description("Local HTTP Server");
+		Server httpsServer = new Server().url("https://j10e203.p.ssafy.io").description("Test HTTPS Server");
 		return new OpenAPI()
-			// .servers(Arrays.asList(httpsServer, localServer))
+			.servers(Arrays.asList(httpsServer, localServer))
 			.components(new Components().addSecuritySchemes("JWT",bearerAuth))
 			.addSecurityItem(addSecurityItem)
 			.info(apiInfo());

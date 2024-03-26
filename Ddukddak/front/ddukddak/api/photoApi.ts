@@ -28,9 +28,9 @@ export const getPhotos = async (): Promise<PhotoApiResponse> => {
   }
 };
 
-// interface AddPhotoParams {
-//   photoFile: File;
-// }
+interface AddPhotoParams {
+  photoFile: File;
+}
 
 /**
  * 사진 추가
@@ -40,47 +40,17 @@ export const getPhotos = async (): Promise<PhotoApiResponse> => {
  * @returns {Promise<ApiResponse>} "Success" 메시지를 반환합니다.
  * @throws 400 "Bad request." 또는 401 "Certification failed.", 403 "RefreshToken error.", 410 "S3 error." 오류를 반환할 수 있습니다.
  */
-// export const addPhoto = async (
-//   params: AddPhotoParams,
-// ): Promise<PhotoApiResponse> => {
-//   const formData = new FormData();
-//   formData.append('photoFile', params.photoFile);
-
-//   try {
-//     const response = await apiClient.post<PhotoApiResponse>(
-//       '/api/v1/photos',
-//       formData,
-//     );
-//     console.log(response.data);
-//     return response.data;
-//   } catch (error) {
-//     if (isAxiosError(error) && error.response) {
-//       throw error.response.data;
-//     }
-//     throw error;
-//   }
-// };
-
-interface AddPhotoParams {
-  photoFile: String;
-}
 
 export const addPhoto = async (
   params: AddPhotoParams,
 ): Promise<PhotoApiResponse> => {
-  const photoData = {
-    base64: params.photoFile,
-  };
+  const formData = new FormData();
+  formData.append('photoFile', params.photoFile);
 
   try {
     const response = await apiClient.post<PhotoApiResponse>(
       '/api/v1/photos',
-      JSON.stringify(photoData),
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
+      formData,
     );
     console.log(response.data);
     return response.data;
@@ -91,6 +61,37 @@ export const addPhoto = async (
     throw error;
   }
 };
+
+// interface AddPhotoParams {
+//   photoFile: String;
+// }
+
+// export const addPhoto = async (
+//   params: AddPhotoParams,
+// ): Promise<PhotoApiResponse> => {
+//   const photoData = {
+//     base64: params.photoFile,
+//   };
+
+//   try {
+//     const response = await apiClient.post<PhotoApiResponse>(
+//       '/api/v1/photos',
+//       JSON.stringify(photoData),
+//       {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//         },
+//       },
+//     );
+//     console.log(response.data);
+//     return response.data;
+//   } catch (error) {
+//     if (isAxiosError(error) && error.response) {
+//       throw error.response.data;
+//     }
+//     throw error;
+//   }
+// };
 
 interface DeletePhotoParams {
   deletePhotoIds: number[];

@@ -34,8 +34,15 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
         voiceFile: voiceFile as File,
         voiceName: voicename,
       });
-      Alert.alert('성공', '목소리가 성공적으로 업로드되었습니다.');
-      onClose(); // 성공 후 모달 닫기
+      Alert.alert('성공', '목소리가 성공적으로 업로드되었습니다.', [
+        {
+          text: 'OK',
+          onPress: () => {
+            setVoicename(''); // 입력 초기화
+            onClose(); // 모달 닫기
+          },
+        },
+      ]); // 성공 후 모달 닫기
     } catch (error) {
       console.error(error);
       Alert.alert('업로드 실패', '업로드 중 오류가 발생했습니다.');

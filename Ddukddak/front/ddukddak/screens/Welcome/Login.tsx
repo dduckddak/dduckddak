@@ -147,7 +147,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
               <GreenButton
                 onPress={handlePress}
                 content="로그인"
-                style={{ width: 170, height: 80 }}
+                style={{ width: 160 }}
               />
             </View>
           </View>

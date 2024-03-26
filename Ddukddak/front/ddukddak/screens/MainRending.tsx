@@ -212,7 +212,7 @@ const MainRending: React.FC = () => {
                 onPress={() => {
                   navigation.navigate('login' as never);
                 }}
-                style={{ width: '20%' }}
+                style={{ width: 160 }}
               />
             </View>
           </ImageBackground>
@@ -314,23 +314,24 @@ const styles = StyleSheet.create({
   },
   skipButton: {
     position: 'absolute',
-    top: '90%', // 버튼의 위치를 조정하세요
-    right: 20, // 버튼의 위치를 조정하세요
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 버튼의 배경색
-    padding: 20,
+    top: '97%',
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingTop: 13,
     borderRadius: 5,
+    width: 120,
+    height: 60,
+    alignItems: 'center',
   },
   skipText: {
+    fontFamily: 'im-hyemin-bold',
     color: 'white', // 버튼 텍스트의 색상
-    fontSize: 16, // 버튼 텍스트의 크기
+    fontSize: 25, // 버튼 텍스트의 크기
   },
   buttonStyle: {
     position: 'absolute', // 절대 위치 사용
-    bottom: 50, // 하단에서부터의 거리
-    left: 0,
-    right: 0, // 좌우로부터 0, 중앙 정렬을 위해
-    justifyContent: 'center',
-    alignItems: 'center', // 내부 텍스트 중앙 정렬
+    bottom: 40, // 하단에서부터의 거리
+    alignSelf: 'center',
   },
 });
 

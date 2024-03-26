@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontFamily: 'im-hyemin-bold',
-    height: 60,
+    height: 65,
     textAlignVertical: 'center',
-    fontSize: 20,
+    fontSize: 25,
   },
 });
 

@@ -61,9 +61,9 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     await SecureStore.deleteItemAsync('accessToken');
     await SecureStore.deleteItemAsync('refreshTocken');
     // try {
-    //   // 로그아웃 요청 보내기
+    //   // 로그아웃 요청
     //   const response = await logout();
-    //   // 로그아웃 성공 시 처리
+    //   // 로그아웃 성공
     //   if (response.message === 'Success.') {
     //     // SecureStore에서 accessToken 및 refreshToken 삭제
     //     await SecureStore.deleteItemAsync('accessToken');

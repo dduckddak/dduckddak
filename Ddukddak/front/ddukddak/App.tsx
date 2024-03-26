@@ -31,14 +31,14 @@ import MakingBook from './screens/books/MakingBook';
 import LikeBooks from './screens/books/LikeBooks';
 import Intro from './screens/Welcome/IntroScreen';
 import LikeListScreen from './screens/maincharacter/LikeListScreen';
-<<<<<<< HEAD
+
 import AddFairyPicture from './screens/maincharacter/AddFairyPicture';
 import AddFairyVoice from './screens/maincharacter/AddFairyVoice';
-=======
+
 import { AppInitializer } from './components/AppInitializer';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
->>>>>>> a8a6c6f7faca082cab17bded39b880a66e29aa31
+
 
 function LogoTitle() {
   return (

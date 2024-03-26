@@ -3,12 +3,12 @@ import { View, Image, ImageSourcePropType, StyleSheet, Dimensions } from 'react-
 import GreenButton from '../../../components/GreenButton';
 import SkyButton from '../../../components/SkyButton';
 import ConfirmModal from '../../../components/ConfirmModal';
+import * as url from 'node:url';
 
 type SketchImage = {
-  source: ImageSourcePropType;
-  id: string;
+  coloringFile: string;
+  coloringId: number;
 };
-
 
 interface SketchbookDetailProps {
   image: SketchImage;
@@ -36,7 +36,7 @@ const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image }) => {
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.imagesContainer}>
-          <Image source={image.source} style={styles.imageStyle} />
+          <Image source={{ uri: image.coloringFile }} style={styles.imageStyle} />
         </View>
       </View>
       <GreenButton

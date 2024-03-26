@@ -84,10 +84,7 @@ export const deleteColorings = async (params: DeleteColoringParams): Promise<Col
 
 interface ColoringBaseApiResponse {
   message: string;
-  coloringBaseList?: {
-    coloringBaseId: number;
-    coloringBaseFile: string;
-  }[];
+  coloringBaseList?: string[];
 }
 
 /**

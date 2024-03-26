@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
+import { getColoringBases } from '../../api/coloringApi';
 
 interface ColoringScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -17,11 +18,23 @@ interface Item {
   item: string;
 }
 
-const images = Array.from({length: 12}, (_, i) => `https://pjt-image-bucket.s3.ap-northeast-2.amazonaws.com/ddukddak/color_${(i % 6) + 1}.jpg`);
-
 const ColoringScreen: React.FC<ColoringScreenProps> = ({
                                                          navigation,
                                                        }) => {
+
+  const [coloringBaseList, setColoringBaseList] = useState<string[]>([]);
+
+  useEffect(() => {
+    const handleColoringScreenEnter = async () => {
+      const response = await getColoringBases();
+      if (response.coloringBaseList) {
+        setColoringBaseList(response.coloringBaseList);
+      }
+      console.log(response);
+    }
+
+    handleColoringScreenEnter();
+  }, []);
 
   const renderItem = ({ item }: Item) => (
     <View style={styles.imageContainer}>
@@ -41,7 +54,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
         >
           <FlatList
             style={styles.flatList}
-            data={images}
+            data={coloringBaseList}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={4}
@@ -75,7 +88,7 @@ const styles = StyleSheet.create({
   }
   ,
   box: {
-    backgroundColor: 'rgba(205, 234, 185, 0.48)', // CDEAB9의 RGB 값은 205, 234, 185입니다.
+    backgroundColor: 'rgba(205, 234, 185, 0.48)',
     height:
       Dimensions.get('screen').height * 0.6,
     width:

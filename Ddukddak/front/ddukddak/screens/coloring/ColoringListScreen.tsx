@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,6 +9,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
 import SketchbookList from './sketchbook/SketchbookList';
+import { getColorings } from '../../api/coloringApi';
 
 interface ColoringListScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -57,7 +58,20 @@ const images = [{
 const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
                                                                  navigation,
                                                                }) => {
+  const [coloringList, setColoringList] = useState<{coloringId: number, coloringFile: string}[]>([]);
 
+
+  useEffect(() => {
+    const handleColoringListEnter = async () => {
+      const coloringResponse = await getColorings()
+      if (coloringResponse.coloringList) {
+        setColoringList(coloringResponse.coloringList);
+        console.log(coloringResponse.coloringList);
+      }
+    }
+
+    handleColoringListEnter();
+  }, []);
 
   return (
     <ImageBackground
@@ -65,7 +79,7 @@ const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
       style={styles.imageBackground}
     >
 
-      <SketchbookList images={images} navigation={navigation}>
+      <SketchbookList images={coloringList} navigation={navigation}>
       </SketchbookList>
 
     </ImageBackground>

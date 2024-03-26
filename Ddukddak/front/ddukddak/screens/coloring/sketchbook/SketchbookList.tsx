@@ -6,8 +6,8 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 // const windowWidth = Dimensions.get('window').width;
 
 type Images = {
-  source: ImageSourcePropType;
-  id: string;
+  coloringFile: string;
+  coloringId: number;
 }[];
 
 interface SketchbookProps {
@@ -19,15 +19,15 @@ interface SketchbookProps {
 
 
 const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
-  const handlePress = (item: { source: ImageSourcePropType; id: string; }) => {
-    console.log(item.id); // 아이디가 콘솔에 출력됩니다
+  const handlePress = (item: { coloringFile: string; coloringId: number; }) => {
+    console.log(item.coloringId); // 아이디가 콘솔에 출력됩니다
     navigation.navigate('coloringDetail', item); // 이동
   };
 
 
-  const renderItem = ({ item }: { item: { source: ImageSourcePropType; id: string; } }) => (
+  const renderItem = ({ item }: { item: { coloringFile: string; coloringId: number; } }) => (
     <TouchableOpacity style={styles.imageContainer} onPress={() => handlePress(item)}>
-      <Image source={item.source} style={styles.image} />
+      <Image source={{uri: item.coloringFile}} style={styles.image} />
     </TouchableOpacity>
   );
 
@@ -38,7 +38,7 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
           style={styles.flatList}
           data={images}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.coloringId.toString()}
           numColumns={4}
           contentContainerStyle={styles.flatListContentContainer}
         />

@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Modal, View, Pressable, Text } from 'react-native';
 import SkyButton from '../SkyButton';
-import { Feather } from '@expo/vector-icons';
 
 interface UploadModeModalProps {
   visible: boolean;

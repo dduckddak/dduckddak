@@ -29,7 +29,7 @@ export const getPhotos = async (): Promise<PhotoApiResponse> => {
 };
 
 interface AddPhotoParams {
-  photoFile: File;
+  photoFile: string;
 }
 
 /**
@@ -51,6 +51,11 @@ export const addPhoto = async (
     const response = await apiClient.post<PhotoApiResponse>(
       '/api/v1/photos',
       formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
     console.log(response.data);
     return response.data;

@@ -3,6 +3,7 @@ import { StyleSheet, View, Platform, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../GreenButton';
 import PictureModal from './PictureModal';
+import { addPhoto } from '../../api/photoApi';
 
 interface ImagePickerComponentProps {
   onImageSelected: (uri: string) => void;
@@ -11,9 +12,6 @@ interface ImagePickerComponentProps {
 const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
   onImageSelected,
 }) => {
-  const [permission, setPermission] = useState<'granted' | 'denied' | null>(
-    null,
-  );
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const getPermission = useCallback(
@@ -33,7 +31,19 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
     [],
   );
 
-  // 갤러리에서 사진 선택
+  // 이미지를 서버로 업로드
+  const uploadImage = async (photoUri: string) => {
+    try {
+      // addPhoto 함수의 인자로 파일의 URI를 직접 전달
+      const response = await addPhoto({ photoFile: photoUri });
+      Alert.alert('Upload Success', 'Photo uploaded successfully!');
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Upload Failed', 'Failed to upload photo.');
+    }
+  };
+
+  // 갤러리에서 사진 선택 후 업로드
   const pickImage = async () => {
     const hasPermission = await getPermission('library');
     if (hasPermission) {
@@ -45,12 +55,12 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
       });
 
       if (!result.canceled && result.assets) {
-        onImageSelected(result.assets[0].uri);
+        uploadImage(result.assets[0].uri);
       }
     }
   };
 
-  // 카메라 촬영
+  // 카메라 촬영 후 업로드
   const takePhoto = async () => {
     const hasPermission = await getPermission('camera');
     if (hasPermission) {
@@ -62,7 +72,7 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
       });
 
       if (!result.canceled && result.assets) {
-        onImageSelected(result.assets[0].uri);
+        uploadImage(result.assets[0].uri);
       }
     }
   };

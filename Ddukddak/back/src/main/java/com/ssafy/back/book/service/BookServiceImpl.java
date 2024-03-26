@@ -64,39 +64,26 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public ResponseEntity<? super ListBookRecommendResponseDto> listBookRecommend() {
-		//테스트 코드
-		int userSeq = 1;
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 		List<Integer> bookIds = new ArrayList<>();
 
 		try {
-			List<ReviewDto> reviewList = reviewRepository.findByUserEntity_UserSeq(userSeq);
-			// 좋아요한 리뷰의 bookId 리스트
-			List<Integer> likeList = reviewList.stream()
-				.filter(ReviewDto::getIsLike)
-				.map(ReviewDto::getBookId)
-				.toList();
-
-			// 좋아하지 않은 리뷰의 bookId 리스트
-			List<Integer> unLikeList = reviewList.stream()
-				.filter(reviewDto -> !reviewDto.getIsLike())
-				.map(ReviewDto::getBookId)
-				.toList();
-
 			//fastapi로 추천 요청
 			// 요청 본문 생성
 			Map<String, Object> requestMap = new HashMap<>();
-			requestMap.put("likes", likeList);
-			requestMap.put("dislikes", unLikeList);
 
 			Gson gson = new Gson();
 			String jsonRequestBody = gson.toJson(requestMap);
 
 			// FastAPI 엔드포인트 URL
-			String url = fastApiUrl + "/api/v1/f/recommendations/";
+			String url = fastApiUrl + "/api/v1/f/recommendations/" + userSeq;
 
-			HttpResponse<String> response = Unirest.post(url)
-				.header("Content-Type", "application/json")
-				.body(jsonRequestBody)
+			// Unirest를 사용하여 GET 요청 보내기
+			HttpResponse<String> response = Unirest.get(url)
 				.asString();
 
 			JsonObject responseObject = JsonParser.parseString(response.getBody()).getAsJsonObject();

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
+  Text,
   StyleSheet,
   ImageBackground,
   FlatList,
@@ -12,17 +13,38 @@ import GreenButton from '../../components/GreenButton';
 import ImagePickerComponent from '../../components/picture/ImagePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getPhotos } from '../../api/photoApi';
+import Fairystore from '../../store/Fairystore';
 
 const { width } = Dimensions.get('screen');
 
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
-function AddPicture() {
+function AddPicture({ route, navigation }: any) {
+  const { role, onPictureSelected } = route.params;
+  const {
+    mainImageUri,
+    mainVoiceUri,
+    rolesImageUri,
+    rolesVoiceUri,
+    narrationVoiceUri,
+    bookName,
+    selectedImageIndex,
+    setMainImageUri,
+    setMainVoiceUri,
+    setRolesImageUri,
+    setRolesVoiceUri,
+    setNarrationVoiceUri,
+    setBookName,
+    setSelectedImageIndex,
+  } = Fairystore();
   const [images, setImages] = useState<{ uri: string; selected: boolean }[]>(
     [],
   );
-  const [deleteMode, setDeleteMode] = useState(false);
+  const [selectMode, setSelecteMode] = useState(false);
+  const setSelectedImageIndexStore = Fairystore(
+    (state) => state.setSelectedImageIndex,
+  );
 
   const fetchPhotos = async () => {
     try {
@@ -49,29 +71,24 @@ function AddPicture() {
     fetchPhotos();
   }, []);
 
-  // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {
-    // 삭제 모드일 때만 선택 가능
-    if (deleteMode) {
-      setImages((images) =>
-        images.map((img, i) =>
-          i === index ? { ...img, selected: !img.selected } : img,
-        ),
-      );
+    setSelectedImageIndex(index);
+    setSelectedImageIndexStore(index);
+  };
+
+  const completeSelection = () => {
+    if (selectedImageIndex !== null) {
+      const selectedImage = images[selectedImageIndex];
+      onPictureSelected(selectedImage.uri);
+      navigation.goBack();
+    } else {
+      Alert.alert('사진을 선택해주세요.');
     }
   };
 
+  // 이미지 선택 로직
   const handleImageSelected = (uri: string) => {
     setImages((prevImages) => [...prevImages, { uri, selected: false }]);
-  };
-
-  const onDelete = () => {
-    if (!deleteMode) {
-      setDeleteMode(true); // 삭제 모드 활성화
-    } else {
-      setImages((images) => images.filter((img) => !img.selected));
-      setDeleteMode(false); // 삭제 모드 해제
-    }
   };
 
   const renderImageItem = ({
@@ -82,7 +99,7 @@ function AddPicture() {
     index: number;
   }) => (
     <TouchableOpacity
-      style={[styles.card, item.selected && styles.selected]}
+      style={[styles.card, selectedImageIndex === index && styles.selected]}
       onPress={() => toggleImageSelected(index)}
     >
       <Image source={{ uri: item.uri }} style={styles.cardImage} />
@@ -95,6 +112,7 @@ function AddPicture() {
       style={styles.ImageBackground}
     >
       <View style={styles.container}>
+        <Text>{role}의 얼굴 찾아주기</Text>
         <FlatList
           data={images}
           renderItem={renderImageItem}
@@ -104,8 +122,8 @@ function AddPicture() {
       </View>
       <View style={styles.buttonContainer}>
         <GreenButton
-          content={deleteMode ? '선택삭제' : '삭제하기'}
-          onPress={onDelete}
+          content={selectMode ? '선택완료' : '선택하기'}
+          onPress={completeSelection}
           style={styles.buttonStyle}
         />
         <ImagePickerComponent onImageSelected={handleImageSelected} />

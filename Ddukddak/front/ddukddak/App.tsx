@@ -31,9 +31,14 @@ import MakingBook from './screens/books/MakingBook';
 import LikeBooks from './screens/books/LikeBooks';
 import Intro from './screens/Welcome/IntroScreen';
 import LikeListScreen from './screens/maincharacter/LikeListScreen';
+
+import AddFairyPicture from './screens/maincharacter/AddFairyPicture';
+import AddFairyVoice from './screens/maincharacter/AddFairyVoice';
+
 import { AppInitializer } from './components/AppInitializer';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
+
 
 function LogoTitle() {
   return (
@@ -112,6 +117,8 @@ export type RootStackParamList = {
   makingBook: { bookTitle: string };
   likebooks: { bookId: string };
   likeList: undefined;
+  addfairypicture: { role: string };
+  addfairyvoice: { role: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -161,21 +168,18 @@ export default function App() {
         >
           {/* ------------------------ 렌더링 화면 ------------------------ */}
           <Stack.Screen name="mainrending" component={MainRending} />
-
           {/* ------------------------ 로그인 페이지 ------------------------ */}
           <Stack.Screen
             name="login"
             component={Login}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 회원가입 페이지 ------------------------ */}
           <Stack.Screen
             name="signup"
             component={Signup}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 인트로 페이지 ------------------------ */}
           <Stack.Screen
             name="intro"
@@ -185,7 +189,6 @@ export default function App() {
               headerRight: () => <LogoRight isHomeScreen={true} />,
             }}
           />
-
           {/* ------------------------ 메인 페이지 ------------------------ */}
           <Stack.Screen
             name="home"
@@ -195,52 +198,54 @@ export default function App() {
               headerRight: () => <LogoRight isHomeScreen={true} />,
             }}
           />
-
           {/* ------------------------ 내가 주인공 페이지 ------------------------ */}
           <Stack.Screen
             name="MainCharacterScreen"
             component={MainCharacterScreen}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 책 상세 페이지 ------------------------ */}
           <Stack.Screen name="detail" component={DetailBookScreen} />
-
           {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
           <Stack.Screen
             name="likebooks"
             component={LikeBooks}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 뚝딱대화 페이지 ------------------------ */}
           <Stack.Screen
             name="talk"
             component={TalkSceren}
             options={{ headerShown: false }}
           />
-
           {/* ------------------------ 동화뚝딱 페이지 ------------------------ */}
           <Stack.Screen
             name="fairy"
             component={FairytaleScreen}
             options={{ headerShown: false }}
           />
-
+          <Stack.Screen
+            name="addfairypicture"
+            component={AddFairyPicture}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="addfairyvoice"
+            component={AddFairyVoice}
+            options={{ headerShown: false }}
+          />
           {/* ------------------------ 사진뚝딱 페이지 ------------------------ */}
           <Stack.Screen
             name="picture"
             component={PictureScreen}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 소리뚝딱 페이지 ------------------------ */}
           <Stack.Screen
             name="voice"
             component={VoiceScreen}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 내가만든책 페이지 ------------------------ */}
           <Stack.Screen
             name="mybook"
@@ -256,10 +261,8 @@ export default function App() {
             component={MakingBook}
             options={{ headerRight: () => <LogoRight isHomeScreen={false} /> }}
           />
-
           {/* ------------------------ 소리추가 페이지 ------------------------ */}
           <Stack.Screen name="addvoice" component={AddVoiceScreen} />
-
           {/* ------------------------ 녹음 페이지 ------------------------ */}
           <Stack.Screen name="record" component={RecordScreen} />
           {/*  색칠뚝딱 페이지*/}
@@ -289,7 +292,6 @@ export default function App() {
               headerBackVisible: false,
             }}
           />
-
           <Stack.Screen
             name="coloringDetail"
             component={ColoringDetailScreen}

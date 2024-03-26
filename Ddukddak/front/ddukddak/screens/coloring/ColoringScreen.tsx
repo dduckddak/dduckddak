@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ImageBackground, Image, FlatList, ImageSourcePropType,
+  ImageBackground, Image, FlatList, ImageSourcePropType, TouchableOpacity,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -23,6 +23,8 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
                                                        }) => {
 
   const [coloringBaseList, setColoringBaseList] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
 
   useEffect(() => {
     const handleColoringScreenEnter = async () => {
@@ -31,14 +33,31 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
         setColoringBaseList(response.coloringBaseList);
       }
       console.log(response);
-    }
+    };
 
     handleColoringScreenEnter();
   }, []);
 
-  const renderItem = ({ item }: Item) => (
+  useEffect(() => {
+    console.log(selectedImage);
+  }, [selectedImage]);
+
+
+  const handleNavigateDrawing = () => {
+    if (!selectedImage) {
+      console.log('선택된 것 없음');
+      return;
+    }
+
+    navigation.navigate('coloringDraw', { uri: selectedImage });
+
+  };
+
+  const renderItem = ({ item }: { item: string }) => (
     <View style={styles.imageContainer}>
-      <Image source={{uri: item}} style={styles.image} />
+      <TouchableOpacity onPress={() => setSelectedImage(item)}>
+        <Image source={{ uri: item }} style={[styles.image, selectedImage === item ? styles.selectedImage : null]} />
+      </TouchableOpacity>
     </View>
   );
 
@@ -63,7 +82,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
         </View>
 
         <GreenButton
-          onPress={() => navigation.navigate('coloringDraw')}
+          onPress={handleNavigateDrawing}
           content="색칠하러 가기"
           style={styles.naviBtn}
         />
@@ -122,6 +141,10 @@ const styles = StyleSheet.create({
   flatList: {
     width: '100%',
     height: '100%',
+  },
+  selectedImage: {
+    borderWidth: 3,
+    borderColor: 'rgba(180, 130, 210, 0.5)',
   },
 });
 

@@ -6,17 +6,21 @@ import java.io.InputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.talk.dto.request.SttRequestDto;
@@ -25,6 +29,7 @@ import com.ssafy.back.talk.dto.response.StartTalkResponseDto;
 import com.ssafy.back.talk.dto.response.SttResponseDto;
 import com.ssafy.back.talk.dto.response.TalkResponseDto;
 import com.ssafy.back.talk.repository.TalkRepository;
+import com.ssafy.back.util.AssistantAPI;
 import com.ssafy.back.util.MakeKeyUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +42,8 @@ public class TalkServiceImpl implements TalkService {
 
 	private final TalkRepository talkRepository;
 
+	private final RedisTemplate<String, String> redisTemplate;
+
 	// 책이름을 가져오기 위해
 	// private final BookRepository bookRepository;
 
@@ -48,11 +55,11 @@ public class TalkServiceImpl implements TalkService {
 	@Value("${fast-api.url}")
 	private String FastapiURL;
 
-	@Value("${talk-ai.key}")
-	private String talkAIKey;
-
 	@Value("${eleven-labs.key}")
 	private String elevenLabsKey;
+
+	@Value("${open-ai.key}")
+	private String openAIKey;
 
 	@Override
 	public ResponseEntity<? super StartTalkResponseDto> startTalk(int bookId) {
@@ -116,57 +123,38 @@ public class TalkServiceImpl implements TalkService {
 
 	@Override
 	public ResponseEntity<? super TalkResponseDto> talk(TalkRequestDto request) {
-		logger.info("사용자의 말 : " + request.getUserScript());
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
+
+		int userSeq = customUserDetails.getUserSeq();
 
 		//gpt 답변 생성
 		String gptScript;
 
+		//사용자의 기존 쓰레드 정보를 레디스를 통해 얻어오고 없다면 생성해서 레디스에 저장
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+		String threadId = valueOperations.get(String.valueOf(userSeq));
+
+		if (threadId == null) {
+			threadId = AssistantAPI.createThread(openAIKey);
+			valueOperations.set(String.valueOf(userSeq), threadId);
+		}
+		
 		try {
-			//GPT 요청 body
-			String body = "{\n"
-				+ "  \"contents\": [\n"
-				+ "    {\n"
-				+ "      \"parts\": [\n"
-				+ "        {\n"
-				+ "          \"text\": \"input: 글자 수 30 글자 이하로만 말해줘\"\n"
-				+ "        }\n"
-				+ "      ]\n"
-				+ "    }\n"
-				+ "  ]\n"
-				+ "}";
+			AssistantAPI.sendMessage(openAIKey, threadId, request.getUserScript());
+			String runId = AssistantAPI.createRun(openAIKey, threadId, request.getBookId());
 
-			//사용자의 답변을 body에 추가
-			Gson gson = new Gson();
-			JsonObject json = gson.fromJson(body, JsonObject.class);
-			JsonArray partsArray = json.getAsJsonArray("contents").get(0).getAsJsonObject().getAsJsonArray("parts");
-			JsonObject text = new JsonObject();
-			JsonObject role = new JsonObject();
+			//답변 생성이 완료될 때 메시지를 얻는 요청을 함
+			while (true) {
+				if (AssistantAPI.checkRun(openAIKey, threadId, runId).equals("completed"))
+					break;
 
-			//테스트 코드(책 이름과 역할)
-			String bookName = "빨간 모자";
-			String roleName = "늑대";
+				java.lang.Thread.sleep(200);
+			}
 
-			role.addProperty("text", "이제부터" + bookName + "의" + roleName + "역할을 맡아서 나에게 대답해줘");
-			text.addProperty("text", request.getUserScript());
-			partsArray.add(role);
-			partsArray.add(text);
-
-			HttpResponse<String> response = Unirest.post(
-					"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent")
-				.header("Content-Type", "application/json")
-				.queryString("key", talkAIKey)
-				.body(gson.toJson(json))
-				.asString();
-
-			//GPT 응답에서 답변을 추출
-			json = JsonParser.parseString(response.getBody()).getAsJsonObject();
-			partsArray = json.getAsJsonArray("candidates")
-				.get(0)
-				.getAsJsonObject()
-				.getAsJsonObject("content")
-				.getAsJsonArray("parts");
-
-			gptScript = partsArray.get(0).getAsJsonObject().get("text").getAsString();
+			gptScript = AssistantAPI.getMessage(openAIKey, threadId);
 
 			logger.info("Gpt 답변 : " + gptScript);
 

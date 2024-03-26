@@ -23,7 +23,6 @@ type UserInfo = {
   sex?: string;
 };
 
-
 interface LoginResponse {
   message: string;
   accessToken?: string;
@@ -68,13 +67,14 @@ export const checkUserIdDuplicate = async (
   userId: string,
 ): Promise<ApiResponse> => {
   try {
-    const response = await apiClient.get<ApiResponse>('/api/v1/auth/idcheck', {
-      params: { userId },
+    const response = await apiClient.post<ApiResponse>('/api/v1/auth/idcheck', {
+      userId: userId,
     });
     return response.data;
   } catch (error) {
+    console.log(error);
     if (isAxiosError(error) && error.response) {
-      throw error.response.data;
+      return error.response.data;
     }
     throw error;
   }
@@ -182,7 +182,6 @@ export const logout = async (): Promise<ApiResponse> => {
     throw error;
   }
 };
-
 
 /**
  * 유저정보 받아오기

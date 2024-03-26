@@ -11,6 +11,7 @@ import {
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }

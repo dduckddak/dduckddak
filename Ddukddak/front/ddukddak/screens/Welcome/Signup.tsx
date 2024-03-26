@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group';
-import { signUp } from '../../api/userApi';
+import { signUp, checkUserIdDuplicate } from '../../api/userApi';
 
 interface SignUpState {
   userId: string;
@@ -21,6 +21,7 @@ interface SignUpState {
   gender: string;
   name: string;
   birthDate: string;
+  isUserIdValid: boolean; // 아이디 유효성 검사 결과를 나타내는 상태
 }
 
 const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -31,6 +32,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
     gender: '',
     name: '',
     birthDate: '',
+    isUserIdValid: true, // 기본값은 true로 설정
   });
   const radioButtons: RadioButtonProps[] = [
     { id: '1', label: '남자아이', value: 'male' },
@@ -38,43 +40,79 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
   ];
   const [selectedId, setSelectedId] = useState<string | undefined>();
 
-  // 사용자 입력 처리 함수
+  useEffect(() => {
+    // userId가 변경될 때마다 아이디 중복 검사!!
+    checkUserId();
+  }, [signUpState.userId]);
+
   const handleInputChange = (name: keyof SignUpState, value: string) => {
     setSignUpState({ ...signUpState, [name]: value });
+    if (name === 'userId') {
+      setSignUpState((prevState) => ({
+        ...prevState,
+        isUserIdValid: true, // userId가 변경될 때마다 유효성 검사 결과를 초기화
+      }));
+    }
   };
 
-  // // onPress에서 선택된 라디오 버튼의 value를 직접 받는 경우의 처리
-  // const handleGenderSelect = (selectedValue: string) => {
-  //   setSignUpState((prevState) => ({ ...prevState, gender: selectedValue }));
-  // };
+  const checkUserId = async () => {
+    const { userId } = signUpState;
+    if (!userId) return; // userId가 비어있으면 검사하지 않음
+    try {
+      const duplicatedres = await checkUserIdDuplicate(userId);
+      if (!(duplicatedres.message === 'Success.')) {
+        setSignUpState((prevState) => ({
+          ...prevState,
+          isUserIdValid: false, // 아이디가 중복되면 유효성 검사 결과를 false로 변경
+        }));
+      }
+    } catch (error) {
+      console.log('error', error);
+      // 네트워크 오류 등으로 인한 중복 확인 실패 시
+      Alert.alert(
+        '⚠',
+        '아이디 중복 확인을 할 수 없습니다. 나중에 다시 시도해주세요.',
+      );
+    }
+  };
 
   const validateInput = (): boolean => {
-    const { userId, password, confirmPassword, gender, name, birthDate } =
-      signUpState;
+    const { userId, password, confirmPassword, name, birthDate } = signUpState;
     const idRegex = /^[a-zA-Z0-9]{6,20}$/;
+    const pwRegex = /^.{6,20}$/;
 
     if (!idRegex.test(userId)) {
       Alert.alert(
-        '⚠',
+        '아이디 오류',
         '아이디는 한글이나 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',
       );
       return false;
     }
-    const pwRegex = /^.{6,20}$/;
+
     if (!pwRegex.test(password)) {
-      Alert.alert('⚠', '비밀번호는 최소 6자에서 최대 20자여야 합니다.');
+      Alert.alert(
+        '비밀번호 오류',
+        '비밀번호는 최소 6자에서 최대 20자여야 합니다.',
+      );
       return false;
     }
+
     if (password !== confirmPassword) {
-      Alert.alert('⚠', '비밀번호가 일치하지 않습니다. 다시 입력해주세요.');
+      Alert.alert(
+        '비밀번호 오류',
+        '비밀번호가 일치하지 않습니다. 다시 입력해주세요.',
+      );
       return false;
     }
+
     if (name === '' || birthDate === '') {
-      Alert.alert('⚠', '모든 필드를 채워주세요.');
+      Alert.alert('필드 오류', '모든 필드를 채워주세요.');
       return false;
     }
+
     return true;
   };
+
   const handleSignUp = async () => {
     if (validateInput()) {
       try {
@@ -93,7 +131,6 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
       }
     }
   };
-
   return (
     <SafeAreaView style={styles.maxcontainer}>
       <ImageBackground
@@ -134,7 +171,10 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                 <Text style={[styles.text, { marginTop: 6 }]}>ID</Text>
                 <TextInput
                   placeholder="ID를 입력해주세요"
-                  style={styles.inputContainer}
+                  style={[
+                    styles.inputContainer,
+                    !signUpState.isUserIdValid && styles.inputContainerError,
+                  ]}
                   value={signUpState.userId}
                   onChangeText={(text) => handleInputChange('userId', text)}
                 />
@@ -152,7 +192,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
               <View style={styles.flexContainer}>
                 <Text style={[styles.text, { marginTop: 6 }]}>PW 확인</Text>
                 <TextInput
-                  placeholder="비밀번호 확인"
+                  placeholder="비밀번호 확인을 위해 입력해주세요"
                   style={styles.inputContainer}
                   value={signUpState.confirmPassword}
                   onChangeText={(text) =>
@@ -224,6 +264,10 @@ const styles = StyleSheet.create({
     height: 50,
     paddingLeft: 15,
     borderRadius: 5,
+  },
+  inputContainerError: {
+    borderColor: 'red',
+    borderWidth: 1,
   },
   inputText: {
     fontSize: 25,

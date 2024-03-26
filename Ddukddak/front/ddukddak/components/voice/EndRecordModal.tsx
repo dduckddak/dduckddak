@@ -21,7 +21,6 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
   const [voicename, setVoicename] = useState('');
 
   const handleUploadVoice = async () => {
-    // 여기서 recordingUri를 File 객체로 변환하는 로직이 필요할 수 있습니다.
     const voiceFile: any = {
       uri: recordingUri,
       type: 'audio/mp3', // 적절한 MIME 타입 지정

@@ -29,7 +29,7 @@ export const getPhotos = async (): Promise<PhotoApiResponse> => {
 };
 
 interface AddPhotoParams {
-  photoFile: string;
+  photoFile: File;
 }
 
 /**

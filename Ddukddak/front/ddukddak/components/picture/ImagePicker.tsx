@@ -33,10 +33,17 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
 
   // 이미지를 서버로 업로드
   const uploadImage = async (photoUri: string) => {
+    // console.log(photoUri);
+    const imageName = 'defaultName.jpg';
+    const photoFile: any = {
+      uri: photoUri,
+      type: 'image/jpeg', // 적절한 MIME 타입 지정
+      name: imageName, // 파일 이름 지정
+    };
     try {
-      // addPhoto 함수의 인자로 파일의 URI를 직접 전달
-      const response = await addPhoto({ photoFile: photoUri });
-      Alert.alert('Upload Success', 'Photo uploaded successfully!');
+      const response = await addPhoto({ photoFile: photoFile as File });
+      console.log(response);
+      Alert.alert('Upload Success', response.message);
     } catch (error) {
       console.error(error);
       Alert.alert('Upload Failed', 'Failed to upload photo.');
@@ -48,7 +55,7 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
     const hasPermission = await getPermission('library');
     if (hasPermission) {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
@@ -65,7 +72,7 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
     const hasPermission = await getPermission('camera');
     if (hasPermission) {
       let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,

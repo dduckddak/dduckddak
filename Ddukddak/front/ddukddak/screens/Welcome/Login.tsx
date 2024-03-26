@@ -66,17 +66,16 @@ const Login: React.FC<Props> = ({ navigation }) => {
 
       console.log('로그인 성공:', result);
 
-      const userInfoRes = await getUserInfo();
-      const userInfo = {
-        birth: userInfoRes.birth,
-        sex: userInfoRes.sex,
-        userName: userInfoRes.userName,
-      };
-      useUserStore.getState().updateUserData(userInfo);
-
 
       if (typeof accessToken === 'string') {
         await SecureStore.setItemAsync('accessToken', accessToken);
+        const userInfoRes = await getUserInfo();
+        const userInfo = {
+          birth: userInfoRes.birth,
+          sex: userInfoRes.sex,
+          userName: userInfoRes.userName,
+        };
+        useUserStore.getState().updateUserData(userInfo);
       }
       if (typeof refreshToken === 'string') {
         await SecureStore.setItemAsync('refreshToken', refreshToken);

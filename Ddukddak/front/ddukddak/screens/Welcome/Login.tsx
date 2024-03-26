@@ -15,9 +15,10 @@ import {
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
-import { login } from '../../api/userApi';
+import { getUserInfo, login } from '../../api/userApi';
 
 import * as SecureStore from 'expo-secure-store';
+import { useUserStore } from '../../store/userStore';
 
 type Props = {
   navigation: NavigationProp<any>;
@@ -61,10 +62,20 @@ const Login: React.FC<Props> = ({ navigation }) => {
         Alert.alert('로그인 실패', '로그인 응답에서 토큰을 받지 못했습니다.');
         return;
       }
+
+
       console.log('로그인 성공:', result);
+
 
       if (typeof accessToken === 'string') {
         await SecureStore.setItemAsync('accessToken', accessToken);
+        const userInfoRes = await getUserInfo();
+        const userInfo = {
+          birth: userInfoRes.birth,
+          sex: userInfoRes.sex,
+          userName: userInfoRes.userName,
+        };
+        useUserStore.getState().updateUserData(userInfo);
       }
       if (typeof refreshToken === 'string') {
         await SecureStore.setItemAsync('refreshToken', refreshToken);

@@ -1,9 +1,7 @@
 import React from 'react';
 import {
   View,
-  Text,
   Pressable,
-  Button,
   Image,
   ImageBackground,
   StyleSheet,
@@ -15,6 +13,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
+
 const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   return (
     <ImageBackground

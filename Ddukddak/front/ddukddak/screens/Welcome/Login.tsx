@@ -15,25 +15,24 @@ import {
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
-import { login } from '../../api/userApi';
+import { getUserInfo, login } from '../../api/userApi';
 
 import * as SecureStore from 'expo-secure-store';
+import { useUserStore } from '../../store/userStore';
 
 type Props = {
   navigation: NavigationProp<any>;
 };
 
 const Login: React.FC<Props> = ({ navigation }) => {
-  const [userId, setUserId] = useState<string>('');
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [isValidPassword, setIsValidPassword] = useState(false);
+  const [idInput, setIdInput] = useState('');
+  const [pwdInput, setPwdInput] = useState('');
 
   const validatePassword = (): boolean => {
     const idRegex = /^[a-zA-Z0-9]{6,20}$/;
     const pwRegex = /^.{6,20}$/;
 
-    if (!idRegex.test(id)) {
+    if (!idRegex.test(idInput)) {
       Alert.alert(
         '오류',
         'ID는 한글과 특수문자를 포함할 수 없으며, 최소 6자에서 최대 20자여야 합니다.',
@@ -41,7 +40,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
       return false;
     }
 
-    if (!pwRegex.test(password)) {
+    if (!pwRegex.test(pwdInput)) {
       Alert.alert('오류', '비밀번호는 최소 6자에서 최대 20자여야 합니다.');
       return false;
     }
@@ -51,32 +50,64 @@ const Login: React.FC<Props> = ({ navigation }) => {
 
   const handlePress = async () => {
     // 비밀번호 및 ID 유효성 검사
-    if (validatePassword()) {
-      try {
-        const result = await login(id, password);
-        const { accessToken, refreshToken } = result;
+    if (!validatePassword()) {
+      return;
+    }
 
-        if (!('accessToken' in result) || !('refreshToken' in result)) {
-          Alert.alert('로그인 실패', '로그인 응답에서 토큰을 받지 못했습니다.');
-          return;
-        }
-        console.log('로그인 성공:', result);
+    try {
+      const result = await login(idInput, pwdInput);
+      const { accessToken, refreshToken, firstLogin } = result;
 
-        if (typeof accessToken === 'string') {
-          await SecureStore.setItemAsync('accessToken', accessToken);
-        }
-        if (typeof refreshToken === 'string') {
-          await SecureStore.setItemAsync('refreshToken', refreshToken);
-        }
-
-        navigation.navigate('intro'); // 로그인 성공 시 홈 화면으로 이동
-      } catch (error) {
-        Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
-        console.error('로그인 에러:', error);
+      if (!('accessToken' in result) || !('refreshToken' in result)) {
+        Alert.alert('로그인 실패', '로그인 응답에서 토큰을 받지 못했습니다.');
+        return;
       }
+
+
+      console.log('로그인 성공:', result);
+
+      const userInfoRes = await getUserInfo();
+      const userInfo = {
+        birth: userInfoRes.birth,
+        sex: userInfoRes.sex,
+        userName: userInfoRes.userName,
+      };
+      useUserStore.getState().updateUserData(userInfo);
+
+
+      if (typeof accessToken === 'string') {
+        await SecureStore.setItemAsync('accessToken', accessToken);
+      }
+      if (typeof refreshToken === 'string') {
+        await SecureStore.setItemAsync('refreshToken', refreshToken);
+      }
+
+      // 로그인 성공했을 떄, 첫 로그인이면 선호 책을 조사하는 페이지로 그 이외이면 메인 페이지로 이동
+      if (firstLogin) {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'likebooks' }],
+        });
+      } else {
+        // 만약 인트로를 본 적 있는 디바이스라면 바로 main으로 아니라면 intro로 보내기
+        const introChecked = await SecureStore.getItemAsync('introChecked');
+        if (introChecked) {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          });
+        } else {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'intro' }],
+          });
+        }
+      }
+    } catch (error) {
+      Alert.alert('로그인 실패', 'ID나 비밀번호를 확인해주세요.');
+      console.error('로그인 에러:', error);
     }
   };
-  // 비밀번호 유효성 검사
 
   return (
     <SafeAreaView style={styles.container}>
@@ -96,8 +127,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
                 <TextInput
                   placeholder="아이디를 입력해주세요"
                   style={styles.inputContainer}
-                  value={id}
-                  onChangeText={(e) => setId(e)}
+                  value={idInput}
+                  onChangeText={(e) => setIdInput(e)}
                   accessibilityLabel="아이디 입력"
                 />
               </View>
@@ -106,8 +137,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
                 <TextInput
                   placeholder="비밀번호를 입력해주세요"
                   style={styles.inputContainer}
-                  value={password}
-                  onChangeText={(e) => setPassword(e)}
+                  value={pwdInput}
+                  onChangeText={(e) => setPwdInput(e)}
                   secureTextEntry={true}
                 />
               </View>

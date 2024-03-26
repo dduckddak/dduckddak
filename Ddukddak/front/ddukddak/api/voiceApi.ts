@@ -29,7 +29,7 @@ export const getVoices = async (): Promise<ApiResponse> => {
 };
 
 interface AddVoiceParams {
-  voiceFile: string;
+  voiceFile: File;
   voiceName: string;
 }
 

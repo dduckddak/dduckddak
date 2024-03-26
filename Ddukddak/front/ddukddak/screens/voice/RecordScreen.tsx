@@ -110,12 +110,6 @@ function RecordScreen() {
     setModalVisible(false); // 모달 닫기
   };
 
-  const handleCompletePress = () => {
-    // 여기에 완료 버튼이 눌렸을 때의 로직
-    console.log('완료 버튼이 눌렸습니다.');
-    setModalVisible(false);
-  };
-
   const recordingStarted = recording !== undefined;
 
   return (
@@ -160,7 +154,6 @@ function RecordScreen() {
           visible={modalVisible}
           onClose={handleModalClose}
           recordingUri={voiceUri} // 녹음된 URI를 넘깁니다
-          CompletePress={handleCompletePress}
         />
       </View>
     </ImageBackground>

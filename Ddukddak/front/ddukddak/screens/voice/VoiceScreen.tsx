@@ -7,9 +7,10 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
-import { getVoices, previewVoice } from '../../api/voiceApi';
+import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
 
 interface Voice {
@@ -68,6 +69,19 @@ function VoiceScreen() {
     }
   };
 
+  // 삭제 기능
+  const deleteVoice = async (voiceId: number) => {
+    try {
+      const response = await deleteVoices({ deleteVoiceIds: [voiceId] });
+      Alert.alert('삭제 성공', '목소리가 성공적으로 삭제되었습니다.');
+      // 삭제 성공 후, 삭제된 목소리를 목록에서 제거
+      setVoiceData(voiceData.filter((voice) => voice.voiceId !== voiceId));
+    } catch (error: any) {
+      console.error('Error deleting voice:', error.message);
+      Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   const renderItem = ({ item }: any) => (
     <TouchableOpacity onPress={() => console.log(item.voiceName)}>
       <View style={styles.card}>
@@ -76,7 +90,7 @@ function VoiceScreen() {
           <TouchableOpacity onPress={() => preview(item.voiceId)}>
             <Text style={styles.buttonText}>미리듣기</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log('삭제 버튼')}>
+          <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
             <Text style={styles.buttonText}>삭제</Text>
           </TouchableOpacity>
         </View>
@@ -97,7 +111,6 @@ function VoiceScreen() {
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: 'center',
-          alignItems: 'center',
         }}
       />
       <GreenButton

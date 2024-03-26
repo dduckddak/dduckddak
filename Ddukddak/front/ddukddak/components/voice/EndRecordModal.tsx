@@ -9,21 +9,38 @@ import {
   Alert,
 } from 'react-native';
 import SkyButton from '../SkyButton';
+import { addVoice } from '../../api/voiceApi';
 
 interface VoiceModalProps {
   visible: boolean;
   onClose: () => void;
   recordingUri: string | null;
-  CompletePress: () => void;
 }
 
-function EndRecordModal({
-  visible,
-  onClose,
-  recordingUri,
-  CompletePress,
-}: VoiceModalProps) {
+function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
   const [voicename, setVoicename] = useState('');
+
+  const handleUploadVoice = async () => {
+    // 여기서 recordingUri를 File 객체로 변환하는 로직이 필요할 수 있습니다.
+    // React Native에서는 Blob 또는 기타 방법을 사용해야 할 수 있습니다.
+    const voiceFile: any = {
+      uri: recordingUri,
+      type: 'audio/mp3', // 적절한 MIME 타입 지정
+      name: `${voicename}.mp3`, // 파일 이름 지정
+    };
+
+    try {
+      const response = await addVoice({
+        voiceFile: voiceFile as File,
+        voiceName: voicename,
+      });
+      Alert.alert('성공', '목소리가 성공적으로 업로드되었습니다.');
+      onClose(); // 성공 후 모달 닫기
+    } catch (error) {
+      console.error(error);
+      Alert.alert('업로드 실패', '업로드 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <>
@@ -45,7 +62,7 @@ function EndRecordModal({
             />
             <SkyButton
               content="전송하기"
-              onPress={CompletePress}
+              onPress={handleUploadVoice}
               style={styles.button}
             />
           </View>

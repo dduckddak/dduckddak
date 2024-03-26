@@ -59,7 +59,7 @@ const BookSelectionScreen = () => {
   };
 
   const goToNextStep = async () => {
-    if (selectedBooks.length > 0) {
+    if (selectedBooks.length > 1) {
       try {
         const params = {
           choiceBookList: selectedBooks,
@@ -71,10 +71,15 @@ const BookSelectionScreen = () => {
       } catch (error) {
         console.error('에러 발생:', error);
       }
+    } else if (selectedBooks.length === 1) {
+      // 선택된 책이 1개인 경우
+      alert('적어도 2개 이상의 책을 선택해야 합니다.');
     } else {
-      alert('적어도 1개 이상의 책을 선택해야 합니다.');
+      // 선택된 책이 없는 경우
+      alert('책을 선택해주세요.');
     }
   };
+
   const renderItem = ({ item }: { item: Book }) => (
     <TouchableOpacity
       style={[
@@ -102,6 +107,7 @@ const BookSelectionScreen = () => {
           numColumns={4}
           contentContainerStyle={styles.flatListContent}
         />
+        <Text style={styles.requiretext}> 2개 이상 선택해주세요 </Text>
         <GreenButton
           content="선택완료"
           onPress={goToNextStep}
@@ -129,10 +135,19 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginTop: 20,
   },
+  requiretext: {
+    textAlign: 'center',
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 25,
+    marginTop: 15,
+    marginBottom: 0,
+  },
   flatListContent: {
     alignItems: 'center',
     // margin: 10,
+    paddingTop: 0,
     paddingBottom: 40,
+    marginTop: 0,
   },
   bookItem: {
     margin: 10,
@@ -163,6 +178,7 @@ const styles = StyleSheet.create({
   },
   green: {
     margin: 20,
+    marginTop: 10,
     width: Dimensions.get('screen').width * 0.15,
     alignSelf: 'center',
   },

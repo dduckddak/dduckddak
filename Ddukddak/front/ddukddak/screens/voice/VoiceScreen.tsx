@@ -8,10 +8,12 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  Image,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
+import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
 
 interface Voice {
   voiceId: number;
@@ -85,14 +87,25 @@ function VoiceScreen() {
   const renderItem = ({ item }: any) => (
     <TouchableOpacity onPress={() => console.log(item.voiceName)}>
       <View style={styles.card}>
-        <View style={styles.container}>
-          <Text style={styles.cardTitle}>{item.voiceName}</Text>
-          <TouchableOpacity onPress={() => preview(item.voiceId)}>
-            <Text style={styles.buttonText}>미리듣기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
-            <Text style={styles.buttonText}>삭제</Text>
-          </TouchableOpacity>
+        <View style={styles.container1}>
+          <View style={styles.textContainer}>
+            <Text style={styles.cardTitle}>{item.voiceName}</Text>
+          </View>
+
+          <View style={styles.container2}>
+            <TouchableOpacity
+              onPress={() => preview(item.voiceId)}
+              style={styles.prelisten}
+            >
+              <Text style={styles.buttonText}>미리듣기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
+              <Image
+                source={require('../../assets/images/Trash.png')}
+                style={styles.trash}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -114,7 +127,8 @@ function VoiceScreen() {
         }}
       />
       <GreenButton
-        content="추가하기"
+        content="목소리 추가하기"
+        style={{ width: 220, paddingBottom: 40 }}
         onPress={() => navigation.navigate('addvoice' as never)}
       />
     </ImageBackground>
@@ -124,40 +138,60 @@ function VoiceScreen() {
 export default VoiceScreen;
 
 const styles = StyleSheet.create({
+  prelisten: {
+    backgroundColor: '#40AF91',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 120,
+    height: 50,
+    borderRadius: 5,
+  },
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  container: {
-    flex: 1,
+  container1: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
   },
+  textContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container2: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end', // 가로로 오른쪽 정렬
+    alignItems: 'center',
+    gap: 10, //미리듣기랑 쓰레기통 사이 간격
+  },
   card: {
     backgroundColor: '#B7E29B',
-    display: 'flex',
-    width: 400,
-    margin: 10,
-    padding: 20,
-    borderRadius: 10,
-    elevation: 5,
+    width: 500,
+    margin: 30,
+    padding: 15,
+    borderRadius: 5,
+    elevation: 15,
+    shadowColor: '#024e34',
+    shadowOffset: { width: 2, height: 2 },
+    borderColor: '#038a5b',
+    borderWidth: 3,
   },
   cardTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontSize: 35,
+    fontFamily: 'im-hyemin-bold',
   },
   cardPreview: {
     fontSize: 16,
   },
   buttonText: {
-    fontSize: 16,
-    color: 'blue',
-    textDecorationLine: 'underline',
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 20,
+    color: 'white',
   },
+  trash: { width: 60, height: 60 },
 });

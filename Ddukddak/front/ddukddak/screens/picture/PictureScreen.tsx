@@ -12,6 +12,7 @@ import GreenButton from '../../components/GreenButton';
 import ImagePickerComponent from '../../components/picture/ImagePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getPhotos, deletePhotos } from '../../api/photoApi';
+import EmptyListComponent from '../../components/EmptyListComponent';
 
 const { width } = Dimensions.get('screen');
 
@@ -129,6 +130,7 @@ function PictureScreen() {
           renderItem={renderImageItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
+          ListEmptyComponent={<EmptyListComponent />}
         />
       </View>
       <View style={styles.buttonContainer}>

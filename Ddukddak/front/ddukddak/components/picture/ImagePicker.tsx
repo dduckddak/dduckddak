@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Platform, Alert, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Camera } from 'expo-camera';
 import GreenButton from '../GreenButton';
 import PictureModal from './PictureModal';
 import { addPhoto } from '../../api/photoApi';
@@ -34,11 +35,10 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
   // 이미지를 서버로 업로드
   const uploadImage = async (photoUri: string) => {
     // console.log(photoUri);
-    const imageName = 'defaultName.jpg';
     const photoFile: any = {
       uri: photoUri,
       type: 'image/jpeg', // 적절한 MIME 타입 지정
-      name: imageName, // 파일 이름 지정
+      name: `upload_${Date.now()}.jpg`, // 파일 이름 지정
     };
     try {
       const response = await addPhoto({ photoFile: photoFile as File });

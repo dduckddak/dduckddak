@@ -18,24 +18,10 @@ import CreationModal from '../../components/createBook/renderCreationModal';
 import Fairystore from '../../store/Fairystore';
 
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
-  const {
-    mainImageUri,
-    mainVoiceUri,
-    rolesImageUri,
-    rolesVoiceUri,
-    narrationVoiceUri,
-    bookName,
-    setMainImageUri,
-    setMainVoiceUri,
-    setRolesImageUri,
-    setRolesVoiceUri,
-    setNarrationVoiceUri,
-    setBookName,
-  } = Fairystore();
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
     main: { photo: null as string | null, voice: null as string | null },
-    roles: { photo: null as string | null, voice: null as string | null },
+    sub: { photo: null as string | null, voice: null as string | null },
     narration: { voice: null as string | null },
     bookName: '',
   });
@@ -44,6 +30,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [modalVisible, setModalVisible] = useState(false);
   // 다 만들었을때 모달
   const [creationModalVisible, setCreationModalVisible] = useState(false);
+  const [bookName, setBookName] = useState('');
 
   useEffect(() => {
     const backAction = () => {
@@ -60,6 +47,25 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     return () => backHandler.remove(); // 컴포넌트가 unmount 될 때 이벤트 제거
   }, []);
 
+  // const sendData = async () => {
+  //   const payload = {
+  //     bookId: 0, // bookId는 예시 값입니다. 실제 애플리케이션의 요구사항에 따라 변경해야 할 수 있습니다.
+  //     makeBookTitle: bookName,
+  //     mainVoice: mainVoiceUri, // 여기서는 URI를 보내고 있지만, 실제로는 서버에서 요구하는 형식에 맞게 변환할 필요가 있을 수 있습니다.
+  //     mainPhoto: mainImageUri,
+  //     subVoice: rolesVoiceUri,
+  //     subPhoto: rolesImageUri,
+  //     narration: narrationVoiceUri,
+  //   };
+
+  //   try {
+  //     const response = await axios.post('/api/v1/make-books', payload);
+  //     console.log('Success:', response.data);
+  //   } catch (error) {
+  //     console.error('Error sending data:', error);
+  //   }
+  // };
+
   const closeModal = () => {
     setModalVisible(false); // 모달 닫기
     navigation.goBack(); // 뒤로가기
@@ -68,8 +74,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     setData((prevData) => ({
       ...prevData,
       main: { ...prevData.main, photo: uri },
-      roles: { ...prevData.roles, voice: uri },
-      narration: { ...prevData.roles, voice: uri },
+      sub: { ...prevData.sub, voice: uri },
+      narration: { ...prevData.narration, voice: uri },
       bookName: '',
     }));
   };
@@ -82,7 +88,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         if (role === '주인공') {
           newData.main.photo = uri;
         } else if (role === '역할1') {
-          newData.roles.photo = uri; // 'roles' 구조에 맞게 조정이 필요할 수 있음
+          newData.sub.photo = uri; // 'roles' 구조에 맞게 조정이 필요할 수 있음
         }
         // 여기에 다른 역할에 대한 처리를 추가할 수 있습니다.
         return newData;
@@ -206,14 +212,24 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
               <GreenButton
                 onPress={handlePreviousStep}
                 content="이전"
-                style={{ width: 100, height: 80, marginTop: 10 }}
+                style={{
+                  width: 100,
+                  height: 80,
+                  marginTop: 10,
+                  marginRight: 30,
+                }}
               />
             )}
             {currentStep < 4 && (
               <GreenButton
                 onPress={handleNextStep}
                 content="다 찾았어요"
-                style={{ width: 250, height: 80, marginTop: 10 }}
+                style={{
+                  width: 250,
+                  height: 80,
+                  marginTop: 10,
+                  marginRight: 30,
+                }}
               />
             )}
           </View>
@@ -223,7 +239,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              책 만들기를 그만 하시겠습니까 ?
+              책 만들기를 그만 하시겠습 니까 ?
             </Text>
             <View style={styles.buttonContainer}>
               <SkyButton

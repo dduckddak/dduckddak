@@ -24,6 +24,16 @@ interface MakeBookDetailData {
   bookDetail: PageData[];
 }
 
+interface MakeBookRequest {
+  bookId: number;
+  makeBookTitle: string;
+  mainVoice: number;
+  mainPhoto: number;
+  subVoice: number;
+  subPhoto: number;
+  narration: number;
+}
+
 type MakeBookDetailResponse = ApiResponse & MakeBookDetailData;
 
 /**
@@ -40,6 +50,31 @@ export const getMakeBookDetail = async (
   try {
     const response = await apiClient.get<MakeBookDetailResponse>(
       `/api/v1/make-books/${makeBookId}`,
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};
+
+/**
+ * 동화뚝딱 생성
+ * @remarks
+ * POST 요청을 '/api/v1/make-books' 엔드포인트에 보냅니다. 성공시 메시지를 반환합니다.
+ * @param {MakeBookRequest} params 화뚝딱의 ID들을 담은 배열
+ * @returns {Promise<ApiResponse>} "Success." 메시지를 반환합니다.
+ * @throws 400 "요청 받아야할 값이 없음" 또는 401 "토큰인증 실패." 또는 403 "RefreshToken error.", 410 "FastAPI" 오류를 반환할 수 있습니다.
+ */
+export const postMakeBook = async (
+  params: MakeBookRequest,
+): Promise<ApiResponse> => {
+  try {
+    const response = await apiClient.post<ApiResponse>(
+      '/api/v1/make-books',
+      params,
     );
     return response.data;
   } catch (error) {

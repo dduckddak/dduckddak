@@ -88,7 +88,7 @@ function AddVoice({ route, navigation }: any) {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
-      <Text>{role}의 목소리 찾아주기</Text>
+      <Text style={styles.titleText}>{role}의 목소리 찾아주기</Text>
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -146,5 +146,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'blue',
     textDecorationLine: 'underline',
+  },
+  titleText: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 50,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

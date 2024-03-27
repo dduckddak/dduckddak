@@ -11,6 +11,7 @@ import {
 import SkyButton from '../SkyButton';
 import { addVoice } from '../../api/voiceApi';
 
+import { useNavigation } from '@react-navigation/native';
 interface VoiceModalProps {
   visible: boolean;
   onClose: () => void;
@@ -18,6 +19,7 @@ interface VoiceModalProps {
 }
 
 function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
+  const navigation = useNavigation();
   const [voicename, setVoicename] = useState('');
 
   const handleUploadVoice = async () => {
@@ -40,6 +42,7 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
           onPress: () => {
             setVoicename(''); // 입력 초기화
             onClose(); // 모달 닫기
+            navigation.navigate('home' as never);
           },
         },
       ]); // 성공 후 모달 닫기
@@ -60,7 +63,7 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
         <Pressable style={styles.background} onPress={onClose}>
           <View style={styles.modalBox}>
             <Text style={styles.text}>고생했어!!</Text>
-            <Text style={styles.text}>누구의 목소리일까??</Text>
+            <Text style={styles.text}>누구의 목소리야??</Text>
             <TextInput
               style={styles.input}
               onChangeText={setVoicename}
@@ -90,7 +93,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalBox: {
-    width: '80%',
+    width: '70%',
+    height: '65%',
     backgroundColor: '#2B98BB',
     borderRadius: 10,
     elevation: 2,
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#fff',
-    width: '60%',
+    width: '80%',
     padding: 20,
     margin: 20,
     fontSize: 20,

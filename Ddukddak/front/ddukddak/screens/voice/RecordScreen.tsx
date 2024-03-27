@@ -148,7 +148,7 @@ function RecordScreen() {
         <GreenButton
           content={recording ? '녹음 종료' : '녹음 시작'}
           onPress={recording ? stopRecording : startRecording}
-          style={{ width: '15%', margin: 20 }}
+          style={{ width: '15%', margin: 70, marginBottom: -15 }}
         />
         <EndRecordModal
           visible={modalVisible}
@@ -178,19 +178,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    marginBottom: 20,
   },
   scriptTextContainer: {
     width: '70%',
-    height: '70%',
+    height: '85%',
     backgroundColor: '#5FB0CC',
-    borderRadius: 10,
+    borderRadius: 15,
     justifyContent: 'center',
   },
   counterText: {
-    fontSize: 20,
+    fontSize: 30,
     fontFamily: 'im-hyemin-bold',
-    margin: 10,
   },
   text: {
     fontSize: 36,

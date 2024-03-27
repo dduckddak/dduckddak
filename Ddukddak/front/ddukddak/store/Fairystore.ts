@@ -24,7 +24,7 @@ interface StoreState {
   setSelectedImageIndex: (index: number | null) => void;
 }
 
-// useStore 정의
+// Fairystore 정의
 const Fairystore = create<StoreState>((set) => ({
   mainImageUri: null,
   mainVoiceUri: null,

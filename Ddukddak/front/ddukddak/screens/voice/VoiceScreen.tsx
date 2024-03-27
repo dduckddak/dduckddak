@@ -13,7 +13,7 @@ import {
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
-import { green } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+import EmptyListComponent from '../../components/EmptyListComponent';
 
 interface Voice {
   voiceId: number;
@@ -116,6 +116,7 @@ function VoiceScreen() {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      {}
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -125,6 +126,7 @@ function VoiceScreen() {
           flexGrow: 1,
           justifyContent: 'center',
         }}
+        ListEmptyComponent={<EmptyListComponent />}
       />
       <GreenButton
         content="목소리 추가하기"

@@ -25,16 +25,22 @@ function AddPicture({ route, navigation }: any) {
   const {
     mainImageUri,
     mainVoiceUri,
+    mainVoiceName,
     rolesImageUri,
     rolesVoiceUri,
+    rolesVoiceName,
     narrationVoiceUri,
+    narrationVoiceName,
     bookName,
     selectedImageIndex,
     setMainImageUri,
     setMainVoiceUri,
+    setMainVoiceName,
     setRolesImageUri,
     setRolesVoiceUri,
+    setRolesVoiceName,
     setNarrationVoiceUri,
+    setNarrationVoiceName,
     setBookName,
     setSelectedImageIndex,
   } = Fairystore();
@@ -112,7 +118,7 @@ function AddPicture({ route, navigation }: any) {
       style={styles.ImageBackground}
     >
       <View style={styles.container}>
-        <Text>{role}의 얼굴 찾아주기</Text>
+        <Text style={styles.titleText}>{role}의 얼굴 찾아주기</Text>
         <FlatList
           data={images}
           renderItem={renderImageItem}
@@ -176,5 +182,11 @@ const styles = StyleSheet.create({
   selected: {
     borderColor: 'blue',
     borderWidth: 2,
+  },
+  titleText: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 50,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });

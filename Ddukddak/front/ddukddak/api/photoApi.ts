@@ -51,6 +51,11 @@ export const addPhoto = async (
     const response = await apiClient.post<PhotoApiResponse>(
       '/api/v1/photos',
       formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
     console.log(response.data);
     return response.data;
@@ -61,37 +66,6 @@ export const addPhoto = async (
     throw error;
   }
 };
-
-// interface AddPhotoParams {
-//   photoFile: String;
-// }
-
-// export const addPhoto = async (
-//   params: AddPhotoParams,
-// ): Promise<PhotoApiResponse> => {
-//   const photoData = {
-//     base64: params.photoFile,
-//   };
-
-//   try {
-//     const response = await apiClient.post<PhotoApiResponse>(
-//       '/api/v1/photos',
-//       JSON.stringify(photoData),
-//       {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       },
-//     );
-//     console.log(response.data);
-//     return response.data;
-//   } catch (error) {
-//     if (isAxiosError(error) && error.response) {
-//       throw error.response.data;
-//     }
-//     throw error;
-//   }
-// };
 
 interface DeletePhotoParams {
   deletePhotoIds: number[];

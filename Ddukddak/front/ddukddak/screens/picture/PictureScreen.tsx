@@ -11,7 +11,7 @@ import {
 import GreenButton from '../../components/GreenButton';
 import ImagePickerComponent from '../../components/picture/ImagePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getPhotos } from '../../api/photoApi';
+import { getPhotos, deletePhotos } from '../../api/photoApi';
 
 const { width } = Dimensions.get('screen');
 
@@ -19,20 +19,21 @@ const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마
 const CARD_HEIGHT = CARD_WIDTH;
 
 function PictureScreen() {
-  const [images, setImages] = useState<{ uri: string; selected: boolean }[]>(
-    [],
-  );
+  const [images, setImages] = useState<
+    { uri: string; selected: boolean; id: number }[]
+  >([]);
   const [deleteMode, setDeleteMode] = useState(false);
+  const [selectedImages, setSelectedImages] = useState<number[]>([]);
 
   const fetchPhotos = async () => {
     try {
       const response = await getPhotos();
       if (response.photoList) {
         setImages(
-          response.photoList.map((photo) => ({
+          response.photoList.map((photo, index) => ({
             uri: photo.photoFile,
             selected: false,
-            id: photo.photoId,
+            id: index,
           })),
         );
       }
@@ -54,23 +55,51 @@ function PictureScreen() {
     // 삭제 모드일 때만 선택 가능
     if (deleteMode) {
       setImages((images) =>
-        images.map((img, i) =>
-          i === index ? { ...img, selected: !img.selected } : img,
-        ),
+        images.map((img, i) => {
+          if (i === index) {
+            const updatedSelected = !img.selected;
+            // 선택된 이미지 배열 업데이트
+            if (updatedSelected) {
+              setSelectedImages((prevSelectedImages) => [
+                ...prevSelectedImages,
+                img.id,
+              ]);
+            } else {
+              setSelectedImages((prevSelectedImages) =>
+                prevSelectedImages.filter((id) => id !== img.id),
+              );
+            }
+            return { ...img, selected: updatedSelected };
+          }
+          return img;
+        }),
       );
     }
   };
 
   const handleImageSelected = (uri: string) => {
-    setImages((prevImages) => [...prevImages, { uri, selected: false }]);
+    setSelectedImages((prevImages) => [...prevImages, prevImages.length]);
   };
 
-  const onDelete = () => {
-    if (!deleteMode) {
-      setDeleteMode(true); // 삭제 모드 활성화
+  const onDelete = async () => {
+    if (deleteMode) {
+      try {
+        await deletePhotos({ deletePhotoIds: selectedImages });
+        console.log(selectedImages);
+        setImages((images) =>
+          images.filter((img) => !selectedImages.includes(img.id)),
+        );
+        setDeleteMode(false);
+        setSelectedImages([]);
+      } catch (error) {
+        if (error instanceof Error) {
+          Alert.alert('사진 삭제 중 오류가 발생했습니다.', error.message);
+        } else {
+          console.log('알 수 없는 에러', error);
+        }
+      }
     } else {
-      setImages((images) => images.filter((img) => !img.selected));
-      setDeleteMode(false); // 삭제 모드 해제
+      setDeleteMode(true);
     }
   };
 

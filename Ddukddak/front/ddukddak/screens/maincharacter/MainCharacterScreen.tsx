@@ -95,7 +95,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     const fetchBooks = async () => {
       try {
         const books = await getBookList();
-        setBookList(books); 
+        setBookList(books);
       } catch (error) {
         console.error('Failed:', error);
       }
@@ -116,30 +116,32 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     }
   };
 
-const handleSearch = async () => {
-  if (searchText.trim() === '') {
-    alert('검색어를 입력해주세요.');
-    return;
-  }
-  
-  try {
-    // searchBooks 함수를 호출하여 검색 결과를 받아옵니다.
-    const response = await searchBooks(searchText.trim());
-    
-    // 검색 결과 중 첫 번째 책을 가져옵니다. (검색 결과가 있을 경우)
-    const foundBook = response.searchBookList ? response.searchBookList[0] : null;
-
-    if (foundBook) {
-      navigation.navigate('detail', { bookId: foundBook.bookId });
-      setSearchText(''); // 검색 후 입력 필드 초기화
-    } else {
-      alert('일치하는 책이 없습니다.');
+  const handleSearch = async () => {
+    if (searchText.trim() === '') {
+      alert('검색어를 입력해주세요.');
+      return;
     }
-  } catch (error) {
-    console.error('filed:', error);
-    alert('검색 중 오류가 발생했습니다.');
-  }
-};
+
+    try {
+      // searchBooks 함수를 호출하여 검색 결과를 받아옵니다.
+      const response = await searchBooks(searchText.trim());
+
+      // 검색 결과 중 첫 번째 책을 가져옵니다. (검색 결과가 있을 경우)
+      const foundBook = response.searchBookList
+        ? response.searchBookList[0]
+        : null;
+
+      if (foundBook) {
+        navigation.navigate('detail', { bookId: foundBook.bookId });
+        setSearchText(''); // 검색 후 입력 필드 초기화
+      } else {
+        alert('일치하는 책이 없습니다.');
+      }
+    } catch (error) {
+      console.error('filed:', error);
+      alert('검색 중 오류가 발생했습니다.');
+    }
+  };
 
   const nextPage = () => {
     setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % books.length);
@@ -203,7 +205,11 @@ const handleSearch = async () => {
         </View>
         <View style={styles.Likebutton}>
           <Pressable onPress={() => navigation.navigate('likeList')}>
-            <MaterialCommunityIcons name="heart-box-outline" size={100} color="red" />
+            <MaterialCommunityIcons
+              name="heart-box-outline"
+              size={100}
+              color="red"
+            />
           </Pressable>
         </View>
         <View style={styles.dotsContainer}>

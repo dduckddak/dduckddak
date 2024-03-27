@@ -1,8 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, Platform, Alert } from 'react-native';
+import { StyleSheet, View, Platform, Alert, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Camera } from 'expo-camera';
 import GreenButton from '../GreenButton';
 import PictureModal from './PictureModal';
+import { addPhoto } from '../../api/photoApi';
 
 interface ImagePickerComponentProps {
   onImageSelected: (uri: string) => void;
@@ -11,9 +13,6 @@ interface ImagePickerComponentProps {
 const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
   onImageSelected,
 }) => {
-  const [permission, setPermission] = useState<'granted' | 'denied' | null>(
-    null,
-  );
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const getPermission = useCallback(
@@ -33,36 +32,54 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
     [],
   );
 
-  // 갤러리에서 사진 선택
+  // 이미지를 서버로 업로드
+  const uploadImage = async (photoUri: string) => {
+    // console.log(photoUri);
+    const photoFile: any = {
+      uri: photoUri,
+      type: 'image/jpeg', // 적절한 MIME 타입 지정
+      name: `upload_${Date.now()}.jpg`, // 파일 이름 지정
+    };
+    try {
+      const response = await addPhoto({ photoFile: photoFile as File });
+      console.log(response);
+      Alert.alert('Upload Success', response.message);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Upload Failed', 'Failed to upload photo.');
+    }
+  };
+
+  // 갤러리에서 사진 선택 후 업로드
   const pickImage = async () => {
     const hasPermission = await getPermission('library');
     if (hasPermission) {
       let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
 
       if (!result.canceled && result.assets) {
-        onImageSelected(result.assets[0].uri);
+        uploadImage(result.assets[0].uri);
       }
     }
   };
 
-  // 카메라 촬영
+  // 카메라 촬영 후 업로드
   const takePhoto = async () => {
     const hasPermission = await getPermission('camera');
     if (hasPermission) {
       let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [4, 3],
         quality: 1,
       });
 
       if (!result.canceled && result.assets) {
-        onImageSelected(result.assets[0].uri);
+        uploadImage(result.assets[0].uri);
       }
     }
   };

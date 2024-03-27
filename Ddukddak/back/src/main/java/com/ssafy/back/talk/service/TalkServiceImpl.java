@@ -75,7 +75,7 @@ public class TalkServiceImpl implements TalkService {
 		String basicKey = MakeKeyUtil.subBasic(bookId);
 		String talkKey = MakeKeyUtil.subTalk(bookId);
 
-		if (amazonS3.doesObjectExist(bucket, basicKey) && amazonS3.doesObjectExist(basicKey, talkKey)) {
+		if (amazonS3.doesObjectExist(bucket, basicKey) && amazonS3.doesObjectExist(bucket, talkKey)) {
 			String subBasic = amazonS3.getUrl(bucket, basicKey).toString();
 			String subTalk = amazonS3.getUrl(bucket, talkKey).toString();
 
@@ -141,7 +141,7 @@ public class TalkServiceImpl implements TalkService {
 			threadId = AssistantAPI.createThread(openAIKey);
 			valueOperations.set(String.valueOf(userSeq), threadId);
 		}
-		
+
 		try {
 			AssistantAPI.sendMessage(openAIKey, threadId, request.getUserScript());
 			String runId = AssistantAPI.createRun(openAIKey, threadId, request.getBookId());

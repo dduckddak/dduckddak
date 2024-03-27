@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
   ImageBackground, Image, FlatList, ImageSourcePropType,
 } from 'react-native';
 
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
 import SketchbookList from './sketchbook/SketchbookList';
@@ -16,24 +16,25 @@ interface ColoringListScreenProps {
 }
 
 
-
 const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
                                                                  navigation,
                                                                }) => {
-  const [coloringList, setColoringList] = useState<{coloringId: number, coloringFile: string}[]>([]);
+  const [coloringList, setColoringList] = useState<{ coloringId: number, coloringFile: string }[]>([]);
 
 
-  useEffect(() => {
-    const handleColoringListEnter = async () => {
-      const coloringResponse = await getColorings()
-      if (coloringResponse.coloringList) {
-        setColoringList(coloringResponse.coloringList);
-        console.log(coloringResponse.coloringList);
-      }
-    }
+  useFocusEffect(
+    useCallback(() => {
+      const handleColoringListEnter = async () => {
+        const coloringResponse = await getColorings();
+        if (coloringResponse.coloringList) {
+          setColoringList(coloringResponse.coloringList);
+        }
+      };
 
-    handleColoringListEnter();
-  }, []);
+      handleColoringListEnter();
+    }, []),
+  );
+
 
   return (
     <ImageBackground

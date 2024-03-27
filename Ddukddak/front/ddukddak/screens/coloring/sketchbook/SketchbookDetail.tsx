@@ -4,6 +4,8 @@ import GreenButton from '../../../components/GreenButton';
 import SkyButton from '../../../components/SkyButton';
 import ConfirmModal from '../../../components/ConfirmModal';
 import * as url from 'node:url';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { deleteColorings } from '../../../api/coloringApi';
 
 type SketchImage = {
   coloringFile: string;
@@ -11,10 +13,11 @@ type SketchImage = {
 };
 
 interface SketchbookDetailProps {
-  image: SketchImage;
+  image: SketchImage,
+  navigation: NavigationProp<ParamListBase>
 }
 
-const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image }) => {
+const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image, navigation }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -22,9 +25,17 @@ const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image }) => {
     setModalVisible(true);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    const requestBody = {
+      deleteColoringIds : [image.coloringId]
+    };
+
+    const response = await deleteColorings(requestBody)
+    // TODO 예외처리 아직 안함
 
     setModalVisible(false);
+    navigation.goBack();
+
   };
 
   const handleCancel = () => {

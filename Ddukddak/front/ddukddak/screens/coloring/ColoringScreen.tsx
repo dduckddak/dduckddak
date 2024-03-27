@@ -32,19 +32,16 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
       if (response.coloringBaseList) {
         setColoringBaseList(response.coloringBaseList);
       }
-      console.log(response);
     };
 
     handleColoringScreenEnter();
   }, []);
 
-  useEffect(() => {
-    console.log(selectedImage);
-  }, [selectedImage]);
 
 
   const handleNavigateDrawing = () => {
     if (!selectedImage) {
+      // TODO 예외처리 필요
       console.log('선택된 것 없음');
       return;
     }

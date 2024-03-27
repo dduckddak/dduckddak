@@ -10,7 +10,7 @@ import {
   Pressable,
   Text,
 } from 'react-native';
-import { NavigationProp, ParamListBase, RouteProp, useRoute } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -18,6 +18,7 @@ import ColorPicker, { Panel5, OpacitySlider, colorKit, PreviewText } from 'reani
 import type { returnedResults } from 'reanimated-color-picker';
 import GreenButton from '../../components/GreenButton';
 import AlertModal from '../../components/AlertModal';
+import { addColoring } from '../../api/coloringApi';
 
 
 interface ColoringDrawScreenProps {
@@ -87,7 +88,12 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
     const msgData = JSON.parse(event.nativeEvent.data);
     if (msgData.type === 'saveImage') {
       const dataUrl = msgData.value;
-      console.log(dataUrl);
+
+      const response = await addColoring(dataUrl);
+      console.log(response);
+      setSaveModal(true);
+
+
     }
   };
 

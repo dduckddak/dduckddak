@@ -36,7 +36,7 @@ const ColoringDetailScreen: React.FC<ColoringDetailScreenProps> = ({
       style={styles.imageBackground}
     >
 
-      <SketchbookDetail image={image} />
+      <SketchbookDetail navigation={navigation} image={image} />
 
     </ImageBackground>
   );

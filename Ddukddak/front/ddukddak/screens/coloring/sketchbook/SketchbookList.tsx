@@ -20,7 +20,6 @@ interface SketchbookProps {
 
 const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
   const handlePress = (item: { coloringFile: string; coloringId: number; }) => {
-    console.log(item.coloringId); // 아이디가 콘솔에 출력됩니다
     navigation.navigate('coloringDetail', item); // 이동
   };
 

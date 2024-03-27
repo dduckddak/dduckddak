@@ -41,6 +41,10 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
     setIsHappySelected(false);
   };
 
+  const goToTalk = (id: number) => {
+    navigation.navigate('talk', { bookId: id });
+  };
+
   return (
     <ImageBackground
       source={require('../../assets/images/background/detailbookbackground.png')}
@@ -104,7 +108,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('talk' as never)}
+              onPress={() => goToTalk(parseInt(bookid))}
             >
               <Image
                 source={require('../../assets/images/button/talkbutton.png')}

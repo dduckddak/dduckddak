@@ -15,18 +15,20 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ReviewResponseDto extends ResponseDto {
-	public static ResponseEntity<ResponseDto> insertSuccess() {
-		ResponseDto responseBody = new ResponseDto("review insert");
+	private String message;
+	private Boolean isLike;
+	public static ResponseEntity<ResponseDto> insertSuccess(String message, Boolean isLike) {
+		ReviewResponseDto responseBody = new ReviewResponseDto(message, isLike);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 
-	public static ResponseEntity<ResponseDto> updateSuccess() {
-		ResponseDto responseBody = new ResponseDto("review update");
+	public static ResponseEntity<ResponseDto> updateSuccess(String message, Boolean isLike) {
+		ReviewResponseDto responseBody = new ReviewResponseDto(message, isLike);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 
-	public static ResponseEntity<ResponseDto> deleteSuccess() {
-		ResponseDto responseBody = new ResponseDto("review delete");
+	public static ResponseEntity<ResponseDto> deleteSuccess(String message, Boolean isLike) {
+		ReviewResponseDto responseBody = new ReviewResponseDto(message, isLike);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 

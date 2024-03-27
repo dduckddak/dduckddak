@@ -225,17 +225,17 @@ public class BookServiceImpl implements BookService {
 				if (reviewEntity.getIsLike() == dto.isLike()) { //들어온 값이 있는 리뷰와 같다면
 					reviewRepository.delete(reviewEntity);
 					logger.info("delete reviewEntity : " + reviewEntity.toString());
-					return ReviewResponseDto.deleteSuccess();
+					return ReviewResponseDto.deleteSuccess("delete success", null);
 				} else {
 					reviewRepository.updateReviewNative(dto.getBookId(), userSeq, dto.isLike());
 					logger.info("update reviewEntity : " + reviewEntity.toString());
-					return ReviewResponseDto.updateSuccess();
+					return ReviewResponseDto.updateSuccess("update success", dto.isLike());
 				}
 			} else {
 				//해당 책에 사용자의 리뷰가 없다
 				reviewRepository.insertReviewNative(dto.getBookId(), userSeq, dto.isLike());
 				logger.info("User {}'s review for book {} created.", userSeq, dto.getBookId());
-				return ReviewResponseDto.insertSuccess();
+				return ReviewResponseDto.insertSuccess("insert success", dto.isLike());
 			}
 		} catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);

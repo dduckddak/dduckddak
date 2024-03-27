@@ -19,7 +19,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ListBookLikeResponseDto extends ResponseDto {
-	private List<BookSummaryDto> bookList;
+	private List<BookSummaryDto> likeBookList;
 
 	public static ResponseEntity<ListBookLikeResponseDto> success(List<BookSummaryDto> bookList) {
 		ListBookLikeResponseDto responseBody = new ListBookLikeResponseDto(bookList);

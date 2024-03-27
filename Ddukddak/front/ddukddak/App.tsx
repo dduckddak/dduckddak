@@ -52,6 +52,12 @@ interface LogoRightProps {
   isHomeScreen: any;
 }
 
+export interface BookSummary {
+  bookId: number,
+  bookTitle: string,
+  coverImage: string
+}
+
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const navigation = useNavigation();
 
@@ -118,7 +124,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
 // 아니면 에러는 안나지만 타입 빨간줄 뜹니다
 export type RootStackParamList = {
   home: undefined;
-  detail: { bookId: string };
+  detail: BookSummary;
   MainCharacterScreen: undefined;
   talk: { bookId: number };
   fairy: undefined;
@@ -143,14 +149,14 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
+    SplashScreen.hideAsync().catch(() => { });
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -161,7 +167,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => { });
     }
   }, [fontsLoaded]);
 

@@ -7,7 +7,7 @@ interface ApiResponse {
 
 export interface BookListData {
   bookList?: {
-    bookId: string;
+    bookId: number;
     bookTitle: string;
     coverImage: string;
   }[];
@@ -15,7 +15,7 @@ export interface BookListData {
 
 export interface BookSearchData {
   searchBookList?: {
-    bookId: string;
+    bookId: number;
     bookTitle: string;
     bookAuthor: string;
     bookStory: string;
@@ -25,10 +25,9 @@ export interface BookSearchData {
 
 export interface BookDetailData {
   book: {
-    bookTitle: string;
     bookAuthor: string;
     bookStory: string;
-    coverImage: string;
+    isLike: boolean
   };
 }
 
@@ -144,7 +143,7 @@ export const searchBooks = async (
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
 export const getBookDetail = async (
-  bookId: string,
+  bookId: number,
 ): Promise<BookDetailResponse> => {
   try {
     const response = await apiClient.get<BookDetailResponse>(

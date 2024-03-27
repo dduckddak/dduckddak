@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,11 +8,12 @@ import {
   ImageBackground,
   Button,
 } from 'react-native';
-import { books } from './MainCharacterScreen';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
+import {getBookDetail,BookDetailData} from '../../api/bookApi';
+import { BookSummary } from '../../App';
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -24,9 +25,17 @@ interface DetailBookScreenProps {
   route: DetailScreenRouteProp;
   navigation: DetailScreenNavigationProp;
 }
+
+interface DetailBook {
+  bookAuthor:string,
+  bookStory:string,
+  isLike:boolean
+}
+
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
-  const bookid = route.params.bookId;
-  const selectedBook = books.find((book) => book.id === parseInt(bookid));
+  const [selectedBook, setSelectedBook] =useState<DetailBook|undefined>();
+
+  const bookSummary:BookSummary= route.params;
 
   const [isHappySelected, setIsHappySelected] = useState(false);
   const [isSadSelected, setIsSadSelected] = useState(false);
@@ -45,6 +54,21 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
     navigation.navigate('talk', { bookId: id });
   };
 
+  useEffect(() => {
+    const fetchBook = async (bookid:number) => {
+      try {
+        const response = await getBookDetail(bookid);
+        setSelectedBook(response.book);
+        console.log(response.book)
+      } catch (error) {
+        console.error('Failed:', error);
+      }
+    };
+    fetchBook(bookSummary.bookId);
+  }, []);
+
+
+
   return (
     <ImageBackground
       source={require('../../assets/images/background/detailbookbackground.png')}
@@ -56,7 +80,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
               <Image
-                source={selectedBook?.coverImage}
+                source={{uri:bookSummary.coverImage}}
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>
@@ -86,13 +110,13 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.detailText}>
-                제목 : {selectedBook?.title}
+                제목 : {bookSummary.bookTitle}
               </Text>
               <Text style={styles.detailText}>
-                저자 : {selectedBook?.author}
+                저자 : {selectedBook?.bookAuthor}
               </Text>
               <Text style={styles.detailText}>
-                줄거리 : {selectedBook?.synopsis}
+                줄거리 : {selectedBook?.bookStory}
               </Text>
             </View>
           </View>
@@ -108,7 +132,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => goToTalk(parseInt(bookid))}
+              onPress={() => goToTalk(bookSummary.bookId)}
             >
               <Image
                 source={require('../../assets/images/button/talkbutton.png')}

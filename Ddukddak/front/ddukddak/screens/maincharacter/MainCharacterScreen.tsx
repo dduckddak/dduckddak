@@ -12,6 +12,7 @@ import {
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getBookList, BookListData, searchBooks } from '../../api/bookApi';
+import { BookSummary } from '../../App';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -28,7 +29,7 @@ export const books = [
   },
 
   {
-    id: 2,
+    id: 122,
     coverName: 'cover-book-title-2.jpg',
     title: '빨간모자',
     author: 'Author Name 2',
@@ -96,6 +97,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
       try {
         const books = await getBookList();
         setBookList(books);
+
       } catch (error) {
         console.error('Failed:', error);
       }
@@ -153,8 +155,8 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     );
   };
 
-  const goToDetail = (id: number) => {
-    navigation.navigate('detail', { bookId: id });
+  const goToDetail = (bookSummary: BookSummary|undefined) => {
+    navigation.navigate('detail', bookSummary);
   };
 
   return (
@@ -168,15 +170,15 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
             <Image source={require('../../assets/images/button/before.png')} />
           </TouchableOpacity>
           <View style={styles.textContainer}>
-            <Pressable onPress={() => goToDetail(books[currentPage].id)}>
+            <Pressable onPress={() => goToDetail(bookList.bookList && bookList.bookList[currentPage])}>
               <View style={styles.box}>
                 <Text style={styles.text}>이 책 어때요 ?</Text>
                 <Image
-                  source={books[currentPage].coverImage}
+                  source={{ uri: bookList.bookList && bookList.bookList[currentPage].coverImage }}
                   style={styles.bookCover}
                 />
                 <Text style={styles.titletext}>
-                  제목 : {books[currentPage].title}
+                  제목 : {bookList.bookList && bookList.bookList[currentPage].bookTitle}
                 </Text>
               </View>
             </Pressable>
@@ -213,7 +215,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           </Pressable>
         </View>
         <View style={styles.dotsContainer}>
-          {books.map((_, index) => (
+          {bookList.bookList && bookList.bookList.map((_, index) => (
             <View
               key={index}
               style={[

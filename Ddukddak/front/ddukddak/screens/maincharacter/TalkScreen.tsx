@@ -77,7 +77,7 @@ function TalkScreen({ route }: TalkScreenProps) {
     if (recording) {
       console.log('녹음 종료');
       await recording.stopAndUnloadAsync();
-      
+
       const uri = recording.getURI();
       setRecording(undefined);
 
@@ -156,12 +156,12 @@ function TalkScreen({ route }: TalkScreenProps) {
         source={require('../../assets/images/background/background.png')}
         style={styles.imageBackground}
       >
+        <Image
+          source={{ uri: subBasic }}
+          style={styles.bookImage}
+        />
         <Text style={styles.bigtext}>{subName}</Text>
-        <View>
-          <Image
-            source={{ uri: subBasic }}
-            style={styles.bookImage}
-          />
+        <View style={styles.innerContainer}>
           <Text style={styles.bigtext}>{userScript}</Text>
           <Text style={styles.bigtext}>{gptScript}</Text>
           <TouchableOpacity
@@ -188,12 +188,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  innerContainer: {
+    marginBottom: 160, // 아래 여백 추가
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   imageBackground: {
     flex: 1,
     resizeMode: 'contain',
     justifyContent: 'center',
   },
   bookImage: {
+    // position: 'absolute',
+    // bottom: 10, // 아래쪽으로 20픽셀 떨어진 위치
     width: '60%',
     height: '90%', // 이미지가 전체 컨테이너의 80%를 차지하도록 설정
     resizeMode: 'cover',
@@ -208,8 +215,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'im-hyemin-bold',
+    fontSize:30
   },
   bigtext: {
-    fontSize: 10
+    fontSize: 40
   },
 });

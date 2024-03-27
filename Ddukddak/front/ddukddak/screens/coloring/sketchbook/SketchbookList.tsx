@@ -16,8 +16,6 @@ interface SketchbookProps {
 }
 
 
-
-
 const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
   const handlePress = (item: { coloringFile: string; coloringId: number; }) => {
     navigation.navigate('coloringDetail', item); // 이동
@@ -26,13 +24,15 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
 
   const renderItem = ({ item }: { item: { coloringFile: string; coloringId: number; } }) => (
     <TouchableOpacity style={styles.imageContainer} onPress={() => handlePress(item)}>
-      <Image source={{uri: item.coloringFile}} style={styles.image} />
+      <Image source={{ uri: item.coloringFile }} style={styles.image} />
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
+
       <View style={styles.innerContainer}>
+
         <FlatList
           style={styles.flatList}
           data={images}
@@ -47,10 +47,10 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
         content="색칠하러 가기"
         style={styles.naviBtn}
       />
-
       <Image
         source={require('../../../assets/images/sketchbookheader.png')}
         style={styles.header} />
+
     </View>
   );
 };
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   innerContainer: {
+    position : 'relative',
     justifyContent: 'center',
     alignItems: 'center',
     width: '90%',
@@ -90,9 +91,9 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: '-3%',
+    top: '0%',
     width: '90%',
-    height: 150,
+    height: Dimensions.get('screen').height * 0.13,
     resizeMode: 'stretch',
   },
   flatList: {

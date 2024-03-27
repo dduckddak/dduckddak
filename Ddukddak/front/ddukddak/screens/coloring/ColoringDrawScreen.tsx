@@ -38,9 +38,16 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
   const [showModal, setShowModal] = useState(false);
   const [saveModal, setSaveModal] = useState(false);
 
-
+  const { width, height } = Dimensions.get('screen');
+  const webviewHeight = height * 0.65;
+  const webviewWidth = width * 0.46;
   const route = useRoute<RouteProp<ParamListBase, 'coloringFile'>>();
   const image = route.params.uri;
+
+  const injectedJavaScript = `window.imgSrc = "${image}"; window.innerWidth=${webviewWidth}; window.innerHeight=${webviewHeight};`;
+
+
+
 
   useEffect(() => {
     console.log(image);
@@ -149,8 +156,9 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
         <WebView
           ref={webViewRef}
           source={{ uri: 'http://192.168.30.124:3000' }}
+          // source={{ uri: 'http://j10e203.p.ssafy.io:8089' }}
           style={styles.webviewStyle}
-          injectedJavaScript={`window.imgSrc = "${image}";`}
+          injectedJavaScript={injectedJavaScript}
           onMessage={handleMessage}
         />
       </View>

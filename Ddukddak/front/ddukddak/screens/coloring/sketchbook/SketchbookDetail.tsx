@@ -94,9 +94,9 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: '-7%',
+    top: '-3%',
     width: '90%',
-    height: 150,
+    height: Dimensions.get('screen').height * 0.13,
     resizeMode: 'stretch',
   },
   imageStyle: {

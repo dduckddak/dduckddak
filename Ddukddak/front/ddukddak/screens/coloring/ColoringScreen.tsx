@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ImageBackground, Image, FlatList, ImageSourcePropType, TouchableOpacity,
+  ImageBackground,
+  Image,
+  FlatList,
+  ImageSourcePropType,
+  TouchableOpacity,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -18,13 +22,9 @@ interface Item {
   item: string;
 }
 
-const ColoringScreen: React.FC<ColoringScreenProps> = ({
-                                                         navigation,
-                                                       }) => {
-
+const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
   const [coloringBaseList, setColoringBaseList] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
 
   useEffect(() => {
     const handleColoringScreenEnter = async () => {
@@ -37,8 +37,6 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
     handleColoringScreenEnter();
   }, []);
 
-
-
   const handleNavigateDrawing = () => {
     if (!selectedImage) {
       // TODO 예외처리 필요
@@ -47,13 +45,18 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
     }
 
     navigation.navigate('coloringDraw', { uri: selectedImage });
-
   };
 
   const renderItem = ({ item }: { item: string }) => (
     <View style={styles.imageContainer}>
       <TouchableOpacity onPress={() => setSelectedImage(item)}>
-        <Image source={{ uri: item }} style={[styles.image, selectedImage === item ? styles.selectedImage : null]} />
+        <Image
+          source={{ uri: item }}
+          style={[
+            styles.image,
+            selectedImage === item ? styles.selectedImage : null,
+          ]}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -64,10 +67,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
       style={styles.imageBackground}
     >
       <View style={styles.flexContainer}>
-
-        <View
-          style={styles.box}
-        >
+        <View style={styles.box}>
           <FlatList
             style={styles.flatList}
             data={coloringBaseList}
@@ -88,34 +88,26 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
   );
 };
 
-
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
-  }
-  ,
+  },
   flexContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-
-  }
-  ,
+  },
   box: {
     backgroundColor: 'rgba(205, 234, 185, 0.48)',
-    height:
-      Dimensions.get('screen').height * 0.6,
-    width:
-      Dimensions.get('screen').width * 0.85,
+    height: Dimensions.get('screen').height * 0.6,
+    width: Dimensions.get('screen').width * 0.85,
     paddingVertical: 20,
-  }
-  ,
+  },
   naviBtn: {
     width: Dimensions.get('screen').width * 0.15,
-    marginTop:
-      Dimensions.get('screen').height * 0.04,
+    marginTop: Dimensions.get('screen').height * 0.04,
   },
 
   imageContainer: {
@@ -129,7 +121,6 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').width / 6,
     resizeMode: 'cover',
     alignSelf: 'center',
-
   },
   flatListContentContainer: {
     justifyContent: 'center',

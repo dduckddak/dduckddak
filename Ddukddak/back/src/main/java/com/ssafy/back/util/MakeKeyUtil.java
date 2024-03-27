@@ -56,6 +56,6 @@ public class MakeKeyUtil {
 
 	//기본 동화 스크립트 음성 키
 	public static String bookScriptSound(int bookId, int pageSeq, int scriptSeq) {
-		return "default-book/" + bookId + "/sound/" + pageSeq + "/" + scriptSeq;
+		return "default_book/" + bookId + "/sound/" + pageSeq + "/" + scriptSeq;
 	}
 }

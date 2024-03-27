@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ImageBackground, Image, FlatList, ImageSourcePropType,
+  ImageBackground, Image, FlatList, ImageSourcePropType, TouchableOpacity,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
+import { getColoringBases } from '../../api/coloringApi';
 
 interface ColoringScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -17,15 +18,43 @@ interface Item {
   item: string;
 }
 
-const images = Array.from({length: 12}, (_, i) => `https://pjt-image-bucket.s3.ap-northeast-2.amazonaws.com/ddukddak/color_${(i % 6) + 1}.jpg`);
-
 const ColoringScreen: React.FC<ColoringScreenProps> = ({
                                                          navigation,
                                                        }) => {
 
-  const renderItem = ({ item }: Item) => (
+  const [coloringBaseList, setColoringBaseList] = useState<string[]>([]);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
+
+  useEffect(() => {
+    const handleColoringScreenEnter = async () => {
+      const response = await getColoringBases();
+      if (response.coloringBaseList) {
+        setColoringBaseList(response.coloringBaseList);
+      }
+    };
+
+    handleColoringScreenEnter();
+  }, []);
+
+
+
+  const handleNavigateDrawing = () => {
+    if (!selectedImage) {
+      // TODO 예외처리 필요
+      console.log('선택된 것 없음');
+      return;
+    }
+
+    navigation.navigate('coloringDraw', { uri: selectedImage });
+
+  };
+
+  const renderItem = ({ item }: { item: string }) => (
     <View style={styles.imageContainer}>
-      <Image source={{uri: item}} style={styles.image} />
+      <TouchableOpacity onPress={() => setSelectedImage(item)}>
+        <Image source={{ uri: item }} style={[styles.image, selectedImage === item ? styles.selectedImage : null]} />
+      </TouchableOpacity>
     </View>
   );
 
@@ -41,7 +70,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
         >
           <FlatList
             style={styles.flatList}
-            data={images}
+            data={coloringBaseList}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
             numColumns={4}
@@ -50,7 +79,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
         </View>
 
         <GreenButton
-          onPress={() => navigation.navigate('coloringDraw')}
+          onPress={handleNavigateDrawing}
           content="색칠하러 가기"
           style={styles.naviBtn}
         />
@@ -75,7 +104,7 @@ const styles = StyleSheet.create({
   }
   ,
   box: {
-    backgroundColor: 'rgba(205, 234, 185, 0.48)', // CDEAB9의 RGB 값은 205, 234, 185입니다.
+    backgroundColor: 'rgba(205, 234, 185, 0.48)',
     height:
       Dimensions.get('screen').height * 0.6,
     width:
@@ -109,6 +138,10 @@ const styles = StyleSheet.create({
   flatList: {
     width: '100%',
     height: '100%',
+  },
+  selectedImage: {
+    borderWidth: 3,
+    borderColor: 'rgba(180, 130, 210, 0.5)',
   },
 });
 

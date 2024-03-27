@@ -11,8 +11,8 @@ import SketchbookDetail from './sketchbook/SketchbookDetail';
 
 
 type SketchImage = {
-  source: ImageSourcePropType;
-  id: string;
+  coloringFile: string;
+  coloringId: number;
 };
 
 type ParamListBase = {
@@ -36,7 +36,7 @@ const ColoringDetailScreen: React.FC<ColoringDetailScreenProps> = ({
       style={styles.imageBackground}
     >
 
-      <SketchbookDetail image={image} />
+      <SketchbookDetail navigation={navigation} image={image} />
 
     </ImageBackground>
   );

@@ -35,16 +35,39 @@ import LikeListScreen from './screens/maincharacter/LikeListScreen';
 import AddFairyPicture from './screens/maincharacter/AddFairyPicture';
 import AddFairyVoice from './screens/maincharacter/AddFairyVoice';
 
+import Script from './components/createBook/Script';
+import { TransitionPresets } from '@react-navigation/stack';
+
 import { AppInitializer } from './components/AppInitializer';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
 
+// function LeftSide() {
+//   const navigation = useNavigation();
+//   const Press = () => {
+//     navigation.navigate('script' as never);
+//   };
+//   return (
+//     <TouchableOpacity onPress={Press}>
+//       <Image
+//         style={{ width: 110, height: 80 }}
+//         source={require('./assets/favicon.png')} // 로고 이미지
+//       />
+//     </TouchableOpacity>
+//   );
+// }
 function LogoTitle() {
+  const navigation = useNavigation();
+  const onPress = () => {
+    navigation.navigate('script' as never);
+  };
   return (
-    <Image
-      style={{ width: 270, height: 60, marginLeft: '53%' }}
-      source={require('./assets/images/Logo.png')} // 로고 이미지
-    />
+    <TouchableOpacity onPress={onPress}>
+      <Image
+        style={{ width: 300, height: 70, marginLeft: '53%' }}
+        source={require('./assets/images/Logo.png')} // 로고 이미지
+      />
+    </TouchableOpacity>
   );
 }
 
@@ -146,6 +169,7 @@ export type RootStackParamList = {
   likeList: undefined;
   addfairypicture: { role: string };
   addfairyvoice: { role: string };
+  script: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -223,8 +247,20 @@ export default function App() {
               name="home"
               component={MainScreen}
               options={{
+                // headerLeft: LeftSide,
+                headerTitle: () => <LogoTitle />,
+                headerRight: () => <LogoRight isHomeScreen={true} />,
+              }}
+            />
+            {/* ------------------------ 사용설명서 ------------------------ */}
+            <Stack.Screen
+              name="script"
+              component={Script}
+              options={{
+                title: '사용설명서',
                 headerTitle: LogoTitle,
                 headerRight: () => <LogoRight isHomeScreen={true} />,
+                // ...TransitionPresets.ModalSlideFromTop,
               }}
             />
             {/* ------------------------ 내가 주인공 페이지 ------------------------ */}

@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
 
 import { getMakeBookList, MakeBookListData } from '../../api/makeBookApi';
+import EmptyListComponent from '../../components/EmptyListComponent';
 
 interface Book {
   title: string;
@@ -90,6 +91,7 @@ const BookListScreen: React.FC = () => {
     >
       <View>
         <FlatList
+          ListEmptyComponent={<EmptyListComponent />}
           data={makeBookList}
           renderItem={({ item }) => (
             <BookItems

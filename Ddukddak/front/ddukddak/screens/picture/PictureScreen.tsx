@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     gap: 30,
   },
   buttonStyle: {
-    width: '10%',
+    width: 180,
     margin: 30,
   },
   card: {

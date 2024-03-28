@@ -109,7 +109,7 @@ export default ImagePickerComponent;
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    width: '100%',
+    width: 180,
     margin: 30,
   },
 });

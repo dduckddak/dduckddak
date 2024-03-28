@@ -30,11 +30,12 @@ function PictureScreen() {
     try {
       const response = await getPhotos();
       if (response.photoList) {
+        console.log(response);
         setImages(
           response.photoList.map((photo, index) => ({
             uri: photo.photoFile,
             selected: false,
-            id: index,
+            id: photo.photoId,
           })),
         );
       }
@@ -85,8 +86,7 @@ function PictureScreen() {
   const onDelete = async () => {
     if (deleteMode) {
       try {
-        await deletePhotos({ deletePhotoIds: selectedImages });
-        console.log(selectedImages);
+        const response = await deletePhotos({ photoIds: selectedImages });
         setImages((images) =>
           images.filter((img) => !selectedImages.includes(img.id)),
         );

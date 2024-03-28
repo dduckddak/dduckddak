@@ -68,7 +68,7 @@ export const addPhoto = async (
 };
 
 interface DeletePhotoParams {
-  deletePhotoIds: number[];
+  photoIds: number[];
 }
 
 /**
@@ -83,6 +83,7 @@ export const deletePhotos = async (
   params: DeletePhotoParams,
 ): Promise<PhotoApiResponse> => {
   try {
+    console.log(params);
     const response = await apiClient.delete<PhotoApiResponse>(
       '/api/v1/photos',
       { data: params },

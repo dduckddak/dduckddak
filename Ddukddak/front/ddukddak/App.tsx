@@ -53,9 +53,9 @@ interface LogoRightProps {
 }
 
 export interface BookSummary {
-  bookId: number,
-  bookTitle: string,
-  coverImage: string
+  bookId: number;
+  bookTitle: string;
+  coverImage: string;
 }
 
 function LogoRight({ isHomeScreen }: LogoRightProps) {
@@ -149,14 +149,14 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => { });
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => { });
+    SplashScreen.hideAsync().catch(() => {});
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -167,7 +167,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => { });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 
@@ -232,11 +232,19 @@ export default function App() {
               name="MainCharacterScreen"
               component={MainCharacterScreen}
               options={{
+                headerTitle: LogoTitle,
                 headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             {/* ------------------------ 책 상세 페이지 ------------------------ */}
-            <Stack.Screen name="detail" component={DetailBookScreen} />
+            <Stack.Screen
+              name="detail"
+              component={DetailBookScreen}
+              options={{
+                headerTitle: LogoTitle,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
+            />
             {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
             <Stack.Screen
               name="likebooks"
@@ -288,7 +296,6 @@ export default function App() {
               name="mybook"
               component={MyCreateBookScreen}
               options={{
-                headerTitle: LogoTitle,
                 headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
@@ -301,16 +308,28 @@ export default function App() {
               }}
             />
             {/* ------------------------ 소리추가 페이지 ------------------------ */}
-            <Stack.Screen name="addvoice" component={AddVoiceScreen} />
+            <Stack.Screen
+              name="addvoice"
+              component={AddVoiceScreen}
+              options={{
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
+            />
             {/* ------------------------ 녹음 페이지 ------------------------ */}
-            <Stack.Screen name="record" component={RecordScreen} />
+            <Stack.Screen
+              name="record"
+              component={RecordScreen}
+              options={{
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
+            />
             {/*  색칠뚝딱 페이지*/}
             <Stack.Screen
               name="coloring"
               component={ColoringScreen}
               options={{
-                headerTitle: LogoTitle,
                 headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             <Stack.Screen
@@ -318,26 +337,26 @@ export default function App() {
               component={ColoringDrawScreen}
               options={{
                 headerTransparent: true,
-                headerTitle: LogoTitle,
                 headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             <Stack.Screen
               name="coloringList"
               component={ColoringListScreen}
               options={{
-                headerTitle: LogoTitle,
                 headerTransparent: true,
                 headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             <Stack.Screen
               name="coloringDetail"
               component={ColoringDetailScreen}
               options={{
-                headerTitle: LogoTitle,
                 headerTransparent: true,
                 headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             {/*  좋아요 한 책 페이지*/}
@@ -345,9 +364,9 @@ export default function App() {
               name="likeList"
               component={LikeListScreen}
               options={{
-                headerTitle: LogoTitle,
                 headerTransparent: true,
                 headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
           </Stack.Navigator>

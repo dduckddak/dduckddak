@@ -179,6 +179,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
                 />
                 <Text style={styles.titletext}>
                   제목 : {bookList.bookList && bookList.bookList[currentPage].bookTitle}
+
                 </Text>
               </View>
             </Pressable>

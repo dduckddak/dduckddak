@@ -30,7 +30,6 @@ function PictureScreen() {
     try {
       const response = await getPhotos();
       if (response.photoList) {
-        console.log(response);
         setImages(
           response.photoList.map((photo, index) => ({
             uri: photo.photoFile,

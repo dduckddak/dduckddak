@@ -21,18 +21,19 @@ type Images = {
 }[];
 
 interface SketchbookProps {
-  images: Images;
-  navigation: NavigationProp<ParamListBase>;
+  images: Images,
+  navigation: NavigationProp<ParamListBase>,
+  isLoading?: boolean
 }
 
-const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
+const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images, isLoading }) => {
   const handlePress = (item: { coloringFile: string; coloringId: number }) => {
     navigation.navigate('coloringDetail', item); // 이동
   };
 
   const renderItem = ({
-    item,
-  }: {
+                        item,
+                      }: {
     item: { coloringFile: string; coloringId: number };
   }) => (
     <TouchableOpacity
@@ -54,7 +55,8 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
           keyExtractor={(item) => item.coloringId.toString()}
           numColumns={2}
           contentContainerStyle={styles.flatListContentContainer}
-          ListEmptyComponent={<EmptyListComponent imageHeightRatio={0.55} />}
+          ListEmptyComponent={isLoading && images.length === 0 ? <EmptyListComponent imageHeightRatio={0.55} /> : null}
+
         />
       </View>
       <GreenButton

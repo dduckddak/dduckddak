@@ -1,11 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
-  View,
   StyleSheet,
   ImageBackground,
-  Image,
-  FlatList,
-  ImageSourcePropType,
 } from 'react-native';
 
 import {
@@ -13,8 +9,6 @@ import {
   ParamListBase,
   useFocusEffect,
 } from '@react-navigation/native';
-import GreenButton from '../../components/GreenButton';
-import { Dimensions } from 'react-native';
 import SketchbookList from './sketchbook/SketchbookList';
 import { getColorings } from '../../api/coloringApi';
 
@@ -23,11 +17,13 @@ interface ColoringListScreenProps {
 }
 
 const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
-  navigation,
-}) => {
+                                                                 navigation,
+                                                               }) => {
   const [coloringList, setColoringList] = useState<
     { coloringId: number; coloringFile: string }[]
   >([]);
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -36,6 +32,7 @@ const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
         if (coloringResponse.coloringList) {
           setColoringList(coloringResponse.coloringList);
         }
+        setIsLoading(false);
       };
 
       handleColoringListEnter();
@@ -48,6 +45,7 @@ const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
       style={styles.imageBackground}
     >
       <SketchbookList
+        isLoading={isLoading}
         images={coloringList}
         navigation={navigation}
       ></SketchbookList>

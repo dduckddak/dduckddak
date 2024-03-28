@@ -1,4 +1,4 @@
-from dataset import review_info_list
+from allDataset import review_info_list
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel

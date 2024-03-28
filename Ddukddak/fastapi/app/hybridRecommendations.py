@@ -1,36 +1,35 @@
 from CFRecommendations import get_cf_recommendations
 from CBRecommendations import get_cb_recommendations
+import database_helper 
+import pandas as pd
 
 def hybrid_recommendations(user_seq, cf_weight=0.2, cb_weight=0.8, top_n=7):
-    """
-    CF 모델과 CB 모델로부터의 추천을 결합한 하이브리드 추천을 생성합니다.
+    # 사용자 선호도 정보와 리뷰된 책 목록 가져오기
+    likes, dislikes, reviewed_books = database_helper.get_user_preferences_and_reviewed_books(user_seq)
+    
+    # CF 및 CB 추천 실행
+    cf_books = get_cf_recommendations(user_seq, likes, dislikes, reviewed_books, n=30)
+    cb_books = get_cb_recommendations(user_seq, likes, dislikes, reviewed_books, n=30)
 
-    :param user_seq: 사용자 시퀀스 ID
-    :param cf_weight: CF 모델의 가중치 (기본값 0.2)
-    :param cb_weight: CB 모델의 가중치 (기본값 0.8)
-    :param top_n: 반환할 추천 책의 수
-    :return: 추천된 책의 ID 목록
-    """
-    # CF 모델과 CB 모델에서 추천 받기
-    cf_books_df = get_cf_recommendations(user_seq, n=30)
-    cb_books = get_cb_recommendations(user_seq, n=30)
-    # DataFrame에서 (book_id, score) 형태로 데이터를 추출
-    cf_books = [(row['book_id'], row['est_rating']) for index, row in cf_books_df.iterrows()]
 
-    # 추천된 책들의 가중치 합산
+     # cf_books와 cb_books를 합침
+    combined_books = pd.concat([cf_books, cb_books], ignore_index=True)
+
+
+    # 추천된 책들의 가중치 합산, 이미 리뷰된 책은 제외
     combined_scores = {}
-    for book_id, score in cf_books:
-        combined_scores[book_id] = combined_scores.get(book_id, 0) + score * cf_weight
-    for book_id in cb_books:
-        combined_scores[book_id] = combined_scores.get(book_id, 0) + cb_weight  # CB 모델의 가중치를 고정값으로 적용
+    for index, row in combined_books.iterrows():
+        book_id = row['book_id']
+        if book_id not in reviewed_books:
+            combined_scores[book_id] = combined_scores.get(book_id, 0) + row['est_rating'] * (cf_weight if index < len(cf_books) else cb_weight)
 
     # 가중치 합산 점수가 높은 순으로 정렬하여 상위 N권 선택
     recommended_books = sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)[:top_n]
 
     # 최종 추천된 책의 ID 목록 반환
-    return [book_id for book_id, _ in recommended_books]
+    return [int(book_id) for book_id, _ in recommended_books]
 
 # 사용자 ID 예시로 하이브리드 추천 실행
-user_seq = 1
-final_recommendations = hybrid_recommendations(user_seq)
-print(f"하이브리드 추천 결과 (Top {len(final_recommendations)}권): {final_recommendations}")
+# user_seq = 1
+# final_recommendations = hybrid_recommendations(user_seq)
+# print(f"하이브리드 추천 결과 (Top {len(final_recommendations)}권): {final_recommendations}")

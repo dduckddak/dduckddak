@@ -21,7 +21,7 @@ public class MakeKeyUtil {
 
 	//bookId 를 이용한 동화책 그림 키 제작
 	public static String page(int bookId, int pageSeq, boolean isFace) {
-		return "default-book/" + bookId + (isFace ? "/nonblank/" : "/blank/") + pageSeq;
+		return "default_book/" + bookId + (isFace ? "/nonblank/" : "/blank/") + pageSeq+".png";
 	}
 
 	//대화 상대 역할 기본 이미지

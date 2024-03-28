@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
   Image,
+  Animated,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
@@ -19,6 +20,49 @@ interface Voice {
   voiceId: number;
   voiceName: string;
 }
+
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
 
 function VoiceScreen() {
   const navigation = useNavigation();
@@ -116,6 +160,30 @@ function VoiceScreen() {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud1}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
       {}
       <FlatList
         data={voiceData}
@@ -148,6 +216,17 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
   },
+  cloud: { position: 'absolute', top: 5, left: 200 },
+  cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud2: {
+    position: 'absolute',
+    top: 5,
+    left: 700,
+    width: 150,
+    height: 110,
+    transform: 'scaleX(-1)',
+  },
+  cloud3: { position: 'absolute', top: 125, left: 1060 },
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',

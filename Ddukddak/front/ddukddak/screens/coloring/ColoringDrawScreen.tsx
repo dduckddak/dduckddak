@@ -13,13 +13,21 @@ import {
 import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { WebView, WebViewMessageEvent } from 'react-native-webview';
 
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import ColorPicker, { Panel5, OpacitySlider, colorKit, PreviewText } from 'reanimated-color-picker';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
+import ColorPicker, {
+  Panel5,
+  OpacitySlider,
+  colorKit,
+  PreviewText,
+} from 'reanimated-color-picker';
 import type { returnedResults } from 'reanimated-color-picker';
 import GreenButton from '../../components/GreenButton';
 import AlertModal from '../../components/AlertModal';
 import { addColoring } from '../../api/coloringApi';
-
+import Balloons from '../../components/balloon';
 
 interface ColoringDrawScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -33,8 +41,9 @@ type ParamListBase = {
   coloringFile: ColoringImage;
 };
 
-
-const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) => {
+const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
+  navigation,
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [saveModal, setSaveModal] = useState(false);
 
@@ -46,25 +55,22 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
 
   const injectedJavaScript = `window.imgSrc = "${image}"; window.innerWidth=${webviewWidth}; window.innerHeight=${webviewHeight};`;
 
-
-
-
   useEffect(() => {
     console.log(image);
   }, []);
-
 
   const webViewRef = React.useRef<WebView>(null);
 
   const initialColor = colorKit.HEX('black');
   //
   const selectedColor = useSharedValue(initialColor);
-  const backgroundColorStyle = useAnimatedStyle(() => ({ backgroundColor: selectedColor.value }));
+  const backgroundColorStyle = useAnimatedStyle(() => ({
+    backgroundColor: selectedColor.value,
+  }));
 
   const onColorSelect = (color: returnedResults) => {
     'worklet';
     selectedColor.value = color.hex;
-
   };
 
   const handleCloseModal = () => {
@@ -90,7 +96,6 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
     navigation.goBack();
   };
 
-
   const handleMessage = async (event: WebViewMessageEvent) => {
     const msgData = JSON.parse(event.nativeEvent.data);
     if (msgData.type === 'saveImage') {
@@ -99,25 +104,28 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
       const response = await addColoring(dataUrl);
       console.log(response);
       setSaveModal(true);
-
-
     }
   };
 
-
   return (
-
     <ImageBackground
-      source={require('../../assets/images/background/background.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
-      <TouchableOpacity style={styles.paletteButtonContainer} onPress={() => setShowModal(true)}>
+      <TouchableOpacity
+        style={styles.paletteButtonContainer}
+        onPress={() => setShowModal(true)}
+      >
         <Image
           source={require('../../assets/images/coloring/palette.png')}
           style={styles.paletteButton}
         />
       </TouchableOpacity>
-      <Modal onRequestClose={() => setShowModal(false)} visible={showModal} animationType="slide">
+      <Modal
+        onRequestClose={() => setShowModal(false)}
+        visible={showModal}
+        animationType="slide"
+      >
         <Animated.View style={[pickerStyles.container, backgroundColorStyle]}>
           <View style={pickerStyles.pickerContainer}>
             <ColorPicker
@@ -132,17 +140,34 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
               <OpacitySlider style={pickerStyles.sliderStyle} adaptSpectrum />
 
               <View style={pickerStyles.previewTxtContainer}>
-                <PreviewText style={{ color: '#707070' }} colorFormat="hex" />
+                <PreviewText
+                  style={{
+                    color: '#282828',
+                    fontFamily: 'im-hyemin',
+                    fontSize: 20,
+                  }}
+                  colorFormat="rgba"
+                />
               </View>
             </ColorPicker>
           </View>
 
-          <Pressable style={pickerStyles.closeButton} onPress={handleCloseModal}>
-            <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>
+          <Pressable
+            style={pickerStyles.closeButton}
+            onPress={handleCloseModal}
+          >
+            <Text
+              style={{
+                color: '#282828',
+                fontFamily: 'im-hyemin-bold',
+                fontSize: 30,
+              }}
+            >
+              색상 선택완료
+            </Text>
           </Pressable>
         </Animated.View>
       </Modal>
-
 
       <View style={styles.webviewContainer}>
         <Image
@@ -153,6 +178,9 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
           source={require('../../assets/images/coloring/coloring_side_ddak.png')}
           style={styles.sideImageBottom}
         />
+        <View style={styles.ballon}>
+          <Balloons />
+        </View>
         <WebView
           ref={webViewRef}
           source={{ uri: 'http://192.168.30.124:3000' }}
@@ -162,10 +190,22 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({ navigation }) =
           onMessage={handleMessage}
         />
       </View>
-
-
-      <GreenButton style={styles.saveButtonContainer} onPress={handleSave} content="저장" />
-      <AlertModal isVisible={saveModal} text={['스케치북에 저장되었어요!']} onConfirm={handleClickSaveModal} />
+      <TouchableOpacity onPress={handleSave}>
+        <Image
+          source={require('../../assets/images/coloring/plane.png')}
+          style={styles.saveButtonContainer}
+        />
+      </TouchableOpacity>
+      {/* <GreenButton
+        style={styles.saveButtonContainer}
+        onPress={handleSave}
+        content="저장"
+      /> */}
+      <AlertModal
+        isVisible={saveModal}
+        text={['스케치북에 저장되었어요!']}
+        onConfirm={handleClickSaveModal}
+      />
     </ImageBackground>
   );
 };
@@ -177,33 +217,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   webviewContainer: {
-    marginTop: Dimensions.get('window').height * 0.08,
-    height: Dimensions.get('screen').height * 0.80,
+    marginTop: Dimensions.get('window').height * 0.11,
+    height: Dimensions.get('screen').height * 0.8,
     width: Dimensions.get('screen').width * 0.85,
-    padding: 30,
+    padding: 25,
     backgroundColor: '#D1A271',
+    borderRadius: 15,
   },
   webviewStyle: {
     flex: 1,
   },
   sideImageTop: {
     position: 'absolute',
-    top: 30,
-    right: -85,
+    transform: [{ rotate: '-90deg' }],
+    top: -85,
+    left: 185,
     width: 100,
     height: 100,
   },
   sideImageBottom: {
     position: 'absolute',
-    top: 150,
-    right: -85,
-    width: 100,
+    transform: [{ rotate: '-90deg' }],
+    top: -80,
+    left: 85,
+    width: 93,
     height: 100,
+  },
+  ballon: {
+    position: 'absolute',
+    top: -80,
+    right: 80,
+    width: 700,
+    height: 95,
   },
   paletteButtonContainer: {
     position: 'absolute',
-    bottom: 0,
-    left: 20,
+    bottom: 10,
+    left: 40,
     zIndex: 2,
   },
   paletteButton: {
@@ -212,13 +262,12 @@ const styles = StyleSheet.create({
   },
   saveButtonContainer: {
     position: 'absolute',
-    bottom: Dimensions.get('screen').height * 0.05,
-    right: Dimensions.get('screen').width * 0.04,
-    width: 100,
-    height: 60,
+    top: -Dimensions.get('screen').height * 0.15,
+    left: Dimensions.get('screen').width * 0.4,
+    width: 110,
+    height: 130,
   },
 });
-
 
 const pickerStyles = StyleSheet.create({
   container: {
@@ -228,10 +277,11 @@ const pickerStyles = StyleSheet.create({
   },
   pickerContainer: {
     alignSelf: 'center',
-    width: 300,
+    width: 430,
     backgroundColor: '#fff',
     padding: 20,
-    borderRadius: 20,
+    marginBottom: 60,
+    borderRadius: 15,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -243,7 +293,7 @@ const pickerStyles = StyleSheet.create({
     elevation: 10,
   },
   panelStyle: {
-    borderRadius: 2,
+    borderRadius: 10,
 
     shadowColor: '#000',
     shadowOffset: {
@@ -256,8 +306,8 @@ const pickerStyles = StyleSheet.create({
     elevation: 5,
   },
   sliderStyle: {
-    borderRadius: 20,
-    marginTop: 20,
+    borderRadius: 7,
+    marginTop: 15,
 
     shadowColor: '#000',
     shadowOffset: {
@@ -270,9 +320,9 @@ const pickerStyles = StyleSheet.create({
     elevation: 5,
   },
   previewTxtContainer: {
-    paddingTop: 20,
-    marginTop: 20,
-    borderTopWidth: 1,
+    // paddingTop: 20,
+    marginTop: 15,
+    // borderTopWidth: 1,
     borderColor: '#bebdbe',
   },
   openButton: {
@@ -294,8 +344,11 @@ const pickerStyles = StyleSheet.create({
   },
   closeButton: {
     position: 'absolute',
-    bottom: 10,
-    borderRadius: 20,
+    bottom: 75,
+    textAlign: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    height: 70,
     paddingHorizontal: 40,
     paddingVertical: 10,
     alignSelf: 'center',

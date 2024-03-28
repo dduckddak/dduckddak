@@ -2,10 +2,17 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ImageBackground, Image, FlatList, ImageSourcePropType,
+  ImageBackground,
+  Image,
+  FlatList,
+  ImageSourcePropType,
 } from 'react-native';
 
-import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
+import {
+  NavigationProp,
+  ParamListBase,
+  useFocusEffect,
+} from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
 import SketchbookList from './sketchbook/SketchbookList';
@@ -15,12 +22,12 @@ interface ColoringListScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-
 const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
-                                                                 navigation,
-                                                               }) => {
-  const [coloringList, setColoringList] = useState<{ coloringId: number, coloringFile: string }[]>([]);
-
+  navigation,
+}) => {
+  const [coloringList, setColoringList] = useState<
+    { coloringId: number; coloringFile: string }[]
+  >([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,20 +42,18 @@ const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
     }, []),
   );
 
-
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
-
-      <SketchbookList images={coloringList} navigation={navigation}>
-      </SketchbookList>
-
+      <SketchbookList
+        images={coloringList}
+        navigation={navigation}
+      ></SketchbookList>
     </ImageBackground>
   );
 };
-
 
 const styles = StyleSheet.create({
   imageBackground: {
@@ -56,7 +61,6 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-
 });
 
 export default ColoringListScreen;

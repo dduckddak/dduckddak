@@ -57,8 +57,8 @@ const styles = StyleSheet.create({
   },
   modalBox: {
     width: '100%',
+    height: '20%',
     backgroundColor: '#2B98BB',
-    borderRadius: 4,
     elevation: 2,
     flexDirection: 'row',
     justifyContent: 'center',

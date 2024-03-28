@@ -14,6 +14,7 @@ import { RootStackParamList } from '../../App';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import {getBookDetail,BookDetailData} from '../../api/bookApi';
 import { BookSummary } from '../../App';
+import { createReview } from '../../api/bookApi'
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -29,7 +30,7 @@ interface DetailBookScreenProps {
 interface DetailBook {
   bookAuthor:string,
   bookStory:string,
-  isLike:boolean
+  isLike:Boolean
 }
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
@@ -40,14 +41,34 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [isHappySelected, setIsHappySelected] = useState(false);
   const [isSadSelected, setIsSadSelected] = useState(false);
 
-  const handleHappyPress = () => {
+  const handleHappyPress = async () => {
     setIsHappySelected((prev) => !prev);
     setIsSadSelected(false);
+    // 리뷰 생성 또는 업데이트 로직
+    try {
+      await createReview({
+        bookId: bookSummary.bookId,
+        isLike: true,
+      });
+      console.log("Review updated to like");
+    } catch (error) {
+      console.error("Failed to update review:", error);
+    }
   };
 
-  const handleSadPress = () => {
+  const handleSadPress = async () => {
     setIsSadSelected((prev) => !prev);
     setIsHappySelected(false);
+    // 리뷰 생성 또는 업데이트 로직
+    try {
+      await createReview({
+        bookId: bookSummary.bookId,
+        isLike: false,
+      });
+      console.log("Review updated to dislike");
+    } catch (error) {
+      console.error("Failed to update review:", error);
+    }
   };
 
   const goToTalk = (id: number) => {

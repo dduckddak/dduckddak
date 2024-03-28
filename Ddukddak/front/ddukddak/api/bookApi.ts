@@ -32,7 +32,7 @@ export interface BookDetailData {
 }
 
 export interface LikeBookListData {
-  bookList?: {
+  likeBookList?: {
     bookId: number;
     bookTitle: string;
     coverImage: string;
@@ -283,9 +283,9 @@ export const getReviewDetail = async (
  * @returns {Promise<BookListResponse>} "Success" 메시지와 함께 LikeBookList를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
-export const getLikeList = async (): Promise<BookListResponse> => {
+export const getLikeList = async (): Promise<LikeBookListResponse> => {
   try {
-    const response = await apiClient.get<BookListResponse>(
+    const response = await apiClient.get<LikeBookListResponse>(
       '/api/v1/books/like',
     );
     return response.data;

@@ -38,7 +38,6 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
   }, []);
 
 
-
   const handleNavigateDrawing = () => {
     if (!selectedImage) {
       // TODO 예외처리 필요
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').width / 6,
     resizeMode: 'cover',
     alignSelf: 'center',
-
+    backgroundColor: 'white',
   },
   flatListContentContainer: {
     justifyContent: 'center',

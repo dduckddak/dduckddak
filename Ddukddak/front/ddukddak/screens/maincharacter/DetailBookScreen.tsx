@@ -14,7 +14,7 @@ import { RootStackParamList } from '../../App';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import { getBookDetail, BookDetailData } from '../../api/bookApi';
 import { BookSummary } from '../../App';
-import { createReview } from '../../api/bookApi'
+import { createReview } from '../../api/bookApi';
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -28,9 +28,9 @@ interface DetailBookScreenProps {
 }
 
 interface DetailBook {
-  bookAuthor: string,
-  bookStory: string,
-  isLike: Boolean
+  bookAuthor: string;
+  bookStory: string;
+  isLike: Boolean;
 }
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
@@ -50,11 +50,10 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
       });
       console.log(response);
       // checkLike(response.isLike);
-
     } catch (error) {
-      console.error("Failed to update review:", error);
+      console.error('Failed to update review:', error);
     }
-  }
+  };
 
   const checkLike = (isLike: Boolean) => {
     if (isLike == null) {
@@ -67,12 +66,11 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
       setIsHappySelected(true);
       setIsSadSelected(false);
       return;
-    }
-    else {
+    } else {
       setIsSadSelected(true);
       setIsHappySelected(false);
     }
-  }
+  };
 
   const handleHappyPress = async () => {
     setIsHappySelected((prev) => !prev);
@@ -97,18 +95,15 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
       try {
         const response = await getBookDetail(bookid);
         setSelectedBook(response.book);
-        console.log(response.book)
+        console.log(response.book);
 
-        checkLike(response.book.isLike)
-
+        checkLike(response.book.isLike);
       } catch (error) {
         console.error('Failed:', error);
       }
     };
     fetchBook(bookSummary.bookId);
   }, []);
-
-
 
   return (
     <ImageBackground
@@ -196,6 +191,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    marginTop: 50,
   },
   headerText: {
     fontSize: 50,

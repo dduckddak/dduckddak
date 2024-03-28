@@ -277,7 +277,6 @@ export default function App() {
               name="detail"
               component={DetailBookScreen}
               options={{
-                headerTitle: LogoTitle,
                 headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />

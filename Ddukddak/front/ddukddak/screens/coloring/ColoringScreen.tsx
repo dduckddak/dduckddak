@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
-  ImageBackground, Image, FlatList, ImageSourcePropType, TouchableOpacity,
+  ImageBackground,
+  Image,
+  FlatList,
+  ImageSourcePropType,
+  TouchableOpacity,
+  Animated,
+  Alert,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -17,14 +23,51 @@ interface ColoringScreenProps {
 interface Item {
   item: string;
 }
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
 
-const ColoringScreen: React.FC<ColoringScreenProps> = ({
-                                                         navigation,
-                                                       }) => {
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
 
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-30, -40],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
   const [coloringBaseList, setColoringBaseList] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
 
   useEffect(() => {
     const handleColoringScreenEnter = async () => {
@@ -37,49 +80,75 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
     handleColoringScreenEnter();
   }, []);
 
-
   const handleNavigateDrawing = () => {
     if (!selectedImage) {
       // TODO 예외처리 필요
       console.log('선택된 것 없음');
+      Alert.alert('알림', '그림을 선택해주세요.');
       return;
     }
 
     navigation.navigate('coloringDraw', { uri: selectedImage });
-
   };
 
   const renderItem = ({ item }: { item: string }) => (
     <View style={styles.imageContainer}>
       <TouchableOpacity onPress={() => setSelectedImage(item)}>
-        <Image source={{ uri: item }} style={[styles.image, selectedImage === item ? styles.selectedImage : null]} />
+        <Image
+          source={{ uri: item }}
+          style={[
+            styles.image,
+            selectedImage === item ? styles.selectedImage : null,
+          ]}
+        />
       </TouchableOpacity>
     </View>
   );
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background.png')}
+      source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud1}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
       <View style={styles.flexContainer}>
-
-        <View
-          style={styles.box}
-        >
+        <View style={styles.box}>
           <FlatList
             style={styles.flatList}
             data={coloringBaseList}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
-            numColumns={4}
+            numColumns={2}
             contentContainerStyle={styles.flatListContentContainer}
           />
         </View>
 
         <GreenButton
           onPress={handleNavigateDrawing}
-          content="색칠하러 가기"
+          content="선택한그림 색칠"
           style={styles.naviBtn}
         />
       </View>
@@ -87,34 +156,40 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({
   );
 };
 
-
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
-  }
-  ,
+  },
+  cloud: { position: 'absolute', top: 5, left: 200 },
+  cloud1: { position: 'absolute', top: 25, left: 400, width: 200, height: 130 },
+  cloud2: {
+    position: 'absolute',
+    top: 5,
+    left: 690,
+    width: 150,
+    height: 110,
+    transform: 'scaleX(-1)',
+  },
+  cloud3: { position: 'absolute', top: 35, left: 1060 },
   flexContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-
-  }
-  ,
+  },
   box: {
     backgroundColor: 'rgba(205, 234, 185, 0.48)',
-    height:
-      Dimensions.get('screen').height * 0.6,
-    width:
-      Dimensions.get('screen').width * 0.85,
+    height: Dimensions.get('screen').height * 0.7,
+    width: Dimensions.get('screen').width * 0.9,
     paddingVertical: 20,
-  }
-  ,
+    marginTop: '6%',
+    padding: '2%',
+    borderRadius: 15,
+  },
   naviBtn: {
-    width: Dimensions.get('screen').width * 0.15,
-    marginTop:
-      Dimensions.get('screen').height * 0.04,
+    width: Dimensions.get('screen').width * 0.2,
+    marginTop: Dimensions.get('screen').height * 0.02,
   },
 
   imageContainer: {
@@ -124,8 +199,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get('screen').width / 6,
-    height: Dimensions.get('screen').width / 6,
+    width: Dimensions.get('screen').width / 2.5,
+    height: Dimensions.get('screen').width / 3,
     resizeMode: 'cover',
     alignSelf: 'center',
     backgroundColor: 'white',
@@ -139,7 +214,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   selectedImage: {
-    borderWidth: 3,
+    borderWidth: 8,
+    borderRadius: 10,
     borderColor: 'rgba(180, 130, 210, 0.5)',
   },
 });

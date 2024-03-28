@@ -9,6 +9,8 @@ import {
   SafeAreaView,
   StatusBar,
   Text,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { RadioButtonProps, RadioGroup } from 'react-native-radio-buttons-group';
@@ -137,91 +139,97 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
         source={require('../../assets/images/background/background2.png')}
         style={styles.imageBackground}
       >
-        <View style={styles.container}>
-          <Image
-            source={require('../../assets/images/signup.png')}
-            style={styles.signup}
-          />
-          <View
-            style={[
-              StyleSheet.absoluteFill,
-              { paddingTop: StatusBar.currentHeight },
-            ]}
-          >
-            <View style={styles.TopContainer}>
-              <View style={styles.flexContainer}>
-                <Text style={[styles.text, { marginTop: 2 }]}>성별</Text>
-                <RadioGroup
-                  radioButtons={radioButtons}
-                  onPress={setSelectedId}
-                  selectedId={selectedId}
-                  layout="row"
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <Image
+              source={require('../../assets/images/signup.png')}
+              style={styles.signup}
+            />
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                { paddingTop: StatusBar.currentHeight },
+              ]}
+            >
+              <View style={styles.TopContainer}>
+                <View style={styles.flexContainer}>
+                  <Text style={[styles.text, { marginTop: 2 }]}>성별</Text>
+                  <RadioGroup
+                    radioButtons={radioButtons}
+                    onPress={setSelectedId}
+                    selectedId={selectedId}
+                    layout="row"
+                  />
+                </View>
+                <View style={[styles.flexContainer, { marginTop: 10 }]}>
+                  <Text style={[styles.text, { marginTop: 10 }]}>이름</Text>
+                  <TextInput
+                    placeholder="이름을 입력해주세요"
+                    style={styles.inputContainer}
+                    value={signUpState.name}
+                    onChangeText={(text) => handleInputChange('name', text)}
+                  />
+                </View>
+                <View style={styles.flexContainer}>
+                  <Text style={[styles.text, { marginTop: 6 }]}>ID</Text>
+                  <TextInput
+                    placeholder="ID를 입력해주세요"
+                    style={[
+                      styles.inputContainer,
+                      !signUpState.isUserIdValid && styles.inputContainerError,
+                    ]}
+                    value={signUpState.userId}
+                    onChangeText={(text) => handleInputChange('userId', text)}
+                  />
+                </View>
+                <View style={styles.flexContainer}>
+                  <Text style={[styles.text, { marginTop: 6 }]}>PW</Text>
+                  <TextInput
+                    placeholder="비밀번호를 입력해주세요"
+                    style={styles.inputContainer}
+                    value={signUpState.password}
+                    onChangeText={(text) => handleInputChange('password', text)}
+                    secureTextEntry={true}
+                  />
+                </View>
+                <View style={styles.flexContainer}>
+                  <Text style={[styles.text, { marginTop: 6 }]}>PW 확인</Text>
+                  <TextInput
+                    placeholder="비밀번호 확인을 위해 입력해주세요"
+                    style={styles.inputContainer}
+                    value={signUpState.confirmPassword}
+                    onChangeText={(text) =>
+                      handleInputChange('confirmPassword', text)
+                    }
+                    secureTextEntry={true}
+                  />
+                </View>
+                <View style={styles.flexContainer}>
+                  <Text
+                    style={[styles.text, { marginTop: 5, marginBottom: 0 }]}
+                  >
+                    생년월일
+                  </Text>
+                  <TextInput
+                    placeholder="생년월일을 입력해주세요"
+                    style={styles.inputContainer}
+                    value={signUpState.birthDate}
+                    onChangeText={(text) =>
+                      handleInputChange('birthDate', text)
+                    }
+                  />
+                </View>
+              </View>
+              <View style={styles.bottomContainer}>
+                <GreenButton
+                  onPress={handleSignUp}
+                  content="회원가입"
+                  style={{ width: 170, height: 80 }}
                 />
               </View>
-              <View style={[styles.flexContainer, { marginTop: 10 }]}>
-                <Text style={[styles.text, { marginTop: 10 }]}>이름</Text>
-                <TextInput
-                  placeholder="이름을 입력해주세요"
-                  style={styles.inputContainer}
-                  value={signUpState.name}
-                  onChangeText={(text) => handleInputChange('name', text)}
-                />
-              </View>
-              <View style={styles.flexContainer}>
-                <Text style={[styles.text, { marginTop: 6 }]}>ID</Text>
-                <TextInput
-                  placeholder="ID를 입력해주세요"
-                  style={[
-                    styles.inputContainer,
-                    !signUpState.isUserIdValid && styles.inputContainerError,
-                  ]}
-                  value={signUpState.userId}
-                  onChangeText={(text) => handleInputChange('userId', text)}
-                />
-              </View>
-              <View style={styles.flexContainer}>
-                <Text style={[styles.text, { marginTop: 6 }]}>PW</Text>
-                <TextInput
-                  placeholder="비밀번호를 입력해주세요"
-                  style={styles.inputContainer}
-                  value={signUpState.password}
-                  onChangeText={(text) => handleInputChange('password', text)}
-                  secureTextEntry={true}
-                />
-              </View>
-              <View style={styles.flexContainer}>
-                <Text style={[styles.text, { marginTop: 6 }]}>PW 확인</Text>
-                <TextInput
-                  placeholder="비밀번호 확인을 위해 입력해주세요"
-                  style={styles.inputContainer}
-                  value={signUpState.confirmPassword}
-                  onChangeText={(text) =>
-                    handleInputChange('confirmPassword', text)
-                  }
-                  secureTextEntry={true}
-                />
-              </View>
-              <View style={styles.flexContainer}>
-                <Text style={[styles.text, { marginTop: 5, marginBottom: 0 }]}>
-                  생년월일
-                </Text>
-                <TextInput
-                  placeholder="생년월일을 입력해주세요"
-                  style={styles.inputContainer}
-                  value={signUpState.birthDate}
-                  onChangeText={(text) => handleInputChange('birthDate', text)}
-                />
-              </View>
-            </View>
-            <View style={styles.bottomContainer}>
-              <GreenButton
-                onPress={handleSignUp}
-                content="회원가입"
-                style={{ width: 170, height: 80 }}
-              />
             </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </ImageBackground>
     </SafeAreaView>
   );

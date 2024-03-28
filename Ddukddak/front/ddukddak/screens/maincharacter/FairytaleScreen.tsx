@@ -9,6 +9,8 @@ import {
   Modal,
   Pressable,
   BackHandler,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { NavigationProp } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -159,32 +161,34 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
       case 4:
         return (
           <View style={styles.stepFourContainer}>
-            <View>
-              <TextInput
-                style={styles.textInputStyle}
-                placeholder="책 이름 입력"
-                value={data.bookName || ''}
-                onChangeText={handleBookNameChange}
-              />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  gap: 10,
-                }}
-              >
-                <GreenButton
-                  onPress={handlePreviousStep}
-                  content="이전"
-                  style={{ width: 100, height: 80, marginTop: 10 }}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <View>
+                <TextInput
+                  style={styles.textInputStyle}
+                  placeholder="책 이름 입력"
+                  value={data.bookName || ''}
+                  onChangeText={handleBookNameChange}
                 />
-                <GreenButton
-                  onPress={handleNextStep}
-                  content="나만의 동화 만들기"
-                  style={{ width: 250, height: 80, marginTop: 10 }}
-                />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    gap: 10,
+                  }}
+                >
+                  <GreenButton
+                    onPress={handlePreviousStep}
+                    content="이전"
+                    style={{ width: 100, height: 80, marginTop: 10 }}
+                  />
+                  <GreenButton
+                    onPress={handleNextStep}
+                    content="나만의 동화 만들기"
+                    style={{ width: 250, height: 80, marginTop: 10 }}
+                  />
+                </View>
               </View>
-            </View>
+            </TouchableWithoutFeedback>
           </View>
         );
       default:

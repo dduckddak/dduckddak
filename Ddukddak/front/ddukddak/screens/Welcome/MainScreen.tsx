@@ -4,7 +4,8 @@ import {
   Pressable,
   Image,
   ImageBackground,
-  StyleSheet, Text,
+  StyleSheet,
+  Text,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
@@ -19,15 +20,14 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
   const userSex = useUserStore((state) => state.sex);
   const [mainPageCharacter, setMainPageCharacter] = useState();
 
-
   useEffect(() => {
     const updateMainImage = () => {
       if (userSex === 'M') {
-        setMainPageCharacter(require('../../assets/images/DD/뚝이.png'))
+        setMainPageCharacter(require('../../assets/images/DD/뚝이3.png'));
       } else {
-        setMainPageCharacter(require('../../assets/images/DD/딱이.png'))
+        setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
       }
-    }
+    };
 
     updateMainImage();
   }, []);
@@ -39,23 +39,25 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
       <View style={styles.mainContainer}>
         {/* Left side content */}
         <View style={styles.leftContainer}>
-          <Pressable onPress={() => navigation.navigate('MainCharacterScreen')}>
-            <Image
-              source={mainPageCharacter}
-              style={styles.ddak2}
-            />
-
-            <Image
-              source={require('../../assets/images/Main/maincharacter.png')}
-              style={styles.greenButton}
-            />
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate('mybook')}>
-            <Image
-              source={require('../../assets/images/Main/books.png')}
-              style={styles.bookicon}
-            />
-          </Pressable>
+          <View style={{ zIndex: 999 }}>
+            <Pressable
+              onPress={() => navigation.navigate('MainCharacterScreen')}
+            >
+              <Image source={mainPageCharacter} style={styles.ddak2} />
+              <Image
+                source={require('../../assets/images/Main/maincharacter.png')}
+                style={styles.greenButton}
+              />
+            </Pressable>
+          </View>
+          <View style={{ zIndex: 1 }}>
+            <Pressable onPress={() => navigation.navigate('mybook')}>
+              <Image
+                source={require('../../assets/images/Main/books.png')}
+                style={styles.bookicon}
+              />
+            </Pressable>
+          </View>
         </View>
         {/* Right side content */}
         <View style={styles.rightContainer}>
@@ -122,6 +124,5 @@ const styles = StyleSheet.create({
     top: '31%',
     width: 350,
     height: 400,
-    zIndex: 20,
   },
 });

@@ -8,6 +8,8 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -17,71 +19,6 @@ import { BookSummary } from '../../App';
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
-
-// export const books = [
-//   {
-//     id: 1,
-//     coverName: 'cover-book-title-1.jpg',
-//     title: '잭과콩나무',
-//     author: 'Author Name 1',
-//     synopsis: 'This is the synopsis of Book Title 1. It talks about...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-//
-//   {
-//     id: 122,
-//     coverName: 'cover-book-title-2.jpg',
-//     title: '빨간모자',
-//     author: 'Author Name 2',
-//     synopsis:
-//       'This is the synopsis of Book Title 2. It explores the concept of...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-//   {
-//     id: 3,
-//     coverName: 'cover-book-title-3.jpg',
-//     title: '도깨비 방망이',
-//     author: 'Author Name 3',
-//     synopsis:
-//       'This is the synopsis of Book Title 3. The story revolves around...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-//   {
-//     id: 4,
-//     coverName: 'cover-book-title-4.jpg',
-//     title: '책일',
-//     author: 'Author Name 4',
-//     synopsis:
-//       'This is the synopsis of Book Title 4. It delves into the life of...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-//   {
-//     id: 5,
-//     coverName: 'cover-book-title-5.jpg',
-//     title: '책이',
-//     author: 'Author Name 5',
-//     synopsis:
-//       'This is the synopsis of Book Title 5. A tale of adventure and...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-//   {
-//     id: 6,
-//     coverName: 'cover-book-title-6.jpg',
-//     title: '책삼',
-//     author: 'Author Name 6',
-//     synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-//   {
-//     id: 7,
-//     coverName: 'cover-book-title-7.jpg',
-//     title: '책사',
-//     author: 'Author Name 7',
-//     synopsis:
-//       'This is the synopsis of Book Title 7. A gripping narrative about...',
-//     coverImage: require('../../assets/images/books/bookcover.png'),
-//   },
-// ];
 
 const tempBookData = {
   bookList: [
@@ -191,71 +128,77 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
       source={require('../../assets/images/background/background.png')}
       style={styles.imageBackground}
     >
-      <View style={styles.flexContainer}>
-        <View style={styles.container}>
-          <TouchableOpacity onPress={previousPage}>
-            <Image source={require('../../assets/images/button/before.png')} />
-          </TouchableOpacity>
-          <View style={styles.textContainer}>
-            {bookList.length > 0 && (
-              <Pressable onPress={() => goToDetail(bookList[currentPage])}>
-                <View style={styles.box}>
-                  <Text style={styles.text}>이 책 어때요 ?</Text>
-                  <Image
-                    source={{ uri: bookList[currentPage].coverImage }}
-                    style={styles.bookCover}
-                  />
-                  <Text style={styles.titletext}>
-                    제목 : {bookList[currentPage].bookTitle}
-                  </Text>
-                </View>
-              </Pressable>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.flexContainer}>
+          <View style={styles.container}>
+            <TouchableOpacity onPress={previousPage}>
+              <Image
+                source={require('../../assets/images/button/before.png')}
+              />
+            </TouchableOpacity>
+            <View style={styles.textContainer}>
+              {bookList.length > 0 && (
+                <Pressable onPress={() => goToDetail(bookList[currentPage])}>
+                  <View style={styles.box}>
+                    <Text style={styles.text}>이 책 어때요 ?</Text>
+                    <Image
+                      source={{ uri: bookList[currentPage].coverImage }}
+                      style={styles.bookCover}
+                    />
+                    <Text style={styles.titletext}>
+                      제목 : {bookList[currentPage].bookTitle}
+                    </Text>
+                  </View>
+                </Pressable>
+              )}
+            </View>
+            <TouchableOpacity onPress={nextPage}>
+              <Image source={require('../../assets/images/button/next.png')} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.searchButtonAndInputContainer}>
+            <Pressable onPress={handleToggleOrSearch}>
+              <MaterialCommunityIcons
+                name="card-search-outline"
+                size={100}
+                color="#C5E1C9"
+              />
+            </Pressable>
+            {showSearch && (
+              <TextInput
+                style={styles.searchInput}
+                placeholder="책 제목을 검색해보세요."
+                value={searchText}
+                onChangeText={setSearchText}
+                onSubmitEditing={handleSearch}
+              />
             )}
           </View>
-          <TouchableOpacity onPress={nextPage}>
-            <Image source={require('../../assets/images/button/next.png')} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.searchButtonAndInputContainer}>
-          <Pressable onPress={handleToggleOrSearch}>
-            <MaterialCommunityIcons
-              name="card-search-outline"
-              size={100}
-              color="#C5E1C9"
-            />
-          </Pressable>
-          {showSearch && (
-            <TextInput
-              style={styles.searchInput}
-              placeholder="책 제목을 검색해보세요."
-              value={searchText}
-              onChangeText={setSearchText}
-              onSubmitEditing={handleSearch}
-            />
-          )}
-        </View>
-        <View style={styles.Likebutton}>
-          <Pressable onPress={() => navigation.navigate('likeList')}>
-            <MaterialCommunityIcons
-              name="heart-box-outline"
-              size={100}
-              color="red"
-            />
-          </Pressable>
-        </View>
-        <View style={styles.dotsContainer}>
-          {bookList &&
-            bookList.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  index === currentPage ? styles.activeDot : styles.inactiveDot,
-                ]}
+          <View style={styles.Likebutton}>
+            <Pressable onPress={() => navigation.navigate('likeList')}>
+              <MaterialCommunityIcons
+                name="heart-box-outline"
+                size={100}
+                color="red"
               />
-            ))}
+            </Pressable>
+          </View>
+          <View style={styles.dotsContainer}>
+            {bookList &&
+              bookList.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.dot,
+                    index === currentPage
+                      ? styles.activeDot
+                      : styles.inactiveDot,
+                  ]}
+                />
+              ))}
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 };

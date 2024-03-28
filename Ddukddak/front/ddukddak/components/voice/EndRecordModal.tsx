@@ -7,6 +7,8 @@ import {
   Text,
   TextInput,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import SkyButton from '../SkyButton';
 import { addVoice } from '../../api/voiceApi';
@@ -73,23 +75,25 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
         animationType="fade"
         onRequestClose={onClose}
       >
-        <Pressable style={styles.background} onPress={onClose}>
-          <View style={styles.modalBox}>
-            <Text style={styles.text}>고생했어!!</Text>
-            <Text style={styles.text}>누구의 목소리야??</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setVoicename}
-              value={voicename}
-              placeholder="목소리 이름을 입력하세요"
-            />
-            <SkyButton
-              content="전송하기"
-              onPress={handleUploadVoice}
-              style={styles.button}
-            />
-          </View>
-        </Pressable>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Pressable style={styles.background} onPress={onClose}>
+            <View style={styles.modalBox}>
+              <Text style={styles.text}>고생했어!!</Text>
+              <Text style={styles.text}>누구의 목소리야??</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={setVoicename}
+                value={voicename}
+                placeholder="목소리 이름을 입력하세요"
+              />
+              <SkyButton
+                content="전송하기"
+                onPress={handleUploadVoice}
+                style={styles.button}
+              />
+            </View>
+          </Pressable>
+        </TouchableWithoutFeedback>
       </Modal>
     </>
   );

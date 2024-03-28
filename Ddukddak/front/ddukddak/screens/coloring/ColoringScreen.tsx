@@ -15,6 +15,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { Dimensions } from 'react-native';
 import { getColoringBases } from '../../api/coloringApi';
+import AlertModal from '../../components/AlertModal';
 
 interface ColoringScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -68,6 +69,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
   const [coloringBaseList, setColoringBaseList] = useState<string[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const handleColoringScreenEnter = async () => {
@@ -84,16 +86,22 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
     if (!selectedImage) {
       // TODO 예외처리 필요
       console.log('선택된 것 없음');
-      Alert.alert('알림', '그림을 선택해주세요.');
+      setIsModalVisible(true);
       return;
     }
 
     navigation.navigate('coloringDraw', { uri: selectedImage });
   };
 
+  const handleImageSelect = (item: string) => {
+    setSelectedImage((prevSelectedImage) =>
+      prevSelectedImage === item ? null : item,
+    );
+  };
+
   const renderItem = ({ item }: { item: string }) => (
     <View style={styles.imageContainer}>
-      <TouchableOpacity onPress={() => setSelectedImage(item)}>
+      <TouchableOpacity onPress={() => handleImageSelect(item)}>
         <Image
           source={{ uri: item }}
           style={[
@@ -150,6 +158,11 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
           onPress={handleNavigateDrawing}
           content="선택한그림 색칠"
           style={styles.naviBtn}
+        />
+        <AlertModal
+          isVisible={isModalVisible}
+          text={['그림을 선택해주세요.']}
+          onConfirm={() => setIsModalVisible(false)}
         />
       </View>
     </ImageBackground>

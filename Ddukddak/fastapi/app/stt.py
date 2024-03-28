@@ -5,7 +5,7 @@ import whisper
 import torch
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-model = whisper.load_model("small", device=DEVICE)
+model = whisper.load_model("medium", device=DEVICE)
 
 async def stt(file):
     if not file:

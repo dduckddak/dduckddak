@@ -30,7 +30,7 @@ def hybrid_recommendations(user_seq, cf_weight=0.2, cb_weight=0.8, top_n=7):
     # 최종 추천된 책의 ID 목록 반환
     return [book_id for book_id, _ in recommended_books]
 
-# # 사용자 ID 예시로 하이브리드 추천 실행
-# user_seq = 1
-# final_recommendations = hybrid_recommendations(user_seq)
-# print(f"하이브리드 추천 결과 (Top {len(final_recommendations)}권): {final_recommendations}")
+# 사용자 ID 예시로 하이브리드 추천 실행
+user_seq = 1
+final_recommendations = hybrid_recommendations(user_seq)
+print(f"하이브리드 추천 결과 (Top {len(final_recommendations)}권): {final_recommendations}")

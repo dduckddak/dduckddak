@@ -1,19 +1,43 @@
 from dataset import review_info_list, book_info_list_schema
 from joblib import load
 import numpy as np
-
+import pymysql
+import os
+from dotenv import load_dotenv
 # 컨텐츠 기반 필터링 모델 및 TFIDF 벡터라이저 로드
 tfidf, cosine_sim = load('models/content_based_model.joblib')
 
+# 데이터베이스 연결 설정
+def get_db_connection():
+    load_dotenv()
+    DB_HOST = os.getenv("DB_HOST")
+    DB_USER = os.getenv("DB_USER")
+    DB_PASSWORD = os.getenv("DB_PASSWORD")
+    DB_DATABASE = os.getenv("DB_DATABASE")
+    connection = pymysql.connect(
+        host=DB_HOST,
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_DATABASE,
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+    return connection
+
+# 사용자의 선호도 정보 조회
 def get_user_preferences(user_seq):
-    """
-    특정 사용자의 '좋아요'와 '싫어요'한 책의 ID 목록을 반환합니다.
-    
-    :param user_seq: 사용자의 고유 번호
-    :return: 좋아요한 책의 ID 목록, 싫어요한 책의 ID 목록
-    """
-    likes = [review.book_id for review in review_info_list.reviews if review.user_seq == user_seq and review.is_like == 1]
-    dislikes = [review.book_id for review in review_info_list.reviews if review.user_seq == user_seq and review.is_like == 0]
+    connection = get_db_connection()
+    try:
+        with connection.cursor() as cursor:
+            # 사용자의 '좋아요'한 책 목록 조회
+            cursor.execute("SELECT book_id FROM review WHERE user_seq = %s AND is_like = 1", (user_seq,))
+            likes = [row['book_id'] for row in cursor.fetchall()]
+            
+            # 사용자의 '싫어요'한 책 목록 조회
+            cursor.execute("SELECT book_id FROM review WHERE user_seq = %s AND is_like = 0", (user_seq,))
+            dislikes = [row['book_id'] for row in cursor.fetchall()]
+    finally:
+        connection.close()
     return likes, dislikes
 
 def get_cb_recommendations(user_seq, n=30):

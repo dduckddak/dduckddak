@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Image, ImageSourcePropType, StyleSheet, Dimensions, FlatList, TouchableOpacity } from 'react-native';
 import GreenButton from '../../../components/GreenButton';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import EmptyListComponent from '../../../components/EmptyListComponent';
 
 // const windowWidth = Dimensions.get('window').width;
 
@@ -40,6 +41,7 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images }) => {
           keyExtractor={(item) => item.coloringId.toString()}
           numColumns={4}
           contentContainerStyle={styles.flatListContentContainer}
+          ListEmptyComponent={<EmptyListComponent imageHeightRatio={0.55} />}
         />
       </View>
       <GreenButton

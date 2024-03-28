@@ -346,16 +346,15 @@ export default function App() {
               component={ColoringScreen}
               options={{
                 headerTitle: LogoTitle,
-                headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             <Stack.Screen
               name="coloringDraw"
               component={ColoringDrawScreen}
               options={{
-                headerTransparent: true,
                 headerTitle: LogoTitle,
-                headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             <Stack.Screen
@@ -363,8 +362,7 @@ export default function App() {
               component={ColoringListScreen}
               options={{
                 headerTitle: LogoTitle,
-                headerTransparent: true,
-                headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             <Stack.Screen
@@ -372,8 +370,7 @@ export default function App() {
               component={ColoringDetailScreen}
               options={{
                 headerTitle: LogoTitle,
-                headerTransparent: true,
-                headerBackVisible: false,
+                headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />
             {/*  좋아요 한 책 페이지*/}

@@ -12,7 +12,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
-import {getBookDetail,BookDetailData} from '../../api/bookApi';
+import { getBookDetail, BookDetailData } from '../../api/bookApi';
 import { BookSummary } from '../../App';
 import { createReview } from '../../api/bookApi'
 
@@ -28,47 +28,64 @@ interface DetailBookScreenProps {
 }
 
 interface DetailBook {
-  bookAuthor:string,
-  bookStory:string,
-  isLike:Boolean
+  bookAuthor: string,
+  bookStory: string,
+  isLike: Boolean
 }
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
-  const [selectedBook, setSelectedBook] =useState<DetailBook|undefined>();
+  const [selectedBook, setSelectedBook] = useState<DetailBook | undefined>();
 
-  const bookSummary:BookSummary= route.params;
+  const bookSummary: BookSummary = route.params;
 
   const [isHappySelected, setIsHappySelected] = useState(false);
   const [isSadSelected, setIsSadSelected] = useState(false);
 
-  const handleHappyPress = async () => {
-    setIsHappySelected((prev) => !prev);
-    setIsSadSelected(false);
+  const updateReview = async (like: boolean) => {
     // 리뷰 생성 또는 업데이트 로직
     try {
-      await createReview({
+      const response = await createReview({
         bookId: bookSummary.bookId,
-        isLike: true,
+        like: like,
       });
-      console.log("Review updated to like");
+      console.log(response);
+      // checkLike(response.isLike);
+
     } catch (error) {
       console.error("Failed to update review:", error);
     }
+  }
+
+  const checkLike = (isLike: Boolean) => {
+    if (isLike == null) {
+      setIsHappySelected(false);
+      setIsSadSelected(false);
+      return;
+    }
+
+    if (isLike) {
+      setIsHappySelected(true);
+      setIsSadSelected(false);
+      return;
+    }
+    else {
+      setIsSadSelected(true);
+      setIsHappySelected(false);
+    }
+  }
+
+  const handleHappyPress = async () => {
+    setIsHappySelected((prev) => !prev);
+    setIsSadSelected(false);
+
+    await updateReview(true);
   };
 
   const handleSadPress = async () => {
     setIsSadSelected((prev) => !prev);
     setIsHappySelected(false);
-    // 리뷰 생성 또는 업데이트 로직
-    try {
-      await createReview({
-        bookId: bookSummary.bookId,
-        isLike: false,
-      });
-      console.log("Review updated to dislike");
-    } catch (error) {
-      console.error("Failed to update review:", error);
-    }
+
+    await updateReview(false);
   };
 
   const goToTalk = (id: number) => {
@@ -76,11 +93,14 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   };
 
   useEffect(() => {
-    const fetchBook = async (bookid:number) => {
+    const fetchBook = async (bookid: number) => {
       try {
         const response = await getBookDetail(bookid);
         setSelectedBook(response.book);
         console.log(response.book)
+
+        checkLike(response.book.isLike)
+
       } catch (error) {
         console.error('Failed:', error);
       }
@@ -101,7 +121,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri:bookSummary.coverImage}}
+                source={{ uri: bookSummary.coverImage }}
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>

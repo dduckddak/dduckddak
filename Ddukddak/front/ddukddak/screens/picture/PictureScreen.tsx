@@ -20,17 +20,19 @@ const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마
 const CARD_HEIGHT = CARD_WIDTH;
 
 function PictureScreen() {
-  const [images, setImages] = useState<
+  const [imageData, setImageData] = useState<
     { uri: string; selected: boolean; id: number }[]
   >([]);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchPhotos = async () => {
+  const readPhotos = async () => {
+    setIsLoading(true);
     try {
       const response = await getPhotos();
       if (response.photoList) {
-        setImages(
+        setImageData(
           response.photoList.map((photo, index) => ({
             uri: photo.photoFile,
             selected: false,
@@ -44,18 +46,20 @@ function PictureScreen() {
       } else {
         console.log('알 수 없는 에러', error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPhotos();
+    readPhotos();
   }, []);
 
   // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {
     // 삭제 모드일 때만 선택 가능
     if (deleteMode) {
-      setImages((images) =>
+      setImageData((images) =>
         images.map((img, i) => {
           if (i === index) {
             const updatedSelected = !img.selected;
@@ -86,7 +90,7 @@ function PictureScreen() {
     if (deleteMode) {
       try {
         const response = await deletePhotos({ photoIds: selectedImages });
-        setImages((images) =>
+        setImageData((images) =>
           images.filter((img) => !selectedImages.includes(img.id)),
         );
         setDeleteMode(false);
@@ -125,11 +129,13 @@ function PictureScreen() {
     >
       <View style={styles.container}>
         <FlatList
-          data={images}
+          data={imageData}
           renderItem={renderImageItem}
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
-          ListEmptyComponent={<EmptyListComponent />}
+          ListEmptyComponent={
+            !isLoading && imageData.length === 0 ? <EmptyListComponent /> : null
+          }
         />
       </View>
       <View style={styles.buttonContainer}>

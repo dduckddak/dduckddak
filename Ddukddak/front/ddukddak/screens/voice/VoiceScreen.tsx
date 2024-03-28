@@ -68,11 +68,13 @@ function VoiceScreen() {
   const navigation = useNavigation();
 
   const [voiceData, setVoiceData] = useState<Voice[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 현재 재생 중인 사운드를 추적하는 상태 변수
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
 
   const readList = async () => {
+    setIsLoading(true);
     try {
       const result = await getVoices();
       if (Array.isArray(result.voiceList)) {
@@ -82,6 +84,8 @@ function VoiceScreen() {
       }
     } catch (error) {
       console.error('Error fetching voices:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -194,7 +198,9 @@ function VoiceScreen() {
           flexGrow: 1,
           justifyContent: 'center',
         }}
-        ListEmptyComponent={<EmptyListComponent />}
+        ListEmptyComponent={
+          !isLoading && voiceData.length === 0 ? <EmptyListComponent /> : null
+        }
       />
       <GreenButton
         content="목소리 추가하기"

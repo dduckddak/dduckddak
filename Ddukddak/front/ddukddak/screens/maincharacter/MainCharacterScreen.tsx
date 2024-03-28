@@ -18,85 +18,109 @@ interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-export const books = [
-  {
-    id: 1,
-    coverName: 'cover-book-title-1.jpg',
-    title: '잭과콩나무',
-    author: 'Author Name 1',
-    synopsis: 'This is the synopsis of Book Title 1. It talks about...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
+// export const books = [
+//   {
+//     id: 1,
+//     coverName: 'cover-book-title-1.jpg',
+//     title: '잭과콩나무',
+//     author: 'Author Name 1',
+//     synopsis: 'This is the synopsis of Book Title 1. It talks about...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+//
+//   {
+//     id: 122,
+//     coverName: 'cover-book-title-2.jpg',
+//     title: '빨간모자',
+//     author: 'Author Name 2',
+//     synopsis:
+//       'This is the synopsis of Book Title 2. It explores the concept of...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+//   {
+//     id: 3,
+//     coverName: 'cover-book-title-3.jpg',
+//     title: '도깨비 방망이',
+//     author: 'Author Name 3',
+//     synopsis:
+//       'This is the synopsis of Book Title 3. The story revolves around...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+//   {
+//     id: 4,
+//     coverName: 'cover-book-title-4.jpg',
+//     title: '책일',
+//     author: 'Author Name 4',
+//     synopsis:
+//       'This is the synopsis of Book Title 4. It delves into the life of...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+//   {
+//     id: 5,
+//     coverName: 'cover-book-title-5.jpg',
+//     title: '책이',
+//     author: 'Author Name 5',
+//     synopsis:
+//       'This is the synopsis of Book Title 5. A tale of adventure and...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+//   {
+//     id: 6,
+//     coverName: 'cover-book-title-6.jpg',
+//     title: '책삼',
+//     author: 'Author Name 6',
+//     synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+//   {
+//     id: 7,
+//     coverName: 'cover-book-title-7.jpg',
+//     title: '책사',
+//     author: 'Author Name 7',
+//     synopsis:
+//       'This is the synopsis of Book Title 7. A gripping narrative about...',
+//     coverImage: require('../../assets/images/books/bookcover.png'),
+//   },
+// ];
 
-  {
-    id: 122,
-    coverName: 'cover-book-title-2.jpg',
-    title: '빨간모자',
-    author: 'Author Name 2',
-    synopsis:
-      'This is the synopsis of Book Title 2. It explores the concept of...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
-  {
-    id: 3,
-    coverName: 'cover-book-title-3.jpg',
-    title: '도깨비 방망이',
-    author: 'Author Name 3',
-    synopsis:
-      'This is the synopsis of Book Title 3. The story revolves around...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
-  {
-    id: 4,
-    coverName: 'cover-book-title-4.jpg',
-    title: '책일',
-    author: 'Author Name 4',
-    synopsis:
-      'This is the synopsis of Book Title 4. It delves into the life of...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
-  {
-    id: 5,
-    coverName: 'cover-book-title-5.jpg',
-    title: '책이',
-    author: 'Author Name 5',
-    synopsis:
-      'This is the synopsis of Book Title 5. A tale of adventure and...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
-  {
-    id: 6,
-    coverName: 'cover-book-title-6.jpg',
-    title: '책삼',
-    author: 'Author Name 6',
-    synopsis: 'This is the synopsis of Book Title 6. Exploring themes of...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
-  {
-    id: 7,
-    coverName: 'cover-book-title-7.jpg',
-    title: '책사',
-    author: 'Author Name 7',
-    synopsis:
-      'This is the synopsis of Book Title 7. A gripping narrative about...',
-    coverImage: require('../../assets/images/books/bookcover.png'),
-  },
-];
+
+const tempBookData = {
+  bookList: [
+    {
+      bookId: 121,
+      bookTitle: '잭과 콩나무',
+      coverImage: 'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/121/nonblank/0.png',
+    },
+    {
+      bookId: 122,
+      bookTitle: '빨간 모자',
+      coverImage: 'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/122/nonblank/0.png',
+    },
+    {
+      bookId: 123,
+      bookTitle: '도깨비 방망이',
+      coverImage: 'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/123/nonblank/0.png',
+    },
+  ],
+};
+
 
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
-  navigation,
-}) => {
+                                                                   navigation,
+                                                                 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
 
-  const [bookList, setBookList] = useState<BookListData>({});
+  const [bookList, setBookList] = useState<BookSummary[]>([]);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const books = await getBookList();
-        setBookList(books);
+        // const books = await getBookList();
+
+        // setBookList(books);
+        setBookList(tempBookData.bookList);
 
       } catch (error) {
         console.error('Failed:', error);
@@ -146,16 +170,16 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   };
 
   const nextPage = () => {
-    setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % books.length);
+    setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % bookList.length);
   };
 
   const previousPage = () => {
     setCurrentPage(
-      (prevCurrentPage) => (prevCurrentPage + books.length - 1) % books.length,
+      (prevCurrentPage) => (prevCurrentPage + bookList.length - 1) % bookList.length,
     );
   };
 
-  const goToDetail = (bookSummary: BookSummary|undefined) => {
+  const goToDetail = (bookSummary: BookSummary | undefined) => {
     navigation.navigate('detail', bookSummary);
   };
 
@@ -170,19 +194,20 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
             <Image source={require('../../assets/images/button/before.png')} />
           </TouchableOpacity>
           <View style={styles.textContainer}>
-            <Pressable onPress={() => goToDetail(bookList.bookList && bookList.bookList[currentPage])}>
-              <View style={styles.box}>
-                <Text style={styles.text}>이 책 어때요 ?</Text>
-                <Image
-                  source={{ uri: bookList.bookList && bookList.bookList[currentPage].coverImage }}
-                  style={styles.bookCover}
-                />
-                <Text style={styles.titletext}>
-                  제목 : {bookList.bookList && bookList.bookList[currentPage].bookTitle}
-
-                </Text>
-              </View>
-            </Pressable>
+            {bookList.length > 0 &&
+              <Pressable onPress={() => goToDetail(bookList[currentPage])}>
+                <View style={styles.box}>
+                  <Text style={styles.text}>이 책 어때요 ?</Text>
+                  <Image
+                    source={{ uri: bookList[currentPage].coverImage }}
+                    style={styles.bookCover}
+                  />
+                  <Text style={styles.titletext}>
+                    제목 : {bookList[currentPage].bookTitle}
+                  </Text>
+                </View>
+              </Pressable>
+            }
           </View>
           <TouchableOpacity onPress={nextPage}>
             <Image source={require('../../assets/images/button/next.png')} />
@@ -216,7 +241,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           </Pressable>
         </View>
         <View style={styles.dotsContainer}>
-          {bookList.bookList && bookList.bookList.map((_, index) => (
+          {bookList && bookList.map((_, index) => (
             <View
               key={index}
               style={[

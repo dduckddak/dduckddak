@@ -1,20 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Pressable,
   Image,
   ImageBackground,
-  StyleSheet,
+  StyleSheet, Text,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useUserStore } from '../../store/userStore';
 
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
 const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
+  const userSex = useUserStore((state) => state.sex);
+  const [mainPageCharacter, setMainPageCharacter] = useState();
+
+
+  useEffect(() => {
+    const updateMainImage = () => {
+      if (userSex === 'M') {
+        setMainPageCharacter(require('../../assets/images/DD/뚝이.png'))
+      } else {
+        setMainPageCharacter(require('../../assets/images/DD/딱이.png'))
+      }
+    }
+
+    updateMainImage();
+  }, []);
   return (
     <ImageBackground
       source={require('../../assets/images/background/MainBackground.png')}
@@ -25,9 +41,10 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
         <View style={styles.leftContainer}>
           <Pressable onPress={() => navigation.navigate('MainCharacterScreen')}>
             <Image
-              source={require('../../assets/images/DD/딱이.png')}
+              source={mainPageCharacter}
               style={styles.ddak2}
             />
+
             <Image
               source={require('../../assets/images/Main/maincharacter.png')}
               style={styles.greenButton}

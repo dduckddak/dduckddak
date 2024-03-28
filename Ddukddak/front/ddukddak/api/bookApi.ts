@@ -164,7 +164,7 @@ export const getBookDetail = async (
 
 interface ReviewCreateParams {
   bookId: number;
-  isLike: Boolean;
+  like: Boolean;
 }
 
 interface ApiResponse {

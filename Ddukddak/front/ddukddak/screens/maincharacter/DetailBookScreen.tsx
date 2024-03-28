@@ -41,34 +41,49 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [isHappySelected, setIsHappySelected] = useState(false);
   const [isSadSelected, setIsSadSelected] = useState(false);
 
-  const handleHappyPress = async () => {
-    setIsHappySelected((prev) => !prev);
-    setIsSadSelected(false);
+  const updateReview = async (like: boolean) => {
     // 리뷰 생성 또는 업데이트 로직
     try {
-      await createReview({
+      const response = await createReview({
         bookId: bookSummary.bookId,
-        isLike: true,
+        like: like,
       });
-      console.log('Review updated to like');
+      console.log(response);
+      // checkLike(response.isLike);
     } catch (error) {
       console.error('Failed to update review:', error);
     }
   };
 
+  const checkLike = (isLike: Boolean) => {
+    if (isLike == null) {
+      setIsHappySelected(false);
+      setIsSadSelected(false);
+      return;
+    }
+
+    if (isLike) {
+      setIsHappySelected(true);
+      setIsSadSelected(false);
+      return;
+    } else {
+      setIsSadSelected(true);
+      setIsHappySelected(false);
+    }
+  };
+
+  const handleHappyPress = async () => {
+    setIsHappySelected((prev) => !prev);
+    setIsSadSelected(false);
+
+    await updateReview(true);
+  };
+
   const handleSadPress = async () => {
     setIsSadSelected((prev) => !prev);
     setIsHappySelected(false);
-    // 리뷰 생성 또는 업데이트 로직
-    try {
-      await createReview({
-        bookId: bookSummary.bookId,
-        isLike: false,
-      });
-      console.log('Review updated to dislike');
-    } catch (error) {
-      console.error('Failed to update review:', error);
-    }
+
+    await updateReview(false);
   };
 
   const goToTalk = (id: number) => {
@@ -81,6 +96,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         const response = await getBookDetail(bookid);
         setSelectedBook(response.book);
         console.log(response.book);
+
+        checkLike(response.book.isLike);
       } catch (error) {
         console.error('Failed:', error);
       }

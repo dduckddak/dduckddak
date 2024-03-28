@@ -13,6 +13,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import MainScreen from './MainScreen';
 import * as SecureStore from 'expo-secure-store';
+import { useUserStore } from '../../store/userStore';
 
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -20,8 +21,9 @@ interface MainScreenProps {
 
 const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
-
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const userSex = useUserStore((state) => state.sex);
+  const [mainPageCharacter, setMainPageCharacter] = useState();
 
   const handleNextStep = () =>
     setCurrentStep((prevStep) => (prevStep < 6 ? prevStep + 1 : prevStep));
@@ -35,14 +37,25 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     const setIntroCheck = async () => {
-      await SecureStore.setItemAsync('introChecked', "true");
-    }
+      await SecureStore.setItemAsync('introChecked', 'true');
+    };
+
     setIntroCheck();
+
+    const updateMainImage = () => {
+      if (userSex === 'M') {
+        setMainPageCharacter(require('../../assets/images/DD/뚝이.png'));
+      } else {
+        setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
+      }
+    };
+
+    updateMainImage();
   }, []);
 
   const YourComponent: React.FC<{ currentStep: number }> = ({
-    currentStep,
-  }) => {
+                                                              currentStep,
+                                                            }) => {
     let mainScreenContent;
     switch (currentStep) {
       case 1:
@@ -183,7 +196,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
               <View style={styles.leftContainer}>
                 <TouchableOpacity onPress={handlePress}>
                   <Image
-                    source={require('../../assets/images/DD/딱이.png')}
+                    source={mainPageCharacter}
                     style={styles.ddak2}
                   />
                   <Image
@@ -245,7 +258,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
               <View style={styles.leftContainer}>
                 <TouchableOpacity onPress={handlePress}>
                   <Image
-                    source={require('../../assets/images/DD/딱이.png')}
+                    source={mainPageCharacter}
                     style={styles.ddak2}
                   />
                   <Image

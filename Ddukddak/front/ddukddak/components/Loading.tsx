@@ -15,10 +15,9 @@ const Loading = () => {
 
   useEffect(() => {
     let count = 0;
-    let countInterval = setInterval(() => {
-      setImageNumber(count++ % 15);
-    }, 2000 / 20);
-
+    const countInterval = setInterval(() => {
+      setImageNumber(count++ % animationImages.length);
+    }, 100);
     return () => clearInterval(countInterval);
   }, []);
 

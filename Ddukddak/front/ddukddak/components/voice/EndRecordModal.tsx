@@ -10,8 +10,9 @@ import {
 } from 'react-native';
 import SkyButton from '../SkyButton';
 import { addVoice } from '../../api/voiceApi';
-
 import { useNavigation } from '@react-navigation/native';
+import Loading from '../Loading';
+
 interface VoiceModalProps {
   visible: boolean;
   onClose: () => void;
@@ -21,8 +22,10 @@ interface VoiceModalProps {
 function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
   const navigation = useNavigation();
   const [voicename, setVoicename] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUploadVoice = async () => {
+    setIsLoading(true);
     const voiceFile: any = {
       uri: recordingUri,
       type: 'audio/mp3', // 적절한 MIME 타입 지정
@@ -34,6 +37,7 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
         voiceFile: voiceFile as File,
         voiceName: voicename,
       });
+      setIsLoading(false);
       Alert.alert('성공', '목소리가 성공적으로 업로드되었습니다.', [
         {
           text: 'OK',
@@ -46,9 +50,20 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
       ]); // 성공 후 모달 닫기
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
       Alert.alert('업로드 실패', '업로드 중 오류가 발생했습니다.');
     }
   };
+
+  if (isLoading) {
+    return (
+      <Modal visible={visible} transparent={true} animationType="fade">
+        <View style={styles.centeredLoadingView}>
+          <Loading />
+        </View>
+      </Modal>
+    );
+  }
 
   return (
     <>
@@ -117,5 +132,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'im-hyemin-bold',
     borderRadius: 10,
+  },
+  centeredLoadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });

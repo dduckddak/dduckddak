@@ -83,31 +83,32 @@ interface MainCharacterScreenProps {
 //   },
 // ];
 
-
 const tempBookData = {
   bookList: [
     {
       bookId: 121,
       bookTitle: '잭과 콩나무',
-      coverImage: 'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/121/nonblank/0.png',
+      coverImage:
+        'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/121/nonblank/0.png',
     },
     {
       bookId: 122,
       bookTitle: '빨간 모자',
-      coverImage: 'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/122/nonblank/0.png',
+      coverImage:
+        'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/122/nonblank/0.png',
     },
     {
       bookId: 123,
       bookTitle: '도깨비 방망이',
-      coverImage: 'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/123/nonblank/0.png',
+      coverImage:
+        'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/123/nonblank/0.png',
     },
   ],
 };
 
-
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
-                                                                   navigation,
-                                                                 }) => {
+  navigation,
+}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
@@ -121,7 +122,6 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
         // setBookList(books);
         setBookList(tempBookData.bookList);
-
       } catch (error) {
         console.error('Failed:', error);
       }
@@ -170,12 +170,15 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   };
 
   const nextPage = () => {
-    setCurrentPage((prevCurrentPage) => (prevCurrentPage + 1) % bookList.length);
+    setCurrentPage(
+      (prevCurrentPage) => (prevCurrentPage + 1) % bookList.length,
+    );
   };
 
   const previousPage = () => {
     setCurrentPage(
-      (prevCurrentPage) => (prevCurrentPage + bookList.length - 1) % bookList.length,
+      (prevCurrentPage) =>
+        (prevCurrentPage + bookList.length - 1) % bookList.length,
     );
   };
 
@@ -194,7 +197,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
             <Image source={require('../../assets/images/button/before.png')} />
           </TouchableOpacity>
           <View style={styles.textContainer}>
-            {bookList.length > 0 &&
+            {bookList.length > 0 && (
               <Pressable onPress={() => goToDetail(bookList[currentPage])}>
                 <View style={styles.box}>
                   <Text style={styles.text}>이 책 어때요 ?</Text>
@@ -207,7 +210,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
                   </Text>
                 </View>
               </Pressable>
-            }
+            )}
           </View>
           <TouchableOpacity onPress={nextPage}>
             <Image source={require('../../assets/images/button/next.png')} />
@@ -241,15 +244,16 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           </Pressable>
         </View>
         <View style={styles.dotsContainer}>
-          {bookList && bookList.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.dot,
-                index === currentPage ? styles.activeDot : styles.inactiveDot,
-              ]}
-            />
-          ))}
+          {bookList &&
+            bookList.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.dot,
+                  index === currentPage ? styles.activeDot : styles.inactiveDot,
+                ]}
+              />
+            ))}
         </View>
       </View>
     </ImageBackground>
@@ -316,8 +320,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     position: 'absolute',
-    paddingTop: '100%',
-    paddingLeft: '125%',
+    paddingTop: '250%',
+    paddingLeft: '280%',
   },
   dot: {
     width: 35,

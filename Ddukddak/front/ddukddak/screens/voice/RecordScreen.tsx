@@ -12,22 +12,35 @@ import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
 import EndRecordModal from '../../components/voice/EndRecordModal';
 
-function RecordScreen() {
-  const scripts = [
-    { id: 1, content: '옛날 옛날 욕심쟁이 형과' },
-    { id: 2, content: '마음 착한 아우가 살았어' },
-    {
-      id: 3,
-      content: '어느날 아우가 산에서 나무를 하는데 개암이 세개가 뚝 떨어졌어요',
-    },
-    { id: 4, content: '“어? 개암이네 이건 부모님과 형님께 드려야겠다”' },
-    {
-      id: 5,
-      content:
-        '집에 가려는데 날이 저물어 저녁이 되었어요 “어? 벌써 이렇게 되었나? 서둘러 가야겠다”',
-    },
-  ];
+const scripts = [
+  {
+    id: 1,
+    content:
+      '오랜 옛날, 숲속 마을에 동물과 \n 대화할 수 있는 마녀가 있었어요.\n 이 마녀에게는 사람들의 꿈을 이루어 주는 \n 특별한 능력이 있었죠. ',
+  },
+  {
+    id: 2,
+    content:
+      '어느 날, 하늘을 나는 꿈을 가진 소녀가 \n 마녀에게 도움을 청하기 위해 찾아왔어요.\n 소녀의 이야기를 들은 마녀는 \n 소녀를 숲 속 깊은 곳으로 데려가서 \n 반짝이는 별가루를 건네주었어요.',
+  },
+  {
+    id: 3,
+    content:
+      '별가루를 받은 소녀는 마법처럼 \n 천천히 하늘로 솟구쳐 올랐고,\n 그 순간을 기뻐하며 웃음을 터트렸어요.  ',
+  },
+  {
+    id: 4,
+    content:
+      '마녀는 소녀가 하늘을 나는 모습을 바라보며 행복해했고,\n 소녀는 자신의 꿈을 \n실현한 것에 대해 깊은 감사를 느꼈어요.',
+  },
+  {
+    id: 5,
+    content:
+      '이 사건 이후로 소녀는 \n 모든 사람이 꿈을 이룰 수 있다고 굳게 믿게 되었습니다.\n 마녀는 오늘도 숲속에서 \n 다른 사람들의 꿈을 실현시키기 위해 \n마법을 준비하고 있습니다.',
+  },
+];
 
+function RecordScreen() {
   const [currentScriptIndex, setCurrentScriptIndex] = useState(0);
   const [recording, setRecording] = useState<Audio.Recording | undefined>(
     undefined,
@@ -83,10 +96,10 @@ function RecordScreen() {
     if (recording) {
       if (timerId) clearTimeout(timerId);
       const elapsedTime = Date.now() - recordingStartTime;
-      if (elapsedTime < 3000) {
+      if (elapsedTime < 30000) {
         Alert.alert(
           '녹음이 너무 짧습니다',
-          '녹음은 최소 3초 이상이어야 합니다.',
+          '녹음은 최소 30초 이상이어야 합니다.',
         );
         return;
       }
@@ -196,6 +209,7 @@ const styles = StyleSheet.create({
     color: 'white',
     marginBottom: 20,
     textAlign: 'center',
+    lineHeight: 60,
   },
   button: {
     paddingVertical: 10,

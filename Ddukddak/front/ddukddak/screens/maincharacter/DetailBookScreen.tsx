@@ -12,9 +12,9 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
-import {getBookDetail,BookDetailData} from '../../api/bookApi';
+import { getBookDetail, BookDetailData } from '../../api/bookApi';
 import { BookSummary } from '../../App';
-import { createReview } from '../../api/bookApi'
+import { createReview } from '../../api/bookApi';
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -28,15 +28,15 @@ interface DetailBookScreenProps {
 }
 
 interface DetailBook {
-  bookAuthor:string,
-  bookStory:string,
-  isLike:Boolean
+  bookAuthor: string;
+  bookStory: string;
+  isLike: Boolean;
 }
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
-  const [selectedBook, setSelectedBook] =useState<DetailBook|undefined>();
+  const [selectedBook, setSelectedBook] = useState<DetailBook | undefined>();
 
-  const bookSummary:BookSummary= route.params;
+  const bookSummary: BookSummary = route.params;
 
   const [isHappySelected, setIsHappySelected] = useState(false);
   const [isSadSelected, setIsSadSelected] = useState(false);
@@ -50,9 +50,9 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         bookId: bookSummary.bookId,
         isLike: true,
       });
-      console.log("Review updated to like");
+      console.log('Review updated to like');
     } catch (error) {
-      console.error("Failed to update review:", error);
+      console.error('Failed to update review:', error);
     }
   };
 
@@ -65,9 +65,9 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         bookId: bookSummary.bookId,
         isLike: false,
       });
-      console.log("Review updated to dislike");
+      console.log('Review updated to dislike');
     } catch (error) {
-      console.error("Failed to update review:", error);
+      console.error('Failed to update review:', error);
     }
   };
 
@@ -76,19 +76,17 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   };
 
   useEffect(() => {
-    const fetchBook = async (bookid:number) => {
+    const fetchBook = async (bookid: number) => {
       try {
         const response = await getBookDetail(bookid);
         setSelectedBook(response.book);
-        console.log(response.book)
+        console.log(response.book);
       } catch (error) {
         console.error('Failed:', error);
       }
     };
     fetchBook(bookSummary.bookId);
   }, []);
-
-
 
   return (
     <ImageBackground
@@ -101,7 +99,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
               <Image
-                source={{uri:bookSummary.coverImage}}
+                source={{ uri: bookSummary.coverImage }}
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>
@@ -176,6 +174,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    marginTop: 50,
   },
   headerText: {
     fontSize: 50,

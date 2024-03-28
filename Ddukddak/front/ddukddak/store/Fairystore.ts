@@ -2,51 +2,37 @@ import { create } from 'zustand';
 
 // 스토어의 상태와 액션에 대한 인터페이스 정의
 interface StoreState {
-  mainImageUri: string | null;
-  mainVoiceUri: string | null;
-  mainVoiceName: string | null;
-  rolesImageUri: string | null;
-  rolesVoiceUri: string | null;
-  rolesVoiceName: string | null;
-  narrationVoiceUri: string | null;
-  narrationVoiceName: string | null;
+  mainImageIdx: number | null;
+  mainVoiceIdx: number | null;
+  subImageIdx: number | null;
+  subVoiceIdx: number | null;
+  narrationVoiceIdx: number | null;
   bookName: string | null;
-  selectedImageIndex: number | null;
-  setMainImageUri: (uri: string) => void;
-  setMainVoiceUri: (uri: string) => void;
-  setMainVoiceName: (name: string) => void;
-  setRolesImageUri: (uri: string) => void;
-  setRolesVoiceUri: (uri: string) => void;
-  setRolesVoiceName: (name: string) => void;
-  setNarrationVoiceUri: (uri: string) => void;
-  setNarrationVoiceName: (name: string) => void;
-  setBookName: (name: string) => void;
-  setSelectedImageIndex: (index: number | null) => void;
+
+  setMainImageIdx: (idx: number | null) => void;
+  setMainVoiceIdx: (idx: number | null) => void;
+  setSubImageIdx: (idx: number | null) => void;
+  setSubVoiceIdx: (idx: number | null) => void;
+  setNarrationVoiceIdx: (idx: number | null) => void;
+  setBookName: (name: string | null) => void;
 }
 
 // Fairystore 정의
 const Fairystore = create<StoreState>((set) => ({
-  mainImageUri: null,
-  mainVoiceUri: null,
-  mainVoiceName: null,
-  rolesImageUri: null,
-  rolesVoiceUri: null,
-  rolesVoiceName: null,
-  narrationVoiceUri: null,
-  narrationVoiceName: null,
+  mainImageIdx: null,
+  mainVoiceIdx: null,
+  subImageIdx: null,
+  subVoiceIdx: null,
+  narrationVoiceIdx: null,
   bookName: null,
-  selectedImageIndex: null,
+
   // 액션 구현
-  setMainImageUri: (uri) => set({ mainImageUri: uri }),
-  setMainVoiceUri: (uri) => set({ mainVoiceUri: uri }),
-  setMainVoiceName: (name) => set({ mainVoiceUri: name }),
-  setRolesImageUri: (uri) => set({ rolesImageUri: uri }),
-  setRolesVoiceUri: (uri) => set({ rolesVoiceUri: uri }),
-  setRolesVoiceName: (name) => set({ mainVoiceUri: name }),
-  setNarrationVoiceUri: (uri) => set({ narrationVoiceUri: uri }),
-  setNarrationVoiceName: (name) => set({ mainVoiceUri: name }),
+  setMainImageIdx: (idx) => set({ mainImageIdx: idx }),
+  setMainVoiceIdx: (idx) => set({ mainVoiceIdx: idx }),
+  setSubImageIdx: (idx) => set({ subImageIdx: idx }),
+  setSubVoiceIdx: (idx) => set({ subVoiceIdx: idx }),
+  setNarrationVoiceIdx: (idx) => set({ narrationVoiceIdx: idx }),
   setBookName: (name) => set({ bookName: name }),
-  setSelectedImageIndex: (index) => set({ selectedImageIndex: index }),
 }));
 
 export default Fairystore;

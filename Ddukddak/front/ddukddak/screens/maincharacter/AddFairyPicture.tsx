@@ -21,43 +21,23 @@ const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마
 const CARD_HEIGHT = CARD_WIDTH;
 
 function AddPicture({ route, navigation }: any) {
-  const { role, onPictureSelected } = route.params;
-  const {
-    mainImageUri,
-    mainVoiceUri,
-    mainVoiceName,
-    rolesImageUri,
-    rolesVoiceUri,
-    rolesVoiceName,
-    narrationVoiceUri,
-    narrationVoiceName,
-    bookName,
-    selectedImageIndex,
-    setMainImageUri,
-    setMainVoiceUri,
-    setMainVoiceName,
-    setRolesImageUri,
-    setRolesVoiceUri,
-    setRolesVoiceName,
-    setNarrationVoiceUri,
-    setNarrationVoiceName,
-    setBookName,
-    setSelectedImageIndex,
-  } = Fairystore();
-  const [images, setImages] = useState<{ uri: string; selected: boolean }[]>(
-    [],
+  const { role } = route.params;
+  const [imageData, setImageData] = useState<
+    { uri: string; selected: boolean; id: number }[]
+  >([]);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
+    null,
   );
   const [selectMode, setSelecteMode] = useState(false);
-  const setSelectedImageIndexStore = Fairystore(
-    (state) => state.setSelectedImageIndex,
-  );
+  const setMainImageIdx = Fairystore((state) => state.setMainImageIdx);
+  const setSubImageIdx = Fairystore((state) => state.setSubImageIdx);
 
-  const fetchPhotos = async () => {
+  const readPhotos = async () => {
     try {
       const response = await getPhotos();
       if (response.photoList) {
-        setImages(
-          response.photoList.map((photo) => ({
+        setImageData(
+          response.photoList.map((photo, index) => ({
             uri: photo.photoFile,
             selected: false,
             id: photo.photoId,
@@ -74,39 +54,36 @@ function AddPicture({ route, navigation }: any) {
   };
 
   useEffect(() => {
-    fetchPhotos();
+    console.log('Role:', role);
+    readPhotos();
   }, []);
 
-  const toggleImageSelected = (index: number) => {
-    setSelectedImageIndex(index);
-    setSelectedImageIndexStore(index);
-  };
-
-  const completeSelection = () => {
-    if (selectedImageIndex !== null) {
-      const selectedImage = images[selectedImageIndex];
-      onPictureSelected(selectedImage.uri);
-      navigation.goBack();
-    } else {
-      Alert.alert('사진을 선택해주세요.');
-    }
-  };
-
   // 이미지 선택 로직
-  const handleImageSelected = (uri: string) => {
-    setImages((prevImages) => [...prevImages, { uri, selected: false }]);
+  const handleSelectImage = (index: any) => {
+    setSelectedImageIndex(index);
+    setSelecteMode(true);
   };
 
-  const renderImageItem = ({
-    item,
-    index,
-  }: {
-    item: { uri: string; selected: boolean };
-    index: number;
-  }) => (
+  const handleCompleteSelection = () => {
+    switch (role) {
+      case 'main':
+        setMainImageIdx(selectedImageIndex);
+        break;
+      case 'sub':
+        setSubImageIdx(selectedImageIndex);
+        break;
+      default:
+        Alert.alert('Error', 'Unknown role.');
+        return;
+    }
+    setSelecteMode(false);
+    navigation.goBack();
+  };
+
+  const renderImageItem = ({ item, index }: any) => (
     <TouchableOpacity
       style={[styles.card, selectedImageIndex === index && styles.selected]}
-      onPress={() => toggleImageSelected(index)}
+      onPress={() => handleSelectImage(index)}
     >
       <Image source={{ uri: item.uri }} style={styles.cardImage} />
     </TouchableOpacity>
@@ -115,24 +92,23 @@ function AddPicture({ route, navigation }: any) {
   return (
     <ImageBackground
       source={require('../../assets/images/background/MainBackground.png')}
-      style={styles.ImageBackground}
+      style={styles.imageBackground}
     >
-      <View style={styles.container}>
-        <Text style={styles.titleText}>{role}의 얼굴 찾아주기</Text>
-        <FlatList
-          data={images}
-          renderItem={renderImageItem}
-          keyExtractor={(item, index) => index.toString()}
-          numColumns={4}
-        />
-      </View>
+      <FlatList
+        data={imageData}
+        renderItem={renderImageItem}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={4}
+        contentContainerStyle={styles.listContentContainer}
+        style={styles.imagelist}
+      />
       <View style={styles.buttonContainer}>
         <GreenButton
           content={selectMode ? '선택완료' : '선택하기'}
-          onPress={completeSelection}
-          style={styles.buttonStyle}
+          onPress={handleCompleteSelection}
+          style={styles.button}
         />
-        <ImagePickerComponent onImageSelected={handleImageSelected} />
+        <ImagePickerComponent />
       </View>
     </ImageBackground>
   );
@@ -141,52 +117,42 @@ function AddPicture({ route, navigation }: any) {
 export default AddPicture;
 
 const styles = StyleSheet.create({
-  ImageBackground: {
+  imageBackground: {
     flex: 1,
-    resizeMode: 'cover',
+    alignItems: 'center',
     justifyContent: 'center',
   },
-  container: {
-    flex: 1,
-    alignContent: 'center',
+  listContentContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 20,
-    left: 0,
-    right: 0,
-    gap: 30,
   },
-  buttonStyle: {
-    width: '10%',
-    margin: 30,
+  button: {
+    width: '14%',
+  },
+  imagelist: {
+    width: '80%',
+    height: '80%',
+    marginHorizontal: '11%',
+    marginVertical: '7%',
   },
   card: {
-    marginTop: '20%',
-    marginLeft: 10,
+    margin: 5,
     borderRadius: 10,
     overflow: 'hidden',
-    elevation: 5,
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
   },
   cardImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
   selected: {
-    borderColor: 'blue',
     borderWidth: 2,
-  },
-  titleText: {
-    fontFamily: 'im-hyemin-bold',
-    fontSize: 50,
-    textAlign: 'center',
-    marginTop: 20,
+    borderColor: 'blue',
   },
 });

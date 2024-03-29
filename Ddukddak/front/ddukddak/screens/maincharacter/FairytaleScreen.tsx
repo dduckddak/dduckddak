@@ -12,18 +12,19 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { NavigationProp } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../../components/GreenButton';
 import SkyButton from '../../components/SkyButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
 import Fairystore from '../../store/Fairystore';
+import { NavigationProp } from '@react-navigation/native';
 
 function FairytaleScreen({
   navigation,
   route,
 }: {
   navigation: NavigationProp<any>;
+  route: any;
 }) {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
@@ -33,6 +34,10 @@ function FairytaleScreen({
     bookName: '',
   });
   const mainVoiceIdx = Fairystore((state) => state.mainVoiceIdx);
+  const mainImageIdx = Fairystore((state) => state.mainImageIdx);
+  const subImageIdx = Fairystore((state) => state.subImageIdx);
+  const subVoiceIdx = Fairystore((state) => state.subVoiceIdx);
+  const narrationVoiceIdx = Fairystore((state) => state.narrationVoiceIdx);
   const { mainName, subName } = route.params;
 
   // 나갈때 모달
@@ -42,8 +47,6 @@ function FairytaleScreen({
   const [bookName, setBookName] = useState('');
 
   useEffect(() => {
-    console.log('mainName:', mainName);
-    console.log('subName:', subName);
     // console.log('Loaded mainVoiceIdx: ', mainVoiceIdx);
     const backAction = () => {
       setModalVisible(true);
@@ -61,9 +64,8 @@ function FairytaleScreen({
 
   // const sendData = async () => {
   //   const payload = {
-  //     bookId: 0, // bookId는 예시 값입니다. 실제 애플리케이션의 요구사항에 따라 변경해야 할 수 있습니다.
   //     makeBookTitle: bookName,
-  //     mainVoice: mainVoiceUri, // 여기서는 URI를 보내고 있지만, 실제로는 서버에서 요구하는 형식에 맞게 변환할 필요가 있을 수 있습니다.
+  //     mainVoice: mainVoiceUri,
   //     mainPhoto: mainImageUri,
   //     subVoice: rolesVoiceUri,
   //     subPhoto: rolesImageUri,

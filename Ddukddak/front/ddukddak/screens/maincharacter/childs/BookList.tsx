@@ -1,29 +1,35 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
 import { BookSummary } from '../../../App';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { searchBooks } from '../../../api/bookApi';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-
 type BookListProps = {
-  bookList: BookSummary[],
-  currentPage: number,
-  previousPage: () => void,
-  nextPage: () => void,
-  goToDetail: (book: BookSummary) => void,
-  navigation: NavigationProp<ParamListBase>
-}
+  bookList: BookSummary[];
+  currentPage: number;
+  previousPage: () => void;
+  nextPage: () => void;
+  goToDetail: (book: BookSummary) => void;
+  navigation: NavigationProp<ParamListBase>;
+};
 
 const BookList = ({
-                    bookList,
-                    currentPage,
-                    previousPage,
-                    nextPage,
-                    goToDetail,
-                    navigation,
-                  }: BookListProps) => {
-
+  bookList,
+  currentPage,
+  previousPage,
+  nextPage,
+  goToDetail,
+  navigation,
+}: BookListProps) => {
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
 
@@ -55,7 +61,7 @@ const BookList = ({
         : null;
 
       if (foundBook) {
-        navigation.navigate('detail', { bookId: foundBook.bookId });
+        navigation.navigate('detail', foundBook);
         setSearchText(''); // 검색 후 입력 필드 초기화
       } else {
         alert('일치하는 책이 없습니다.');
@@ -66,13 +72,10 @@ const BookList = ({
     }
   };
 
-
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={previousPage}>
-        <Image
-          source={require('../../../assets/images/button/before.png')}
-        />
+        <Image source={require('../../../assets/images/button/before.png')} />
       </TouchableOpacity>
       <View style={styles.textContainer}>
         {bookList.length > 0 && (
@@ -121,11 +124,9 @@ const BookList = ({
           />
         </Pressable>
       </View>
-
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -193,6 +194,5 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 });
-
 
 export default BookList;

@@ -3,14 +3,11 @@ import {
   View,
   StyleSheet,
   ImageBackground,
-  Pressable,
-  TextInput,
   Keyboard,
-  TouchableWithoutFeedback, Dimensions,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { getBookList, BookListData, searchBooks } from '../../api/bookApi';
+import { getBookList } from '../../api/bookApi';
 import { BookSummary } from '../../App';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
@@ -43,8 +40,8 @@ const tempBookData = {
 };
 
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
-                                                                   navigation,
-                                                                 }) => {
+  navigation,
+}) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookList, setBookList] = useState<BookSummary[]>([]);
 
@@ -64,8 +61,6 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     console.log(bookList);
     fetchBooks();
   }, []);
-
-
 
   const nextPage = () => {
     setCurrentPage(
@@ -91,13 +86,13 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.flexContainer}>
-
           {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
 
           {/* 윗부분 비우려고 쓰는 텅 빈 View 영역 */}
-          <View style={{
-            flex: 1,
-          }}
+          <View
+            style={{
+              flex: 1,
+            }}
           />
           <BookList
             bookList={bookList}
@@ -107,14 +102,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
             goToDetail={goToDetail}
             navigation={navigation}
           />
-          <Dots
-            bookList={bookList}
-            currentPage={currentPage}
-          />
-
-
-
-
+          <Dots bookList={bookList} currentPage={currentPage} />
         </View>
       </TouchableWithoutFeedback>
     </ImageBackground>
@@ -134,8 +122,6 @@ const styles = StyleSheet.create({
     position: 'relative',
     // borderWidth: 1,
   },
-
-
 });
 
 export default MainCharacterScreen;

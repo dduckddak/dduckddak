@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Image, Text, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

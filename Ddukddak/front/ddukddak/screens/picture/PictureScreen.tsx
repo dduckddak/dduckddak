@@ -245,7 +245,7 @@ function PictureScreen() {
           onPress={onDelete}
           style={styles.buttonStyle}
         />
-        <ImagePickerComponent onImageSelected={handleImageSelected} />
+        <ImagePickerComponent />
       </View>
     </ImageBackground>
   );

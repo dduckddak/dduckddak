@@ -6,13 +6,7 @@ import GreenButton from '../GreenButton';
 import PictureModal from './PictureModal';
 import { addPhoto } from '../../api/photoApi';
 
-interface ImagePickerComponentProps {
-  onImageSelected: (uri: string) => void;
-}
-
-const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({
-  onImageSelected,
-}) => {
+const ImagePickerComponent: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const getPermission = useCallback(

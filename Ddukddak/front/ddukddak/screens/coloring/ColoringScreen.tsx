@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     left: 690,
     width: 150,
     height: 110,
-    transform: 'scaleX(-1)',
+    transform: [{ scaleX: -1 }],
   },
   cloud3: { position: 'absolute', top: 35, left: 1060 },
   flexContainer: {

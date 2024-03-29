@@ -112,7 +112,8 @@ const styles = StyleSheet.create({
   modalBox: {
     width: '70%',
     height: '65%',
-    backgroundColor: '#2B98BB',
+    // backgroundColor: '#2B98BB',
+    backgroundColor: '#0084BE',
     borderRadius: 10,
     elevation: 2,
     justifyContent: 'center',

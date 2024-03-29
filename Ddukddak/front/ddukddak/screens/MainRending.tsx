@@ -258,6 +258,8 @@ const styles = StyleSheet.create({
   ddak: {
     marginTop: -230,
     marginLeft: '67%',
+    width: '18%',
+    flex: 1,
   },
   nextbutton: {
     alignSelf: 'flex-end',

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   ddak2: {
     position: 'absolute',
-    left: '3%',
+    left: '2%',
     top: '31%',
     width: '78%',
     height: '80%',

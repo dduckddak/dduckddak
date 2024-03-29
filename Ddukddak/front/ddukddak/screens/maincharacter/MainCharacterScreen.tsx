@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     height: 130,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 65, left: 950, width: 160, height: 130 },
+  cloud3: { position: 'absolute', top: 5, left: 950, width: 160, height: 130 },
   howabout: {
     fontFamily: 'im-hyemin-bold',
     fontSize: 65,

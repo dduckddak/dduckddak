@@ -7,14 +7,12 @@ interface StoreState {
   subImageIdx: number | null;
   subVoiceIdx: number | null;
   narrationVoiceIdx: number | null;
-  bookName: string | null;
 
   setMainImageIdx: (idx: number | null) => void;
   setMainVoiceIdx: (idx: number | null) => void;
   setSubImageIdx: (idx: number | null) => void;
   setSubVoiceIdx: (idx: number | null) => void;
   setNarrationVoiceIdx: (idx: number | null) => void;
-  setBookName: (name: string | null) => void;
 }
 
 // Fairystore 정의
@@ -24,7 +22,6 @@ const Fairystore = create<StoreState>((set) => ({
   subImageIdx: null,
   subVoiceIdx: null,
   narrationVoiceIdx: null,
-  bookName: null,
 
   // 액션 구현
   setMainImageIdx: (idx) => set({ mainImageIdx: idx }),
@@ -32,7 +29,6 @@ const Fairystore = create<StoreState>((set) => ({
   setSubImageIdx: (idx) => set({ subImageIdx: idx }),
   setSubVoiceIdx: (idx) => set({ subVoiceIdx: idx }),
   setNarrationVoiceIdx: (idx) => set({ narrationVoiceIdx: idx }),
-  setBookName: (name) => set({ bookName: name }),
 }));
 
 export default Fairystore;

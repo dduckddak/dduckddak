@@ -24,7 +24,7 @@ export interface BookDetailData {
   book: {
     bookAuthor: string;
     bookStory: string;
-    isLike: Boolean
+    isLike: Boolean;
   };
 }
 
@@ -37,7 +37,7 @@ export interface LikeBookListData {
 }
 
 export interface reviewData {
-  isLike: Boolean
+  isLike: Boolean;
 }
 
 type BookListResponse = ApiResponse & BookListData;
@@ -126,6 +126,7 @@ export const searchBooks = async (
     const response = await apiClient.get<BookSearchResponse>(
       `/api/v1/books/search/${searchKeyword}`,
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {

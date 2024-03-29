@@ -90,18 +90,19 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
     navigation.navigate('talk', { bookId: id });
   };
 
-  useEffect(() => {
-    const fetchBook = async (bookid: number) => {
-      try {
-        const response = await getBookDetail(bookid);
-        setSelectedBook(response.book);
-        console.log(response.book);
+  const fetchBook = async (bookid: number) => {
+    try {
+      const response = await getBookDetail(bookid);
+      setSelectedBook(response.book);
+      // console.log(response.book);
 
-        checkLike(response.book.isLike);
-      } catch (error) {
-        console.error('Failed:', error);
-      }
-    };
+      checkLike(response.book.isLike);
+    } catch (error) {
+      console.error('Failed:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchBook(bookSummary.bookId);
   }, []);
 

@@ -8,13 +8,15 @@ import com.ssafy.back.common.ResponseMessage;
 
 public class InsertPhotoResponseDto extends ResponseDto {
 
-	public static ResponseEntity<ResponseDto> S3error() {
-		ResponseDto responseBody = new ResponseDto(ResponseMessage.S3_ERROR);
-		return ResponseEntity.status(HttpStatus.GONE).body(responseBody);
+	public static ResponseEntity<ResponseDto> uniRestError(){
+		ResponseDto responseBody = new ResponseDto(ResponseMessage.BAD_REQUEST);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
 	}
 
-	public static ResponseEntity<ResponseDto> fastApierror() {
-		ResponseDto responseBody = new ResponseDto(ResponseMessage.FastApi_ERROR);
-		return ResponseEntity.status(HttpStatus.GONE).body(responseBody);
+	public static ResponseEntity<ResponseDto> fastApierror(HttpStatus httpStatus, String message) {
+		ResponseDto responseBody = new ResponseDto(message);
+		return ResponseEntity.status(httpStatus).body(responseBody);
 	}
+
+
 }

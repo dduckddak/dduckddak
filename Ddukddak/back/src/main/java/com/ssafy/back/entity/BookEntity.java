@@ -44,13 +44,14 @@ public class BookEntity {
 
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<MakeBookEntity> makeBookEntities = new ArrayList<>();
-	
+
+	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
+	private List<PersonEntity> personEntities = new ArrayList<>();
+
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ScriptEntity> scriptEntities = new ArrayList<>();
 
-	@OneToOne(mappedBy = "bookEntity", fetch = FetchType.LAZY)
-	private PersonEntity personEntity = new PersonEntity();
 }

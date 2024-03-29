@@ -15,4 +15,7 @@ public class BookDetailDto {
 	private String bookAuthor;
 	private String BookStory;
 	private Boolean isLike;
+	private String mainName;
+	private String subName;
+
 }

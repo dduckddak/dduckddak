@@ -19,10 +19,12 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 	@Query("SELECT new com.ssafy.back.book.dto.BookSummaryDto(b.bookId, b.bookTitle) FROM BookEntity b WHERE b.bookTitle LIKE %:keyword%")
 	List<BookSummaryDto> findByTitleContains(@Param("keyword") String keyword);
 
-	@Query("SELECT new com.ssafy.back.book.dto.BookDetailDto(b.bookAuthor, b.bookStory, r.isLike) " +
-		"FROM BookEntity b LEFT JOIN ReviewEntity r ON r.bookEntity.bookId = b.bookId AND r.userEntity.userSeq = :userSeq "
-		+
-		"WHERE b.bookId = :bookId")
+	@Query(
+		"SELECT new com.ssafy.back.book.dto.BookDetailDto(b.bookAuthor, b.bookStory, r.isLike, mainPerson.personName, subPerson.personName) "
+			+ "FROM BookEntity b LEFT JOIN ReviewEntity r ON r.bookEntity.bookId = b.bookId AND r.userEntity.userSeq = :userSeq "
+			+ "LEFT JOIN b.personEntities mainPerson WITH mainPerson.personId.isMain = true "
+			+ "LEFT JOIN b.personEntities subPerson WITH subPerson.personId.isMain = false "
+			+ "WHERE b.bookId = :bookId")
 	BookDetailDto findBookDetailByBookIdAndUserSeq(@Param("bookId") Integer bookId, @Param("userSeq") Integer userSeq);
 
 	@Query("SELECT new com.ssafy.back.book.dto.BookSummaryDto(b.bookId, b.bookTitle) " +

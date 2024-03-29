@@ -139,3 +139,35 @@ export const getMakeBookList = async (): Promise<MakeBookListResponse> => {
     throw error;
   }
 };
+
+interface FairyDetailData {
+  subName: string;
+  subBasic: string;
+  subTalk: string;
+}
+
+type FairyDetailResponse = ApiResponse & FairyDetailData;
+
+/**
+ * 동화뚝딱 정보 가져오기
+ * @remarks
+ * GET 요청을 '/api/v1/talks/{bookId}' 엔드포인트에 보냅니다. 성공시 메시지와 함께 뚝딱대화 상세 정보를 반환합니다.
+ * @param {number} bookId 상세 정보를 가져오려는 뚝딱대화의 책 ID
+ * @returns {Promise<FairyDetailResponse>} "Success" 메시지와 함께 talkDetail를 반환합니다.
+ * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found.", 410 "S3 error." 오류를 반환할 수 있습니다.
+ */
+export const getFairyDetail = async (
+  bookId: number,
+): Promise<FairyDetailResponse> => {
+  try {
+    const response = await apiClient.get<FairyDetailResponse>(
+      `/api/v1/talks/${bookId}`,
+    );
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw error;
+  }
+};

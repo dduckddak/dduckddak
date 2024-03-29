@@ -303,12 +303,16 @@ export default function App() {
             <Stack.Screen
               name="addfairypicture"
               component={AddFairyPicture}
-              options={{ headerShown: false }}
+              options={{
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
             />
             <Stack.Screen
               name="addfairyvoice"
               component={AddFairyVoice}
-              options={{ headerShown: false }}
+              options={{
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
             />
             {/* ------------------------ 사진뚝딱 페이지 ------------------------ */}
             <Stack.Screen

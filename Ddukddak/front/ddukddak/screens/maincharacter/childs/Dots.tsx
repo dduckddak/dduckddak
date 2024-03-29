@@ -13,7 +13,7 @@ const Dots = ({ bookList, currentPage }: DotsListProps) => {
       flex: 1,
       flexDirection: 'row',
       width: '35%',
-      marginTop: 10,
+      marginTop: 0,
       bottom: 0,
       alignSelf: 'center',
       alignItems: 'center',

@@ -93,11 +93,10 @@ public class PhotoServiceImpl implements PhotoService {
 
 			// FastAPI로부터 받은 JSON 응답을 파싱
 			JsonObject jsonResponse = JsonParser.parseString(response.getBody()).getAsJsonObject();
-			System.out.println(jsonResponse);
-			int status_code = jsonResponse.get("status_code").getAsInt();
+			int statusCode = jsonResponse.get("status_code").getAsInt();
 			String message = jsonResponse.get("message").getAsString();
 
-			if(status_code != 200) return InsertPhotoResponseDto.fastApierror(HttpStatus.NOT_FOUND, message);
+			if(statusCode != 200) return InsertPhotoResponseDto.fastApierror(HttpStatus.NOT_FOUND, message);
 
 		} catch (Exception e) {
 			logger.error(ResponseMessage.UNIREST_ERROR);
@@ -122,7 +121,7 @@ public class PhotoServiceImpl implements PhotoService {
 
 		List<PhotoDto> photoResult = photoList.stream().map(photo -> {
 			PhotoDto photoDto = new PhotoDto();
-			String url = generatePublicUrl(bucket) + photo(photo.getUserEntity().getUserSeq(), photo.getPhotoId());
+			String url = generatePublicUrl(bucket) + photo(photo.getUserEntity().getUserSeq(), photo.getPhotoId()) + ".png";
 
 			photoDto.setPhotoId(photo.getPhotoId());
 			photoDto.setPhotoFile(url);

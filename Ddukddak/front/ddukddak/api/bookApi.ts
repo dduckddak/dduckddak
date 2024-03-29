@@ -1,16 +1,13 @@
 import apiClient from './apiClient';
 import { isAxiosError } from 'axios';
+import { BookSummary } from '../App';
 
 interface ApiResponse {
   message: string;
 }
 
 export interface BookListData {
-  bookList?: {
-    bookId: number;
-    bookTitle: string;
-    coverImage: string;
-  }[];
+  bookList?: BookSummary[];
 }
 
 export interface BookSearchData {
@@ -176,14 +173,14 @@ interface ApiResponse {
  * @remarks
  * POST 요청을 '/api/v1/books/reviews' 엔드포인트에 보냅니다. 성공시 메시지를 반환합니다.
  * @param {ReviewCreateParams} params 리뷰를 작성할 책의 ID와 좋아요 여부
- * @returns {Promise<ReviewCreateResponse>} 
+ * @returns {Promise<ReviewCreateResponse>}
  * {"message": "insert success",
-  "like": Boolean} 
+  "like": Boolean}
   {"message": "update success",
   "like": Boolean}
-  {"message": "delete success", 
+  {"message": "delete success",
   "like": Boolean}
-  ( insert, update 인 경우는 true or false 값이 오고 , 
+  ( insert, update 인 경우는 true or false 값이 오고 ,
   delete인 경우에는 null이 옵니다. )
  * @throws 400 "Bad request." 또는 401 "Certification failed.", 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */

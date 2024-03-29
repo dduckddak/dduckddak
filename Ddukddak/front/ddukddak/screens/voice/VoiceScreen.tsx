@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
   Alert,
   Image,
   Animated,
+  Dimensions,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
@@ -66,7 +67,26 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 
 function VoiceScreen() {
   const navigation = useNavigation();
-
+  const { width } = Dimensions.get('screen');
+  // 오리야 놀아라
+  const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(duckPosition, {
+          toValue: { x: width * 0.1, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(duckPosition, {
+          toValue: { x: 2, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, []);
+  // 추가 끝
   const [voiceData, setVoiceData] = useState<Voice[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -188,7 +208,18 @@ function VoiceScreen() {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      {}
+      <Animated.Image
+        source={require('../../assets/images/duck.png')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      />
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -227,12 +258,19 @@ const styles = StyleSheet.create({
   cloud2: {
     position: 'absolute',
     top: 5,
-    left: 700,
+    left: 850,
     width: 150,
     height: 110,
-    transform: 'scaleX(-1)',
+    transform: [{ scaleX: -1 }],
   },
   cloud3: { position: 'absolute', top: 125, left: 1060 },
+  duck: {
+    position: 'absolute',
+    bottom: '17%',
+    left: '2%',
+    width: '10%',
+    height: '12%',
+  },
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',

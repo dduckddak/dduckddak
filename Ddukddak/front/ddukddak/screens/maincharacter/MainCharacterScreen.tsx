@@ -5,12 +5,16 @@ import {
   ImageBackground,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions,
+  Text,
+  Animated,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getBookList } from '../../api/bookApi';
 import { BookSummary } from '../../App';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
+import { Image } from 'react-native';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -44,7 +48,49 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookList, setBookList] = useState<BookSummary[]>([]);
+  // 구름 두둥실
+  const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+    const [cloudAnimationValue] = useState(new Animated.Value(0));
 
+    useEffect(() => {
+      const animateClouds = () => {
+        const cloudAnimation = Animated.sequence([
+          Animated.timing(cloudAnimationValue, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(cloudAnimationValue, {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ]);
+
+        Animated.loop(cloudAnimation).start();
+      };
+      animateClouds();
+      return () => {};
+    }, [cloudAnimationValue]);
+    const cloud1TranslateY = cloudAnimationValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, -20],
+    });
+    return (
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 45,
+          left: 50,
+          width: 200,
+          height: 130,
+          transform: [{ translateY: cloud1TranslateY }],
+        }}
+      >
+        {children}
+      </Animated.View>
+    );
+  };
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -81,14 +127,37 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background.png')}
+      source={require('../../assets/images/background/background3.png')}
       style={styles.imageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      {/* <CloudAnimation>
+    <Image
+      source={require('../../assets/images/Main/cloud.png')}
+      style={styles.cloud1}
+    />
+  </CloudAnimation> */}
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
+      <Text style={styles.howabout}>이 책 어때요??</Text>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
         <View style={styles.flexContainer}>
-          {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
-
-          {/* 윗부분 비우려고 쓰는 텅 빈 View 영역 */}
           <View
             style={{
               flex: 1,
@@ -115,10 +184,27 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
+  cloud: { position: 'absolute', top: 45, left: 130 },
+  // cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud2: {
+    position: 'absolute',
+    top: 150,
+    left: -30,
+    width: 200,
+    height: 130,
+    transform: [{ scaleX: -1 }],
+  },
+  cloud3: { position: 'absolute', top: 5, left: 950, width: 160, height: 130 },
+  howabout: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 65,
+    alignSelf: 'center',
+    paddingTop: 50,
+  },
   flexContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     position: 'relative',
     // borderWidth: 1,
   },

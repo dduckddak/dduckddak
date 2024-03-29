@@ -91,6 +91,7 @@ function PictureScreen() {
       </Animated.View>
     );
   };
+
   const readPhotos = async () => {
     setIsLoading(true);
     try {

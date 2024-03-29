@@ -110,7 +110,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/detailbookbackground.png')}
+      source={require('../../assets/images/background/background3.png')}
       style={styles.imageBackground}
     >
       <View style={styles.container}>
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   headerText: {
-    fontSize: 50,
+    fontSize: 65,
     fontFamily: 'im-hyemin-bold',
     marginVertical: 10,
   },
@@ -246,10 +246,10 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     borderRadius: 15,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderColor: 'rgba(65, 152, 7, 0.5)',
     backgroundColor: 'rgba(65, 152, 7, 0.5)',
-    shadowColor: 'rgba(65, 152, 7, 0.5)',
+    // shadowColor: 'rgba(65, 152, 7, 0.5)',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 10,
     elevation: 5,

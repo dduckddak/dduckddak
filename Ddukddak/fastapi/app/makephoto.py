@@ -1,10 +1,13 @@
 import cv2
 import io
+import base64
+import pymysql
 import numpy as np
 import urllib.request
 import dlib
 from util.S3util import S3Util
 from util.makeKeyUtil import MakeKeyUtil
+from util.dbUtil import Database
 
 ## S3 버킷
 s3_util = S3Util('ddukddak')
@@ -96,23 +99,41 @@ def make_fairytale_photo(userSeq, mainPhoto, subPhoto, bookId, generatedId):
 
     return True
 
-def get_extract_face_photo(userSeq, photoId):
-    ## s3 로부터 사진을 받아옴
-    file_name = MakeKeyUtil.original_photo(userSeq, photoId)
-    public_url = s3_util.generate_public_url(file_name)
-
-    print(public_url)
+def get_extract_face_photo(userSeq, photoBase64):
     
-    ## 사진으로부터 얼굴 추출해서 S3 에 저장함
+    # Base64로 인코딩된 사진을 디코딩
+    image_data = base64.b64decode(photoBase64)
+    image = np.frombuffer(image_data, dtype=np.uint8)
+    image = cv2.imdecode(image, cv2.IMREAD_COLOR)  # 이미지 디코딩
+
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 
-    resp = urllib.request.urlopen(public_url)
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)  # 이미지 디코딩
-
     faces = detector(image, 1)
 
+    # 얼굴 인식 조건 검사
+    if len(faces) == 0:
+        return 404, "얼굴이 아닙니다."
+    elif len(faces) > 1:
+        return 404, "하나의 얼굴만 가능합니다."
+
+    # 1. DB에 저장
+
+    try:
+        with Database() as connection:
+            with connection.cursor() as cursor:
+                sql = "INSERT INTO photo (user_seq) VALUES (%s)"
+                cursor.execute(sql, (userSeq,))
+                connection.commit()
+                photoId = cursor.lastrowid  
+                print(photoId)
+            
+    except pymysql.MySQLError as e:
+        print(f"DB 에러: {e}")
+        return 500, "데이터베이스 에러"
+    
+    # 2. 반환된 photoId 로 S3 에 2가지 저장(원본, 추출된 얼굴)
+    ##2-1. 추출된 이미지 저장
     face = faces[0] 
 
     landmarks = predictor(image, face)
@@ -139,11 +160,87 @@ def get_extract_face_photo(userSeq, photoId):
 
     is_success, buffer = cv2.imencode(".png", cropped_image)
     if not is_success: 
-        return False
+        return 404, "이미지 처리 실패"
 
     io_buf = io.BytesIO(buffer)
 
     file_name = MakeKeyUtil.extract_photo(userSeq, photoId) + ".png"
     upload_success = s3_util.upload_fileobj(io_buf, file_name) 
+    if not upload_success: 
+        return 404, "S3 에러"
+    
+    ##2-2. 얼굴만 저장
+    is_success, buffer = cv2.imencode(".png", image)
+    if not is_success: 
+        return 404, "이미지 처리 실패"
+    
+    io_buf = io.BytesIO(buffer)
 
-    return True
+    file_name = MakeKeyUtil.original_photo(userSeq, photoId) + ".png"
+    upload_success = s3_util.upload_fileobj(io_buf, file_name) 
+    if not upload_success: 
+        return 404, "S3 에러"
+
+
+
+    return 200, "success"
+
+    
+
+
+
+
+
+    # ## s3 로부터 사진을 받아옴
+    # file_name = MakeKeyUtil.original_photo(userSeq, photoId)
+    # public_url = s3_util.generate_public_url(file_name)
+
+    # print(public_url)
+    
+    # ## 사진으로부터 얼굴 추출해서 S3 에 저장함
+    # detector = dlib.get_frontal_face_detector()
+    # predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+
+    # resp = urllib.request.urlopen(public_url)
+    # image = np.asarray(bytearray(resp.read()), dtype="uint8")
+    # image = cv2.imdecode(image, cv2.IMREAD_COLOR)  # 이미지 디코딩
+
+    # faces = detector(image, 1)
+
+    # if(len(faces) == 0 or len(faces) > 1) :
+    #     return False
+
+    # face = faces[0] 
+
+    # landmarks = predictor(image, face)
+    # jaw_points = np.array([[p.x, p.y] for p in landmarks.parts()[0:17]])
+
+    # (x, y), radius = cv2.minEnclosingCircle(jaw_points)
+    # center = (int(x), int(y))
+    # scale_factor = 1
+    # radius = int(radius * scale_factor)
+
+    # mask = np.zeros(image.shape[:2], dtype=np.uint8)
+    # cv2.circle(mask, center, radius, 255, -1)
+
+    # image_rgba = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+
+    # image_rgba[:, :, 3] = mask
+
+    # top_left_x = max(center[0] - radius, 0)
+    # top_left_y = max(center[1] - radius, 0)
+    # bottom_right_x = min(center[0] + radius, image.shape[1] - 1)
+    # bottom_right_y = min(center[1] + radius, image.shape[0] - 1)
+
+    # cropped_image = image_rgba[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+
+    # is_success, buffer = cv2.imencode(".png", cropped_image)
+    # if not is_success: 
+    #     return False
+
+    # io_buf = io.BytesIO(buffer)
+
+    # file_name = MakeKeyUtil.extract_photo(userSeq, photoId) + ".png"
+    # upload_success = s3_util.upload_fileobj(io_buf, file_name) 
+
+    # return True

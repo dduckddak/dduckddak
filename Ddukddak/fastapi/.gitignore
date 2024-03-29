@@ -36,3 +36,4 @@ app/.env
 app/result_img/*
 .test
 .venv
+stargan

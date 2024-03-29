@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter, File, UploadFile
 from makephoto import get_extract_face_photo, make_fairytale_photo, set_yes_photo
-from schemas import MakePhoto, ExtractPhoto  # 현재 디렉터리 내 schemas.py에서 클래스 가져오기
+from schemas import MakePhoto, ExtractPhoto, ResponseModel  # 현재 디렉터리 내 schemas.py에서 클래스 가져오기
 from hybridRecommendations import hybrid_recommendations
 from makephoto import make_fairytale_photo
 from stt import stt
@@ -26,8 +26,9 @@ async def create_maked_photo(makephoto: MakePhoto):
 
 @router.post("/extract-face/", tags=["api"])
 async def extract_face(extractphoto : ExtractPhoto):
-    result = get_extract_face_photo(extractphoto.userSeq, extractphoto.photoId)
-    return {"result" : result}
+    status_code, message = get_extract_face_photo(extractphoto.userSeq, extractphoto.photo)
+    # print(extractphoto.userSeq, extractphoto.photo)
+    return ResponseModel(status_code=status_code, message=message)
 
 @router.post("/stt", tags=["api"])
 async def startStt(file: UploadFile = File(...)):

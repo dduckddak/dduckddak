@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 from typing import List, Optional
 
+class ResponseModel(BaseModel):
+    status_code: int
+    message: str
+
 #사용자의 좋아요, 싫어요 목록 
 class UserPreferences(BaseModel):
     likes: List[int]
@@ -15,7 +19,7 @@ class MakePhoto(BaseModel):
 
 class ExtractPhoto(BaseModel):
     userSeq : int
-    photoId : int
+    photo: str  # Base64 인코딩된 이미지 데이터
 
 class ReviewInfo(BaseModel):
     book_id: int

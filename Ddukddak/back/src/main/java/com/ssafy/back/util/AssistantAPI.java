@@ -23,7 +23,6 @@ public class AssistantAPI {
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + openAIKey)
 				.header("OpenAI-Beta", "assistants=v1")
-				.body(new JsonObject())
 				.asString();
 
 			JsonObject json = JsonParser.parseString(response.getBody()).getAsJsonObject();

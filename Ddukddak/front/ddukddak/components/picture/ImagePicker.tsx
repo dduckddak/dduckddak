@@ -16,6 +16,8 @@ const ImagePickerComponent: React.FC = () => {
   const [sAlertModal, setSAlertModal] = useState(false);
   // 실패 모달
   const [fAlertModal, setFAlertModal] = useState(false);
+  // 실패 모달 메시지
+  const [fAlertModalMessage, setFAlertModalMessage] = useState('');
   // 권한 모달
   const [gAlertModal, setGAlertModal] = useState(false);
 
@@ -48,9 +50,24 @@ const ImagePickerComponent: React.FC = () => {
       const response = await addPhoto({ photoFile: photoFile as File });
       console.log(response);
       setSAlertModal(true);
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
-      setFAlertModal(true);
+
+      if (typeof error === 'string') {
+        let errorMessage = '사진 업로드에 실패했습니다. 다시 시도해 주세요.';
+        if (error.includes('얼굴이 아닙니다.')) {
+          errorMessage = '얼굴이 포함된 사진을 업로드해 주세요.';
+        } else if (error.includes('하나의 얼굴만 가능합니다.')) {
+          errorMessage = '한명의 얼굴이 포함된 사진을 업로드해 주세요.';
+        }
+
+        setFAlertModalMessage(errorMessage);
+        setFAlertModal(true);
+      } else {
+        // 에러가 문자열이 아닌 경우의 처리
+        setFAlertModalMessage('알 수 없는 에러가 발생했습니다.');
+        setFAlertModal(true);
+      }
     }
   };
 
@@ -120,7 +137,7 @@ const ImagePickerComponent: React.FC = () => {
 
       <AlertModal
         isVisible={fAlertModal}
-        text={['사진 업로드 실패. 다시 시도해 주세요.']}
+        text={[fAlertModalMessage]}
         onConfirm={handleModalClose}
       />
 

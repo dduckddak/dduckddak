@@ -1,29 +1,36 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Pressable, StyleSheet, TextInput } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  Dimensions,
+} from 'react-native';
 import { BookSummary } from '../../../App';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { searchBooks } from '../../../api/bookApi';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-
 type BookListProps = {
-  bookList: BookSummary[],
-  currentPage: number,
-  previousPage: () => void,
-  nextPage: () => void,
-  goToDetail: (book: BookSummary) => void,
-  navigation: NavigationProp<ParamListBase>
-}
+  bookList: BookSummary[];
+  currentPage: number;
+  previousPage: () => void;
+  nextPage: () => void;
+  goToDetail: (book: BookSummary) => void;
+  navigation: NavigationProp<ParamListBase>;
+};
 
 const BookList = ({
-                    bookList,
-                    currentPage,
-                    previousPage,
-                    nextPage,
-                    goToDetail,
-                    navigation,
-                  }: BookListProps) => {
-
+  bookList,
+  currentPage,
+  previousPage,
+  nextPage,
+  goToDetail,
+  navigation,
+}: BookListProps) => {
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
 
@@ -66,40 +73,44 @@ const BookList = ({
     }
   };
 
-
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={previousPage}>
         <Image
           source={require('../../../assets/images/button/before.png')}
+          style={styles.beforebutton}
         />
       </TouchableOpacity>
       <View style={styles.textContainer}>
         {bookList.length > 0 && (
           <Pressable onPress={() => goToDetail(bookList[currentPage])}>
             <View style={styles.box}>
-              <Text style={styles.text}>이 책 어때요 ?</Text>
+              {/* <Text style={styles.text}>이 책 어때요 ?</Text> */}
               <Image
                 source={{ uri: bookList[currentPage].coverImage }}
                 style={styles.bookCover}
               />
               <Text style={styles.titletext}>
-                제목 : {bookList[currentPage].bookTitle}
+                {bookList[currentPage].bookTitle}
               </Text>
             </View>
           </Pressable>
         )}
       </View>
       <TouchableOpacity onPress={nextPage}>
-        <Image source={require('../../../assets/images/button/next.png')} />
+        <Image
+          source={require('../../../assets/images/button/next.png')}
+          style={styles.nextbutton}
+        />
       </TouchableOpacity>
       <View style={styles.searchButtonAndInputContainer}>
         <Pressable onPress={handleToggleOrSearch}>
-          <MaterialCommunityIcons
+          {/* <MaterialCommunityIcons
             name="card-search-outline"
             size={100}
             color="#C5E1C9"
-          />
+          /> */}
+          <Image source={require('../../../assets/images/button/find.png')} />
         </Pressable>
         {showSearch && (
           <TextInput
@@ -114,18 +125,12 @@ const BookList = ({
 
       <View style={styles.likeButton}>
         <Pressable onPress={() => navigation.navigate('likeList')}>
-          <MaterialCommunityIcons
-            name="heart-box-outline"
-            size={100}
-            color="red"
-          />
+          <Image source={require('../../../assets/images/button/heart.png')} />
         </Pressable>
       </View>
-
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -133,44 +138,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    flex: 4,
-    // borderWidth: 2,
   },
   textContainer: {
     flex: 1,
     alignItems: 'center',
   },
   box: {
-    borderWidth: 1,
-    borderColor: 'rgba(65, 152, 7, 0.23)',
-    backgroundColor: 'rgba(65, 152, 7, 0.23)',
-    padding: 10,
+    borderWidth: 6,
+    borderColor: '#062D3E',
+    backgroundColor: '#87CEE9',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 700,
-    height: 500,
+    marginTop: -95,
+    width: Dimensions.get('screen').width * 0.6,
+    height: Dimensions.get('screen').height * 0.6,
     borderRadius: 20,
   },
   text: {
     textAlign: 'center',
     fontFamily: 'im-hyemin-bold',
-    fontSize: 60,
+    fontSize: 55,
+    marginBottom: 10,
   },
   titletext: {
     textAlign: 'center',
     fontFamily: 'im-hyemin-bold',
     fontSize: 48,
+    marginTop: 20,
   },
   bookCover: {
-    width: '100%',
+    width: '40%',
     height: '70%',
     resizeMode: 'contain',
   },
-
+  nextbutton: { right: '100%', bottom: '8%' },
+  beforebutton: { left: '100%', bottom: '8%' },
   searchButtonAndInputContainer: {
     position: 'absolute',
-    right: 10,
-    top: 0,
+    right: 14,
+    top: -135,
     zIndex: 1,
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -178,21 +184,19 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     padding: 15,
-    borderWidth: 1,
+    borderWidth: 3,
     borderRadius: 10,
     backgroundColor: '#C5E1C9',
     width: 500,
     fontFamily: 'im-hyemin-bold',
     fontSize: 20,
   },
-
   likeButton: {
     position: 'absolute',
-    right: 10,
-    top: 80,
+    right: 14,
+    top: -55,
     zIndex: 1,
   },
 });
-
 
 export default BookList;

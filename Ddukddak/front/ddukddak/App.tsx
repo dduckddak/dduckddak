@@ -268,7 +268,7 @@ export default function App() {
               name="MainCharacterScreen"
               component={MainCharacterScreen}
               options={{
-                headerTitle: LogoTitle,
+                // headerTitle: LogoTitle,
                 headerRight: () => <LogoRight isHomeScreen={false} />,
               }}
             />

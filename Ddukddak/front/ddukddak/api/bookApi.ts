@@ -28,6 +28,8 @@ export interface BookDetailData {
     bookAuthor: string;
     bookStory: string;
     isLike: Boolean;
+    mainName: string;
+    subName: string;
   };
 }
 

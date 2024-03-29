@@ -150,7 +150,7 @@ export type RootStackParamList = {
   detail: BookSummary;
   MainCharacterScreen: undefined;
   talk: { bookId: number };
-  fairy: undefined;
+  fairy: { mainName: string; subName: string };
   mainrending: undefined;
   intro: undefined;
   login: undefined;

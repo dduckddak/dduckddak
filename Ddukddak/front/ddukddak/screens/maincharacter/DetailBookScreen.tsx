@@ -31,6 +31,8 @@ interface DetailBook {
   bookAuthor: string;
   bookStory: string;
   isLike: Boolean;
+  mainName: string;
+  subName: string;
 }
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
@@ -94,7 +96,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
     try {
       const response = await getBookDetail(bookid);
       setSelectedBook(response.book);
-      // console.log(response.book);
+      console.log(response.book);
 
       checkLike(response.book.isLike);
     } catch (error) {
@@ -160,7 +162,12 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
           <View>
             <TouchableOpacity
               style={styles.button}
-              onPress={() => navigation.navigate('fairy' as never)}
+              onPress={() =>
+                navigation.navigate('fairy', {
+                  mainName: selectedBook ? selectedBook.mainName : '',
+                  subName: selectedBook ? selectedBook.subName : '',
+                })
+              }
             >
               <Image
                 source={require('../../assets/images/button/donghwabutton.png')}

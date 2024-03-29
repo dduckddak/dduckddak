@@ -19,7 +19,12 @@ import SkyButton from '../../components/SkyButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
 import Fairystore from '../../store/Fairystore';
 
-function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
+function FairytaleScreen({
+  navigation,
+  route,
+}: {
+  navigation: NavigationProp<any>;
+}) {
   const [currentStep, setCurrentStep] = useState(1);
   const [data, setData] = useState({
     main: { photo: null as string | null, voice: null as string | null },
@@ -28,6 +33,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     bookName: '',
   });
   const mainVoiceIdx = Fairystore((state) => state.mainVoiceIdx);
+  const { mainName, subName } = route.params;
 
   // 나갈때 모달
   const [modalVisible, setModalVisible] = useState(false);
@@ -36,7 +42,9 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [bookName, setBookName] = useState('');
 
   useEffect(() => {
-    console.log('Loaded mainVoiceIdx: ', mainVoiceIdx);
+    console.log('mainName:', mainName);
+    console.log('subName:', subName);
+    // console.log('Loaded mainVoiceIdx: ', mainVoiceIdx);
     const backAction = () => {
       setModalVisible(true);
 
@@ -135,10 +143,10 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return buttonComponent({ role: 'main' });
+        return buttonComponent({ role: mainName });
 
       case 2:
-        return buttonComponent({ role: 'sub' });
+        return buttonComponent({ role: subName });
       case 3:
         return (
           <View>

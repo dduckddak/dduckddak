@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
 import { BookSummary } from '../../../App';
 
 type DotsListProps = {
-  bookList: BookSummary[],
-  currentPage: number,
-}
+  bookList: BookSummary[];
+  currentPage: number;
+};
 
 const Dots = ({ bookList, currentPage }: DotsListProps) => {
   const styles = StyleSheet.create({
@@ -31,23 +31,21 @@ const Dots = ({ bookList, currentPage }: DotsListProps) => {
       backgroundColor: '#B3DABF',
     },
   });
+  const activeDotImage = require('../../../assets/images/active.png');
+  const inactiveDotImage = require('../../../assets/images/inactive.png');
 
   return (
     <View style={styles.dotsContainer}>
       {bookList &&
         bookList.map((_, index) => (
-          <View
+          <Image
             key={index}
-            style={[
-              styles.dot,
-              index === currentPage
-                ? styles.activeDot
-                : styles.inactiveDot,
-            ]}
+            source={index === currentPage ? activeDotImage : inactiveDotImage}
+            style={styles.dot}
           />
         ))}
     </View>
   );
-}
+};
 
 export default Dots;

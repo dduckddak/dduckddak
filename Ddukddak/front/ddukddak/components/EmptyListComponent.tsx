@@ -2,17 +2,16 @@ import { View, Image, StyleSheet, Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('screen');
 
-
 interface EmptyListComponentProps {
   // 비율을 결정할 prop을 추가
   // 이미지의 높이를 화면 높이의 75%로 기본값을 설정
   imageHeightRatio?: number;
 }
 
-
-function EmptyListComponent({ imageHeightRatio = 0.75 }: EmptyListComponentProps) {
+function EmptyListComponent({
+  imageHeightRatio = 0.6,
+}: EmptyListComponentProps) {
   const imageHeight = height * imageHeightRatio;
-
 
   return (
     <View style={styles.emptyContainer}>
@@ -34,11 +33,7 @@ const styles = StyleSheet.create({
   },
   emptyImage: {
     width: width - 40,
-    height: height * 0.75,
+    height: height * 0.5,
     resizeMode: 'contain',
-  },
-  emptyText: {
-    fontSize: 20,
-    marginTop: 20,
   },
 });

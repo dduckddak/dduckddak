@@ -58,16 +58,17 @@ const styles = StyleSheet.create({
   modalBox: {
     width: '100%',
     height: '20%',
-    backgroundColor: '#2B98BB',
+    backgroundColor: '#0084BE',
     elevation: 2,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 100,
+    gap: 90,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
   },
   button: {
     width: '20%',
-    margin: 20,
   },
 });
 

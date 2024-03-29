@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  Animated,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import ImagePickerComponent from '../../components/picture/ImagePicker';
@@ -27,6 +28,69 @@ function PictureScreen() {
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // 오리야 놀아라
+  const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(duckPosition, {
+          toValue: { x: width * 0.1, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(duckPosition, {
+          toValue: { x: 2, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, []);
+  // 추가 끝
+
+  // 구름 두둥실
+  const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+    const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+    useEffect(() => {
+      const animateClouds = () => {
+        const cloudAnimation = Animated.sequence([
+          Animated.timing(cloudAnimationValue, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(cloudAnimationValue, {
+            toValue: 0,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ]);
+
+        Animated.loop(cloudAnimation).start();
+      };
+      animateClouds();
+      return () => {};
+    }, [cloudAnimationValue]);
+    const cloud1TranslateY = cloudAnimationValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, -20],
+    });
+    return (
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 45,
+          left: 50,
+          width: 200,
+          height: 130,
+          transform: [{ translateY: cloud1TranslateY }],
+        }}
+      >
+        {children}
+      </Animated.View>
+    );
+  };
   const readPhotos = async () => {
     setIsLoading(true);
     try {
@@ -127,6 +191,42 @@ function PictureScreen() {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.ImageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      {/* <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud1}
+        />
+      </CloudAnimation> */}
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
+      <Animated.Image
+        source={require('../../assets/images/duck.png')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      />
       <View style={styles.container}>
         <FlatList
           data={imageData}
@@ -136,6 +236,7 @@ function PictureScreen() {
           ListEmptyComponent={
             !isLoading && imageData.length === 0 ? <EmptyListComponent /> : null
           }
+          style={styles.imagelist}
         />
       </View>
       <View style={styles.buttonContainer}>
@@ -158,10 +259,34 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
+  duck: {
+    position: 'absolute',
+    bottom: '17%',
+    left: '2%',
+    width: '10%',
+    height: '12%',
+  },
+  cloud: { position: 'absolute', top: 5, left: 200 },
+  // cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud2: {
+    position: 'absolute',
+    top: 5,
+    left: 620,
+    width: 200,
+    height: 130,
+    transform: [{ scaleX: -1 }],
+  },
+  cloud3: { position: 'absolute', top: 125, left: 1060 },
   container: {
     flex: 1,
     alignContent: 'center',
     justifyContent: 'center',
+  },
+  imagelist: {
+    width: '80%',
+    height: '80%',
+    marginHorizontal: '11%',
+    marginVertical: '7%',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -192,7 +317,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   selected: {
-    borderColor: 'blue',
-    borderWidth: 2,
+    borderWidth: 8,
+    borderRadius: 10,
+    borderColor: 'rgba(223, 143, 241, 0.551)',
   },
 });

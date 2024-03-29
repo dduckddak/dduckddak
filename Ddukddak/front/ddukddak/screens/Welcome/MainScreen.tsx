@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
 
   // 내가주인공 말풍선
-  greenButton: { left: 300, top: 40 },
+  greenButton: { left: '68%', top: 40 },
   icon: {
     width: 400,
     height: 130,
@@ -120,9 +120,9 @@ const styles = StyleSheet.create({
   },
   ddak2: {
     position: 'absolute',
-    left: '3%',
+    left: '2%',
     top: '31%',
-    width: 350,
-    height: 400,
+    width: '78%',
+    height: '80%',
   },
 });

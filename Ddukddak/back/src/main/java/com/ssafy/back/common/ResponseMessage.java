@@ -22,6 +22,9 @@ public interface ResponseMessage {
 
 	String S3_ERROR = "S3 error.";
 
+	String BAD_REQUEST = "Bad Request";
+
+	String UNIREST_ERROR = "Unirest error.";
 	String FastApi_ERROR = "FastApi error.";
 	String ELEVENLABS_ERROR = "ElevenLabs error.";
 	String FASTAPI_ERROR = "FastAPI error.";

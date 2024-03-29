@@ -4,12 +4,14 @@ import static com.ssafy.back.util.MakeKeyUtil.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,46 +70,19 @@ public class PhotoServiceImpl implements PhotoService {
 	@Transactional
 	public ResponseEntity<? super InsertPhotoResponseDto> insertPhoto(InsertPhotoRequestDto request) {
 
-		// 1. 얼굴 먼저 디비, S3 에 저장
-		// 2. 반환된 사진 id 로 fastapi 요청 ( fastapi 는 얼굴 인식해서 추출한 사진 저장함 )
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 
 		int userSeq = customUserDetails.getUserSeq();
 
-		UserEntity userEntity = new UserEntity();
-		userEntity.setUserSeq(userSeq);
-
-		PhotoEntity photoEntity = new PhotoEntity();
-		photoEntity.setUserEntity(userEntity);
-
-		PhotoEntity savedPhotoEntity = photoRepository.save(photoEntity);
-
 		try {
-			String key = photo(userSeq, savedPhotoEntity.getPhotoId());
-
 			MultipartFile photoFile = request.getPhotoFile();
-			InputStream inputStream = photoFile.getInputStream();
+			String photoBase64 = Base64.getEncoder().encodeToString(photoFile.getBytes());
 
-			ObjectMetadata metadata = new ObjectMetadata();
-			metadata.setContentLength(photoFile.getSize());
-			metadata.setContentType(photoFile.getContentType());
-
-			amazonS3.putObject(bucket, key, inputStream, metadata);
-
-			inputStream.close();
-
-		} catch (Exception e) {
-			logger.error(ResponseMessage.S3_ERROR);
-			logger.debug("Error message", e);
-
-			return InsertPhotoResponseDto.S3error();
-		}
-
-		try {
 			JsonObject bodyJson = new JsonObject();
 			bodyJson.addProperty("userSeq", userSeq);
-			bodyJson.addProperty("photoId", savedPhotoEntity.getPhotoId());
+			//bodyJson.addProperty("photoId", savedPhotoEntity.getPhotoId());
+			bodyJson.addProperty("photo", photoBase64); // Base64 인코딩된 이미지 데이터 추가
 
 			String endpoint = fastApiUrl + "/api/v1/f/extract-face/";
 
@@ -118,16 +93,17 @@ public class PhotoServiceImpl implements PhotoService {
 
 			// FastAPI로부터 받은 JSON 응답을 파싱
 			JsonObject jsonResponse = JsonParser.parseString(response.getBody()).getAsJsonObject();
+			System.out.println(jsonResponse);
+			int status_code = jsonResponse.get("status_code").getAsInt();
+			String message = jsonResponse.get("message").getAsString();
 
-			boolean isSuccess = jsonResponse.get("result").getAsBoolean();
-
-			logger.info("fastapi 로 부터 받은 값 : {}", isSuccess);
+			if(status_code != 200) return InsertPhotoResponseDto.fastApierror(HttpStatus.NOT_FOUND, message);
 
 		} catch (Exception e) {
-			logger.error(ResponseMessage.FastApi_ERROR);
+			logger.error(ResponseMessage.UNIREST_ERROR);
 			logger.debug("Error message", e);
 
-			return InsertPhotoResponseDto.fastApierror();
+			return InsertPhotoResponseDto.uniRestError();
 		}
 
 		return ResponseDto.success();

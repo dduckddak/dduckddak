@@ -27,6 +27,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     narration: { voice: null as string | null },
     bookName: '',
   });
+  const mainVoiceIdx = Fairystore((state) => state.mainVoiceIdx);
 
   // 나갈때 모달
   const [modalVisible, setModalVisible] = useState(false);
@@ -35,6 +36,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [bookName, setBookName] = useState('');
 
   useEffect(() => {
+    console.log('Loaded mainVoiceIdx: ', mainVoiceIdx);
     const backAction = () => {
       setModalVisible(true);
 
@@ -47,7 +49,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     );
 
     return () => backHandler.remove(); // 컴포넌트가 unmount 될 때 이벤트 제거
-  }, []);
+  }, [mainVoiceIdx]);
 
   // const sendData = async () => {
   //   const payload = {
@@ -72,24 +74,15 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     setModalVisible(false); // 모달 닫기
     navigation.goBack(); // 뒤로가기
   };
-  const updateSelectedImage = (uri: any) => {
-    setData((prevData) => ({
-      ...prevData,
-      main: { ...prevData.main, photo: uri },
-      sub: { ...prevData.sub, voice: uri },
-      narration: { ...prevData.narration, voice: uri },
-      bookName: '',
-    }));
-  };
 
   const pickImage = async (role: string) => {
     // 선택된 사진을 처리하는 콜백 함수
     const onPictureSelected = (uri: string) => {
       setData((prevData) => {
         const newData = { ...prevData };
-        if (role === '주인공') {
+        if (role === 'main') {
           newData.main.photo = uri;
-        } else if (role === '역할1') {
+        } else if (role === 'sub') {
           newData.sub.photo = uri; // 'roles' 구조에 맞게 조정이 필요할 수 있음
         }
         // 여기에 다른 역할에 대한 처리를 추가할 수 있습니다.
@@ -99,7 +92,6 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
 
     navigation.navigate('addfairypicture', {
       role,
-      onPictureSelected: updateSelectedImage,
     });
   };
 
@@ -143,10 +135,10 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return buttonComponent({ role: '주인공' });
+        return buttonComponent({ role: 'main' });
 
       case 2:
-        return buttonComponent({ role: '역할1' });
+        return buttonComponent({ role: 'sub' });
       case 3:
         return (
           <View>

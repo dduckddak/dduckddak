@@ -95,7 +95,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         : null;
 
       if (foundBook) {
-        navigation.navigate('detail', { bookId: foundBook.bookId });
+        navigation.navigate('detail', foundBook);
         setSearchText(''); // 검색 후 입력 필드 초기화
       } else {
         alert('일치하는 책이 없습니다.');

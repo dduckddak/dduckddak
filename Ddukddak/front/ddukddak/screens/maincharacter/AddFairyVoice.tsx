@@ -26,6 +26,8 @@ function AddVoice({ route, navigation }: any) {
   const [selectMode, setSelecteMode] = useState(false);
   const [voiceData, setVoiceData] = useState<Voice[]>([]);
 
+  const setMainVoiceIdx = Fairystore((state) => state.setMainVoiceIdx);
+
   // 현재 재생 중인 사운드를 추적하는 상태 변수
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
   const [selectedVoiceId, setSelectedVoiceId] = useState<number | null>(null);
@@ -89,8 +91,7 @@ function AddVoice({ route, navigation }: any) {
   const handleSelectButtonPress = () => {
     if (selectMode && selectedVoiceId !== null) {
       // 선택완료 로직
-      // 이전 페이지에 selectedVoiceId를 전달
-      onVoiceSelected(selectedVoiceId); // 이 함수는 이전 페이지로 voiceId를 전달하는 함수입니다.
+      setMainVoiceIdx(selectedVoiceId); // 이 함수는 이전 페이지로 voiceId를 전달하는 함수입니다.
       navigation.goBack();
     } else {
       // 선택모드 활성화
@@ -143,16 +144,18 @@ function AddVoice({ route, navigation }: any) {
         }}
         ListEmptyComponent={<EmptyListComponent />}
       />
-      <GreenButton
-        content={selectMode ? '선택완료' : '선택하기'}
-        style={{ width: 220, paddingBottom: 40 }}
-        onPress={handleSelectButtonPress}
-      />
-      <GreenButton
-        content="목소리 추가하기"
-        style={{ width: 220, paddingBottom: 40 }}
-        onPress={() => navigation.navigate('addvoice' as never)}
-      />
+      <View style={styles.buttonContainer}>
+        <GreenButton
+          content={selectMode ? '선택완료' : '선택하기'}
+          style={{ width: 220, paddingBottom: 40 }}
+          onPress={handleSelectButtonPress}
+        />
+        <GreenButton
+          content="목소리 추가하기"
+          style={{ width: 220, paddingBottom: 40 }}
+          onPress={() => navigation.navigate('addvoice' as never)}
+        />
+      </View>
     </ImageBackground>
   );
 }
@@ -173,6 +176,16 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 20,
+    left: 0,
+    right: 0,
+    gap: 30,
   },
   container1: {
     flexDirection: 'row',

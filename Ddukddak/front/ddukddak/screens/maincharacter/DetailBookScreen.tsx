@@ -155,7 +155,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 저자 : {selectedBook?.bookAuthor}
               </Text>
               <Text style={styles.detailText}>
-                줄거리 : {selectedBook?.bookStory}
+                줄거리 : {selectedBook?.bookStory.length > 70 ? selectedBook?.bookStory.slice(0, 70) + ' ...' : selectedBook?.bookStory}
               </Text>
             </View>
           </View>

@@ -7,7 +7,6 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Alert,
   Image,
   Animated,
   Dimensions,
@@ -16,11 +15,15 @@ import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
+import AlertModal from '../../components/AlertModal';
 
 interface Voice {
   voiceId: number;
   voiceName: string;
 }
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
@@ -53,10 +56,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: 45,
-        left: 50,
-        width: 200,
-        height: 130,
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -67,14 +70,14 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 
 function VoiceScreen() {
   const navigation = useNavigation();
-  const { width } = Dimensions.get('screen');
+
   // 오리야 놀아라
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(duckPosition, {
-          toValue: { x: width * 0.1, y: 0 },
+          toValue: { x: screenWidth * 0.1, y: 0 },
           duration: 2000,
           useNativeDriver: false,
         }),
@@ -92,6 +95,11 @@ function VoiceScreen() {
 
   // 현재 재생 중인 사운드를 추적하는 상태 변수
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
+
+  // 삭제 성공 모달
+  const [sAlertModal, setSAlertModal] = useState(false);
+  // 삭제 실패 모달
+  const [fAlertModal, setFAlertModal] = useState(false);
 
   const readList = async () => {
     setIsLoading(true);
@@ -143,13 +151,20 @@ function VoiceScreen() {
   const deleteVoice = async (voiceId: number) => {
     try {
       const response = await deleteVoices({ deleteVoiceIds: [voiceId] });
-      Alert.alert('삭제 성공', '목소리가 성공적으로 삭제되었습니다.');
+      // Alert.alert('삭제 성공', '목소리가 성공적으로 삭제되었습니다.');
+      setSAlertModal(true);
       // 삭제 성공 후, 삭제된 목소리를 목록에서 제거
       setVoiceData(voiceData.filter((voice) => voice.voiceId !== voiceId));
     } catch (error: any) {
       console.error('Error deleting voice:', error.message);
-      Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
+      // Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
+      setFAlertModal(true);
     }
+  };
+
+  const handleModalClose = () => {
+    setSAlertModal(false);
+    setFAlertModal(false);
   };
 
   const renderItem = ({ item }: any) => (
@@ -235,8 +250,19 @@ function VoiceScreen() {
       />
       <GreenButton
         content="목소리 추가하기"
-        style={{ width: 220, paddingBottom: 40 }}
+        style={{ width: screenWidth * 0.2, paddingBottom: screenWidth * 0.035 }}
         onPress={() => navigation.navigate('addvoice' as never)}
+      />
+      <AlertModal
+        isVisible={sAlertModal}
+        text={['삭제 성공', '목소리가 성공적으로 삭제되었습니다.']}
+        onConfirm={handleModalClose}
+      />
+
+      <AlertModal
+        isVisible={fAlertModal}
+        text={['삭제 실패', ' 다시 시도해 주세요.']}
+        onConfirm={handleModalClose}
       />
     </ImageBackground>
   );
@@ -249,27 +275,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#40AF91',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 120,
-    height: 50,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.05,
     borderRadius: 5,
   },
-  cloud: { position: 'absolute', top: 5, left: 200 },
-  cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.15,
+  },
+  cloud1: {
+    position: 'absolute',
+    top: screenHeight * 0.03,
+    left: screenWidth * 0.35,
+    width: screenWidth * 0.17,
+    height: screenHeight * 0.2,
+  },
   cloud2: {
     position: 'absolute',
-    top: 5,
-    left: 850,
-    width: 150,
-    height: 110,
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.71,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.17,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 125, left: 1060 },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.15,
+    left: screenWidth * 0.88,
+  },
   duck: {
     position: 'absolute',
-    bottom: '17%',
-    left: '2%',
-    width: '10%',
-    height: '12%',
+    bottom: screenHeight * 0.15,
+    left: screenWidth * 0.04,
+    width: screenWidth * 0.09,
+    height: screenHeight * 0.1,
   },
   imageBackground: {
     flex: 1,
@@ -290,13 +330,13 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end', // 가로로 오른쪽 정렬
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: 10, //미리듣기랑 쓰레기통 사이 간격
+    gap: 10,
   },
   card: {
     backgroundColor: '#B7E29B',
-    width: 500,
+    width: screenWidth * 0.415,
     margin: 30,
     padding: 15,
     borderRadius: 5,
@@ -307,16 +347,14 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   cardTitle: {
-    fontSize: 35,
+    fontSize: screenWidth * 0.036,
     fontFamily: 'im-hyemin-bold',
   },
-  cardPreview: {
-    fontSize: 16,
-  },
+
   buttonText: {
     fontFamily: 'im-hyemin-bold',
-    fontSize: 20,
+    fontSize: screenWidth * 0.016,
     color: 'white',
   },
-  trash: { width: 60, height: 60 },
+  trash: { width: screenWidth * 0.05, height: screenHeight * 0.08 },
 });

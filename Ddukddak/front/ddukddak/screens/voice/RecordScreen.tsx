@@ -6,11 +6,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Alert,
+  Dimensions,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
 import EndRecordModal from '../../components/voice/EndRecordModal';
+import AlertModal from '../../components/AlertModal';
 
 const scripts = [
   {
@@ -40,6 +41,9 @@ const scripts = [
   },
 ];
 
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
 function RecordScreen() {
   const [currentScriptIndex, setCurrentScriptIndex] = useState(0);
   const [recording, setRecording] = useState<Audio.Recording | undefined>(
@@ -49,6 +53,12 @@ function RecordScreen() {
   const [recordingStartTime, setRecordingStartTime] = useState(0);
   const [timerId, setTimerId] = useState<NodeJS.Timeout | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  // 시간이 짧을 때 모달
+  const [timeModal, setTimeModal] = useState(false);
+
+  // 권한 모달
+  const [gAlertModal, setGAlertModal] = useState(false);
 
   const handleNextStep = () => {
     if (currentScriptIndex < scripts.length - 1) {
@@ -66,6 +76,7 @@ function RecordScreen() {
     const { status } = await Audio.requestPermissionsAsync();
     try {
       if (status !== 'granted') {
+        setGAlertModal(true);
         console.error('권한 거절');
         return;
       }
@@ -97,10 +108,11 @@ function RecordScreen() {
       if (timerId) clearTimeout(timerId);
       const elapsedTime = Date.now() - recordingStartTime;
       if (elapsedTime < 30000) {
-        Alert.alert(
-          '녹음이 너무 짧습니다',
-          '녹음은 최소 30초 이상이어야 합니다.',
-        );
+        setTimeModal(true);
+        // Alert.alert(
+        // '녹음이 너무 짧습니다',
+        // '녹음은 최소 30초 이상이어야 합니다.',
+        // );
         return;
       }
 
@@ -120,7 +132,9 @@ function RecordScreen() {
   }
 
   const handleModalClose = () => {
-    setModalVisible(false); // 모달 닫기
+    setModalVisible(false);
+    setTimeModal(false);
+    setGAlertModal(false);
   };
 
   const recordingStarted = recording !== undefined;
@@ -161,7 +175,11 @@ function RecordScreen() {
         <GreenButton
           content={recording ? '녹음 종료' : '녹음 시작'}
           onPress={recording ? stopRecording : startRecording}
-          style={{ width: '15%', margin: 70, marginBottom: -15 }}
+          style={{
+            width: screenWidth * 0.15,
+            margin: screenWidth * 0.05,
+            marginBottom: -screenWidth * 0.012,
+          }}
         />
         <EndRecordModal
           visible={modalVisible}
@@ -169,6 +187,17 @@ function RecordScreen() {
           recordingUri={voiceUri} // 녹음된 URI를 넘깁니다
         />
       </View>
+      <AlertModal
+        isVisible={timeModal}
+        text={['녹음이 너무 짧습니다', '녹음은 최소 30초 이상이어야 합니다.']}
+        onConfirm={handleModalClose}
+      />
+
+      <AlertModal
+        isVisible={gAlertModal}
+        text={['권한 승인이 거절되었습니다.']}
+        onConfirm={handleModalClose}
+      />
     </ImageBackground>
   );
 }
@@ -193,23 +222,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scriptTextContainer: {
-    width: '70%',
-    height: '85%',
+    width: screenWidth * 0.7,
+    height: screenHeight * 0.53,
     backgroundColor: '#5FB0CC',
     borderRadius: 15,
     justifyContent: 'center',
   },
   counterText: {
-    fontSize: 30,
+    fontSize: screenWidth * 0.03,
+    marginTop: 10,
     fontFamily: 'im-hyemin-bold',
   },
   text: {
-    fontSize: 36,
+    fontSize: screenWidth * 0.032,
     fontFamily: 'im-hyemin-bold',
     color: 'white',
     marginBottom: 20,
     textAlign: 'center',
-    lineHeight: 60,
+    lineHeight: screenHeight * 0.08,
   },
   button: {
     paddingVertical: 10,
@@ -217,17 +247,6 @@ const styles = StyleSheet.create({
     margin: 20,
     borderRadius: 5,
     marginVertical: 5,
-  },
-  startButton: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginVertical: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
   },
   disabledButton: {
     opacity: 0.5,

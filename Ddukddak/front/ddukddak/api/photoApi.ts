@@ -60,6 +60,7 @@ export const addPhoto = async (
     console.log(response.data);
     return response.data;
   } catch (error) {
+    console.log(error);
     if (isAxiosError(error) && error.response) {
       throw error.response.data;
     }

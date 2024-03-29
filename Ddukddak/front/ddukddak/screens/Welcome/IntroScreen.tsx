@@ -3,14 +3,13 @@ import {
   View,
   Text,
   Pressable,
-  Button,
   Image,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import GreenButton from '../../components/GreenButton';
 import MainScreen from './MainScreen';
 import * as SecureStore from 'expo-secure-store';
 import { useUserStore } from '../../store/userStore';
@@ -18,6 +17,9 @@ import { useUserStore } from '../../store/userStore';
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -33,7 +35,6 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const handlePress = () => {
     navigation.navigate('MainCharacterScreen');
   };
-
 
   useEffect(() => {
     const setIntroCheck = async () => {
@@ -54,8 +55,8 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   }, []);
 
   const YourComponent: React.FC<{ currentStep: number }> = ({
-                                                              currentStep,
-                                                            }) => {
+    currentStep,
+  }) => {
     let mainScreenContent;
     switch (currentStep) {
       case 1:
@@ -195,10 +196,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
                 <TouchableOpacity onPress={handlePress}>
-                  <Image
-                    source={mainPageCharacter}
-                    style={styles.ddak2}
-                  />
+                  <Image source={mainPageCharacter} style={styles.ddak2} />
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}
@@ -257,10 +255,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
                 <TouchableOpacity onPress={handlePress}>
-                  <Image
-                    source={mainPageCharacter}
-                    style={styles.ddak2}
-                  />
+                  <Image source={mainPageCharacter} style={styles.ddak2} />
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}

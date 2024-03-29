@@ -20,6 +20,9 @@ const { width } = Dimensions.get('screen');
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
 function PictureScreen() {
   const [imageData, setImageData] = useState<
     { uri: string; selected: boolean; id: number }[]
@@ -80,10 +83,10 @@ function PictureScreen() {
       <Animated.View
         style={{
           position: 'absolute',
-          top: 45,
-          left: 50,
-          width: 200,
-          height: 130,
+          top: screenHeight * 0.03,
+          left: screenWidth * 0.01,
+          width: screenWidth * 0.2,
+          height: screenHeight * 0.1,
           transform: [{ translateY: cloud1TranslateY }],
         }}
       >
@@ -118,7 +121,7 @@ function PictureScreen() {
 
   useEffect(() => {
     readPhotos();
-  }, []);
+  }, [imageData]);
 
   // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {
@@ -198,12 +201,6 @@ function PictureScreen() {
           style={styles.cloud}
         />
       </CloudAnimation>
-      {/* <CloudAnimation>
-        <Image
-          source={require('../../assets/images/Main/cloud.png')}
-          style={styles.cloud1}
-        />
-      </CloudAnimation> */}
       <CloudAnimation>
         <Image
           source={require('../../assets/images/Main/cloud.png')}
@@ -262,22 +259,29 @@ const styles = StyleSheet.create({
   },
   duck: {
     position: 'absolute',
-    bottom: '17%',
-    left: '2%',
-    width: '10%',
-    height: '12%',
+    bottom: screenHeight * 0.15,
+    left: screenWidth * 0.04,
+    width: screenWidth * 0.09,
+    height: screenHeight * 0.1,
   },
-  cloud: { position: 'absolute', top: 5, left: 200 },
-  // cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.15,
+  },
   cloud2: {
     position: 'absolute',
-    top: 5,
-    left: 620,
-    width: 200,
-    height: 130,
+    top: screenHeight * 0.004,
+    left: screenWidth * 0.52,
+    width: screenWidth * 0.17,
+    height: screenHeight * 0.17,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 125, left: 1060 },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.15,
+    left: screenWidth * 0.88,
+  },
   container: {
     flex: 1,
     alignContent: 'center',

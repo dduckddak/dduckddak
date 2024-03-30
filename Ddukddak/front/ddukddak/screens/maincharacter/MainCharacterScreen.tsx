@@ -17,33 +17,11 @@ import { BookSummary } from '../../types/types';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
 import { useUserStore } from '../../store/userStore';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
-
-const tempBookData = {
-  bookList: [
-    {
-      bookId: 121,
-      bookTitle: '잭과 콩나무',
-      coverImage:
-        'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/121/nonblank/0.png',
-    },
-    {
-      bookId: 122,
-      bookTitle: '빨간 모자',
-      coverImage:
-        'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/122/nonblank/0.png',
-    },
-    {
-      bookId: 123,
-      bookTitle: '도깨비 방망이',
-      coverImage:
-        'https://ddukddak.s3.ap-northeast-2.amazonaws.com/default_book/123/nonblank/0.png',
-    },
-  ],
-};
 
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   navigation,
@@ -151,12 +129,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           style={styles.cloud}
         />
       </CloudAnimation>
-      {/* <CloudAnimation>
-    <Image
-      source={require('../../assets/images/Main/cloud.png')}
-      style={styles.cloud1}
-    />
-  </CloudAnimation> */}
+
       <CloudAnimation>
         <Image
           source={require('../../assets/images/Main/cloud.png')}

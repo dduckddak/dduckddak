@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,6 @@ import {
   Image,
   SafeAreaView,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   TouchableOpacity,
   Alert,
   Keyboard,
@@ -19,7 +17,7 @@ import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
 import { getUserInfo, login } from '../../api/userApi';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as SecureStore from 'expo-secure-store';
 import { useUserStore } from '../../store/userStore';
 
@@ -115,58 +113,64 @@ const Login: React.FC<Props> = ({ navigation }) => {
         source={require('../../assets/images/background/background2.png')}
         style={styles.imageBackground}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.container}>
-            <Image
-              source={require('../../assets/images/login.png')}
-              style={styles.login}
-            />
-            <View style={[StyleSheet.absoluteFill]}>
-              <View style={styles.TopContainer}>
-                <View style={styles.flexContainer}>
-                  <Text style={[styles.text, { marginTop: 34 }]}>ID</Text>
-                  <TextInput
-                    placeholder="아이디를 입력해주세요"
-                    style={styles.inputContainer}
-                    value={idInput}
-                    onChangeText={(e) => setIdInput(e)}
-                    accessibilityLabel="아이디 입력"
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          extraScrollHeight={20}
+          enableOnAndroid={true}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
+              <Image
+                source={require('../../assets/images/login.png')}
+                style={styles.login}
+              />
+              <View style={[StyleSheet.absoluteFill]}>
+                <View style={styles.TopContainer}>
+                  <View style={styles.flexContainer}>
+                    <Text style={[styles.text, { marginTop: 34 }]}>ID</Text>
+                    <TextInput
+                      placeholder="아이디를 입력해주세요"
+                      style={styles.inputContainer}
+                      value={idInput}
+                      onChangeText={(e) => setIdInput(e)}
+                      accessibilityLabel="아이디 입력"
+                    />
+                  </View>
+                  <View style={styles.flexContainer}>
+                    <Text style={[styles.text, { marginTop: 34 }]}>PW</Text>
+                    <TextInput
+                      placeholder="비밀번호를 입력해주세요"
+                      style={styles.inputContainer}
+                      value={pwdInput}
+                      onChangeText={(e) => setPwdInput(e)}
+                      secureTextEntry={true}
+                    />
+                  </View>
+                </View>
+                <View style={styles.middleContainer}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('signup')}
+                    activeOpacity={0.5}
+                  >
+                    <Text>회원가입</Text>
+                  </TouchableOpacity>
+                  <Text>|</Text>
+                  <Text>ID 찾기</Text>
+                  <Text>|</Text>
+                  <Text>Password 찾기</Text>
+                </View>
+                <View style={styles.bottomContainer}>
+                  <GreenButton
+                    onPress={handlePress}
+                    content="로그인"
+                    style={{ width: 160 }}
                   />
                 </View>
-                <View style={styles.flexContainer}>
-                  <Text style={[styles.text, { marginTop: 34 }]}>PW</Text>
-                  <TextInput
-                    placeholder="비밀번호를 입력해주세요"
-                    style={styles.inputContainer}
-                    value={pwdInput}
-                    onChangeText={(e) => setPwdInput(e)}
-                    secureTextEntry={true}
-                  />
-                </View>
               </View>
-              <View style={styles.middleContainer}>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('signup')}
-                  activeOpacity={0.5}
-                >
-                  <Text>회원가입</Text>
-                </TouchableOpacity>
-                <Text>|</Text>
-                <Text>ID 찾기</Text>
-                <Text>|</Text>
-                <Text>Password 찾기</Text>
-              </View>
-              <View style={styles.bottomContainer}>
-                <GreenButton
-                  onPress={handlePress}
-                  content="로그인"
-                  style={{ width: 160 }}
-                />
-              </View>
+              <StatusBar style="light" />
             </View>
-            <StatusBar style="light" />
-          </View>
-        </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
       </ImageBackground>
     </SafeAreaView>
   );

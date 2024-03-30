@@ -30,6 +30,8 @@ export const BGMPlayer = () => {
             }
         };
     }, []);
+
+    return null;
 };
 
 export default BGMPlayer;

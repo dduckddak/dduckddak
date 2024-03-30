@@ -39,6 +39,7 @@ import Script from './components/createBook/Script';
 import { TransitionPresets } from '@react-navigation/stack';
 
 import { AppInitializer } from './components/AppInitializer';
+import { BookSummary, DetailBook } from './types/types';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
 import { useBgmStore } from './store/BgmStore'
@@ -78,11 +79,6 @@ interface LogoRightProps {
   isHomeScreen: any;
 }
 
-export interface BookSummary {
-  bookId: number;
-  bookTitle: string;
-  coverImage: string;
-}
 
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
@@ -145,7 +141,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
               fontFamily: 'im-hyemin-bold',
               fontSize: 30,
               color: '#003C2A',
-              
+
             }}
           >
             로그아웃
@@ -181,7 +177,7 @@ export type RootStackParamList = {
   detail: BookSummary;
   MainCharacterScreen: undefined;
   talk: { bookId: number };
-  fairy: { mainName: string; subName: string };
+  fairy: { selectedBook: DetailBook; bookSummary: BookSummary; };
   mainrending: undefined;
   intro: undefined;
   login: undefined;

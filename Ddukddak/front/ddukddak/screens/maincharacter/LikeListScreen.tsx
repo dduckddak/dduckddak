@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getLikeList, LikeBookListData } from '../../api/bookApi';
-import { BookSummary } from '../../App';
+import { BookSummary } from '../../types/types';
 
 interface LikeListScreenProps {
   navigation: NavigationProp<ParamListBase>;

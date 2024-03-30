@@ -10,112 +10,101 @@ import {
   Pressable,
   BackHandler,
   Keyboard,
-  TouchableWithoutFeedback,
+  TouchableWithoutFeedback, Image, Dimensions,
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+
 import GreenButton from '../../components/GreenButton';
 import SkyButton from '../../components/SkyButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
-import Fairystore from '../../store/Fairystore';
-import { NavigationProp } from '@react-navigation/native';
+import { useFairyStore } from '../../store/fairyStore';
+import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '../../App';
+import { BookSummary, DetailBook, PhotoData, VoiceData } from '../../types/types';
+import ConfirmModal from '../../components/ConfirmModal';
+import { postMakeBook } from '../../api/makeBookApi';
+
+type FairyRouteProp = RouteProp<RootStackParamList, 'fairy'>;
+
 
 function FairytaleScreen({
-  navigation,
-  route,
-}: {
+                           navigation,
+                         }: {
   navigation: NavigationProp<any>;
-  route: any;
 }) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [data, setData] = useState({
-    main: { photo: null as string | null, voice: null as string | null },
-    sub: { photo: null as string | null, voice: null as string | null },
-    narration: { voice: null as string | null },
-    bookName: '',
-  });
-  const mainVoiceIdx = Fairystore((state) => state.mainVoiceIdx);
-  const mainImageIdx = Fairystore((state) => state.mainImageIdx);
-  const subImageIdx = Fairystore((state) => state.subImageIdx);
-  const subVoiceIdx = Fairystore((state) => state.subVoiceIdx);
-  const narrationVoiceIdx = Fairystore((state) => state.narrationVoiceIdx);
-  const { mainName, subName } = route.params;
+  const [currentStep, setCurrentStep] = useState(1); // 현재 진행 단계(1 : 메인 캐릭터 2: 서브 캐릭 3 : 내레이션 4 : 만들기)
+  const [makeBookTitle, setMakeBookTitle] = useState('');  // 클라이언트가 자신이 만들 책 제목을 지정하기 위한 state
 
-  // 나갈때 모달
-  const [modalVisible, setModalVisible] = useState(false);
-  // 다 만들었을때 모달
-  const [creationModalVisible, setCreationModalVisible] = useState(false);
-  const [bookName, setBookName] = useState('');
+  const { mainImage, mainVoice, subImage, subVoice, narration, resetStore } = useFairyStore();  // zustand 상태 변수, 함수
+
+  const [isExitModal, setIsExitModal] = useState(false);  // 나갈때 모달
+  const [isMakeBookModal, setIsMakeBookModal] = useState(false);  // 다 만들었을때 모달
+
+  const route = useRoute<FairyRouteProp>();
+  const selectedBook: DetailBook = route.params.selectedBook;  // DetailScreen에서 받아온 책 정보 (DetailBook 타입)
+  const bookSummary: BookSummary = route.params.bookSummary;    // DetailScreen에서 받아온 책 정보 (BookSummary 타입)
+
 
   useEffect(() => {
-    // console.log('Loaded mainVoiceIdx: ', mainVoiceIdx);
     const backAction = () => {
-      setModalVisible(true);
-
-      return true; // 이벤트 처리 완료
+      setIsExitModal(true);
+      return true;
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
     );
-
     return () => backHandler.remove(); // 컴포넌트가 unmount 될 때 이벤트 제거
-  }, [mainVoiceIdx]);
-
-  // const sendData = async () => {
-  //   const payload = {
-  //     makeBookTitle: bookName,
-  //     mainVoice: mainVoiceUri,
-  //     mainPhoto: mainImageUri,
-  //     subVoice: rolesVoiceUri,
-  //     subPhoto: rolesImageUri,
-  //     narration: narrationVoiceUri,
-  //   };
-
-  //   try {
-  //     const response = await axios.post('/api/v1/make-books', payload);
-  //     console.log('Success:', response.data);
-  //   } catch (error) {
-  //     console.error('Error sending data:', error);
-  //   }
-  // };
+  }, []);
 
   const closeModal = () => {
-    setModalVisible(false); // 모달 닫기
+    setIsExitModal(false); // 모달 닫기
+    resetStore();
     navigation.goBack(); // 뒤로가기
   };
 
-  const pickImage = async (role: string) => {
-    // 선택된 사진을 처리하는 콜백 함수
-    const onPictureSelected = (uri: string) => {
-      setData((prevData) => {
-        const newData = { ...prevData };
-        if (role === 'main') {
-          newData.main.photo = uri;
-        } else if (role === 'sub') {
-          newData.sub.photo = uri; // 'roles' 구조에 맞게 조정이 필요할 수 있음
-        }
-        // 여기에 다른 역할에 대한 처리를 추가할 수 있습니다.
-        return newData;
-      });
-    };
+  const handleMakeBook = async () => {
+    const requestBody = {
+      bookId : bookSummary.bookId,
+      makeBookTitle: makeBookTitle,
+      mainVoice : mainVoice?.voiceId,
+      mainPhoto: mainImage?.photoId,
+      subVoice: subVoice?.voiceId,
+      subImage: subImage?.photoId,
+      narration: narration?.voiceId,
+    }
+    console.log(requestBody);
 
-    navigation.navigate('addfairypicture', {
-      role,
-    });
+    const response = await postMakeBook(requestBody);
+    resetStore();
+    console.log(response);
+
+    return response.message === 'Success.';
+  }
+
+  /**
+   * @function selectCharacterImage
+   * @description 동화뚝딱에서 특정 캐릭터의 이미지를 선택하는 화면으로 이동. 이 때 currentStep을 이용해서 메인, 서브를 구분한다.
+   */
+  const selectCharacterImage = async (role: string) => {
+    navigation.navigate('addfairypicture', { currentStep });
   };
 
-  const recordVoice = async (role: string) => {
-    navigation.navigate('addfairyvoice', { role });
+  /**
+   * @function selectCharacterVoice
+   * @description 동화뚝딱에서 특정 캐릭터의 목소리를 선택하는 화면으로 이동. 이 때 currentStep을 이용해서 메인, 서브, 내래이션을 구분한다.
+   */
+  const selectCharacterVoice = async () => {
+    navigation.navigate('addfairyvoice', { currentStep });
   };
+
 
   const handleNextStep = () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
       // 여기서 데이터를 서버에 POST 요청
-      console.log('Send data to server:', data);
-      setCreationModalVisible(true);
+      // console.log('Send data to server:', data);
+      setIsMakeBookModal(true);
     }
   };
 
@@ -125,78 +114,164 @@ function FairytaleScreen({
     }
   };
 
-  const buttonComponent = ({ role }: any) => {
+  const buttonComponent = ({ role, image, voice }: {
+    role: string,
+    image: PhotoData | null,
+    voice: VoiceData | null
+  }) => {
     return (
-      <View style={styles.buttoncontainer}>
-        <Pressable style={styles.button} onPress={() => pickImage(role)}>
-          <Text style={styles.textcenter}> {role} 얼굴 찾아주기</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={() => recordVoice(role)}>
-          <Text style={styles.textcenter}>{role} 소리 찾아주기</Text>
-        </Pressable>
+      <View style={styles.rightSideContainer}>
+        <View style={{ flex: 1 }}>
+          <Text>{role}의 얼굴과 목소리를 찾아줘</Text>
+        </View>
+
+        <View style={styles.characterButtonContainer}>
+          <Pressable style={styles.button} onPress={() => selectCharacterImage(role)}>
+            {!image ?
+
+              <Text style={styles.textcenter}>얼굴{'\n'}찾아주기</Text> // 이미지가 없으면 '얼굴 찾아주기'
+              :
+              <Image source={{ uri: image.photoFile }} style={styles.imageInButton} /> // 이미지가 있으면 이미지 렌더링
+            }
+          </Pressable>
+          <Pressable style={styles.button} onPress={() => selectCharacterVoice()}>
+            {
+              !voice ?
+                <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
+                :
+                <Text style={styles.textcenter}>{voice.voiceName}{'\n'}목소리</Text>
+            }
+
+          </Pressable>
+        </View>
+        <View style={styles.handleStepContainer}>
+          {currentStep > 1 && currentStep < 4 && (
+            <GreenButton
+              onPress={handlePreviousStep}
+              content="이전"
+              style={{
+                width: screenWidth * 0.08,
+              }}
+            />
+          )}
+
+          <GreenButton
+            onPress={handleNextStep}
+            content="다 찾았어요"
+            style={{
+              width: screenWidth * 0.15,
+
+              marginLeft: 30,
+            }}
+          />
+
+        </View>
+      </View>
+    );
+  };
+
+  const narrationSelectComponent = () => {
+    return (
+      <View style={styles.rightSideContainer}>
+        <View style={{ flex: 4 }}>
+          <Text>재료를 모두 찾아줘서 고마워</Text>
+        </View>
+        <View style={styles.narrationButtonContainer}>
+          <Pressable style={styles.narrationVoiceSelectButton} onPress={() => selectCharacterVoice()}>
+            {
+              !narration ?
+                <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
+                :
+                <Text style={styles.textcenter}>{narration.voiceName}{'\n'}목소리</Text>
+            }
+          </Pressable>
+        </View>
+        <View style={styles.handleStepContainer}>
+          <GreenButton
+            onPress={handlePreviousStep}
+            content="이전"
+            style={{
+              width: screenWidth * 0.08,
+            }}
+          />
+          <GreenButton
+            onPress={handleNextStep}
+            content="다 찾았어요"
+            style={{
+              width: screenWidth * 0.15,
+              marginLeft: 30,
+            }}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const inputBookTitleContainer = () => {
+    return (
+      <View style={styles.rightSideContainer}>
+        <View style={{ flex: 3, borderWidth: 1 }}>
+          <Text>이제 조금만 기다리면 책이 만들어질거야!{'\n'}이름을 지어줄래?</Text>
+        </View>
+        <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}>
+
+          <View style={styles.titleInputBox}>
+            <TextInput
+              style={styles.titleInput}
+              placeholder="여기에 입력하세요"
+              onChangeText={text => setMakeBookTitle(text)}
+              value={makeBookTitle}
+            />
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              marginBottom: '5%',
+            }}>
+              <GreenButton
+                onPress={handlePreviousStep}
+                content="이전"
+                style={{
+                  width: '15%',
+                }}
+              />
+              <GreenButton
+                onPress={() => setIsMakeBookModal(true)}
+                content="나만의 동화책 만들기"
+                style={{
+                  width: '60%',
+                }}
+              />
+
+            </View>
+
+          </View>
+        </View>
+
       </View>
     );
   };
 
   const handleBookNameChange = (name: string) => {
-    setBookName(name); // 사용자가 입력한 책 이름을 저장
+    setMakeBookTitle(name); // 사용자가 입력한 책 이름을 저장
   };
 
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return buttonComponent({ role: mainName });
-
+        return buttonComponent({ role: selectedBook.mainName, image: mainImage, voice: mainVoice });
       case 2:
-        return buttonComponent({ role: subName });
+        return buttonComponent({ role: selectedBook.subName, image: subImage, voice: subVoice });
       case 3:
-        return (
-          <View>
-            <Pressable
-              style={styles.button}
-              onPress={() => recordVoice('내래이션')}
-            >
-              <Text style={styles.textcenter}>내레이션 목소리 녹음</Text>
-            </Pressable>
-          </View>
-        );
+        return narrationSelectComponent();
       case 4:
-        return (
-          <View style={styles.stepFourContainer}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View>
-                <TextInput
-                  style={styles.textInputStyle}
-                  placeholder="책 이름 입력"
-                  value={data.bookName || ''}
-                  onChangeText={handleBookNameChange}
-                />
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    gap: 10,
-                  }}
-                >
-                  <GreenButton
-                    onPress={handlePreviousStep}
-                    content="이전"
-                    style={{ width: 100, height: 80, marginTop: 10 }}
-                  />
-                  <GreenButton
-                    onPress={handleNextStep}
-                    content="나만의 동화 만들기"
-                    style={{ width: 250, height: 80, marginTop: 10 }}
-                  />
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        );
+        return inputBookTitleContainer();
       default:
         return <View />;
     }
   };
+
+
+
 
   return (
     <View style={styles.container}>
@@ -205,73 +280,39 @@ function FairytaleScreen({
         source={require('../../assets/images/background/fairybackground.png')}
         style={styles.imageBackground}
       >
+
+        {/* 로고 영역 비워놓으려고 빈 View*/}
+        <View style={{ flex: 1 }}></View>
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}
+          style={{ flex: 8, justifyContent: 'space-between', borderWidth: 1, flexDirection: 'row' }}
         >
-          {renderStep()}
-          <CreationModal
-            creationModalVisible={creationModalVisible}
-            setCreationModalVisible={setCreationModalVisible}
-          />
-          <View style={{ flexDirection: 'row', gap: 20 }}>
-            {currentStep > 1 && currentStep < 4 && (
-              <GreenButton
-                onPress={handlePreviousStep}
-                content="이전"
-                style={{
-                  width: 100,
-                  height: 80,
-                  marginTop: 10,
-                  marginRight: 30,
-                }}
-              />
-            )}
-            {currentStep < 4 && (
-              <GreenButton
-                onPress={handleNextStep}
-                content="다 찾았어요"
-                style={{
-                  width: 250,
-                  height: 80,
-                  marginTop: 10,
-                  marginRight: 30,
-                }}
-              />
-            )}
+          {/* 딱이 들어갈 영역 화면 좌측 1 : 2 찾아주기 버튼들 나올 영역*/}
+          <View style={styles.leftSideContainer}>
+            <Text>이 박스에 딱이 들어감</Text>
           </View>
+          {renderStep()}
         </View>
       </ImageBackground>
-      <Modal visible={modalVisible} transparent animationType="fade">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>
-              책 만들기를 그만 하시겠습 니까 ?
-            </Text>
-            <View style={styles.buttonContainer}>
-              <SkyButton
-                content="나가기"
-                onPress={closeModal}
-                style={{
-                  width: 150,
-                  height: 20,
-                  marginTop: 20,
-                  marginRight: 100,
-                }}
-              />
-              <SkyButton
-                content="취소"
-                onPress={() => setModalVisible(false)}
-                style={{ width: 150, height: 20, marginTop: 20 }}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+
+      {/* 모달 영역 */}
+      <ConfirmModal isVisible={isExitModal} text={['책 만들기를 그만 하시겠습니까?']} onConfirm={closeModal}
+                    onCancel={() => setIsExitModal(false)} />
+      <CreationModal
+        creationModalVisible={isMakeBookModal}
+        setCreationModalVisible={setIsMakeBookModal}
+        handleMakeBook={handleMakeBook}
+      />
+      {/* 모달 영역 */}
     </View>
   );
 }
 
 export default FairytaleScreen;
+
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -282,51 +323,39 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
     width: '100%',
     height: '100%',
+    flexDirection: 'column',
   },
-  buttoncontainer: {
+  rightSideContainer: {
+    flex: 2,
+    flexDirection: 'column',
+
+    borderWidth: 8,
+  },
+  leftSideContainer: {
+    flex: 1,
+  },
+
+  characterButtonContainer: {
+    flex: 3,
     flexDirection: 'row',
-    margin: 30,
-    gap: 30,
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'red',
   },
   button: {
     backgroundColor: '#CDEAB9',
-    borderRadius: 15,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    marginTop: 20,
-    height: 300,
+    borderRadius: 500,
+    height: screenHeight * 0.4,
+    width: screenHeight * 0.4,
     justifyContent: 'center',
     alignItems: 'center',
   },
   textcenter: {
     fontFamily: 'im-hyemin-bold',
+    textAlign: 'center',
     color: 'black',
-    fontSize: 25,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#0084BE',
-    padding: 20,
-    borderRadius: 10,
-    elevation: 5,
-    alignItems: 'center',
-    width: '70%',
-    height: '30%',
-  },
-  modalText: {
-    fontFamily: 'im-hyemin-bold',
-    color: 'white',
-    fontSize: 50,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
+    fontSize: screenWidth > 500 ? 35 : 20,
   },
   stepFourContainer: {
     alignItems: 'center',
@@ -347,4 +376,57 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     fontSize: 18,
   },
+
+  handleStepContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  imageInButton: {
+    width: '80%',
+    height: '80%',
+    borderRadius: 500,
+  },
+
+  narrationButtonContainer: {
+    flex: 3,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'red',
+  },
+
+  narrationVoiceSelectButton: {
+    backgroundColor: '#CDEAB9',
+    borderRadius: 500,
+    height: screenHeight * 0.25,
+    width: screenHeight * 0.25,
+    marginRight: screenHeight * 0.05,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  titleInputBox: {
+    backgroundColor: '#C8E8B2',
+    width: '80%',
+    height: '80%',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
+
+  titleInput: {
+    width: '75%',
+    alignSelf: 'center',
+    borderBottomColor: '#519567',
+    borderBottomWidth: 6,
+    textAlign: 'center',
+    marginBottom: '5%',
+    fontSize: 35,
+    fontFamily: 'im-hyemin-bold',
+    // color: 'white',
+  },
+
 });

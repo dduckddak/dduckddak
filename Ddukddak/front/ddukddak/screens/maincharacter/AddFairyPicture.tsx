@@ -13,36 +13,34 @@ import GreenButton from '../../components/GreenButton';
 import ImagePickerComponent from '../../components/picture/ImagePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getPhotos } from '../../api/photoApi';
-import Fairystore from '../../store/Fairystore';
+
+import { SelectablePhotoData, PhotoData } from '../../types/types';
+import { useFairyStore } from '../../store/fairyStore';
 
 const { width } = Dimensions.get('screen');
+
 
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
 function AddPicture({ route, navigation }: any) {
-  const { role } = route.params;
-  const [imageData, setImageData] = useState<
-    { uri: string; selected: boolean; id: number }[]
-  >([]);
-  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(
-    null,
-  );
-  const [selectMode, setSelecteMode] = useState(false);
-  const setMainImageIdx = Fairystore((state) => state.setMainImageIdx);
-  const setSubImageIdx = Fairystore((state) => state.setSubImageIdx);
+  const { currentStep } = route.params;
+  const [imageData, setImageData] = useState<SelectablePhotoData[]>([]);
+  const [selectedImage, setSelectedImage] = useState<PhotoData | null>(null);
+
+  const [selectMode, setSelectMode] = useState<boolean>();
+  const { setMainImage, setSubImage } = useFairyStore();
 
   const readPhotos = async () => {
     try {
       const response = await getPhotos();
       if (response.photoList) {
-        setImageData(
-          response.photoList.map((photo, index) => ({
-            uri: photo.photoFile,
-            selected: false,
-            id: photo.photoId,
-          })),
-        );
+        const fetchedImageData: SelectablePhotoData[] = response.photoList.map(photo => ({
+          photoId: photo.photoId,
+          photoFile: photo.photoFile,
+          selected: false,
+        }));
+        setImageData(fetchedImageData);
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -54,38 +52,41 @@ function AddPicture({ route, navigation }: any) {
   };
 
   useEffect(() => {
-    console.log('Role:', role);
+    // console.log('Role:', role);
     readPhotos();
+
   }, []);
 
-  // 이미지 선택 로직
-  const handleSelectImage = (index: any) => {
-    setSelectedImageIndex(index);
-    setSelecteMode(true);
+  // 이미지 선택
+  const handleSelectImage = (index: number) => {
+    const selected = imageData[index];
+    setSelectedImage({ photoId: selected.photoId, photoFile: selected.photoFile });
+    setSelectMode(true);
   };
 
   const handleCompleteSelection = () => {
-    switch (role) {
-      case 'main':
-        setMainImageIdx(selectedImageIndex);
+    switch (currentStep) {
+      case 1:
+        setMainImage(selectedImage);
         break;
-      case 'sub':
-        setSubImageIdx(selectedImageIndex);
+      case 2:
+        setSubImage(selectedImage);
         break;
       default:
         Alert.alert('Error', 'Unknown role.');
         return;
     }
-    setSelecteMode(false);
+    setSelectMode(false);
     navigation.goBack();
   };
 
-  const renderImageItem = ({ item, index }: any) => (
+
+  const renderImageItem = ({ item, index }: { item: SelectablePhotoData, index: number }) => (
     <TouchableOpacity
-      style={[styles.card, selectedImageIndex === index && styles.selected]}
+      style={[styles.card, selectedImage?.photoId === item.photoId && styles.selected]}
       onPress={() => handleSelectImage(index)}
     >
-      <Image source={{ uri: item.uri }} style={styles.cardImage} />
+      <Image source={{ uri: item.photoFile }} style={styles.cardImage} />
     </TouchableOpacity>
   );
 
@@ -97,7 +98,7 @@ function AddPicture({ route, navigation }: any) {
       <FlatList
         data={imageData}
         renderItem={renderImageItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={item => item.photoId.toString()}
         numColumns={4}
         contentContainerStyle={styles.listContentContainer}
         style={styles.imagelist}

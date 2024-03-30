@@ -19,12 +19,11 @@ import { useFairyStore } from '../../store/fairyStore';
 
 const { width } = Dimensions.get('screen');
 
-
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
 function AddPicture({ route, navigation }: any) {
-  const { currentStep } = route.params;
+  const { currentStep, role } = route.params;
   const [imageData, setImageData] = useState<SelectablePhotoData[]>([]);
   const [selectedImage, setSelectedImage] = useState<PhotoData | null>(null);
 
@@ -35,11 +34,13 @@ function AddPicture({ route, navigation }: any) {
     try {
       const response = await getPhotos();
       if (response.photoList) {
-        const fetchedImageData: SelectablePhotoData[] = response.photoList.map(photo => ({
-          photoId: photo.photoId,
-          photoFile: photo.photoFile,
-          selected: false,
-        }));
+        const fetchedImageData: SelectablePhotoData[] = response.photoList.map(
+          (photo) => ({
+            photoId: photo.photoId,
+            photoFile: photo.photoFile,
+            selected: false,
+          }),
+        );
         setImageData(fetchedImageData);
       }
     } catch (error: unknown) {
@@ -52,15 +53,17 @@ function AddPicture({ route, navigation }: any) {
   };
 
   useEffect(() => {
-    // console.log('Role:', role);
+    console.log('Role:', route.params);
     readPhotos();
-
   }, []);
 
   // 이미지 선택
   const handleSelectImage = (index: number) => {
     const selected = imageData[index];
-    setSelectedImage({ photoId: selected.photoId, photoFile: selected.photoFile });
+    setSelectedImage({
+      photoId: selected.photoId,
+      photoFile: selected.photoFile,
+    });
     setSelectMode(true);
   };
 
@@ -80,10 +83,18 @@ function AddPicture({ route, navigation }: any) {
     navigation.goBack();
   };
 
-
-  const renderImageItem = ({ item, index }: { item: SelectablePhotoData, index: number }) => (
+  const renderImageItem = ({
+    item,
+    index,
+  }: {
+    item: SelectablePhotoData;
+    index: number;
+  }) => (
     <TouchableOpacity
-      style={[styles.card, selectedImage?.photoId === item.photoId && styles.selected]}
+      style={[
+        styles.card,
+        selectedImage?.photoId === item.photoId && styles.selected,
+      ]}
       onPress={() => handleSelectImage(index)}
     >
       <Image source={{ uri: item.photoFile }} style={styles.cardImage} />
@@ -95,10 +106,11 @@ function AddPicture({ route, navigation }: any) {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      <Text style={styles.textStyle}>{role}의 얼굴 찾아주기</Text>
       <FlatList
         data={imageData}
         renderItem={renderImageItem}
-        keyExtractor={item => item.photoId.toString()}
+        keyExtractor={(item) => item.photoId.toString()}
         numColumns={4}
         contentContainerStyle={styles.listContentContainer}
         style={styles.imagelist}
@@ -140,9 +152,11 @@ const styles = StyleSheet.create({
     height: '80%',
     marginHorizontal: '11%',
     marginVertical: '7%',
+    marginTop: -30,
   },
   card: {
     margin: 5,
+    marginTop: 0,
     borderRadius: 10,
     overflow: 'hidden',
     width: CARD_WIDTH,
@@ -155,5 +169,10 @@ const styles = StyleSheet.create({
   selected: {
     borderWidth: 2,
     borderColor: 'blue',
+  },
+  textStyle: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 48,
+    marginTop: 25,
   },
 });

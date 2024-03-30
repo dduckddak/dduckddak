@@ -131,15 +131,15 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
    * @description 동화뚝딱에서 특정 캐릭터의 이미지를 선택하는 화면으로 이동. 이 때 currentStep을 이용해서 메인, 서브를 구분한다.
    */
   const selectCharacterImage = async (role: string) => {
-    navigation.navigate('addfairypicture', { currentStep });
+    navigation.navigate('addfairypicture', { currentStep, role });
   };
 
   /**
    * @function selectCharacterVoice
    * @description 동화뚝딱에서 특정 캐릭터의 목소리를 선택하는 화면으로 이동. 이 때 currentStep을 이용해서 메인, 서브, 내래이션을 구분한다.
    */
-  const selectCharacterVoice = async () => {
-    navigation.navigate('addfairyvoice', { currentStep });
+  const selectCharacterVoice = async (role: string) => {
+    navigation.navigate('addfairyvoice', { currentStep, role });
   };
 
   const handleNextStep = () => {
@@ -198,7 +198,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           </Pressable>
           <Pressable
             style={styles.button}
-            onPress={() => selectCharacterVoice()}
+            onPress={() => selectCharacterVoice(role)}
           >
             {!voice ? (
               <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
@@ -210,6 +210,11 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
             )}
           </Pressable>
         </View>
+        <Text style={[styles.findtext]}> {role}의 얼굴과 목소리를 찾아줘</Text>
+        <Image
+          source={require('../../assets/images/books/find.png')}
+          style={styles.find}
+        />
         <View style={styles.handleStepContainer}>
           {currentStep > 1 && currentStep < 4 && (
             <GreenButton
@@ -220,11 +225,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
               }}
             />
           )}
-          <Image
-            source={require('../../assets/images/books/find.png')}
-            style={styles.find}
-          />
-          <Text style={styles.findtext}> {role}의 얼굴과 목소리를 찾아줘</Text>
+
           <GreenButton
             onPress={handleNextStep}
             content="다 찾았어요"
@@ -248,7 +249,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         <View style={styles.narrationButtonContainer}>
           <Pressable
             style={styles.narrationVoiceSelectButton}
-            onPress={() => selectCharacterVoice()}
+            onPress={() => selectCharacterVoice('내래이션')}
           >
             {!narration ? (
               <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
@@ -429,17 +430,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  cloud: { position: 'absolute', top: 5, left: 200 },
-  cloud1: { position: 'absolute', top: 25, left: 400, width: 200, height: 130 },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.05,
+    left: screenWidth * 0.01,
+  },
+  cloud1: {
+    position: 'absolute',
+    top: screenHeight * 0.1,
+    left: screenWidth * 0.15,
+    width: screenWidth * 0.155,
+    height: screenHeight * 0.155,
+  },
   cloud2: {
     position: 'absolute',
-    top: 5,
-    left: 690,
-    width: 150,
-    height: 110,
+    top: screenHeight * 0.03,
+    left: screenWidth * 0.54,
+    width: screenWidth * 0.13,
+    height: screenHeight * 0.14,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 35, left: 1060 },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.05,
+    left: screenWidth * 0.85,
+  },
   tree1: {
     position: 'absolute',
     top: Dimensions.get('screen').height * 0.15,
@@ -456,15 +471,17 @@ const styles = StyleSheet.create({
   find: {
     position: 'absolute',
     bottom: Dimensions.get('screen').height * 0.02,
-    right: Dimensions.get('screen').width * 0.23,
-    width: Dimensions.get('screen').width * 0.71,
-    height: Dimensions.get('screen').height * 0.2,
+    right: Dimensions.get('screen').width * 0.33,
+    width: Dimensions.get('screen').width * 0.61,
+    height: Dimensions.get('screen').height * 0.17,
   },
   findtext: {
+    position: 'absolute',
     fontFamily: 'im-hyemin-bold',
     fontSize: 40,
-    right: Dimensions.get('screen').width * 0.15,
-    bottom: Dimensions.get('screen').height * 0.02,
+    right: Dimensions.get('screen').width * 0.41,
+    bottom: Dimensions.get('screen').height * 0.07,
+    zIndex: 999,
   },
   imageBackground: {
     flex: 1,

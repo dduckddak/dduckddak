@@ -2,35 +2,38 @@ import React from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
+import { useUserStore } from '../../store/userStore';
 
 const CreationModal = ({
-                         creationModalVisible,
-                         setCreationModalVisible,
-                         handleMakeBook,
-                       }: {
+  creationModalVisible,
+  setCreationModalVisible,
+  handleMakeBook,
+}: {
   creationModalVisible: boolean;
   setCreationModalVisible: (visible: boolean) => void;
   handleMakeBook: () => Promise<boolean>;
 }) => {
   const navigation = useNavigation();
+  // 이걸 어떻게 해야할지 고민
+  // 동화생성 완료 후 너가 할지 이름 넣어줄지,,,
+  const userName = useUserStore((state) => state.userName);
 
   const makeBookConfirm = async () => {
     const success = await handleMakeBook();
 
     if (success) {
-      navigation.navigate('home' as never)
+      navigation.navigate('home' as never);
     } else {
-      console.log('뭔가잘못됨...')
+      console.log('뭔가잘못됨...');
     }
-
-  }
+  };
 
   return (
     <Modal visible={creationModalVisible} transparent animationType="slide">
       <View style={styles.modalContainer}>
         <View style={styles.endmodalContent}>
           <Text style={styles.modalText}>
-            00이가 재료를 모두 찾아준 덕분에 책이 잘 만들어지고 있어! 다
+            {userName}이가 재료를 모두 찾아준 덕분에 책이 잘 만들어지고 있어! 다
             만들어지면 알려줄게
           </Text>
           <View style={styles.buttonContainer}>

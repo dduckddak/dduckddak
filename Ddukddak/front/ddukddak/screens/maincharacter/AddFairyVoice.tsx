@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -7,22 +7,81 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  Dimensions,
+  Animated,
   Image,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
-import { deleteVoices, getVoices, previewVoice } from '../../api/voiceApi';
+import { getVoices, previewVoice } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
-import fairyStore, { useFairyStore } from '../../store/fairyStore';
+import { useFairyStore } from '../../store/fairyStore';
 import { VoiceData, SelectableVoiceData } from '../../types/types';
 
-interface Voice {
-  voiceId: number;
-  voiceName: string;
-}
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
 
 function AddVoice({ route, navigation }: any) {
-  const { currentStep } = route.params;
+  // 오리
+  const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(duckPosition, {
+          toValue: { x: screenWidth * 0.1, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(duckPosition, {
+          toValue: { x: 2, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, []);
+
+  const { currentStep, role } = route.params;
 
   const [selectMode, setSelectMode] = useState<boolean>();
   const [voiceData, setVoiceData] = useState<SelectableVoiceData[]>([]);
@@ -163,6 +222,37 @@ function AddVoice({ route, navigation }: any) {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      <Text style={styles.textStyle}>{role}의 목소리 찾아주기</Text>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
+      <Animated.Image
+        source={require('../../assets/images/duck.png')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      />
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -192,6 +282,9 @@ function AddVoice({ route, navigation }: any) {
 
 export default AddVoice;
 
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
 const styles = StyleSheet.create({
   prelisten: {
     backgroundColor: '#40AF91',
@@ -200,6 +293,32 @@ const styles = StyleSheet.create({
     width: 120,
     height: 50,
     borderRadius: 5,
+  },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.15,
+  },
+
+  cloud2: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.65,
+    width: screenWidth * 0.15,
+    height: screenHeight * 0.2,
+    transform: [{ scaleX: -1 }],
+  },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.15,
+    left: screenWidth * 0.88,
+  },
+  duck: {
+    position: 'absolute',
+    bottom: screenHeight * 0.15,
+    left: screenWidth * 0.04,
+    width: screenWidth * 0.09,
+    height: screenHeight * 0.1,
   },
   imageBackground: {
     flex: 1,
@@ -258,5 +377,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'white',
   },
-  trash: { width: 60, height: 60 },
+  textStyle: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 48,
+    marginTop: 25,
+  },
 });

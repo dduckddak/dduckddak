@@ -6,8 +6,8 @@ import {
   StyleSheet,
   StatusBar,
   Image,
-  TouchableOpacity,
   Dimensions,
+  Animated,
 } from 'react-native';
 import {
   cacheDirectory,
@@ -20,6 +20,52 @@ import { RootStackParamList } from '../../App';
 import { getTalkDetail, sttTalk, triggerTalk } from '../../api/talkApi';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
 
 type TalkScreenRouteProp = RouteProp<RootStackParamList, 'talk'>;
 type TalkScreenNavigationProp = StackNavigationProp<RootStackParamList, 'talk'>;
@@ -175,6 +221,18 @@ function TalkScreen({ route }: TalkScreenProps) {
         source={require('../../assets/images/background/background3.png')}
         style={styles.imageBackground}
       >
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud}
+          />
+          <CloudAnimation>
+            <Image
+              source={require('../../assets/images/Main/cloud.png')}
+              style={styles.cloud1}
+            />
+          </CloudAnimation>
+        </CloudAnimation>
         <Image source={{ uri: subBasic }} style={styles.characterImage} />
 
         <View
@@ -227,6 +285,20 @@ export default TalkScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.17,
+    left: screenWidth * 0.07,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.15,
+  },
+  cloud1: {
+    position: 'absolute',
+    top: -screenHeight * 0.04,
+    left: screenWidth * 0.27,
+    width: screenWidth * 0.2,
+    height: screenHeight * 0.27,
   },
   imageBackground: {
     flex: 1,

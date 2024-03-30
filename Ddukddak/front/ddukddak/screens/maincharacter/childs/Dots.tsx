@@ -20,15 +20,9 @@ const Dots = ({ bookList, currentPage }: DotsListProps) => {
       justifyContent: 'space-between',
     },
     dot: {
-      width: Dimensions.get('screen').width * 0.022,
-      height: Dimensions.get('screen').width * 0.022,
+      width: Dimensions.get('screen').width * 0.035,
+      height: Dimensions.get('screen').width * 0.035,
       borderRadius: 100,
-    },
-    activeDot: {
-      backgroundColor: '#254E5A',
-    },
-    inactiveDot: {
-      backgroundColor: '#B3DABF',
     },
   });
   const activeDotImage = require('../../../assets/images/active.png');

@@ -5,8 +5,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
-  Button,
   Dimensions,
   FlatList,
   ImageBackground,
@@ -34,8 +32,8 @@ const BookSelectionScreen = () => {
   const fetchLikeBooks = async () => {
     try {
       const likeBookListResponse = await getLikeBookList();
-      if (likeBookListResponse.bookList) {
-        const fetchedBooks = likeBookListResponse.bookList.map((book) => ({
+      if (likeBookListResponse.likeBookList) {
+        const fetchedBooks = likeBookListResponse.likeBookList.map((book) => ({
           id: book.bookId,
           title: book.bookTitle,
           image: book.coverImage,

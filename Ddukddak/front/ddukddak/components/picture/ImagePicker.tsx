@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, Platform, Dimensions } from 'react-native';
+import { StyleSheet, View, Platform, Dimensions, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../GreenButton';
 import PictureModal from './PictureModal';
 import { addPhoto } from '../../api/photoApi';
 import AlertModal from '../AlertModal';
+import Loading from '../Loading';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -20,6 +21,9 @@ const ImagePickerComponent: React.FC = () => {
   const [fAlertModalMessage, setFAlertModalMessage] = useState('');
   // 권한 모달
   const [gAlertModal, setGAlertModal] = useState(false);
+
+  // 로딩 모달
+  const [isLoading, setIsLoading] = useState(false);
 
   const getPermission = useCallback(
     async (type: 'camera' | 'library'): Promise<boolean> => {
@@ -41,6 +45,7 @@ const ImagePickerComponent: React.FC = () => {
 
   // 이미지를 서버로 업로드
   const uploadImage = async (photoUri: string) => {
+    setIsLoading(true);
     const photoFile: any = {
       uri: photoUri,
       type: 'image/jpeg', // 적절한 MIME 타입 지정
@@ -68,6 +73,8 @@ const ImagePickerComponent: React.FC = () => {
         setFAlertModalMessage('알 수 없는 에러가 발생했습니다.');
         setFAlertModal(true);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -115,6 +122,16 @@ const ImagePickerComponent: React.FC = () => {
     setGAlertModal(false);
   };
 
+  if (isLoading) {
+    return (
+      <Modal visible={isLoading} transparent={true} animationType="fade">
+        <View style={styles.centeredLoadingView}>
+          <Loading />
+        </View>
+      </Modal>
+    );
+  }
+
   return (
     <View>
       <GreenButton
@@ -128,19 +145,16 @@ const ImagePickerComponent: React.FC = () => {
         onLaunchCamera={takePhoto}
         onLaunchImageLibrary={pickImage}
       />
-
       <AlertModal
         isVisible={sAlertModal}
         text={['사진 업로드 성공 !!']}
         onConfirm={handleModalClose}
       />
-
       <AlertModal
         isVisible={fAlertModal}
         text={[fAlertModalMessage]}
         onConfirm={handleModalClose}
       />
-
       <AlertModal
         isVisible={gAlertModal}
         text={['권한 승인이 거절되었습니다.']}
@@ -156,5 +170,11 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: screenWidth * 0.15,
     margin: screenHeight * 0.05,
+  },
+  centeredLoadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });

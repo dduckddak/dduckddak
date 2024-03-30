@@ -23,6 +23,50 @@ const CARD_HEIGHT = CARD_WIDTH;
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
+// 구름 두둥실
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
 function PictureScreen() {
   const [imageData, setImageData] = useState<
     { uri: string; selected: boolean; id: number }[]
@@ -39,61 +83,17 @@ function PictureScreen() {
         Animated.timing(duckPosition, {
           toValue: { x: width * 0.1, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(duckPosition, {
           toValue: { x: 2, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
     ).start();
   }, []);
   // 추가 끝
-
-  // 구름 두둥실
-  const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
-    const [cloudAnimationValue] = useState(new Animated.Value(0));
-
-    useEffect(() => {
-      const animateClouds = () => {
-        const cloudAnimation = Animated.sequence([
-          Animated.timing(cloudAnimationValue, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(cloudAnimationValue, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ]);
-
-        Animated.loop(cloudAnimation).start();
-      };
-      animateClouds();
-      return () => {};
-    }, [cloudAnimationValue]);
-    const cloud1TranslateY = cloudAnimationValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, -20],
-    });
-    return (
-      <Animated.View
-        style={{
-          position: 'absolute',
-          top: screenHeight * 0.03,
-          left: screenWidth * 0.01,
-          width: screenWidth * 0.2,
-          height: screenHeight * 0.1,
-          transform: [{ translateY: cloud1TranslateY }],
-        }}
-      >
-        {children}
-      </Animated.View>
-    );
-  };
 
   const readPhotos = async () => {
     setIsLoading(true);
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   },
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.004,
+    top: screenHeight * 0.005,
     left: screenWidth * 0.52,
     width: screenWidth * 0.17,
     height: screenHeight * 0.17,

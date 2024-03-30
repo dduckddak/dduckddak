@@ -3,27 +3,31 @@ import {
   View,
   Text,
   Pressable,
-  Button,
   Image,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import GreenButton from '../../components/GreenButton';
 import MainScreen from './MainScreen';
 import * as SecureStore from 'expo-secure-store';
 import { useUserStore } from '../../store/userStore';
+import { Audio } from 'expo-av';
 
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const userSex = useUserStore((state) => state.sex);
   const [mainPageCharacter, setMainPageCharacter] = useState();
+  const [soundObject, setSoundObject] = useState<Audio.Sound>();
 
   const handleNextStep = () =>
     setCurrentStep((prevStep) => (prevStep < 6 ? prevStep + 1 : prevStep));
@@ -34,6 +38,10 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
     navigation.navigate('MainCharacterScreen');
   };
 
+  const dduk1 = require('../../assets/sound/dduk_1.mp3');
+  const dduk2 = require('../../assets/sound/dduk_2.mp3');
+  const ddak1 = require('../../assets/sound/ddak_1.mp3');
+  const ddak2 = require('../../assets/sound/ddak_2.mp3');
 
   useEffect(() => {
     const setIntroCheck = async () => {
@@ -50,12 +58,43 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
       }
     };
 
+    const loadVoice = async (who: any) => {
+      const voice = new Audio.Sound();
+      setSoundObject(soundObject);
+      try {
+        console.log(who);
+        await voice.loadAsync(who);
+        await voice.playAsync();
+      } catch (error) {
+        console.error('Error loading voice: ', error);
+      }
+    };
+
     updateMainImage();
-  }, []);
+
+    if (currentStep === 1 && userSex === 'M') {
+      loadVoice(dduk1).catch(console.error);
+    }
+    if (currentStep === 1 && userSex === 'F') {
+      loadVoice(ddak1).catch(console.error);
+    }
+    if (currentStep === 2 && userSex === 'M') {
+      loadVoice(dduk2).catch(console.error);
+    }
+    if (currentStep === 2 && userSex === 'F') {
+      loadVoice(ddak2).catch(console.error);
+    }
+
+    return () => {
+      if (soundObject) {
+        soundObject.unloadAsync();
+      }
+    };
+  }, [currentStep, userSex]);
 
   const YourComponent: React.FC<{ currentStep: number }> = ({
-                                                              currentStep,
-                                                            }) => {
+    currentStep,
+  }) => {
     let mainScreenContent;
     switch (currentStep) {
       case 1:
@@ -195,10 +234,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
                 <TouchableOpacity onPress={handlePress}>
-                  <Image
-                    source={mainPageCharacter}
-                    style={styles.ddak2}
-                  />
+                  <Image source={mainPageCharacter} style={styles.ddak2} />
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}
@@ -257,10 +293,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
                 <TouchableOpacity onPress={handlePress}>
-                  <Image
-                    source={mainPageCharacter}
-                    style={styles.ddak2}
-                  />
+                  <Image source={mainPageCharacter} style={styles.ddak2} />
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}

@@ -20,6 +20,53 @@ const { width } = Dimensions.get('screen');
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
+// 구름 두둥실
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
 function PictureScreen() {
   const [imageData, setImageData] = useState<
     { uri: string; selected: boolean; id: number }[]
@@ -36,61 +83,17 @@ function PictureScreen() {
         Animated.timing(duckPosition, {
           toValue: { x: width * 0.1, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(duckPosition, {
           toValue: { x: 2, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
     ).start();
   }, []);
   // 추가 끝
-
-  // 구름 두둥실
-  const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
-    const [cloudAnimationValue] = useState(new Animated.Value(0));
-
-    useEffect(() => {
-      const animateClouds = () => {
-        const cloudAnimation = Animated.sequence([
-          Animated.timing(cloudAnimationValue, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(cloudAnimationValue, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ]);
-
-        Animated.loop(cloudAnimation).start();
-      };
-      animateClouds();
-      return () => {};
-    }, [cloudAnimationValue]);
-    const cloud1TranslateY = cloudAnimationValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, -20],
-    });
-    return (
-      <Animated.View
-        style={{
-          position: 'absolute',
-          top: 45,
-          left: 50,
-          width: 200,
-          height: 130,
-          transform: [{ translateY: cloud1TranslateY }],
-        }}
-      >
-        {children}
-      </Animated.View>
-    );
-  };
 
   const readPhotos = async () => {
     setIsLoading(true);
@@ -118,7 +121,7 @@ function PictureScreen() {
 
   useEffect(() => {
     readPhotos();
-  }, []);
+  }, [imageData]);
 
   // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {
@@ -198,12 +201,6 @@ function PictureScreen() {
           style={styles.cloud}
         />
       </CloudAnimation>
-      {/* <CloudAnimation>
-        <Image
-          source={require('../../assets/images/Main/cloud.png')}
-          style={styles.cloud1}
-        />
-      </CloudAnimation> */}
       <CloudAnimation>
         <Image
           source={require('../../assets/images/Main/cloud.png')}
@@ -262,22 +259,29 @@ const styles = StyleSheet.create({
   },
   duck: {
     position: 'absolute',
-    bottom: '17%',
-    left: '2%',
-    width: '10%',
-    height: '12%',
+    bottom: screenHeight * 0.15,
+    left: screenWidth * 0.04,
+    width: screenWidth * 0.09,
+    height: screenHeight * 0.1,
   },
-  cloud: { position: 'absolute', top: 5, left: 200 },
-  // cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.15,
+  },
   cloud2: {
     position: 'absolute',
-    top: 5,
-    left: 620,
-    width: 200,
-    height: 130,
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.52,
+    width: screenWidth * 0.17,
+    height: screenHeight * 0.17,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 125, left: 1060 },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.15,
+    left: screenWidth * 0.88,
+  },
   container: {
     flex: 1,
     alignContent: 'center',

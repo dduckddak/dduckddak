@@ -5,17 +5,19 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  Text,
+  Dimensions,
   Animated,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import GreenButton from '../../components/GreenButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useUserStore } from '../../store/userStore';
 
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
 
@@ -47,10 +49,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: 45,
-        left: 50,
-        width: 200,
-        height: 130,
+        top: screenHeight * 0.07,
+        left: screenWidth * 0.04,
+        width: screenWidth * 0.3,
+        height: screenHeight * 0.1,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -151,16 +153,24 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  cloud: { position: 'absolute', top: 5, left: 200 },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.01,
+    left: screenWidth * 0.12,
+  },
   cloud2: {
     position: 'absolute',
-    top: 5,
-    left: 580,
-    width: 200,
-    height: 150,
+    top: screenHeight * 0.01,
+    left: screenWidth * 0.45,
+    width: screenWidth * 0.15,
+    height: screenHeight * 0.2,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 155, left: 1060 },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.2,
+    left: screenWidth * 0.82,
+  },
   mainContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -178,21 +188,21 @@ const styles = StyleSheet.create({
   },
 
   // 내가주인공 말풍선
-  greenButton: { left: '68%', top: 40 },
+  greenButton: { left: screenWidth * 0.26, top: screenHeight * 0.06 },
   icon: {
-    width: 400,
-    height: 130,
+    width: screenWidth * 0.34,
+    height: screenHeight * 0.17,
     margin: 40,
   },
   bookicon: {
-    width: 710,
-    height: 210,
+    width: screenWidth * 0.585,
+    height: screenHeight * 0.275,
   },
   ddak2: {
     position: 'absolute',
-    left: '2%',
-    top: '31%',
-    width: '78%',
-    height: '80%',
+    left: screenWidth * 0.008,
+    top: screenHeight * 0.2,
+    width: screenWidth * 0.31,
+    height: screenHeight * 0.53,
   },
 });

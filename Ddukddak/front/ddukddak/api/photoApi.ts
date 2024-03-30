@@ -59,9 +59,11 @@ export const addPhoto = async (
     );
     console.log(response.data);
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
+    // console.error(error.response);
     if (isAxiosError(error) && error.response) {
-      throw error.response.data;
+      // console.error(error.response.data);
+      throw error.response.data.message;
     }
     throw error;
   }

@@ -8,13 +8,15 @@ import {
   Dimensions,
   Text,
   Animated,
+  Image,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getBookList } from '../../api/bookApi';
-import { BookSummary } from '../../App';
+
+import { BookSummary } from '../../types/types';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
-import { Image } from 'react-native';
+import { useUserStore } from '../../store/userStore';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -91,11 +93,22 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
       </Animated.View>
     );
   };
+  const userSex = useUserStore((state) => state.sex);
+  const [mainPageCharacter, setMainPageCharacter] = useState();
+
   useEffect(() => {
+    const updateMainImage = () => {
+      if (userSex === 'M') {
+        setMainPageCharacter(require('../../assets/images/DD/뚝이3.png'));
+      } else {
+        setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
+      }
+    };
+
     const fetchBooks = async () => {
       try {
         const books = await getBookList();
-        console.log(books);
+
         if (books.bookList) {
           setBookList(books.bookList);
         }
@@ -104,7 +117,10 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         console.error('Failed:', error);
       }
     };
+    // 여기 accept imcomming 하면 되겠지 ??
+    updateMainImage();
     console.log(bookList);
+
     fetchBooks();
   }, []);
 
@@ -174,6 +190,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           <Dots bookList={bookList} currentPage={currentPage} />
         </View>
       </TouchableWithoutFeedback>
+      <Image source={mainPageCharacter} style={styles.ddak2} />
     </ImageBackground>
   );
 };
@@ -207,6 +224,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     // borderWidth: 1,
+  },
+  ddak2: {
+    position: 'absolute',
+    right: '3%',
+    top: '75%',
+    width: '12%',
+    height: '22%',
   },
 });
 

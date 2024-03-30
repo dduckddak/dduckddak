@@ -1,8 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import {
-  StyleSheet,
-  ImageBackground,
-} from 'react-native';
+import { StyleSheet, ImageBackground } from 'react-native';
 
 import {
   NavigationProp,
@@ -17,8 +14,8 @@ interface ColoringListScreenProps {
 }
 
 const ColoringListScreen: React.FC<ColoringListScreenProps> = ({
-                                                                 navigation,
-                                                               }) => {
+  navigation,
+}) => {
   const [coloringList, setColoringList] = useState<
     { coloringId: number; coloringFile: string }[]
   >([]);

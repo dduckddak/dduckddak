@@ -5,10 +5,9 @@ import {
   ImageBackground,
   Image,
   FlatList,
-  ImageSourcePropType,
+  Text,
   TouchableOpacity,
   Animated,
-  Alert,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -143,6 +142,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
         />
       </CloudAnimation>
       <View style={styles.flexContainer}>
+        <Text style={styles.textStyle}>🎨 그림을 골라줘 🎨</Text>
         <View style={styles.box}>
           <FlatList
             style={styles.flatList}
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height * 0.7,
     width: Dimensions.get('screen').width * 0.9,
     paddingVertical: 20,
-    marginTop: '6%',
+    marginTop: '2%',
     padding: '2%',
     borderRadius: 15,
   },
@@ -230,6 +230,10 @@ const styles = StyleSheet.create({
     borderWidth: 8,
     borderRadius: 10,
     borderColor: 'rgba(180, 130, 210, 0.5)',
+  },
+  textStyle: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 48,
   },
 });
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import { BookSummary } from '../../../App';
+import { View, StyleSheet, Dimensions, Image } from 'react-native';
+import { BookSummary } from '../../../types/types';
 
 type DotsListProps = {
   bookList: BookSummary[];
@@ -20,28 +20,22 @@ const Dots = ({ bookList, currentPage }: DotsListProps) => {
       justifyContent: 'space-between',
     },
     dot: {
-      width: Dimensions.get('screen').width * 0.022,
-      height: Dimensions.get('screen').width * 0.022,
+      width: Dimensions.get('screen').width * 0.035,
+      height: Dimensions.get('screen').width * 0.035,
       borderRadius: 100,
     },
-    activeDot: {
-      backgroundColor: '#254E5A',
-    },
-    inactiveDot: {
-      backgroundColor: '#B3DABF',
-    },
   });
+  const activeDotImage = require('../../../assets/images/active.png');
+  const inactiveDotImage = require('../../../assets/images/inactive.png');
 
   return (
     <View style={styles.dotsContainer}>
       {bookList &&
         bookList.map((_, index) => (
-          <View
+          <Image
             key={index}
-            style={[
-              styles.dot,
-              index === currentPage ? styles.activeDot : styles.inactiveDot,
-            ]}
+            source={index === currentPage ? activeDotImage : inactiveDotImage}
+            style={styles.dot}
           />
         ))}
     </View>

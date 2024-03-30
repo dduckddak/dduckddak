@@ -149,9 +149,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#87CEE9',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: -95,
-    width: Dimensions.get('screen').width * 0.6,
-    height: Dimensions.get('screen').height * 0.6,
+    marginTop: -80,
+    width: Dimensions.get('screen').width * 0.65,
+    height: Dimensions.get('screen').height * 0.65,
     borderRadius: 20,
   },
   text: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
   searchButtonAndInputContainer: {
     position: 'absolute',
     right: 14,
-    top: -135,
+    top: -90,
     zIndex: 1,
     flexDirection: 'row-reverse',
     alignItems: 'center',
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   likeButton: {
     position: 'absolute',
     right: 14,
-    top: -55,
+    top: -20,
     zIndex: 1,
   },
 });

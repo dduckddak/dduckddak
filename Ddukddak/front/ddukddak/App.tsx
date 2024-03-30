@@ -39,6 +39,7 @@ import Script from './components/createBook/Script';
 import { TransitionPresets } from '@react-navigation/stack';
 
 import { AppInitializer } from './components/AppInitializer';
+import { BookSummary, DetailBook } from './types/types';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
 
@@ -75,11 +76,6 @@ interface LogoRightProps {
   isHomeScreen: any;
 }
 
-export interface BookSummary {
-  bookId: number;
-  bookTitle: string;
-  coverImage: string;
-}
 
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const navigation = useNavigation();
@@ -150,7 +146,7 @@ export type RootStackParamList = {
   detail: BookSummary;
   MainCharacterScreen: undefined;
   talk: { bookId: number };
-  fairy: { mainName: string; subName: string };
+  fairy: { selectedBook: DetailBook; bookSummary: BookSummary; };
   mainrending: undefined;
   intro: undefined;
   login: undefined;
@@ -173,14 +169,16 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => {
+});
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
+    SplashScreen.hideAsync().catch(() => {
+    });
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -191,7 +189,8 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => {
+      });
     }
   }, [fontsLoaded]);
 

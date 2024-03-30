@@ -27,11 +27,11 @@ interface MakeBookDetailData {
 interface MakeBookRequest {
   bookId: number;
   makeBookTitle: string;
-  mainVoice: number;
-  mainPhoto: number;
-  subVoice: number;
-  subPhoto: number;
-  narration: number;
+  mainVoice?: number;
+  mainPhoto?: number;
+  subVoice?: number;
+  subPhoto?: number;
+  narration?: number;
 }
 
 type MakeBookDetailResponse = ApiResponse & MakeBookDetailData;
@@ -79,7 +79,7 @@ export const postMakeBook = async (
     return response.data;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw error.response.data;
+      return error.response.data;
     }
     throw error;
   }

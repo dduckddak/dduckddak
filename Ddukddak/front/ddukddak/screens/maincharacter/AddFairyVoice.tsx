@@ -13,7 +13,9 @@ import GreenButton from '../../components/GreenButton';
 import { deleteVoices, getVoices, previewVoice } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
-import Fairystore from '../../store/Fairystore';
+import fairyStore, { useFairyStore } from '../../store/fairyStore';
+import { VoiceData, SelectableVoiceData } from '../../types/types';
+
 
 interface Voice {
   voiceId: number;
@@ -21,32 +23,39 @@ interface Voice {
 }
 
 function AddVoice({ route, navigation }: any) {
-  const { role, onVoiceSelected } = route.params;
+  const { currentStep } = route.params;
 
-  const [selectMode, setSelecteMode] = useState(false);
-  const [voiceData, setVoiceData] = useState<Voice[]>([]);
+  const [selectMode, setSelectMode] = useState(false);
+  const [voiceData, setVoiceData] = useState<SelectableVoiceData[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<VoiceData | null>(null);
 
-  const setMainVoiceIdx = Fairystore((state) => state.setMainVoiceIdx);
-
-  // 현재 재생 중인 사운드를 추적하는 상태 변수
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
-  const [selectedVoiceId, setSelectedVoiceId] = useState<number | null>(null);
 
-  const readList = async () => {
+  const { setSubVoice, setMainVoice, setNarration } = useFairyStore();
+
+
+  const fetchVoices = async () => {
     try {
       const result = await getVoices();
-      if (Array.isArray(result.voiceList)) {
-        setVoiceData(result.voiceList);
-      } else {
-        throw new Error('Invalid data format');
+      if (!result.voiceList) {
+        console.log('목소리 목록 불러오는데 실패했음');
+        return;
       }
+      const fetchedVoiceData: SelectableVoiceData[] = result.voiceList.map(voice => ({
+        voiceId: voice.voiceId,
+        voiceName: voice.voiceName,
+        selected: false,
+      }));
+      setVoiceData(fetchedVoiceData);
+
     } catch (error) {
       console.error('Error fetching voices:', error);
     }
   };
 
   useEffect(() => {
-    readList();
+    console.log(currentStep);
+    fetchVoices();
   }, []);
 
   // 미리듣기 기능
@@ -89,21 +98,40 @@ function AddVoice({ route, navigation }: any) {
   };
 
   const handleSelectButtonPress = () => {
-    if (selectMode && selectedVoiceId !== null) {
+    if (selectMode && selectedVoice !== null) {
       // 선택완료 로직
-      setMainVoiceIdx(selectedVoiceId); // 이 함수는 이전 페이지로 voiceId를 전달하는 함수입니다.
+      switch (currentStep) {
+        case 1:
+          setMainVoice(selectedVoice);
+          break;
+        case 2:
+          setSubVoice(selectedVoice);
+          break;
+        case 3:
+          setNarration(selectedVoice);
+          break;
+        default:
+          Alert.alert('Error', 'Unknown role.');
+          return;
+      }
+      setSelectMode(false);
       navigation.goBack();
     } else {
       // 선택모드 활성화
-      setSelecteMode(true);
+      setSelectMode(true);
     }
   };
 
-  const renderItem = ({ item }: any) => (
+  const renderItem = ({ item }: { item: VoiceData }) => (
     <TouchableOpacity
-      onPress={() => selectMode && setSelectedVoiceId(item.voiceId)}
+      onPress={() => selectMode && setSelectedVoice(item)}
+
     >
-      <View style={styles.card}>
+      <View style={[styles.card,
+        {
+          borderWidth: selectedVoice?.voiceId !== item.voiceId ? 0 : 3,
+        },
+      ]}>
         <View style={styles.container1}>
           <View style={styles.textContainer}>
             <Text style={styles.cardTitle}>{item.voiceName}</Text>

@@ -10,7 +10,10 @@ import {
   Pressable,
   BackHandler,
   Keyboard,
-  TouchableWithoutFeedback, Image, Dimensions,
+  TouchableWithoutFeedback,
+  Image,
+  Dimensions,
+  Animated,
 } from 'react-native';
 
 import GreenButton from '../../components/GreenButton';
@@ -19,30 +22,72 @@ import CreationModal from '../../components/createBook/renderCreationModal';
 import { useFairyStore } from '../../store/fairyStore';
 import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
-import { BookSummary, DetailBook, PhotoData, VoiceData } from '../../types/types';
+import {
+  BookSummary,
+  DetailBook,
+  PhotoData,
+  VoiceData,
+} from '../../types/types';
 import ConfirmModal from '../../components/ConfirmModal';
 import { postMakeBook } from '../../api/makeBookApi';
 
 type FairyRouteProp = RouteProp<RootStackParamList, 'fairy'>;
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
 
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
 
-function FairytaleScreen({
-                           navigation,
-                         }: {
-  navigation: NavigationProp<any>;
-}) {
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-30, -40],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
+function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [currentStep, setCurrentStep] = useState(1); // 현재 진행 단계(1 : 메인 캐릭터 2: 서브 캐릭 3 : 내레이션 4 : 만들기)
-  const [makeBookTitle, setMakeBookTitle] = useState('');  // 클라이언트가 자신이 만들 책 제목을 지정하기 위한 state
+  const [makeBookTitle, setMakeBookTitle] = useState(''); // 클라이언트가 자신이 만들 책 제목을 지정하기 위한 state
 
-  const { mainImage, mainVoice, subImage, subVoice, narration, resetStore } = useFairyStore();  // zustand 상태 변수, 함수
+  const { mainImage, mainVoice, subImage, subVoice, narration, resetStore } =
+    useFairyStore(); // zustand 상태 변수, 함수
 
-  const [isExitModal, setIsExitModal] = useState(false);  // 나갈때 모달
-  const [isMakeBookModal, setIsMakeBookModal] = useState(false);  // 다 만들었을때 모달
+  const [isExitModal, setIsExitModal] = useState(false); // 나갈때 모달
+  const [isMakeBookModal, setIsMakeBookModal] = useState(false); // 다 만들었을때 모달
 
   const route = useRoute<FairyRouteProp>();
-  const selectedBook: DetailBook = route.params.selectedBook;  // DetailScreen에서 받아온 책 정보 (DetailBook 타입)
-  const bookSummary: BookSummary = route.params.bookSummary;    // DetailScreen에서 받아온 책 정보 (BookSummary 타입)
-
+  const selectedBook: DetailBook = route.params.selectedBook; // DetailScreen에서 받아온 책 정보 (DetailBook 타입)
+  const bookSummary: BookSummary = route.params.bookSummary; // DetailScreen에서 받아온 책 정보 (BookSummary 타입)
 
   useEffect(() => {
     const backAction = () => {
@@ -64,14 +109,14 @@ function FairytaleScreen({
 
   const handleMakeBook = async () => {
     const requestBody = {
-      bookId : bookSummary.bookId,
+      bookId: bookSummary.bookId,
       makeBookTitle: makeBookTitle,
-      mainVoice : mainVoice?.voiceId,
+      mainVoice: mainVoice?.voiceId,
       mainPhoto: mainImage?.photoId,
       subVoice: subVoice?.voiceId,
       subPhoto: subImage?.photoId,
       narration: narration?.voiceId,
-    }
+    };
     console.log(requestBody);
 
     const response = await postMakeBook(requestBody);
@@ -79,7 +124,7 @@ function FairytaleScreen({
     console.log(response);
 
     return response.message === 'Success.';
-  }
+  };
 
   /**
    * @function selectCharacterImage
@@ -97,7 +142,6 @@ function FairytaleScreen({
     navigation.navigate('addfairyvoice', { currentStep });
   };
 
-
   const handleNextStep = () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
@@ -114,34 +158,56 @@ function FairytaleScreen({
     }
   };
 
-  const buttonComponent = ({ role, image, voice }: {
-    role: string,
-    image: PhotoData | null,
-    voice: VoiceData | null
+  const buttonComponent = ({
+    role,
+    image,
+    voice,
+  }: {
+    role: string;
+    image: PhotoData | null;
+    voice: VoiceData | null;
   }) => {
     return (
       <View style={styles.rightSideContainer}>
         <View style={{ flex: 1 }}>
-          <Text>{role}의 얼굴과 목소리를 찾아줘</Text>
+          {/* <Text> {role}의 얼굴과 목소리를 찾아줘</Text> */}
         </View>
-
+        <Image
+          source={require('../../assets/images/books/tree.png')}
+          style={styles.tree1}
+        />
+        <Image
+          source={require('../../assets/images/books/tree.png')}
+          style={styles.tree2}
+        />
         <View style={styles.characterButtonContainer}>
-          <Pressable style={styles.button} onPress={() => selectCharacterImage(role)}>
-            {!image ?
-
-              <Text style={styles.textcenter}>얼굴{'\n'}찾아주기</Text> // 이미지가 없으면 '얼굴 찾아주기'
-              :
-              <Image source={{ uri: image.photoFile }} style={styles.imageInButton} /> // 이미지가 있으면 이미지 렌더링
+          <Pressable
+            style={styles.button}
+            onPress={() => selectCharacterImage(role)}
+          >
+            {
+              !image ? (
+                <Text style={styles.textcenter}>얼굴{'\n'}찾아주기</Text> // 이미지가 없으면 '얼굴 찾아주기'
+              ) : (
+                <Image
+                  source={{ uri: image.photoFile }}
+                  style={styles.imageInButton}
+                />
+              ) // 이미지가 있으면 이미지 렌더링
             }
           </Pressable>
-          <Pressable style={styles.button} onPress={() => selectCharacterVoice()}>
-            {
-              !voice ?
-                <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
-                :
-                <Text style={styles.textcenter}>{voice.voiceName}{'\n'}목소리</Text>
-            }
-
+          <Pressable
+            style={styles.button}
+            onPress={() => selectCharacterVoice()}
+          >
+            {!voice ? (
+              <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
+            ) : (
+              <Text style={styles.textcenter}>
+                {voice.voiceName}
+                {'\n'}목소리
+              </Text>
+            )}
           </Pressable>
         </View>
         <View style={styles.handleStepContainer}>
@@ -154,7 +220,11 @@ function FairytaleScreen({
               }}
             />
           )}
-
+          <Image
+            source={require('../../assets/images/books/find.png')}
+            style={styles.find}
+          />
+          <Text style={styles.findtext}> {role}의 얼굴과 목소리를 찾아줘</Text>
           <GreenButton
             onPress={handleNextStep}
             content="다 찾았어요"
@@ -164,7 +234,6 @@ function FairytaleScreen({
               marginLeft: 30,
             }}
           />
-
         </View>
       </View>
     );
@@ -177,13 +246,18 @@ function FairytaleScreen({
           <Text>재료를 모두 찾아줘서 고마워</Text>
         </View>
         <View style={styles.narrationButtonContainer}>
-          <Pressable style={styles.narrationVoiceSelectButton} onPress={() => selectCharacterVoice()}>
-            {
-              !narration ?
-                <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
-                :
-                <Text style={styles.textcenter}>{narration.voiceName}{'\n'}목소리</Text>
-            }
+          <Pressable
+            style={styles.narrationVoiceSelectButton}
+            onPress={() => selectCharacterVoice()}
+          >
+            {!narration ? (
+              <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
+            ) : (
+              <Text style={styles.textcenter}>
+                {narration.voiceName}
+                {'\n'}목소리
+              </Text>
+            )}
           </Pressable>
         </View>
         <View style={styles.handleStepContainer}>
@@ -211,22 +285,27 @@ function FairytaleScreen({
     return (
       <View style={styles.rightSideContainer}>
         <View style={{ flex: 3, borderWidth: 1 }}>
-          <Text>이제 조금만 기다리면 책이 만들어질거야!{'\n'}이름을 지어줄래?</Text>
+          <Text>
+            이제 조금만 기다리면 책이 만들어질거야!{'\n'}이름을 지어줄래?
+          </Text>
         </View>
-        <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}>
-
+        <View
+          style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}
+        >
           <View style={styles.titleInputBox}>
             <TextInput
               style={styles.titleInput}
               placeholder="여기에 입력하세요"
-              onChangeText={text => setMakeBookTitle(text)}
+              onChangeText={(text) => setMakeBookTitle(text)}
               value={makeBookTitle}
             />
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              marginBottom: '5%',
-            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginBottom: '5%',
+              }}
+            >
               <GreenButton
                 onPress={handlePreviousStep}
                 content="이전"
@@ -241,12 +320,9 @@ function FairytaleScreen({
                   width: '60%',
                 }}
               />
-
             </View>
-
           </View>
         </View>
-
       </View>
     );
   };
@@ -258,9 +334,17 @@ function FairytaleScreen({
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return buttonComponent({ role: selectedBook.mainName, image: mainImage, voice: mainVoice });
+        return buttonComponent({
+          role: selectedBook.mainName,
+          image: mainImage,
+          voice: mainVoice,
+        });
       case 2:
-        return buttonComponent({ role: selectedBook.subName, image: subImage, voice: subVoice });
+        return buttonComponent({
+          role: selectedBook.subName,
+          image: subImage,
+          voice: subVoice,
+        });
       case 3:
         return narrationSelectComponent();
       case 4:
@@ -270,21 +354,46 @@ function FairytaleScreen({
     }
   };
 
-
-
-
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
-        source={require('../../assets/images/background/fairybackground.png')}
+        source={require('../../assets/images/background/background4.jpg')}
         style={styles.imageBackground}
       >
-
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud}
+          />
+        </CloudAnimation>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud1}
+          />
+        </CloudAnimation>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud2}
+          />
+        </CloudAnimation>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud3}
+          />
+        </CloudAnimation>
         {/* 로고 영역 비워놓으려고 빈 View*/}
-        <View style={{ flex: 1 }}></View>
+        {/* <View style={{ flex: 1 }}></View> */}
         <View
-          style={{ flex: 8, justifyContent: 'space-between', borderWidth: 1, flexDirection: 'row' }}
+          style={{
+            flex: 8,
+            justifyContent: 'space-between',
+            borderWidth: 1,
+            flexDirection: 'row',
+          }}
         >
           {/* 딱이 들어갈 영역 화면 좌측 1 : 2 찾아주기 버튼들 나올 영역*/}
           <View style={styles.leftSideContainer}>
@@ -295,8 +404,12 @@ function FairytaleScreen({
       </ImageBackground>
 
       {/* 모달 영역 */}
-      <ConfirmModal isVisible={isExitModal} text={['책 만들기를 그만 하시겠습니까?']} onConfirm={closeModal}
-                    onCancel={() => setIsExitModal(false)} />
+      <ConfirmModal
+        isVisible={isExitModal}
+        text={['책 만들기를 그만 하시겠습니까?']}
+        onConfirm={closeModal}
+        onCancel={() => setIsExitModal(false)}
+      />
       <CreationModal
         creationModalVisible={isMakeBookModal}
         setCreationModalVisible={setIsMakeBookModal}
@@ -309,14 +422,49 @@ function FairytaleScreen({
 
 export default FairytaleScreen;
 
-
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  cloud: { position: 'absolute', top: 5, left: 200 },
+  cloud1: { position: 'absolute', top: 25, left: 400, width: 200, height: 130 },
+  cloud2: {
+    position: 'absolute',
+    top: 5,
+    left: 690,
+    width: 150,
+    height: 110,
+    transform: [{ scaleX: -1 }],
+  },
+  cloud3: { position: 'absolute', top: 35, left: 1060 },
+  tree1: {
+    position: 'absolute',
+    top: Dimensions.get('screen').height * 0.15,
+    width: Dimensions.get('screen').width * 0.3,
+    height: Dimensions.get('screen').height * 0.6,
+  },
+  tree2: {
+    position: 'absolute',
+    top: Dimensions.get('screen').height * 0.15,
+    left: Dimensions.get('screen').width * 0.35,
+    width: Dimensions.get('screen').width * 0.3,
+    height: Dimensions.get('screen').height * 0.6,
+  },
+  find: {
+    position: 'absolute',
+    bottom: Dimensions.get('screen').height * 0.02,
+    right: Dimensions.get('screen').width * 0.23,
+    width: Dimensions.get('screen').width * 0.71,
+    height: Dimensions.get('screen').height * 0.2,
+  },
+  findtext: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 40,
+    right: Dimensions.get('screen').width * 0.15,
+    bottom: Dimensions.get('screen').height * 0.02,
   },
   imageBackground: {
     flex: 1,
@@ -328,8 +476,6 @@ const styles = StyleSheet.create({
   rightSideContainer: {
     flex: 2,
     flexDirection: 'column',
-
-    borderWidth: 8,
   },
   leftSideContainer: {
     flex: 1,
@@ -338,16 +484,14 @@ const styles = StyleSheet.create({
   characterButtonContainer: {
     flex: 3,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'red',
+    gap: Dimensions.get('screen').width * 0.126,
+    marginHorizontal: Dimensions.get('screen').width * 0.03,
   },
   button: {
-    backgroundColor: '#CDEAB9',
+    backgroundColor: '#6AC460',
     borderRadius: 500,
-    height: screenHeight * 0.4,
-    width: screenHeight * 0.4,
+    height: screenHeight * 0.35,
+    width: screenHeight * 0.35,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -428,5 +572,4 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     // color: 'white',
   },
-
 });

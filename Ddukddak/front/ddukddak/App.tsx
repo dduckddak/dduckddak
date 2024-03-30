@@ -189,7 +189,7 @@ export type RootStackParamList = {
   coloringDraw: undefined;
   coloringList: undefined;
   coloringDetail: undefined;
-  makingBook: { bookTitle: string };
+  makingBook: { makeBookId: number };
   likebooks: { bookId: string };
   likeList: undefined;
   addfairypicture: { role: string };

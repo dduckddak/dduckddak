@@ -242,6 +242,11 @@ public class MakeBookServiceImpl implements MakeBookService {
 				.body(gson.toJson(createImageRequestDto))
 				.asString();
 
+			// 상태 코드 확인
+			if (response.getStatus() != 200) {
+				throw new Exception("생성 동화 이미지 생성 실패 - 서버 에러");
+			}
+
 			JsonObject json = JsonParser.parseString(response.getBody()).getAsJsonObject();
 			boolean result = json.get("result").getAsBoolean();
 

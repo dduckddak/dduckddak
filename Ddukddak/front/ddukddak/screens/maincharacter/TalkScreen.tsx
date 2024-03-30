@@ -7,6 +7,7 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {
   cacheDirectory,
@@ -21,10 +22,7 @@ import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
 
 type TalkScreenRouteProp = RouteProp<RootStackParamList, 'talk'>;
-type TalkScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'talk'
->;
+type TalkScreenNavigationProp = StackNavigationProp<RootStackParamList, 'talk'>;
 
 interface TalkScreenProps {
   route: TalkScreenRouteProp;
@@ -38,7 +36,6 @@ function TalkScreen({ route }: TalkScreenProps) {
   const [subBasic, setSubBasic] = useState<string>();
   const [subTalk, setSubTalk] = useState<string>();
 
-
   /*
     처음 화면에 들어왔을 때 캐릭터쪽에 말풍선이 생겨 있다. (ex. 안녕 지금부터 회원이가 빨간모자야)
     isRecording이 false일 때 녹음 버튼을 누르면 녹음을 시작하면 isRecording이 true가 되면서 녹음모드가 시작된다.(startRecording함수 수행)
@@ -48,7 +45,9 @@ function TalkScreen({ route }: TalkScreenProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [characterTalking, setCharacterTalking] = useState(true);
 
-  const [recording, setRecording] = useState<Audio.Recording | undefined>(undefined);
+  const [recording, setRecording] = useState<Audio.Recording | undefined>(
+    undefined,
+  );
 
   const [userScript, setUserScript] = useState<string | null>('');
   const [characterScript, setCharacterScript] = useState<string | null>('');
@@ -60,7 +59,6 @@ function TalkScreen({ route }: TalkScreenProps) {
       setSubName(result.subName);
       setSubBasic(result.subBasic);
       setSubTalk(result.subTalk);
-
     } catch (error) {
       console.error('load Talk :', error);
     }
@@ -72,7 +70,7 @@ function TalkScreen({ route }: TalkScreenProps) {
 
   async function startRecording() {
     const { status } = await Audio.requestPermissionsAsync();
-    setIsRecording(true)
+    setIsRecording(true);
     try {
       if (status !== 'granted') {
         console.error('권한 거절');
@@ -84,7 +82,6 @@ function TalkScreen({ route }: TalkScreenProps) {
       );
       setRecording(recording);
       console.log('녹음 시작');
-
     } catch (err) {
       console.error('녹음 실패', err);
       // 실패시 레코딩 모드 변경
@@ -127,7 +124,6 @@ function TalkScreen({ route }: TalkScreenProps) {
       const response = await sttTalk(talkFile as File);
 
       return response.userScript;
-
     } catch (error) {
       console.error(error);
     }
@@ -146,7 +142,6 @@ function TalkScreen({ route }: TalkScreenProps) {
       setCharacterScript(response.gptScript);
       setCharacterTalking(true);
       await playBase64Audio(response.gptVoiceFile);
-
     } catch (error) {
       console.error(error);
     }
@@ -168,7 +163,6 @@ function TalkScreen({ route }: TalkScreenProps) {
 
       // 오디오 재생
       await soundObject.playAsync();
-
     } catch (error) {
       console.error('오디오 재생 중 오류 발생:', error);
     }
@@ -178,70 +172,52 @@ function TalkScreen({ route }: TalkScreenProps) {
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
-        source={require('../../assets/images/background/background.png')}
+        source={require('../../assets/images/background/background3.png')}
         style={styles.imageBackground}
       >
-        <View
-          style={styles.imageContainer}
-        >
-          <Image
-            source={{ uri: subBasic }}
-            style={styles.characterImage}
-          />
-        </View>
+        <Image source={{ uri: subBasic }} style={styles.characterImage} />
 
         <View
           style={{
-            flex: 3,
-            // borderWidth: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 60,
+            paddingRight: Dimensions.get('screen').width * 0.4,
           }}
         >
-          <View
-            style={{
-              flex: 2,
-              justifyContent: 'center',
-              // borderWidth: 2,
-              // borderColor: 'green',
-            }}
-          >
-            {/* 대화 말풍선 나올 영역 시작 */}
+          {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
+          <Image source={require('../../assets/images/talk/talk.png')} />
+          {characterTalking ? (
+            <Text style={styles.bigtext}>
+              {/* 이거 ;스크립트 회원이름 말하면서 자동으로 먼저 나와야 하는데 */}
+              캐릭터 스크립트 위치 {characterScript}
+            </Text>
+          ) : (
+            <Text style={styles.bigtext}>유저스크립트 :{userScript}</Text>
+          )}
+          {/* 대화 말풍선 나올 영역 끝 */}
 
-            {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
-            {
-              characterTalking ? (
-                <Text style={styles.bigtext}>캐릭터 스크립트 : {characterScript}</Text>
-              ) : (
-                <Text style={styles.bigtext}>유저스크립트 :{userScript}</Text>
-              )
-            }
-            {/* 대화 말풍선 나올 영역 끝 */}
-          </View>
-          <View
-            style={{
-              flex: 1,
-              // borderWidth: 2,
-              // borderColor: 'yellow',
-              justifyContent: 'center',
-            }}
-          >
-            {isRecording ? (
-              <GreenButton onPress={stopRecording} content={'대화끝내기'}
-                           style={{
-                             width: '40%',
-                           }}
-              />
-            ) : (
-              <GreenButton onPress={startRecording} content={'대화하기'}
-                           style={{
-                             width: '40%',
-                           }}
-              />
-            )}
-          </View>
-
+          {isRecording ? (
+            <GreenButton
+              onPress={stopRecording}
+              content={'대화끝내기'}
+              style={{
+                width: '35%',
+                marginLeft: Dimensions.get('screen').width * 0.2,
+              }}
+            />
+          ) : (
+            <GreenButton
+              onPress={startRecording}
+              content={'대화하기'}
+              style={{
+                width: '35%',
+                marginLeft: Dimensions.get('screen').width * 0.2,
+              }}
+            />
+          )}
         </View>
       </ImageBackground>
-
     </View>
   );
 }
@@ -252,34 +228,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  innerContainer: {
-    marginBottom: 160, // 아래 여백 추가
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   imageBackground: {
     flex: 1,
     resizeMode: 'contain',
     justifyContent: 'center',
     flexDirection: 'row',
   },
-
-  imageContainer: {
-    flex: 2,
-    height: '100%',
-    // borderWidth: 3,
-    // borderColor: 'blue',
-
-  },
   characterImage: {
-    width: '100%',
-    height: '100%', // 이미지가 전체 컨테이너의 80%를 차지하도록 설정
-    resizeMode: 'contain',
-
-
+    width: Dimensions.get('screen').width * 0.35,
+    height: Dimensions.get('screen').width * 0.35,
+    marginLeft: Dimensions.get('screen').width * 0.4,
+    marginTop: Dimensions.get('screen').width * 0.2,
   },
   bigtext: {
     fontSize: 40,
-    // borderWidth: 3,
+    fontFamily: 'im-hyemin-bold',
+    position: 'absolute',
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    top: Dimensions.get('screen').height * 0.12,
+    left: Dimensions.get('screen').width * 0.1,
+    width: Dimensions.get('screen').width * 0.44,
+    height: Dimensions.get('screen').height * 0.5,
+    borderWidth: 3,
   },
 });

@@ -89,9 +89,16 @@ def make_fairytale_photo(userSeq, mainPhoto, subPhoto, bookId, generatedId):
                         set_no_photo(bookId,page_id,userSeq,generatedId)
                     else :
                         if(label == 'main'):
-                            set_yes_photo(bookId,page_id,userSeq,generatedId, x, y, radius, mainPhoto)
+                            # 설정 안 했을 경우 추가
+                            if(mainPhoto==-1):
+                                 set_no_photo(bookId,page_id,userSeq,generatedId)
+                            else:
+                                set_yes_photo(bookId,page_id,userSeq,generatedId, x, y, radius, mainPhoto)
                         elif(label == 'sub'):
-                            set_yes_photo(bookId,page_id,userSeq,generatedId, x, y, radius, subPhoto)
+                            if(subPhoto==-1):
+                                 set_no_photo(bookId,page_id,userSeq,generatedId)
+                            else:
+                                set_yes_photo(bookId,page_id,userSeq,generatedId, x, y, radius, subPhoto)
                         
     except Exception as e :
         print(e)

@@ -101,28 +101,6 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     navigation.navigate('mainrending' as never);
     await SecureStore.deleteItemAsync('accessToken');
     await SecureStore.deleteItemAsync('refreshTocken');
-    // try {
-    //   // 로그아웃 요청
-    //   const response = await logout();
-    //   // 로그아웃 성공
-    //   if (response.message === 'Success.') {
-    //     // SecureStore에서 accessToken 및 refreshToken 삭제
-    //     await SecureStore.deleteItemAsync('accessToken');
-    //     await SecureStore.deleteItemAsync('refreshToken');
-    //     // mainrending 화면으로 이동
-    //     navigation.navigate('mainrending' as never);
-    //   } else {
-    //     // 로그아웃 실패 시 서버에서 반환된 메시지를 알림으로 표시
-    //     Alert.alert('로그아웃 실패', response.message);
-    //   }
-    // } catch (error) {
-    //   // 로그아웃 요청 실패 시 오류 메시지 표시
-    //   console.error('로그아웃 실패:', error);
-    //   Alert.alert(
-    //     '로그아웃 실패',
-    //     '서버에서 로그아웃을 처리하는 동안 문제가 발생했습니다.',
-    //   );
-    // }
   };
 
   if (isHomeScreen) {
@@ -307,13 +285,7 @@ export default function App() {
               }}
             />
             {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
-            <Stack.Screen
-              name="likebooks"
-              component={LikeBooks}
-              options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
-              }}
-            />
+            <Stack.Screen name="likebooks" component={LikeBooks} />
             {/* ------------------------ 뚝딱대화 페이지 ------------------------ */}
             <Stack.Screen
               name="talk"
@@ -324,7 +296,9 @@ export default function App() {
             <Stack.Screen
               name="fairy"
               component={FairytaleScreen}
-              options={{ headerShown: false }}
+              options={{
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
             />
             <Stack.Screen
               name="addfairypicture"
@@ -448,8 +422,8 @@ const styles = StyleSheet.create({
   },
 
   buttonImage: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     marginRight: 5,
   },
 });

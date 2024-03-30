@@ -19,7 +19,6 @@ import { useFairyStore } from '../../store/fairyStore';
 
 const { width } = Dimensions.get('screen');
 
-
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
 
@@ -35,11 +34,13 @@ function AddPicture({ route, navigation }: any) {
     try {
       const response = await getPhotos();
       if (response.photoList) {
-        const fetchedImageData: SelectablePhotoData[] = response.photoList.map(photo => ({
-          photoId: photo.photoId,
-          photoFile: photo.photoFile,
-          selected: false,
-        }));
+        const fetchedImageData: SelectablePhotoData[] = response.photoList.map(
+          (photo) => ({
+            photoId: photo.photoId,
+            photoFile: photo.photoFile,
+            selected: false,
+          }),
+        );
         setImageData(fetchedImageData);
       }
     } catch (error: unknown) {
@@ -54,13 +55,15 @@ function AddPicture({ route, navigation }: any) {
   useEffect(() => {
     // console.log('Role:', role);
     readPhotos();
-
   }, []);
 
   // 이미지 선택
   const handleSelectImage = (index: number) => {
     const selected = imageData[index];
-    setSelectedImage({ photoId: selected.photoId, photoFile: selected.photoFile });
+    setSelectedImage({
+      photoId: selected.photoId,
+      photoFile: selected.photoFile,
+    });
     setSelectMode(true);
   };
 
@@ -80,10 +83,18 @@ function AddPicture({ route, navigation }: any) {
     navigation.goBack();
   };
 
-
-  const renderImageItem = ({ item, index }: { item: SelectablePhotoData, index: number }) => (
+  const renderImageItem = ({
+    item,
+    index,
+  }: {
+    item: SelectablePhotoData;
+    index: number;
+  }) => (
     <TouchableOpacity
-      style={[styles.card, selectedImage?.photoId === item.photoId && styles.selected]}
+      style={[
+        styles.card,
+        selectedImage?.photoId === item.photoId && styles.selected,
+      ]}
       onPress={() => handleSelectImage(index)}
     >
       <Image source={{ uri: item.photoFile }} style={styles.cardImage} />
@@ -98,7 +109,7 @@ function AddPicture({ route, navigation }: any) {
       <FlatList
         data={imageData}
         renderItem={renderImageItem}
-        keyExtractor={item => item.photoId.toString()}
+        keyExtractor={(item) => item.photoId.toString()}
         numColumns={4}
         contentContainerStyle={styles.listContentContainer}
         style={styles.imagelist}
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
   },
   card: {
     margin: 5,
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: 'hidden',
     width: CARD_WIDTH,
     height: CARD_HEIGHT,
@@ -153,7 +164,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   selected: {
-    borderWidth: 2,
-    borderColor: 'blue',
+    borderWidth: 7,
+    borderColor: 'rgba(180, 130, 210, 0.8)',
   },
 });

@@ -30,6 +30,7 @@ import {
 } from '../../types/types';
 import ConfirmModal from '../../components/ConfirmModal';
 import { postMakeBook } from '../../api/makeBookApi';
+import { useUserStore } from '../../store/userStore';
 
 type FairyRouteProp = RouteProp<RootStackParamList, 'fairy'>;
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
@@ -89,7 +90,20 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const selectedBook: DetailBook = route.params.selectedBook; // DetailScreen에서 받아온 책 정보 (DetailBook 타입)
   const bookSummary: BookSummary = route.params.bookSummary; // DetailScreen에서 받아온 책 정보 (BookSummary 타입)
 
+  // 성별에 따라 뚝이 / 딱이 다르게 나오기
+  const userSex = useUserStore((state) => state.sex);
+  const [mainPageCharacter, setMainPageCharacter] = useState();
+  const updateMainImage = () => {
+    if (userSex === 'M') {
+      setMainPageCharacter(require('../../assets/images/DD/뚝이3.png'));
+    } else {
+      setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
+    }
+  };
+
   useEffect(() => {
+    updateMainImage();
+
     const backAction = () => {
       setIsExitModal(true);
       return true;
@@ -242,20 +256,34 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const narrationSelectComponent = () => {
     return (
       <View style={styles.rightSideContainer}>
+        <Image
+          source={require('../../assets/images/books/findfin.png')}
+          style={styles.findfin}
+        />
         <View style={{ flex: 4 }}>
-          <Text>재료를 모두 찾아줘서 고마워</Text>
+          {/* <Text>재료를 모두 찾아줘서 고마워</Text> */}
         </View>
         <View style={styles.narrationButtonContainer}>
+          <Image
+            source={require('../../assets/images/books/snail.png')}
+            style={styles.snail}
+          />
+          <Image
+            source={require('../../assets/images/books/snail.png')}
+            style={styles.snail2}
+          />
           <Pressable
             style={styles.narrationVoiceSelectButton}
             onPress={() => selectCharacterVoice()}
           >
             {!narration ? (
-              <Text style={styles.textcenter}>목소리{'\n'}찾아주기</Text>
+              <Text style={styles.textcenter}>
+                누구의 목소리로{'\n'}들을지 선택하기
+              </Text>
             ) : (
               <Text style={styles.textcenter}>
                 {narration.voiceName}
-                {'\n'}목소리
+                {'\n'}목소리로 듣기
               </Text>
             )}
           </Pressable>
@@ -284,13 +312,18 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const inputBookTitleContainer = () => {
     return (
       <View style={styles.rightSideContainer}>
-        <View style={{ flex: 3, borderWidth: 1 }}>
-          <Text>
-            이제 조금만 기다리면 책이 만들어질거야!{'\n'}이름을 지어줄래?
-          </Text>
+        <View style={{ flex: 3 }}>
+          <Image
+            source={require('../../assets/images/books/naming.png')}
+            style={styles.naming}
+          />
         </View>
         <View
-          style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}
+          style={{
+            flex: 4,
+            right: -screenWidth * 0.01,
+            top: screenHeight * 0.04,
+          }}
         >
           <View style={styles.titleInputBox}>
             <TextInput
@@ -373,12 +406,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
             style={styles.cloud1}
           />
         </CloudAnimation>
-        <CloudAnimation>
-          <Image
-            source={require('../../assets/images/Main/cloud.png')}
-            style={styles.cloud2}
-          />
-        </CloudAnimation>
+
         <CloudAnimation>
           <Image
             source={require('../../assets/images/Main/cloud.png')}
@@ -397,7 +425,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         >
           {/* 딱이 들어갈 영역 화면 좌측 1 : 2 찾아주기 버튼들 나올 영역*/}
           <View style={styles.leftSideContainer}>
-            <Text>이 박스에 딱이 들어감</Text>
+            {/* <Text>이 박스에 딱이 들어감</Text> */}
+            <Image source={mainPageCharacter} style={styles.ddak2} />
           </View>
           {renderStep()}
         </View>
@@ -429,17 +458,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  cloud: { position: 'absolute', top: 5, left: 200 },
-  cloud1: { position: 'absolute', top: 25, left: 400, width: 200, height: 130 },
-  cloud2: {
+  cloud: { position: 'absolute', top: 5, left: 10 },
+  cloud1: { position: 'absolute', top: 35, left: 200, width: 200, height: 130 },
+
+  cloud3: { position: 'absolute', top: 35, left: 1000 },
+  ddak2: {
     position: 'absolute',
-    top: 5,
-    left: 690,
-    width: 150,
-    height: 110,
-    transform: [{ scaleX: -1 }],
+    left: screenWidth * 0.03,
+    top: screenHeight * 0.3,
+    width: screenWidth * 0.25,
+    height: screenHeight * 0.43,
   },
-  cloud3: { position: 'absolute', top: 35, left: 1060 },
   tree1: {
     position: 'absolute',
     top: Dimensions.get('screen').height * 0.15,
@@ -459,6 +488,32 @@ const styles = StyleSheet.create({
     right: Dimensions.get('screen').width * 0.23,
     width: Dimensions.get('screen').width * 0.71,
     height: Dimensions.get('screen').height * 0.2,
+  },
+  snail: {
+    position: 'absolute',
+    bottom: Dimensions.get('screen').height * 0.01,
+    right: Dimensions.get('screen').width * 0.01,
+    width: Dimensions.get('screen').width * 0.35,
+    height: Dimensions.get('screen').height * 0.43,
+    // transform: [{ scaleX: -1 }],
+  },
+  snail2: {
+    position: 'absolute',
+    bottom: Dimensions.get('screen').height * 0.03,
+    right: Dimensions.get('screen').width * 0.45,
+    width: Dimensions.get('screen').width * 0.18,
+    transform: [{ scaleX: -1 }],
+    height: Dimensions.get('screen').height * 0.23,
+  },
+  findfin: {
+    position: 'absolute',
+    top: -Dimensions.get('screen').height * 0.05,
+    right: Dimensions.get('screen').width * 0.25,
+  },
+  naming: {
+    position: 'absolute',
+    top: Dimensions.get('screen').height * 0.04,
+    right: Dimensions.get('screen').width * 0.13,
   },
   findtext: {
     fontFamily: 'im-hyemin-bold',
@@ -539,26 +594,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'red',
   },
 
   narrationVoiceSelectButton: {
-    backgroundColor: '#CDEAB9',
-    borderRadius: 500,
-    height: screenHeight * 0.25,
-    width: screenHeight * 0.25,
-    marginRight: screenHeight * 0.05,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: screenHeight * 0.22,
+    width: screenHeight * 0.5,
+    marginRight: screenHeight * 0.03,
   },
 
   titleInputBox: {
     backgroundColor: '#C8E8B2',
-    width: '80%',
-    height: '80%',
+    width: screenHeight * 0.83,
+    height: screenHeight * 0.38,
     flexDirection: 'column',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
+    paddingTop: screenHeight * 0.04,
+    gap: 10,
+    borderRadius: 20,
+    borderWidth: 3,
+    borderColor: '#519567',
   },
 
   titleInput: {

@@ -119,7 +119,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 
 				//페이지 이미지 경로
 				makeBookPage.setPageImage(
-					amazonS3.getUrl(bucket, MakeKeyUtil.makePageImage(userSeq, makeBookDto.getBookId(), i)).toString());
+					amazonS3.getUrl(bucket, MakeKeyUtil.makePageImage(userSeq, makeBookId, i)).toString());
 
 				//스크립트별 상세 정보 추가
 				List<MakeBookScriptDto> pageDetail = new ArrayList<>();

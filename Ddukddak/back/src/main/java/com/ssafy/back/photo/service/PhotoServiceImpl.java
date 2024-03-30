@@ -2,27 +2,22 @@ package com.ssafy.back.photo.service;
 
 import static com.ssafy.back.util.MakeKeyUtil.*;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
@@ -33,21 +28,17 @@ import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.PhotoEntity;
 import com.ssafy.back.entity.UserEntity;
-import com.ssafy.back.entity.VoiceEntity;
 import com.ssafy.back.photo.dto.PhotoDto;
 import com.ssafy.back.photo.dto.request.DeletePhotoRequestDto;
 import com.ssafy.back.photo.dto.request.InsertPhotoRequestDto;
-import com.ssafy.back.photo.dto.request.PhotoRequestDto;
 import com.ssafy.back.photo.dto.response.DeletePhotoResponseDto;
 import com.ssafy.back.photo.dto.response.InsertPhotoResponseDto;
 import com.ssafy.back.photo.dto.response.ListPhotoResponseDto;
-import com.ssafy.back.photo.dto.response.PhotoResponseDto;
 import com.ssafy.back.photo.repository.PhotoRepository;
-import com.ssafy.back.util.MakeKeyUtil;
-import com.ssafy.back.voice.dto.response.InsertVoiceResponseDto;
 import com.ssafy.back.voice.service.VoiceServiceImpl;
 
 import lombok.RequiredArgsConstructor;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -67,11 +58,10 @@ public class PhotoServiceImpl implements PhotoService {
 	private String fastApiUrl;
 
 	@Override
-	@Transactional
 	public ResponseEntity<? super InsertPhotoResponseDto> insertPhoto(InsertPhotoRequestDto request) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
 		int userSeq = customUserDetails.getUserSeq();
 
@@ -96,11 +86,14 @@ public class PhotoServiceImpl implements PhotoService {
 			int statusCode = jsonResponse.get("status_code").getAsInt();
 			String message = jsonResponse.get("message").getAsString();
 
-			if(statusCode != 200) return InsertPhotoResponseDto.fastApierror(HttpStatus.NOT_FOUND, message);
+			if (statusCode != 200)
+				return InsertPhotoResponseDto.fastApierror(HttpStatus.NOT_FOUND, message);
 
 		} catch (Exception e) {
 			logger.error(ResponseMessage.UNIREST_ERROR);
 			logger.debug("Error message", e);
+
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 			return InsertPhotoResponseDto.uniRestError();
 		}
@@ -112,7 +105,7 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public ResponseEntity<? super ListPhotoResponseDto> listPhoto() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
 		String userId = customUserDetails.getUserId();
 		UserEntity userEntity = userRepository.findByUserId(userId);
@@ -121,7 +114,8 @@ public class PhotoServiceImpl implements PhotoService {
 
 		List<PhotoDto> photoResult = photoList.stream().map(photo -> {
 			PhotoDto photoDto = new PhotoDto();
-			String url = generatePublicUrl(bucket) + photo(photo.getUserEntity().getUserSeq(), photo.getPhotoId()) + ".png";
+			String url =
+				generatePublicUrl(bucket) + photo(photo.getUserEntity().getUserSeq(), photo.getPhotoId()) + ".png";
 
 			photoDto.setPhotoId(photo.getPhotoId());
 			photoDto.setPhotoFile(url);
@@ -135,7 +129,7 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public ResponseEntity<? super DeletePhotoResponseDto> deletePhoto(DeletePhotoRequestDto dto) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
 		int userSeq = customUserDetails.getUserSeq();
 

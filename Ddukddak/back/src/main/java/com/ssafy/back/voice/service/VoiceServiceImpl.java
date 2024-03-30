@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -122,6 +123,8 @@ public class VoiceServiceImpl implements VoiceService {
 			logger.debug(ResponseMessage.ELEVENLABS_ERROR);
 			logger.error(e);
 
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
 			try {
 				if (inputStream != null)
 					inputStream.close();
@@ -150,6 +153,8 @@ public class VoiceServiceImpl implements VoiceService {
 		} catch (Exception e) {
 			logger.debug(ResponseMessage.S3_ERROR);
 			logger.error(e);
+
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 			return InsertVoiceResponseDto.S3error();
 

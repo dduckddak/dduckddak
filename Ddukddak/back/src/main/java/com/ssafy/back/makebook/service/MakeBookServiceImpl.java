@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
@@ -256,6 +257,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 		} catch (Exception e) {
 			logger.debug(ResponseMessage.FASTAPI_ERROR);
 			logger.error(e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 			return InsertMakeBookResponseDto.FastAPIerror();
 		}
@@ -314,6 +316,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 				} catch (Exception e) {
 					logger.debug(ResponseMessage.ELEVENLABS_ERROR);
 					logger.error(e);
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 					try {
 						if (inputStream != null)
@@ -340,6 +343,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 				} catch (Exception e) {
 					logger.debug(ResponseMessage.S3_ERROR);
 					logger.error(e);
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 					return InsertMakeBookResponseDto.S3error();
 

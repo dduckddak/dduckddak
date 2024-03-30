@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -36,151 +37,152 @@ import com.ssafy.back.entity.ColoringEntity;
 import com.ssafy.back.entity.UserEntity;
 import com.ssafy.back.util.MakeKeyUtil;
 
-
 import lombok.RequiredArgsConstructor;
 
 @Transactional
 @Service
 @RequiredArgsConstructor
 public class ColoringServiceImpl implements ColoringService {
-    private final Logger logger = LogManager.getLogger(ColoringServiceImpl.class);
+	private final Logger logger = LogManager.getLogger(ColoringServiceImpl.class);
 
-    private final ColoringRepository coloringRepository;
+	private final ColoringRepository coloringRepository;
 
-    private final AmazonS3 amazonS3;
+	private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+	@Value("${cloud.aws.s3.bucket}")
+	private String bucket;
 
-    @Override
-    public ResponseEntity<? super ListColoringResponseDto> listColoring() {
-        //유저 정보 확인
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+	@Override
+	public ResponseEntity<? super ListColoringResponseDto> listColoring() {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-        int userSeq = customUserDetails.getUserSeq();
+		int userSeq = customUserDetails.getUserSeq();
 
-        List<ColoringDto> coloringList = coloringRepository.findByUserEntity_UserSeq(userSeq);
-        for (ColoringDto coloring : coloringList) {
-            String key = MakeKeyUtil.coloring(userSeq, coloring.getColoringId());
+		List<ColoringDto> coloringList = coloringRepository.findByUserEntity_UserSeq(userSeq);
+		for (ColoringDto coloring : coloringList) {
+			String key = MakeKeyUtil.coloring(userSeq, coloring.getColoringId());
 
-            if (amazonS3.doesObjectExist(bucket, key)) {
-                coloring.setColoringFile(amazonS3.getUrl(bucket, key).toString());
+			if (amazonS3.doesObjectExist(bucket, key)) {
+				coloring.setColoringFile(amazonS3.getUrl(bucket, key).toString());
 
-                logger.info(coloring.getColoringId() + " 경로 : " + coloring.getColoringFile());
+				logger.info(coloring.getColoringId() + " 경로 : " + coloring.getColoringFile());
 
-            } else {
-                logger.debug(ResponseMessage.S3_ERROR);
-                logger.error("S3에서 파일을 찾을 수 없습니다.");
+			} else {
+				logger.debug(ResponseMessage.S3_ERROR);
+				logger.error("S3에서 파일을 찾을 수 없습니다.");
 
-                return ListColoringResponseDto.S3error();
-            }
-        }
+				return ListColoringResponseDto.S3error();
+			}
+		}
 
-        logger.info(userSeq + " 색칠 그림 리스트 : " + coloringList);
+		logger.info(userSeq + " 색칠 그림 리스트 : " + coloringList);
 
-        return ListColoringResponseDto.success(coloringList);
-    }
+		return ListColoringResponseDto.success(coloringList);
+	}
 
-    @Override
-    public ResponseEntity<? super InsertColoringResponseDto> insertColoring(InsertColoringRequestDto request) {
-        //유저 정보 확인
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+	@Override
+	public ResponseEntity<? super InsertColoringResponseDto> insertColoring(InsertColoringRequestDto request) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-        int userSeq = customUserDetails.getUserSeq();
+		int userSeq = customUserDetails.getUserSeq();
 
-        // 접두사 제거 (data:image/png;base64)
-        String base64Image = request.getColoringFile().split(",")[1];
+		// 접두사 제거 (data:image/png;base64)
+		String base64Image = request.getColoringFile().split(",")[1];
 
-        // base64 문자열 디코드하여 바이트 배열로 변환
-        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+		// base64 문자열 디코드하여 바이트 배열로 변환
+		byte[] imageBytes = Base64.getDecoder().decode(base64Image);
 
-        ColoringEntity coloringEntity = new ColoringEntity();
-        coloringEntity.setUserEntity(new UserEntity());
-        coloringEntity.getUserEntity().setUserSeq(userSeq);
+		ColoringEntity coloringEntity = new ColoringEntity();
+		coloringEntity.setUserEntity(new UserEntity());
+		coloringEntity.getUserEntity().setUserSeq(userSeq);
 
-        int coloringId = coloringRepository.save(coloringEntity).getColoringId();
-        String key = MakeKeyUtil.coloring(userSeq, coloringId);
+		int coloringId = coloringRepository.save(coloringEntity).getColoringId();
+		String key = MakeKeyUtil.coloring(userSeq, coloringId);
 
-        // S3에 색칠 그림 추가
-        try (InputStream inputStream = new ByteArrayInputStream(imageBytes)) {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(inputStream.available());
-            metadata.setContentType("image/png");
+		// S3에 색칠 그림 추가
+		try (InputStream inputStream = new ByteArrayInputStream(imageBytes)) {
+			ObjectMetadata metadata = new ObjectMetadata();
+			metadata.setContentLength(inputStream.available());
+			metadata.setContentType("image/png");
 
-            amazonS3.putObject(bucket, key, inputStream, metadata);
+			amazonS3.putObject(bucket, key, inputStream, metadata);
 
-            logger.info(coloringId + " " + key + " 색칠 그림 S3 저장");
+			logger.info(coloringId + " " + key + " 색칠 그림 S3 저장");
 
-            return ResponseDto.success();
+			return ResponseDto.success();
 
-        } catch (Exception e) {
-            logger.debug(ResponseMessage.S3_ERROR);
-            logger.error(e);
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
 
-            return InsertColoringResponseDto.S3error();
-        }
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
-    }
+			return InsertColoringResponseDto.S3error();
+		}
 
-    @Override
-    public ResponseEntity<? super DeleteColoringResponseDto> deleteColoring(DeleteColoringRequestDto request) {
-        //유저 정보 확인
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+	}
 
-        int userSeq = customUserDetails.getUserSeq();
+	@Override
+	public ResponseEntity<? super DeleteColoringResponseDto> deleteColoring(DeleteColoringRequestDto request) {
+		//유저 정보 확인
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-        //DB에서 지우기
-        coloringRepository.deleteAllById(request.getDeleteColoringIds());
+		int userSeq = customUserDetails.getUserSeq();
 
-        logger.info(request.getDeleteColoringIds() + " 삭제 완료");
+		//DB에서 지우기
+		coloringRepository.deleteAllById(request.getDeleteColoringIds());
 
-        //S3에서 색칠 그림 삭제
-        try {
-            request.getDeleteColoringIds().forEach(coloringId -> {
-                String key = MakeKeyUtil.coloring(userSeq, coloringId);
-                DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
-                amazonS3.deleteObject(s3request);
+		logger.info(request.getDeleteColoringIds() + " 삭제 완료");
 
-                logger.info(key + " S3 삭제 완료");
-            });
-        } catch (Exception e) {
-            logger.debug(ResponseMessage.S3_ERROR);
-            logger.error(e);
+		//S3에서 색칠 그림 삭제
+		try {
+			request.getDeleteColoringIds().forEach(coloringId -> {
+				String key = MakeKeyUtil.coloring(userSeq, coloringId);
+				DeleteObjectRequest s3request = new DeleteObjectRequest(bucket, key);
+				amazonS3.deleteObject(s3request);
 
-            DeleteColoringResponseDto.S3error();
-        }
-        return ResponseDto.success();
-    }
+				logger.info(key + " S3 삭제 완료");
+			});
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
 
-    @Override
-    public ResponseEntity<? super ListColoringBaseResponseDto> listColoringBase() {
-        try {
-            //S3로 coloring 폴더 안의 파일 목록 요청
-            ListObjectsV2Request request = new ListObjectsV2Request()
-                    .withBucketName(bucket)
-                    .withPrefix("coloring/");
+			DeleteColoringResponseDto.S3error();
+		}
+		return ResponseDto.success();
+	}
 
-            ListObjectsV2Result result = amazonS3.listObjectsV2(request);
-            List<S3ObjectSummary> objects = result.getObjectSummaries();
+	@Override
+	public ResponseEntity<? super ListColoringBaseResponseDto> listColoringBase() {
+		try {
+			//S3로 coloring 폴더 안의 파일 목록 요청
+			ListObjectsV2Request request = new ListObjectsV2Request()
+				.withBucketName(bucket)
+				.withPrefix("coloring/");
 
-            List<String> coloringBaseList = new ArrayList<>();
-            objects.forEach(object -> {
-                coloringBaseList.add(amazonS3.getUrl(bucket, object.getKey()).toString());
-            });
+			ListObjectsV2Result result = amazonS3.listObjectsV2(request);
+			List<S3ObjectSummary> objects = result.getObjectSummaries();
 
-            //폴더 객체는 제외
-            coloringBaseList.remove(0);
+			List<String> coloringBaseList = new ArrayList<>();
+			objects.forEach(object -> {
+				coloringBaseList.add(amazonS3.getUrl(bucket, object.getKey()).toString());
+			});
 
-            return ListColoringBaseResponseDto.success(coloringBaseList);
+			//폴더 객체는 제외
+			coloringBaseList.remove(0);
 
-        } catch (Exception e) {
-            logger.debug(ResponseMessage.S3_ERROR);
-            logger.error(e);
+			return ListColoringBaseResponseDto.success(coloringBaseList);
 
-            return ListColoringBaseResponseDto.S3error();
-        }
-    }
+		} catch (Exception e) {
+			logger.debug(ResponseMessage.S3_ERROR);
+			logger.error(e);
+
+			return ListColoringBaseResponseDto.S3error();
+		}
+	}
 }

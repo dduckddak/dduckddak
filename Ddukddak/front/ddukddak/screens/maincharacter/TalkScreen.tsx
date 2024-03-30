@@ -186,15 +186,15 @@ function TalkScreen({ route }: TalkScreenProps) {
           }}
         >
           {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
-          <Image source={require('../../assets/images/talk/talk.png')} />
-          {characterTalking ? (
+          <Image
+            source={require('../../assets/images/talk/talk.png')}
+            style={characterTalking ? {} : { transform: [{ scaleX: -1 }] }}
+          />
+          <View style={styles.textContainer}>
             <Text style={styles.bigtext}>
-              {/* 이거 ;스크립트 회원이름 말하면서 자동으로 먼저 나와야 하는데 */}
-              캐릭터 스크립트 위치 {characterScript}
+              {characterTalking ? characterScript : userScript}
             </Text>
-          ) : (
-            <Text style={styles.bigtext}>유저스크립트 :{userScript}</Text>
-          )}
+          </View>
           {/* 대화 말풍선 나올 영역 끝 */}
 
           {isRecording ? (
@@ -240,18 +240,19 @@ const styles = StyleSheet.create({
     marginLeft: Dimensions.get('screen').width * 0.4,
     marginTop: Dimensions.get('screen').width * 0.2,
   },
+  textContainer: {
+    position: 'absolute',
+    top: Dimensions.get('screen').height * 0.12,
+    left: Dimensions.get('screen').width * 0.08,
+    width: Dimensions.get('screen').width * 0.44,
+    height: Dimensions.get('screen').height * 0.5,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   bigtext: {
     fontSize: 40,
     fontFamily: 'im-hyemin-bold',
-    position: 'absolute',
     textAlign: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
-    top: Dimensions.get('screen').height * 0.12,
-    left: Dimensions.get('screen').width * 0.1,
-    width: Dimensions.get('screen').width * 0.44,
-    height: Dimensions.get('screen').height * 0.5,
-    borderWidth: 3,
   },
 });

@@ -1,5 +1,6 @@
 import apiClient from './apiClient';
 import { isAxiosError } from 'axios';
+import { BookDetail } from '../types/types';
 
 interface ApiResponse {
   message: string;
@@ -18,11 +19,11 @@ export interface PageData {
   scripts: ScriptData[];
 }
 
-export interface MakeBookDetailData {
-  bookId: number;
-  makeBookTitle: string;
-  bookDetail: PageData[];
-}
+// export interface MakeBookDetailData {
+//   bookId: number;
+//   makeBookTitle: string;
+//   bookDetail: PageData[];
+// }
 
 interface MakeBookRequest {
   bookId: number;
@@ -34,7 +35,7 @@ interface MakeBookRequest {
   narration?: number;
 }
 
-type MakeBookDetailResponse = ApiResponse & MakeBookDetailData;
+type MakeBookDetailResponse = ApiResponse & BookDetail;
 
 /**
  * 동화뚝딱 상세 정보 가져오기

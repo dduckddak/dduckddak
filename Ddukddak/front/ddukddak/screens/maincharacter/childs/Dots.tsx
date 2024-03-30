@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Dimensions, Image } from 'react-native';
-import { BookSummary } from '../../../App';
+import { BookSummary } from '../../../types/types';
 
 type DotsListProps = {
   bookList: BookSummary[];

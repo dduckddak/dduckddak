@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
-import { Image, Text, TouchableOpacity } from 'react-native';
+import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -39,8 +39,12 @@ import Script from './components/createBook/Script';
 import { TransitionPresets } from '@react-navigation/stack';
 
 import { AppInitializer } from './components/AppInitializer';
+import { BookSummary, DetailBook } from './types/types';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
+import { useBgmStore } from './store/BgmStore'
+
+import BGMPlayer from './components/BgmPlayer';
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -75,13 +79,19 @@ interface LogoRightProps {
   isHomeScreen: any;
 }
 
-export interface BookSummary {
-  bookId: number;
-  bookTitle: string;
-  coverImage: string;
-}
 
 function LogoRight({ isHomeScreen }: LogoRightProps) {
+  const bgmStore = useBgmStore();
+
+  const toggleBGM = async () => {
+    if (bgmStore.isPlaying) {
+      await bgmStore.bgmSound?.pauseAsync();
+    } else {
+      await bgmStore.bgmSound?.playAsync();
+    }
+    bgmStore.setIsPlaying(!bgmStore.isPlaying);
+  };
+
   const navigation = useNavigation();
 
   const handlePress = () => {
@@ -118,28 +128,45 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
 
   if (isHomeScreen) {
     return (
-      <TouchableOpacity onPress={handleLogout}>
-        <Text
-          style={{
-            fontFamily: 'im-hyemin-bold',
-            fontSize: 30,
-            color: '#003C2A',
-          }}
-        >
-          로그아웃
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+          <TouchableOpacity onPress={toggleBGM}>
+          <Image
+            style={styles.buttonImage}
+            source={require('./assets/images/button/pengshu.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleLogout}>
+          <Text
+            style={{
+              fontFamily: 'im-hyemin-bold',
+              fontSize: 30,
+              color: '#003C2A',
+
+            }}
+          >
+            로그아웃
+          </Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 
   // 그 외의 경우 뒤로 가기 버튼을 렌더링
   return (
-    <TouchableOpacity onPress={handlePress}>
-      <Image
-        style={{ width: 80, height: 80 }}
-        source={require('./assets/images/button/Back.png')}
-      />
-    </TouchableOpacity>
+    <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={toggleBGM}>
+        <Image
+          style={styles.buttonImage}
+          source={require('./assets/images/button/pengshu.png')}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handlePress}>
+        <Image
+          style={styles.buttonImage}
+          source={require('./assets/images/button/Back.png')}
+        />
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -150,7 +177,7 @@ export type RootStackParamList = {
   detail: BookSummary;
   MainCharacterScreen: undefined;
   talk: { bookId: number };
-  fairy: { mainName: string; subName: string };
+  fairy: { selectedBook: DetailBook; bookSummary: BookSummary; };
   mainrending: undefined;
   intro: undefined;
   login: undefined;
@@ -173,14 +200,14 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
+    SplashScreen.hideAsync().catch(() => { });
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -191,7 +218,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => { });
     }
   }, [fontsLoaded]);
 
@@ -201,6 +228,7 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <BGMPlayer />
       <AppInitializer setInitialRouteName={setInitialRouteName} />
       <NavigationContainer>
         {initialRouteName && (
@@ -414,3 +442,16 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+
+const styles = StyleSheet.create({
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+
+  buttonImage: {
+    width: 80,
+    height: 80,
+    marginRight: 5
+  }
+});

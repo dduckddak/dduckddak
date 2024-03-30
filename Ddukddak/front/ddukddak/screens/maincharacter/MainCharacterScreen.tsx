@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getBookList } from '../../api/bookApi';
-import { BookSummary } from '../../App';
+
+import { BookSummary } from '../../types/types';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
 import { useUserStore } from '../../store/userStore';
@@ -107,7 +108,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     const fetchBooks = async () => {
       try {
         const books = await getBookList();
-        console.log(books);
+
         if (books.bookList) {
           setBookList(books.bookList);
         }
@@ -116,8 +117,10 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         console.error('Failed:', error);
       }
     };
+    // 여기 accept imcomming 하면 되겠지 ??
     updateMainImage();
     console.log(bookList);
+
     fetchBooks();
   }, []);
 

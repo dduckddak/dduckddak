@@ -4,13 +4,26 @@ import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
 
 const CreationModal = ({
-  creationModalVisible,
-  setCreationModalVisible,
-}: {
+                         creationModalVisible,
+                         setCreationModalVisible,
+                         handleMakeBook,
+                       }: {
   creationModalVisible: boolean;
   setCreationModalVisible: (visible: boolean) => void;
+  handleMakeBook: () => Promise<boolean>;
 }) => {
   const navigation = useNavigation();
+
+  const makeBookConfirm = async () => {
+    const success = await handleMakeBook();
+
+    if (success) {
+      navigation.navigate('home' as never)
+    } else {
+      console.log('뭔가잘못됨...')
+    }
+
+  }
 
   return (
     <Modal visible={creationModalVisible} transparent animationType="slide">
@@ -22,7 +35,7 @@ const CreationModal = ({
           </Text>
           <View style={styles.buttonContainer}>
             <GreenButton
-              onPress={() => navigation.navigate('home' as never)}
+              onPress={makeBookConfirm}
               content="기다리기"
               style={{ width: 250, height: 80, marginTop: 10 }}
             />

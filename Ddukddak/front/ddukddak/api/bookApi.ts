@@ -1,6 +1,6 @@
 import apiClient from './apiClient';
 import { isAxiosError } from 'axios';
-import { BookSummary } from '../App';
+import { BookSummary } from '../types/types';
 
 interface ApiResponse {
   message: string;

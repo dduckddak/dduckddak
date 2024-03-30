@@ -13,7 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
 import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import { getBookDetail, BookDetailData } from '../../api/bookApi';
-import { BookSummary } from '../../App';
+import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
@@ -27,16 +27,10 @@ interface DetailBookScreenProps {
   navigation: DetailScreenNavigationProp;
 }
 
-interface DetailBook {
-  bookAuthor: string;
-  bookStory: string;
-  isLike: Boolean;
-  mainName: string;
-  subName: string;
-}
+
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
-  const [selectedBook, setSelectedBook] = useState<DetailBook | undefined>();
+  const [selectedBook, setSelectedBook] = useState<DetailBook>();
 
   const bookSummary: BookSummary = route.params;
 
@@ -155,7 +149,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 저자 : {selectedBook?.bookAuthor}
               </Text>
               <Text style={styles.detailText}>
-                줄거리 : {selectedBook?.bookStory}
+                줄거리 : {selectedBook?.bookStory.length > 70 ? selectedBook?.bookStory.slice(0, 70) + ' ...' : selectedBook?.bookStory}
               </Text>
             </View>
           </View>
@@ -163,9 +157,10 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             <TouchableOpacity
               style={styles.button}
               onPress={() =>
+                selectedBook && bookSummary &&
                 navigation.navigate('fairy', {
-                  mainName: selectedBook ? selectedBook.mainName : '',
-                  subName: selectedBook ? selectedBook.subName : '',
+                  selectedBook : selectedBook,
+                  bookSummary : bookSummary,
                 })
               }
             >

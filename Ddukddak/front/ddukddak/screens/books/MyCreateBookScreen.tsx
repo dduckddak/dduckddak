@@ -58,7 +58,7 @@ const BookItems: React.FC<{
           },
         ]}
       >
-        <Image source={coverImage} style={styles.coverImage} />
+        <Image source={{uri:coverImage}} style={styles.coverImage} />
         <Text style={styles.title}>{title}</Text>
       </Animated.View>
     </TouchableOpacity>
@@ -66,7 +66,7 @@ const BookItems: React.FC<{
 };
 
 const BookListScreen: React.FC = () => {
-  const [makeBookList, setMakeBookList] = useState<MakeBookListData[]>([]);
+  const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
 
   const fetchMakeBooks = async () => {
     try {
@@ -92,11 +92,11 @@ const BookListScreen: React.FC = () => {
       <View>
         <FlatList
           ListEmptyComponent={<EmptyListComponent />}
-          data={makeBookList}
+          data={makeBookList?.makeBookList}
           renderItem={({ item }) => (
             <BookItems
-              title={makeBookList.makeBookTitle}
-              coverImage={makeBookList.makeBookCover}
+              title={item.makeBookTitle}
+              coverImage={item.makeBookCover}
               navigation={navigation}
             />
           )}

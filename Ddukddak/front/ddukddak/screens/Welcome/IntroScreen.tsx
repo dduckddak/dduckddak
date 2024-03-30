@@ -60,7 +60,14 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
 
     const loadVoice = async (who: any) => {
       const voice = new Audio.Sound();
-      setSoundObject(soundObject);
+
+      if (soundObject) {
+        console.log("종료")
+        await soundObject.stopAsync();
+        await soundObject.unloadAsync();
+      }
+
+      setSoundObject(voice);
       try {
         console.log(who);
         await voice.loadAsync(who);
@@ -85,11 +92,13 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
       loadVoice(ddak2).catch(console.error);
     }
 
-    return () => {
+    return async() => {
       if (soundObject) {
-        soundObject.unloadAsync();
+        await soundObject.stopAsync();
+        await soundObject.unloadAsync();
       }
     };
+
   }, [currentStep, userSex]);
 
   const YourComponent: React.FC<{ currentStep: number }> = ({

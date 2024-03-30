@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   selected: {
-    borderWidth: 2,
-    borderColor: 'blue',
+    borderWidth: 7,
+    borderColor: 'rgba(180, 130, 210, 0.8)',
   },
   textStyle: {
     fontFamily: 'im-hyemin-bold',

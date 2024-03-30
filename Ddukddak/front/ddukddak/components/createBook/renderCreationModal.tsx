@@ -3,6 +3,7 @@ import { View, Text, Modal, StyleSheet } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
 import { useUserStore } from '../../store/userStore';
+import SkyButton from '../SkyButton';
 
 const CreationModal = ({
   creationModalVisible,
@@ -33,19 +34,30 @@ const CreationModal = ({
       <View style={styles.modalContainer}>
         <View style={styles.endmodalContent}>
           <Text style={styles.modalText}>
-            {userName}이가 재료를 모두 찾아준 덕분에 책이 잘 만들어지고 있어! 다
-            만들어지면 알려줄게
+            {userName}이가 재료를 모두 찾아준 덕분에
+            {'\n'}책이 잘 만들어지고 있어!
+            {'\n'}다 만들어지면 알려줄게
           </Text>
           <View style={styles.buttonContainer}>
-            <GreenButton
+            <SkyButton
               onPress={makeBookConfirm}
-              content="기다리기"
-              style={{ width: 250, height: 80, marginTop: 10 }}
+              content="책 만들기"
+              style={{
+                width: 250,
+                height: 80,
+                marginTop: 10,
+                marginHorizontal: 10,
+              }}
             />
-            <GreenButton
+            <SkyButton
               onPress={() => setCreationModalVisible(false)}
-              content="뒤로가기"
-              style={{ width: 250, height: 80, marginTop: 10 }}
+              content="만들기 취소"
+              style={{
+                width: 250,
+                height: 80,
+                marginTop: 10,
+                marginHorizontal: 10,
+              }}
             />
           </View>
         </View>
@@ -63,19 +75,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   endmodalContent: {
-    backgroundColor: '#519657',
+    backgroundColor: '#0084BE',
     padding: 20,
     borderRadius: 10,
     elevation: 5,
     alignItems: 'center',
     width: '70%',
-    height: '45%',
+    height: '60%',
+    justifyContent: 'center',
   },
   modalText: {
     fontFamily: 'im-hyemin-bold',
     color: 'white',
     fontSize: 50,
     textAlign: 'center',
+    lineHeight: 80,
   },
   buttonContainer: {
     flexDirection: 'row',

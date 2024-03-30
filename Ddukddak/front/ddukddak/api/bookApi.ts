@@ -56,9 +56,9 @@ type PostLikeBooksResponse = ApiResponse;
 
 /**
  * 선호도 조사 책 목록 가져오기*/
-export const getLikeBookList = async (): Promise<LikeBookListResponse> => {
+export const getLikeBookList = async (): Promise<BookListResponse> => {
   try {
-    const response = await apiClient.get<LikeBookListResponse>(
+    const response = await apiClient.get<BookListResponse>(
       '/api/v1/books/choice-list',
     );
     return response.data;

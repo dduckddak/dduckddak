@@ -32,8 +32,9 @@ const BookSelectionScreen = () => {
   const fetchLikeBooks = async () => {
     try {
       const likeBookListResponse = await getLikeBookList();
-      if (likeBookListResponse.likeBookList) {
-        const fetchedBooks = likeBookListResponse.likeBookList.map((book) => ({
+
+      if (likeBookListResponse.bookList) {
+        const fetchedBooks = likeBookListResponse.bookList.map((book) => ({
           id: book.bookId,
           title: book.bookTitle,
           image: book.coverImage,

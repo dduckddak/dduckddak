@@ -12,13 +12,13 @@ interface ScriptData {
   voiceFile: string; // TODO return이 명세서에는 file로 되어 있는데 file로 보낼 순 없을거라 우선 string
 }
 
-interface PageData {
+export interface PageData {
   pageSeq: number;
   pageImage: string;
   scripts: ScriptData[];
 }
 
-interface MakeBookDetailData {
+export interface MakeBookDetailData {
   bookId: number;
   makeBookTitle: string;
   bookDetail: PageData[];
@@ -111,7 +111,7 @@ export const deleteMakeBook = async (
 
 export interface MakeBookListData {
   makeBookList?: {
-    bookId: number;
+    makeBookId: number;
     makeBookTitle: string;
     makeBookCover: string;
   }[];

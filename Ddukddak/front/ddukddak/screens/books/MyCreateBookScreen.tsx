@@ -16,16 +16,19 @@ import { Colors } from '../../components/Ui/styles';
 import { getMakeBookList, MakeBookListData } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 
-interface Book {
-  title: string;
-  coverImage: any; // 이미지 소스는 any 타입으로 설정
-}
-
-const BookItems: React.FC<{
+interface BookItemsProps {
   title: string;
   coverImage: any;
+  makeBookId: number;
   navigation: any;
-}> = ({ title, coverImage, navigation }) => {
+}
+
+const BookItems: React.FC<BookItemsProps> = ({
+  title,
+  coverImage,
+  makeBookId,
+  navigation,
+}) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   useEffect(() => {
     return () => CharrrrAnimation.removeAllListeners();
@@ -45,7 +48,7 @@ const BookItems: React.FC<{
       useNativeDriver: true,
     }).start(() => {
       CharrrrAnimation.setValue(1);
-      navigation.navigate('makingBook', { bookTitle: title });
+      navigation.navigate('makingBook', { makeBookId: makeBookId });
     });
   };
 
@@ -58,7 +61,7 @@ const BookItems: React.FC<{
           },
         ]}
       >
-        <Image source={{uri:coverImage}} style={styles.coverImage} />
+        <Image source={{ uri: coverImage }} style={styles.coverImage} />
         <Text style={styles.title}>{title}</Text>
       </Animated.View>
     </TouchableOpacity>
@@ -72,7 +75,7 @@ const BookListScreen: React.FC = () => {
     try {
       const makeBooksResponse = await getMakeBookList();
       setMakeBookList(makeBooksResponse);
-      console.log('makebooks', makeBooksResponse);
+      console.log('API Response : ', makeBooksResponse);
     } catch (error) {
       console.log('에러!', error);
     }
@@ -97,6 +100,7 @@ const BookListScreen: React.FC = () => {
             <BookItems
               title={item.makeBookTitle}
               coverImage={item.makeBookCover}
+              makeBookId={item.makeBookId}
               navigation={navigation}
             />
           )}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   ImageBackground,
   Dimensions, // Dimensions import 추가
 } from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
+import { getMakeBookDetail, PageData } from '../../api/makeBookApi';
 
 const windowWidth = Dimensions.get('screen').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -62,8 +64,17 @@ const captions = [
   '끝~~!!',
 ];
 
+type BookDetailScreenRouteProp = RouteProp<
+  { params: { makeBookId: string } },
+  'params'
+>;
+
 const MakingBook: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [bookDetails, setBookDetails] = useState<PageData[]>([]);
+
+  const route = useRoute<BookDetailScreenRouteProp>();
+  const makeBookId = route.params.makeBookId;
 
   const onNextPress = () => {
     setCurrentIndex((prevIndex) =>
@@ -77,15 +88,33 @@ const MakingBook: React.FC = () => {
     );
   };
 
+  useEffect(() => {
+    const fetchBookDetails = async () => {
+      try {
+        const response = await getMakeBookDetail(makeBookId);
+        setBookDetails(response.bookDetail);
+        console.log(response.bookDetail[0].scripts);
+      } catch (error) {
+        console.error('Failed', error);
+      }
+    };
+
+    fetchBookDetails();
+  }, [makeBookId]);
+
+  if (!bookDetails) {
+    return <Text>Loading...</Text>;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        {imagePaths
+        {bookDetails
           .slice(currentIndex, currentIndex + 2)
-          .map((imagePath, index) => (
+          .map((item, index) => (
             <View key={index}>
               <Image
-                source={imagePath}
+                source={{ uri: item.pageImage[index] }}
                 style={[
                   styles.image,
                   { width: windowWidth / 2, height: windowHeight },

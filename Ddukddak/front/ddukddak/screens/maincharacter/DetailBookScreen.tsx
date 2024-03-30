@@ -15,6 +15,7 @@ import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import { getBookDetail, BookDetailData } from '../../api/bookApi';
 import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
+import { Dimensions } from 'react-native';
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -26,8 +27,6 @@ interface DetailBookScreenProps {
   route: DetailScreenRouteProp;
   navigation: DetailScreenNavigationProp;
 }
-
-
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [selectedBook, setSelectedBook] = useState<DetailBook>();
@@ -149,7 +148,10 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 저자 : {selectedBook?.bookAuthor}
               </Text>
               <Text style={styles.detailText}>
-                줄거리 : {selectedBook?.bookStory.length > 70 ? selectedBook?.bookStory.slice(0, 70) + ' ...' : selectedBook?.bookStory}
+                줄거리 :{' '}
+                {selectedBook?.bookStory.length > 70
+                  ? selectedBook?.bookStory.slice(0, 70) + ' ...'
+                  : selectedBook?.bookStory}
               </Text>
             </View>
           </View>
@@ -157,10 +159,11 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             <TouchableOpacity
               style={styles.button}
               onPress={() =>
-                selectedBook && bookSummary &&
+                selectedBook &&
+                bookSummary &&
                 navigation.navigate('fairy', {
-                  selectedBook : selectedBook,
-                  bookSummary : bookSummary,
+                  selectedBook: selectedBook,
+                  bookSummary: bookSummary,
                 })
               }
             >
@@ -206,7 +209,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     width: '70%',
-    gap: 20,
+    // gap: 20,
   },
   buttonStyle: {
     flexDirection: 'row',
@@ -219,7 +222,12 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
   },
   detailText: {
-    fontSize: 40,
+    fontSize: 35,
+    fontFamily: 'im-hyemin',
+    marginVertical: 5,
+  },
+  detailText2: {
+    fontSize: 28,
     fontFamily: 'im-hyemin',
     marginVertical: 10,
   },
@@ -238,18 +246,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bookDetails: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
-    borderRadius: 15,
-    // borderWidth: 1,
-    borderColor: 'rgba(65, 152, 7, 0.5)',
-    backgroundColor: 'rgba(65, 152, 7, 0.5)',
-    // shadowColor: 'rgba(65, 152, 7, 0.5)',
+    borderRadius: 20,
+    width: Dimensions.get('screen').width * 0.65,
+    height: Dimensions.get('screen').height * 0.65,
+    backgroundColor: '#C7DFB0',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 10,
     elevation: 5,
     margin: 10,
-    padding: 10,
+    padding: 25,
   },
   button: {
     padding: 10,
@@ -262,8 +269,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   coverImage: {
-    width: '80%',
-    height: '80%',
+    width: '95%',
+    height: '90%',
     resizeMode: 'contain',
   },
 });

@@ -69,7 +69,7 @@ function FairytaleScreen({
       mainVoice : mainVoice?.voiceId,
       mainPhoto: mainImage?.photoId,
       subVoice: subVoice?.voiceId,
-      subImage: subImage?.photoId,
+      subPhoto: subImage?.photoId,
       narration: narration?.voiceId,
     }
     console.log(requestBody);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -6,16 +6,61 @@ import {
   Image,
   TouchableOpacity,
   ImageBackground,
-  Button,
+  Animated,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../App';
-import { Entypo, FontAwesome5 } from '@expo/vector-icons';
-import { getBookDetail, BookDetailData } from '../../api/bookApi';
+import { getBookDetail } from '../../api/bookApi';
 import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
 import { Dimensions } from 'react-native';
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
 
 type DetailScreenRouteProp = RouteProp<RootStackParamList, 'detail'>;
 type DetailScreenNavigationProp = StackNavigationProp<
@@ -44,7 +89,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         like: like,
       });
       console.log(response);
-      // checkLike(response.isLike);
     } catch (error) {
       console.error('Failed to update review:', error);
     }
@@ -56,7 +100,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
       setIsSadSelected(false);
       return;
     }
-
     if (isLike) {
       setIsHappySelected(true);
       setIsSadSelected(false);
@@ -67,17 +110,23 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
     }
   };
 
+  const happyImage = isHappySelected
+    ? require('../../assets/images/books/interested_clicked.png')
+    : require('../../assets/images/books/interested.png');
+
+  const sadImage = isSadSelected
+    ? require('../../assets/images/books/uninterested_clicked.png')
+    : require('../../assets/images/books/uninterested.png');
+
   const handleHappyPress = async () => {
     setIsHappySelected((prev) => !prev);
     setIsSadSelected(false);
-
     await updateReview(true);
   };
 
   const handleSadPress = async () => {
     setIsSadSelected((prev) => !prev);
     setIsHappySelected(false);
-
     await updateReview(false);
   };
 
@@ -106,6 +155,18 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
       source={require('../../assets/images/background/background3.png')}
       style={styles.imageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud1}
+          />
+        </CloudAnimation>
+      </CloudAnimation>
       <View style={styles.container}>
         <Text style={styles.headerText}>이런책이에요 !</Text>
         <View style={styles.contentContainer}>
@@ -117,26 +178,16 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               />
               <View style={styles.buttonsContainer}>
                 <TouchableOpacity
-                  onPress={handleHappyPress}
+                  onPress={() => handleHappyPress()}
                   style={styles.buttonStyle}
                 >
-                  <FontAwesome5
-                    name="smile"
-                    size={50}
-                    color={isHappySelected ? 'green' : 'black'}
-                  />
-                  <Text style={styles.text}>재미있어요</Text>
+                  <Image source={happyImage} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={handleSadPress}
+                  onPress={() => handleSadPress()}
                   style={styles.buttonStyle}
                 >
-                  <Entypo
-                    name="emoji-sad"
-                    size={50}
-                    color={isSadSelected ? 'red' : 'black'}
-                  />
-                  <Text style={styles.text}>재미없어요</Text>
+                  <Image source={sadImage} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -147,12 +198,14 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               <Text style={styles.detailText}>
                 저자 : {selectedBook?.bookAuthor}
               </Text>
-              <Text style={styles.detailText}>
-                줄거리 :{' '}
-                {selectedBook?.bookStory.length > 70
-                  ? selectedBook?.bookStory.slice(0, 70) + ' ...'
-                  : selectedBook?.bookStory}
-              </Text>
+              {selectedBook?.bookStory && (
+                <Text style={styles.detailText2}>
+                  줄거리 :{' '}
+                  {selectedBook.bookStory.length > 80
+                    ? selectedBook.bookStory.slice(0, 80) + ' ...'
+                    : selectedBook.bookStory}
+                </Text>
+              )}
             </View>
           </View>
           <View>
@@ -194,6 +247,20 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.025,
+    left: screenWidth * 0.2,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.15,
+  },
+  cloud1: {
+    position: 'absolute',
+    top: screenHeight * 0.03,
+    left: screenWidth * 0.75,
+    width: screenWidth * 0.17,
+    height: screenHeight * 0.2,
+  },
   container: {
     flex: 1,
     alignItems: 'center',
@@ -209,12 +276,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     width: '70%',
-    // gap: 20,
   },
   buttonStyle: {
     flexDirection: 'row',
-    borderWidth: 3,
-    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -223,11 +287,11 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 35,
-    fontFamily: 'im-hyemin',
+    fontFamily: 'im-hyemin-bold',
     marginVertical: 5,
   },
   detailText2: {
-    fontSize: 28,
+    fontSize: 29,
     fontFamily: 'im-hyemin',
     marginVertical: 10,
   },
@@ -237,7 +301,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   imageContainer: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
   },

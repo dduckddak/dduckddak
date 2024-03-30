@@ -16,7 +16,6 @@ import EmptyListComponent from '../../components/EmptyListComponent';
 import fairyStore, { useFairyStore } from '../../store/fairyStore';
 import { VoiceData, SelectableVoiceData } from '../../types/types';
 
-
 interface Voice {
   voiceId: number;
   voiceName: string;
@@ -25,14 +24,13 @@ interface Voice {
 function AddVoice({ route, navigation }: any) {
   const { currentStep } = route.params;
 
-  const [selectMode, setSelectMode] = useState(false);
+  const [selectMode, setSelectMode] = useState<boolean>();
   const [voiceData, setVoiceData] = useState<SelectableVoiceData[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<VoiceData | null>(null);
 
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
 
   const { setSubVoice, setMainVoice, setNarration } = useFairyStore();
-
 
   const fetchVoices = async () => {
     try {
@@ -41,13 +39,14 @@ function AddVoice({ route, navigation }: any) {
         console.log('목소리 목록 불러오는데 실패했음');
         return;
       }
-      const fetchedVoiceData: SelectableVoiceData[] = result.voiceList.map(voice => ({
-        voiceId: voice.voiceId,
-        voiceName: voice.voiceName,
-        selected: false,
-      }));
+      const fetchedVoiceData: SelectableVoiceData[] = result.voiceList.map(
+        (voice) => ({
+          voiceId: voice.voiceId,
+          voiceName: voice.voiceName,
+          selected: false,
+        }),
+      );
       setVoiceData(fetchedVoiceData);
-
     } catch (error) {
       console.error('Error fetching voices:', error);
     }
@@ -85,53 +84,56 @@ function AddVoice({ route, navigation }: any) {
   };
 
   // 삭제 기능
-  const deleteVoice = async (voiceId: number) => {
-    try {
-      const response = await deleteVoices({ deleteVoiceIds: [voiceId] });
-      Alert.alert('삭제 성공', '목소리가 성공적으로 삭제되었습니다.');
-      // 삭제 성공 후, 삭제된 목소리를 목록에서 제거
-      setVoiceData(voiceData.filter((voice) => voice.voiceId !== voiceId));
-    } catch (error: any) {
-      console.error('Error deleting voice:', error.message);
-      Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
-    }
+  // const deleteVoice = async (voiceId: number) => {
+  //   try {
+  //     const response = await deleteVoices({ deleteVoiceIds: [voiceId] });
+  //     Alert.alert('삭제 성공', '목소리가 성공적으로 삭제되었습니다.');
+  //     // 삭제 성공 후, 삭제된 목소리를 목록에서 제거
+  //     setVoiceData(voiceData.filter((voice) => voice.voiceId !== voiceId));
+  //   } catch (error: any) {
+  //     console.error('Error deleting voice:', error.message);
+  //     Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
+  //   }
+  // };
+
+  const handleSelectVoice = (index: number) => {
+    const selected = voiceData[index];
+    setSelectedVoice({
+      voiceId: selected.voiceId,
+      voiceName: selected.voiceName,
+    });
+    setSelectMode(true);
   };
 
   const handleSelectButtonPress = () => {
-    if (selectMode && selectedVoice !== null) {
-      // 선택완료 로직
-      switch (currentStep) {
-        case 1:
-          setMainVoice(selectedVoice);
-          break;
-        case 2:
-          setSubVoice(selectedVoice);
-          break;
-        case 3:
-          setNarration(selectedVoice);
-          break;
-        default:
-          Alert.alert('Error', 'Unknown role.');
-          return;
-      }
-      setSelectMode(false);
-      navigation.goBack();
-    } else {
-      // 선택모드 활성화
-      setSelectMode(true);
+    switch (currentStep) {
+      case 1:
+        setMainVoice(selectedVoice);
+        break;
+      case 2:
+        setSubVoice(selectedVoice);
+        break;
+      case 3:
+        setNarration(selectedVoice);
+        break;
+      default:
+        Alert.alert('Error', 'Unknown role.');
+        return;
     }
+    setSelectMode(false);
+    navigation.goBack();
   };
 
-  const renderItem = ({ item }: { item: VoiceData }) => (
-    <TouchableOpacity
-      onPress={() => selectMode && setSelectedVoice(item)}
-
-    >
-      <View style={[styles.card,
-        {
-          borderWidth: selectedVoice?.voiceId !== item.voiceId ? 0 : 3,
-        },
-      ]}>
+  const renderItem = ({ item, index }: { item: VoiceData; index: number }) => (
+    <TouchableOpacity onPress={() => handleSelectVoice(index)}>
+      <View
+        style={[
+          styles.card,
+          {
+            borderWidth: selectedVoice?.voiceId !== item.voiceId ? 0 : 3,
+          },
+        ]}
+      >
         <View style={styles.container1}>
           <View style={styles.textContainer}>
             <Text style={styles.cardTitle}>{item.voiceName}</Text>
@@ -144,12 +146,12 @@ function AddVoice({ route, navigation }: any) {
             >
               <Text style={styles.buttonText}>미리듣기</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
+            {/* <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
               <Image
                 source={require('../../assets/images/Trash.png')}
                 style={styles.trash}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>

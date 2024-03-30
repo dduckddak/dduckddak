@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
-  ScrollView,
-  Button,
   Dimensions,
   FlatList,
   ImageBackground,
   Image,
-  ActivityIndicator,
-  Pressable
+  Pressable,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getLikeList, LikeBookListData } from '../../api/bookApi';
@@ -21,9 +17,7 @@ interface LikeListScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const LikeListScreen: React.FC<LikeListScreenProps> = ({
-  navigation,
-}) => {
+const LikeListScreen: React.FC<LikeListScreenProps> = ({ navigation }) => {
   // 좋아요한 책 리스트를 저장할 상태
   const [likeList, setLikeList] = useState<LikeBookListData>();
   // 로딩 상태
@@ -50,7 +44,7 @@ const LikeListScreen: React.FC<LikeListScreenProps> = ({
   }, []);
 
   const goToDetail = (bookSummary: BookSummary | undefined) => {
-    console.log(bookSummary)
+    console.log(bookSummary);
     navigation.navigate('detail', bookSummary);
   };
 
@@ -96,7 +90,7 @@ const LikeListScreen: React.FC<LikeListScreenProps> = ({
       </View>
     </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
   imageBackground: {
@@ -124,7 +118,6 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     alignItems: 'center',
-    // margin: 10,
     paddingTop: 0,
     paddingBottom: 40,
     marginTop: 0,

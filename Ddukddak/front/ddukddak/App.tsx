@@ -42,9 +42,9 @@ import { AppInitializer } from './components/AppInitializer';
 import { BookSummary, DetailBook } from './types/types';
 import { getUserInfo } from './api/userApi';
 import { useUserStore } from './store/userStore';
-import { useBgmStore } from './store/BgmStore'
+import { useBgmStore } from './store/BgmStore';
 
-import BGMPlayer from './components/BgmPlayer';
+import BGMPlayer from './components/sound/BgmPlayer';
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -78,7 +78,6 @@ function LogoTitle() {
 interface LogoRightProps {
   isHomeScreen: any;
 }
-
 
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
@@ -129,7 +128,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
   if (isHomeScreen) {
     return (
       <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={toggleBGM}>
+        <TouchableOpacity onPress={toggleBGM}>
           <Image
             style={styles.buttonImage}
             source={require('./assets/images/button/pengshu.png')}
@@ -141,7 +140,6 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
               fontFamily: 'im-hyemin-bold',
               fontSize: 30,
               color: '#003C2A',
-
             }}
           >
             로그아웃
@@ -154,7 +152,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
   // 그 외의 경우 뒤로 가기 버튼을 렌더링
   return (
     <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={toggleBGM}>
+      <TouchableOpacity onPress={toggleBGM}>
         <Image
           style={styles.buttonImage}
           source={require('./assets/images/button/pengshu.png')}
@@ -177,7 +175,7 @@ export type RootStackParamList = {
   detail: BookSummary;
   MainCharacterScreen: undefined;
   talk: { bookId: number };
-  fairy: { selectedBook: DetailBook; bookSummary: BookSummary; };
+  fairy: { selectedBook: DetailBook; bookSummary: BookSummary };
   mainrending: undefined;
   intro: undefined;
   login: undefined;
@@ -200,14 +198,14 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => { });
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => { });
+    SplashScreen.hideAsync().catch(() => {});
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -218,7 +216,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => { });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 
@@ -446,12 +444,12 @@ export default function App() {
 const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
 
   buttonImage: {
     width: 80,
     height: 80,
-    marginRight: 5
-  }
+    marginRight: 5,
+  },
 });

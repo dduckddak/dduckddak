@@ -1,17 +1,7 @@
 import React from 'react';
-import {
-  ImageBackground,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, Image } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 function AddVoiceScreen() {
   const navigation = useNavigation();
@@ -65,24 +55,24 @@ const styles = StyleSheet.create({
   },
   dd: {
     position: 'absolute',
-    left: screenWidth * 0.02,
-    width: screenWidth * 0.4,
-    height: screenHeight * 0.65,
-    bottom: -screenHeight * 0.4,
+    left: 30,
+    width: 500,
+    height: 500,
+    bottom: -300,
   },
   ballon: {
     position: 'absolute',
-    top: screenHeight * 0.051,
-    right: screenWidth * 0.04,
+    top: 40,
+    right: 60,
   },
   ballontext: {
     position: 'absolute',
-    right: screenWidth * 0.11,
-    top: screenHeight * 0.27,
+    right: 130,
+    top: 210,
   },
   text: {
     textAlign: 'center',
-    fontSize: screenWidth * 0.041,
+    fontSize: 50,
     fontFamily: 'im-hyemin-bold',
   },
   buttonContainer: {
@@ -92,7 +82,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   buttonStyle: {
-    width: screenWidth * 0.2,
-    bottom: -screenHeight * 0.015,
+    width: '20%',
+    bottom: -10,
   },
 });

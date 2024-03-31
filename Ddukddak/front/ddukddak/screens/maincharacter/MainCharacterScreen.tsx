@@ -5,7 +5,6 @@ import {
   ImageBackground,
   Keyboard,
   TouchableWithoutFeedback,
-  Dimensions,
   Text,
   Animated,
   Image,
@@ -169,30 +168,27 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   );
 };
 
-const Width = Dimensions.get('screen').width;
-const Height = Dimensions.get('screen').height;
-
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  cloud: { position: 'absolute', top: Height * 0.01, left: Width * 0.15 },
+  cloud: { position: 'absolute', top: -20, left: 200, width: 130, height: 150 },
   cloud2: {
     position: 'absolute',
-    top: Height * 0.2,
+    top: 150,
     left: -30,
-    width: Width * 0.11,
-    height: Height * 0.2,
+    width: 130,
+    height: 150,
     transform: [{ scaleX: -1 }],
   },
   cloud3: {
     position: 'absolute',
-    top: Height * 0.01,
-    left: Width * 0.72,
-    width: Width * 0.11,
-    height: Height * 0.2,
+    top: 5,
+    left: 850,
+    width: 130,
+    height: 150,
   },
   howabout: {
     fontFamily: 'im-hyemin-bold',

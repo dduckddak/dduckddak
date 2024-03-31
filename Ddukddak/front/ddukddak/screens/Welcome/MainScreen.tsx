@@ -49,10 +49,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.07,
-        left: screenWidth * 0.04,
-        width: screenWidth * 0.3,
-        height: screenHeight * 0.1,
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -153,23 +153,21 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  cloud: {
-    position: 'absolute',
-    top: screenHeight * 0.001,
-    left: screenWidth * 0.12,
-  },
+  cloud: { position: 'absolute', top: 5, left: 120 },
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.001,
-    left: screenWidth * 0.7,
-    width: screenWidth * 0.16,
-    height: screenHeight * 0.12,
+    top: 15,
+    left: 570,
+    width: 160,
+    height: 130,
     transform: [{ scaleX: -1 }],
   },
   cloud3: {
     position: 'absolute',
-    top: screenHeight * 0.1,
-    right: -screenWidth * 1.1,
+    top: 155,
+    left: 900,
+    width: 150,
+    height: 120,
   },
   mainContainer: {
     flex: 1,
@@ -188,21 +186,23 @@ const styles = StyleSheet.create({
   },
 
   // 내가주인공 말풍선
-  greenButton: { left: screenWidth * 0.26, top: screenHeight * 0.06 },
+  greenButton: { left: '68%', top: 40 },
   icon: {
-    width: screenWidth * 0.55,
-    height: screenHeight * 0.1,
+    width: 360,
+    height: 125,
     margin: 40,
   },
   bookicon: {
-    width: screenWidth * 0.85,
-    height: screenHeight * 0.16,
+    width: 710,
+    height: 210,
+    right: 22,
+    top: 5,
   },
   ddak2: {
     position: 'absolute',
-    left: screenWidth * 0.008,
-    top: screenHeight * 0.2,
-    width: screenWidth * 0.37,
-    height: screenHeight * 0.26,
+    left: '2%',
+    top: '31%',
+    width: '78%',
+    height: '80%',
   },
 });

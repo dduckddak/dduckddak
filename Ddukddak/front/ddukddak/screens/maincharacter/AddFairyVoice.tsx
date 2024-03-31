@@ -40,7 +40,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -50,10 +50,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.05,
-        left: screenWidth * 0.005,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.2,
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -244,16 +244,18 @@ function AddVoice({ route, navigation }: any) {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity onPress={() =>
-        playTouch('duck')
-      } style={[styles.duck,
-      {
-        transform: [
-          { translateX: duckPosition.x },
-          { translateY: duckPosition.y },
-        ],
-      }
-      ]}>
+      <TouchableOpacity
+        onPress={() => playTouch('duck')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      >
         <Animated.Image
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
@@ -300,32 +302,23 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 5,
   },
-  cloud: {
-    position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.15,
-  },
-
+  cloud: { position: 'absolute', top: 5, left: 200 },
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.65,
-    width: screenWidth * 0.15,
-    height: screenHeight * 0.2,
+    top: 5,
+    left: 850,
+    width: 150,
+    height: 110,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: {
-    position: 'absolute',
-    top: screenHeight * 0.15,
-    left: screenWidth * 0.88,
-  },
+  cloud3: { position: 'absolute', top: 125, left: 1000 },
   duck: {
     position: 'absolute',
-    bottom: screenHeight * 0.15,
-    left: screenWidth * 0.04,
-    width: screenWidth * 0.09,
-    height: screenHeight * 0.1,
-    zIndex: 1
+    bottom: '17%',
+    left: '2%',
+    width: '10%',
+    height: '12%',
+    zIndex: 1,
   },
   imageBackground: {
     flex: 1,
@@ -392,5 +385,5 @@ const styles = StyleSheet.create({
   duckImage: {
     width: '100%',
     height: '100%',
-  }
+  },
 });

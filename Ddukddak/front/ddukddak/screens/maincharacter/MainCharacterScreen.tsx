@@ -120,7 +120,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background4.png')}
+      source={require('../../assets/images/background/background5.png')}
       style={styles.imageBackground}
     >
       <CloudAnimation>

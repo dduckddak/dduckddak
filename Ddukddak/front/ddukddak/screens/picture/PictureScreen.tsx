@@ -152,10 +152,6 @@ function PictureScreen() {
     }
   };
 
-  const handleImageSelected = (uri: string) => {
-    setSelectedImages((prevImages) => [...prevImages, prevImages.length]);
-  };
-
   const onDelete = async () => {
     if (deleteMode) {
       try {

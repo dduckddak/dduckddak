@@ -23,54 +23,56 @@ interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   navigation,
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookList, setBookList] = useState<BookSummary[]>([]);
   // 구름 두둥실
-  const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
-    const [cloudAnimationValue] = useState(new Animated.Value(0));
 
-    useEffect(() => {
-      const animateClouds = () => {
-        const cloudAnimation = Animated.sequence([
-          Animated.timing(cloudAnimationValue, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(cloudAnimationValue, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ]);
-
-        Animated.loop(cloudAnimation).start();
-      };
-      animateClouds();
-      return () => {};
-    }, [cloudAnimationValue]);
-    const cloud1TranslateY = cloudAnimationValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, -20],
-    });
-    return (
-      <Animated.View
-        style={{
-          position: 'absolute',
-          top: 45,
-          left: 50,
-          width: 200,
-          height: 130,
-          transform: [{ translateY: cloud1TranslateY }],
-        }}
-      >
-        {children}
-      </Animated.View>
-    );
-  };
   const userSex = useUserStore((state) => state.sex);
   const [mainPageCharacter, setMainPageCharacter] = useState();
 
@@ -167,23 +169,31 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   );
 };
 
+const Width = Dimensions.get('screen').width;
+const Height = Dimensions.get('screen').height;
+
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
   },
-  cloud: { position: 'absolute', top: 45, left: 130 },
-  // cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+  cloud: { position: 'absolute', top: Height * 0.01, left: Width * 0.15 },
   cloud2: {
     position: 'absolute',
-    top: 150,
+    top: Height * 0.2,
     left: -30,
-    width: 200,
-    height: 130,
+    width: Width * 0.11,
+    height: Height * 0.2,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 5, left: 950, width: 160, height: 130 },
+  cloud3: {
+    position: 'absolute',
+    top: Height * 0.01,
+    left: Width * 0.72,
+    width: Width * 0.11,
+    height: Height * 0.2,
+  },
   howabout: {
     fontFamily: 'im-hyemin-bold',
     fontSize: 65,

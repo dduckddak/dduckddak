@@ -30,6 +30,7 @@ interface BookItemsProps {
   selectedItems: number[];
   setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
   navigation: any;
+  toggleDeleteMode: () => void;
 }
 
 const screenHeight = Dimensions.get('screen').height;
@@ -88,11 +89,13 @@ const BookItems: React.FC<BookItemsProps> = ({
   selectedItems,
   setSelectedItems,
   navigation,
+  toggleDeleteMode,
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
 
   useEffect(() => {
+    console.log(isDeleteMode);
     return () => {
       CharrrrAnimation.removeAllListeners();
     };
@@ -101,15 +104,13 @@ const BookItems: React.FC<BookItemsProps> = ({
   const isSelected = selectedItems.includes(makeBookId);
 
   const handleSelectItem = () => {
+    console.log('Long press detected');
     if (isDeleteMode) {
       // 삭제 모드일 때의 로직
       const newSelectedItems = isSelected
         ? selectedItems.filter((id) => id !== makeBookId)
         : [...selectedItems, makeBookId];
       setSelectedItems(newSelectedItems);
-    } else {
-      // 삭제 모드가 아닐 때의 로직 (상세 페이지로 이동 등)
-      handlePress();
     }
   };
 
@@ -132,7 +133,17 @@ const BookItems: React.FC<BookItemsProps> = ({
   };
 
   return (
-    <TouchableOpacity style={styles.bookItem} onPress={handleSelectItem}>
+    <TouchableOpacity
+      style={styles.bookItem}
+      onLongPress={toggleDeleteMode} // 길게 누를 때 실행
+      onPress={() => {
+        if (isDeleteMode) {
+          handleSelectItem();
+        } else {
+          handlePress();
+        }
+      }}
+    >
       <View
         style={[
           styles.bookContainer,
@@ -147,6 +158,7 @@ const BookItems: React.FC<BookItemsProps> = ({
 };
 
 const BookListScreen: React.FC = () => {
+  const toggleDeleteMode = () => setIsDeleteMode(!isDeleteMode);
   const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
   const { playTouch } = useTouchEffect();
 
@@ -167,19 +179,33 @@ const BookListScreen: React.FC = () => {
     fetchMakeBooks();
   }, []);
 
-  const handleDeleteItems = async () => {
-    console.log(selectedItems);
+  const test = async (makeBookIds: number[]) => {
     try {
-      const response = await deleteMakeBook(selectedItems);
+      const response = await deleteMakeBook(makeBookIds);
       console.log(response);
       setIsDeleteMode(false);
       setSelectedItems([]);
       fetchMakeBooks();
-    } catch (error) {
-      console.error('Failed to delete items', error);
-      Alert.alert('Error', 'Failed to delete books');
+    } catch (error: any) {
+      console.error('Error deleting:', error.message);
+      // Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
+      // setFAlertModal(true);
     }
   };
+
+  // const handleDeleteItems = async () => {
+  //   console.log(selectedItems);
+  //   try {
+  //     const response = await deleteMakeBook(selectedItems);
+  //     console.log(response);
+  //     setIsDeleteMode(false);
+  //     setSelectedItems([]);
+  //     fetchMakeBooks();
+  //   } catch (error) {
+  //     console.error('Failed to delete items', error);
+  //     Alert.alert('Error', 'Failed to delete books');
+  //   }
+  // };
 
   const navigation = useNavigation();
 
@@ -261,6 +287,7 @@ const BookListScreen: React.FC = () => {
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
               navigation={navigation}
+              toggleDeleteMode={toggleDeleteMode}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -270,21 +297,13 @@ const BookListScreen: React.FC = () => {
       </View>
       <TouchableOpacity
         style={styles.trash}
-        onPress={() => setIsDeleteMode(!isDeleteMode)}
+        onPress={() => test(selectedItems)}
       >
         <Image
           source={require('../../assets/images/Trash.png')}
           style={{ width: '100%', height: '100%' }}
         />
       </TouchableOpacity>
-      {isDeleteMode && (
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={handleDeleteItems}
-        >
-          <Text>Delete Selected</Text>
-        </TouchableOpacity>
-      )}
     </ImageBackground>
   );
 };

@@ -30,3 +30,18 @@ export interface VoiceData {
 export interface SelectableVoiceData extends VoiceData{
   selected: boolean;
 }
+
+export interface BookDetail {
+  bookDetail : PageData[];
+}
+
+
+export interface PageData {
+  pageImage : string;
+  pageDetail : PageDetail[];
+}
+
+export interface PageDetail {
+  scriptContent : string;
+  scriptSound : string;
+}

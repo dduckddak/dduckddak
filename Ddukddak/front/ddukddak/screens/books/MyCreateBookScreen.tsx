@@ -19,6 +19,7 @@ import {
   deleteMakeBook,
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
+import useTouchEffect from '../../components/sound/TouchEffect';
 
 interface BookItemsProps {
   title: string;
@@ -51,7 +52,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
 
   const cloud1TranslateY = cloudAnimationValue.interpolate({
@@ -82,6 +83,7 @@ const BookItems: React.FC<BookItemsProps> = ({
   navigation,
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
+  const { playTouch } = useTouchEffect();
 
   useEffect(() => {
     return () => {
@@ -90,6 +92,7 @@ const BookItems: React.FC<BookItemsProps> = ({
   }, []);
 
   const handlePress = () => {
+    playTouch('open');
     CharrrrAnimation.setValue(1);
 
     setTimeout(() => {
@@ -124,6 +127,7 @@ const BookItems: React.FC<BookItemsProps> = ({
 
 const BookListScreen: React.FC = () => {
   const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
+  const { playTouch } = useTouchEffect();
 
   const fetchMakeBooks = async () => {
     try {
@@ -149,12 +153,12 @@ const BookListScreen: React.FC = () => {
         Animated.timing(duckPosition, {
           toValue: { x: screenWidth * 0.1, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(duckPosition, {
           toValue: { x: 2, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
     ).start();
@@ -189,18 +193,21 @@ const BookListScreen: React.FC = () => {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Animated.Image
-        source={require('../../assets/images/duck.png')}
-        style={[
-          styles.duck,
-          {
-            transform: [
-              { translateX: duckPosition.x },
-              { translateY: duckPosition.y },
-            ],
-          },
-        ]}
-      />
+      <TouchableOpacity onPress={() =>
+        playTouch('duck')
+      } style={[styles.duck,
+      {
+        transform: [
+          { translateX: duckPosition.x },
+          { translateY: duckPosition.y },
+        ],
+      }
+      ]}>
+        <Animated.Image
+          source={require('../../assets/images/duck.png')}
+          style={styles.duckImage}
+        />
+      </TouchableOpacity>
       <View>
         <FlatList
           ListEmptyComponent={<EmptyListComponent />}
@@ -264,6 +271,7 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.04,
     width: screenWidth * 0.09,
     height: screenHeight * 0.1,
+    zIndex: 1
   },
   bookItem: {
     marginHorizontal: screenWidth * 0.048,
@@ -301,4 +309,9 @@ const styles = StyleSheet.create({
     top: '86%',
     elevation: 5,
   },
+
+  duckImage: {
+    width: '100%',
+    height: '100%',
+  }
 });

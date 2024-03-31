@@ -17,6 +17,7 @@ import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import { useFairyStore } from '../../store/fairyStore';
 import { VoiceData, SelectableVoiceData } from '../../types/types';
+import useTouchEffect from '../../components/sound/TouchEffect';
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
@@ -39,7 +40,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -62,6 +63,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 };
 
 function AddVoice({ route, navigation }: any) {
+  const { playTouch } = useTouchEffect();
+
   // 오리
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   useEffect(() => {
@@ -70,12 +73,12 @@ function AddVoice({ route, navigation }: any) {
         Animated.timing(duckPosition, {
           toValue: { x: screenWidth * 0.1, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(duckPosition, {
           toValue: { x: 2, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
     ).start();
@@ -241,18 +244,21 @@ function AddVoice({ route, navigation }: any) {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Animated.Image
-        source={require('../../assets/images/duck.png')}
-        style={[
-          styles.duck,
-          {
-            transform: [
-              { translateX: duckPosition.x },
-              { translateY: duckPosition.y },
-            ],
-          },
-        ]}
-      />
+      <TouchableOpacity onPress={() =>
+        playTouch('duck')
+      } style={[styles.duck,
+      {
+        transform: [
+          { translateX: duckPosition.x },
+          { translateY: duckPosition.y },
+        ],
+      }
+      ]}>
+        <Animated.Image
+          source={require('../../assets/images/duck.png')}
+          style={styles.duckImage}
+        />
+      </TouchableOpacity>
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -319,6 +325,7 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.04,
     width: screenWidth * 0.09,
     height: screenHeight * 0.1,
+    zIndex: 1
   },
   imageBackground: {
     flex: 1,
@@ -382,4 +389,8 @@ const styles = StyleSheet.create({
     fontSize: 48,
     marginTop: 25,
   },
+  duckImage: {
+    width: '100%',
+    height: '100%',
+  }
 });

@@ -41,7 +41,7 @@ const CreationModal = ({
           <View style={styles.buttonContainer}>
             <SkyButton
               onPress={makeBookConfirm}
-              content="책 만들기"
+              content="기다리기"
               style={{
                 width: 250,
                 height: 80,

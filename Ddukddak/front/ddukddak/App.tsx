@@ -45,6 +45,7 @@ import { useUserStore } from './store/userStore';
 import { useBgmStore } from './store/BgmStore';
 
 import BGMPlayer from './components/sound/BgmPlayer';
+import useTouchEffect from './components/sound/TouchEffect';
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -62,8 +63,11 @@ import BGMPlayer from './components/sound/BgmPlayer';
 // }
 function LogoTitle() {
   const navigation = useNavigation();
+  const { playTouch } = useTouchEffect();
   const onPress = () => {
+    playTouch('touch');
     navigation.navigate('script' as never);
+
   };
   return (
     <TouchableOpacity onPress={onPress}>
@@ -81,8 +85,11 @@ interface LogoRightProps {
 
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
+  const { playTouch } = useTouchEffect();
 
   const toggleBGM = async () => {
+    playTouch('touch');
+
     if (bgmStore.isPlaying) {
       await bgmStore.bgmSound?.pauseAsync();
     } else {
@@ -94,10 +101,12 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
   const navigation = useNavigation();
 
   const handlePress = () => {
+    playTouch('touch');
     navigation.goBack();
   };
 
   const handleLogout = async () => {
+    playTouch('touch');
     navigation.navigate('mainrending' as never);
     await SecureStore.deleteItemAsync('accessToken');
     await SecureStore.deleteItemAsync('refreshTocken');
@@ -176,14 +185,16 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
+  const { playTouch } = useTouchEffect();
+
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
+    SplashScreen.hideAsync().catch(() => { });
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -194,7 +205,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => { });
     }
   }, [fontsLoaded]);
 

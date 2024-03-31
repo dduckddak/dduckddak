@@ -403,6 +403,12 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
             style={styles.cloud1}
           />
         </CloudAnimation>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud2}
+          />
+        </CloudAnimation>
 
         <CloudAnimation>
           <Image
@@ -455,91 +461,76 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  cloud: {
-    position: 'absolute',
-    top: screenHeight * 0.05,
-    left: screenWidth * 0.01,
-  },
-  cloud1: {
-    position: 'absolute',
-    top: screenHeight * 0.1,
-    left: screenWidth * 0.15,
-    width: screenWidth * 0.155,
-    height: screenHeight * 0.155,
-  },
+  cloud: { position: 'absolute', top: 50, left: 10, width: 150, height: 130 },
+  cloud1: { position: 'absolute', top: 25, left: 250, width: 200, height: 130 },
+
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.03,
-    left: screenWidth * 0.54,
-    width: screenWidth * 0.13,
-    height: screenHeight * 0.14,
+    top: 5,
+    left: 600,
+    width: 200,
+    height: 150,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: {
-    position: 'absolute',
-    top: screenHeight * 0.05,
-    left: screenWidth * 0.85,
-  },
-
+  cloud3: { position: 'absolute', top: 100, left: 1000 },
   ddak2: {
     position: 'absolute',
-    left: screenWidth * 0.03,
-    top: screenHeight * 0.3,
-    width: screenWidth * 0.25,
-    height: screenHeight * 0.43,
+    left: 50,
+    top: 230,
+    width: 300,
+    height: 330,
   },
   tree1: {
     position: 'absolute',
-    top: Dimensions.get('screen').height * 0.15,
-    width: Dimensions.get('screen').width * 0.3,
-    height: Dimensions.get('screen').height * 0.6,
+    top: 113,
+    width: 360,
+    height: 452,
   },
   tree2: {
     position: 'absolute',
-    top: Dimensions.get('screen').height * 0.15,
-    left: Dimensions.get('screen').width * 0.35,
-    width: Dimensions.get('screen').width * 0.3,
-    height: Dimensions.get('screen').height * 0.6,
+    top: 113,
+    left: 421,
+    width: 360,
+    height: 452,
   },
   find: {
     position: 'absolute',
-    bottom: Dimensions.get('screen').height * 0.02,
-    right: Dimensions.get('screen').width * 0.33,
-    width: Dimensions.get('screen').width * 0.61,
-    height: Dimensions.get('screen').height * 0.17,
+    bottom: 10,
+    right: 410,
+    width: 750,
+    height: 132,
   },
   snail: {
     position: 'absolute',
-    bottom: Dimensions.get('screen').height * 0.01,
-    right: Dimensions.get('screen').width * 0.01,
-    width: Dimensions.get('screen').width * 0.35,
-    height: Dimensions.get('screen').height * 0.43,
-    // transform: [{ scaleX: -1 }],
+    bottom: 5,
+    right: 12,
+    width: 422,
+    height: 325,
   },
   snail2: {
     position: 'absolute',
-    bottom: Dimensions.get('screen').height * 0.03,
-    right: Dimensions.get('screen').width * 0.45,
-    width: Dimensions.get('screen').width * 0.18,
+    bottom: 15,
+    right: 540,
+    width: 211,
     transform: [{ scaleX: -1 }],
-    height: Dimensions.get('screen').height * 0.23,
+    height: 173,
   },
   findfin: {
     position: 'absolute',
-    top: -Dimensions.get('screen').height * 0.05,
-    right: Dimensions.get('screen').width * 0.25,
+    top: -25,
+    right: 290,
   },
   naming: {
     position: 'absolute',
-    top: Dimensions.get('screen').height * 0.04,
-    right: Dimensions.get('screen').width * 0.13,
+    top: 30,
+    right: 157,
   },
   findtext: {
     position: 'absolute',
     fontFamily: 'im-hyemin-bold',
     fontSize: 40,
-    right: Dimensions.get('screen').width * 0.41,
-    bottom: Dimensions.get('screen').height * 0.07,
+    right: 495,
+    bottom: 52,
     zIndex: 999,
   },
   imageBackground: {
@@ -560,14 +551,14 @@ const styles = StyleSheet.create({
   characterButtonContainer: {
     flex: 3,
     flexDirection: 'row',
-    gap: Dimensions.get('screen').width * 0.126,
-    marginHorizontal: Dimensions.get('screen').width * 0.03,
+    gap: 152,
+    marginHorizontal: 36,
   },
   button: {
     backgroundColor: '#6AC460',
     borderRadius: 500,
-    height: screenHeight * 0.35,
-    width: screenHeight * 0.35,
+    height: 263,
+    width: 263,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -575,7 +566,7 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     textAlign: 'center',
     color: 'black',
-    fontSize: screenWidth > 500 ? 35 : 20,
+    fontSize: 35,
   },
   stepFourContainer: {
     alignItems: 'center',
@@ -618,18 +609,18 @@ const styles = StyleSheet.create({
   },
 
   narrationVoiceSelectButton: {
-    height: screenHeight * 0.22,
-    width: screenHeight * 0.5,
-    marginRight: screenHeight * 0.03,
+    height: 165,
+    width: 375,
+    marginRight: 22,
   },
 
   titleInputBox: {
     backgroundColor: '#C8E8B2',
-    width: screenHeight * 0.83,
-    height: screenHeight * 0.38,
+    width: 625,
+    height: 285,
     flexDirection: 'column',
     justifyContent: 'center',
-    paddingTop: screenHeight * 0.04,
+    paddingTop: 30,
     gap: 10,
     borderRadius: 20,
     borderWidth: 3,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Modal, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Modal } from 'react-native';
 import SkyButton from './SkyButton';
 
 interface AlertModalProps {
@@ -7,9 +7,6 @@ interface AlertModalProps {
   text: string[];
   onConfirm: () => void;
 }
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 const AlertModal: React.FC<AlertModalProps> = ({
   isVisible,
@@ -42,8 +39,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: screenWidth * 0.5,
-    height: screenHeight * 0.35,
+    width: '50%',
+    height: '30%',
     backgroundColor: '#0084BE',
     borderRadius: 20,
     padding: 20,
@@ -56,7 +53,7 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     color: '#FFFFFF',
     marginBottom: 20,
-    fontSize: screenWidth * 0.027,
+    fontSize: 28,
     textAlign: 'center',
   },
   buttonContainer: {
@@ -65,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   buttonStyle: {
-    width: screenWidth * 0.14,
+    width: '30%',
   },
 });
 

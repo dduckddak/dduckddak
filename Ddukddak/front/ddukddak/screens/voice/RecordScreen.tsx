@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
-  Dimensions,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
@@ -40,9 +39,6 @@ const scripts = [
       '이 사건 이후로 소녀는 \n 모든 사람이 꿈을 이룰 수 있다고 굳게 믿게 되었습니다.\n 마녀는 오늘도 숲속에서 \n 다른 사람들의 꿈을 실현시키기 위해 \n마법을 준비하고 있습니다.',
   },
 ];
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 function RecordScreen() {
   const [currentScriptIndex, setCurrentScriptIndex] = useState(0);
@@ -175,11 +171,7 @@ function RecordScreen() {
         <GreenButton
           content={recording ? '녹음 종료' : '녹음 시작'}
           onPress={recording ? stopRecording : startRecording}
-          style={{
-            width: screenWidth * 0.15,
-            margin: screenWidth * 0.05,
-            marginBottom: -screenWidth * 0.012,
-          }}
+          style={{ width: '15%', margin: 70, marginBottom: -15 }}
         />
         <EndRecordModal
           visible={modalVisible}
@@ -222,24 +214,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scriptTextContainer: {
-    width: screenWidth * 0.7,
-    height: screenHeight * 0.53,
+    width: '70%',
+    height: '85%',
     backgroundColor: '#5FB0CC',
     borderRadius: 15,
     justifyContent: 'center',
   },
   counterText: {
-    fontSize: screenWidth * 0.03,
+    fontSize: 30,
     marginTop: 10,
     fontFamily: 'im-hyemin-bold',
   },
   text: {
-    fontSize: screenWidth * 0.032,
+    fontSize: 36,
     fontFamily: 'im-hyemin-bold',
     color: 'white',
     marginBottom: 20,
     textAlign: 'center',
-    lineHeight: screenHeight * 0.08,
+    lineHeight: 60,
   },
   button: {
     paddingVertical: 10,

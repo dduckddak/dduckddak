@@ -16,15 +16,12 @@ import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import AlertModal from '../../components/AlertModal';
-import useTouchEffect from '../../components/sound/TouchEffect'
+import useTouchEffect from '../../components/sound/TouchEffect';
 
 interface Voice {
   voiceId: number;
   voiceName: string;
 }
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
@@ -47,7 +44,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -57,10 +54,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.05,
-        left: screenWidth * 0.005,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.2,
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -73,13 +70,14 @@ function VoiceScreen() {
   const navigation = useNavigation();
   const { playTouch } = useTouchEffect();
 
+  const { width } = Dimensions.get('screen');
   // 오리야 놀아라
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(duckPosition, {
-          toValue: { x: screenWidth * 0.1, y: 0 },
+          toValue: { x: width * 0.1, y: 0 },
           duration: 2000,
           useNativeDriver: true,
         }),
@@ -225,16 +223,18 @@ function VoiceScreen() {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity onPress={() =>
-        playTouch('duck')
-      } style={[styles.duck,
-      {
-        transform: [
-          { translateX: duckPosition.x },
-          { translateY: duckPosition.y },
-        ],
-      }
-      ]}>
+      <TouchableOpacity
+        onPress={() => playTouch('duck')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      >
         <Animated.Image
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
@@ -255,7 +255,7 @@ function VoiceScreen() {
       />
       <GreenButton
         content="목소리 추가하기"
-        style={{ width: screenWidth * 0.2, paddingBottom: screenWidth * 0.035 }}
+        style={{ width: 220, paddingBottom: 40 }}
         onPress={() => navigation.navigate('addvoice' as never)}
       />
       <AlertModal
@@ -280,42 +280,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#40AF91',
     alignItems: 'center',
     justifyContent: 'center',
-    width: screenWidth * 0.1,
-    height: screenHeight * 0.05,
+    width: 120,
+    height: 50,
     borderRadius: 5,
   },
-  cloud: {
-    position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.15,
-  },
-  cloud1: {
-    position: 'absolute',
-    top: screenHeight * 0.03,
-    left: screenWidth * 0.35,
-    width: screenWidth * 0.17,
-    height: screenHeight * 0.2,
-  },
+  cloud: { position: 'absolute', top: 5, left: 200 },
+  cloud1: { position: 'absolute', top: 30, left: 400, width: 220, height: 140 },
+
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.71,
-    width: screenWidth * 0.1,
-    height: screenHeight * 0.17,
+    top: 5,
+    left: 850,
+    width: 150,
+    height: 110,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: {
-    position: 'absolute',
-    top: screenHeight * 0.15,
-    left: screenWidth * 0.88,
-  },
+  cloud3: { position: 'absolute', top: 125, left: 1000 },
   duck: {
     position: 'absolute',
-    bottom: screenHeight * 0.15,
-    left: screenWidth * 0.04,
-    width: screenWidth * 0.09,
-    height: screenHeight * 0.1,
-    zIndex: 1
+    bottom: '17%',
+    left: '2%',
+    width: '10%',
+    height: '12%',
+    zIndex: 1,
   },
   imageBackground: {
     flex: 1,
@@ -342,7 +329,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#B7E29B',
-    width: screenWidth * 0.415,
+    width: 500,
     margin: 30,
     padding: 15,
     borderRadius: 5,
@@ -353,23 +340,19 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   cardTitle: {
-    fontSize: screenWidth * 0.036,
+    fontSize: 35,
     fontFamily: 'im-hyemin-bold',
   },
 
   buttonText: {
     fontFamily: 'im-hyemin-bold',
-    fontSize: screenWidth * 0.016,
+    fontSize: 20,
     color: 'white',
   },
 
-  trash: {
-    width: screenWidth * 0.05,
-    height: screenHeight * 0.08
-  },
-
+  trash: { width: 60, height: 60 },
   duckImage: {
     width: '100%',
     height: '100%',
-  }
+  },
 });

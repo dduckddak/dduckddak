@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   Alert,
   Animated,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
 import ImagePickerComponent from '../../components/picture/ImagePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -20,9 +21,6 @@ const { width } = Dimensions.get('screen');
 
 const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
 const CARD_HEIGHT = CARD_WIDTH;
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 // 구름 두둥실
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
@@ -56,10 +54,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.05,
-        left: screenWidth * 0.005,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.2,
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -262,30 +260,23 @@ const styles = StyleSheet.create({
   },
   duck: {
     position: 'absolute',
-    bottom: screenHeight * 0.15 - 750,
-    left: screenWidth * 0.04,
-    width: screenWidth * 0.09,
-    height: screenHeight * 0.1,
+    bottom: '17%',
+    left: '2%',
+    width: '10%',
+    height: '12%',
+
     zIndex: 10,
   },
-  cloud: {
-    position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.15,
-  },
+  cloud: { position: 'absolute', top: 5, left: 200 },
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.52,
-    width: screenWidth * 0.17,
-    height: screenHeight * 0.17,
+    top: 5,
+    left: 620,
+    width: 200,
+    height: 130,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: {
-    position: 'absolute',
-    top: screenHeight * 0.15,
-    left: screenWidth * 0.88,
-  },
+  cloud3: { position: 'absolute', top: 125, left: 1000 },
   container: {
     flex: 1,
     alignContent: 'center',

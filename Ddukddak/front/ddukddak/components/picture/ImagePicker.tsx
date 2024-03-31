@@ -1,14 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, View, Platform, Dimensions, Modal } from 'react-native';
+import { StyleSheet, View, Platform, Modal } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import GreenButton from '../GreenButton';
 import PictureModal from './PictureModal';
 import { addPhoto } from '../../api/photoApi';
 import AlertModal from '../AlertModal';
 import Loading from '../Loading';
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 const ImagePickerComponent: React.FC = () => {
   // 카메라, 갤러리 모달
@@ -168,8 +165,8 @@ export default ImagePickerComponent;
 
 const styles = StyleSheet.create({
   buttonStyle: {
-    width: screenWidth * 0.15,
-    margin: screenHeight * 0.05,
+    width: 180,
+    margin: 30,
   },
   centeredLoadingView: {
     flex: 1,

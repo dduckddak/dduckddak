@@ -7,7 +7,6 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import MainScreen from './MainScreen';
@@ -19,9 +18,6 @@ interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
-
 const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -29,12 +25,12 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [mainPageCharacter, setMainPageCharacter] = useState();
   const [soundObject, setSoundObject] = useState<Audio.Sound>();
 
-  const handleNextStep = async() => {
+  const handleNextStep = async () => {
     if (soundObject) {
       await soundObject.stopAsync();
     }
     setCurrentStep((prevStep) => (prevStep < 6 ? prevStep + 1 : prevStep));
-  }
+  };
   const handlePreviousStep = () =>
     setCurrentStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
 
@@ -64,9 +60,9 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
     const setIntroCheck = async () => {
       await SecureStore.setItemAsync('introChecked', 'true');
     };
-  
+
     setIntroCheck();
-  
+
     const updateMainImage = () => {
       if (userSex === 'M') {
         setMainPageCharacter(require('../../assets/images/DD/뚝이.png'));
@@ -76,10 +72,13 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
     };
 
     let isMounted = true; // 컴포넌트 마운트 상태를 추적하는 플래그
-  
+
     const loadVoice = async () => {
       // currentStep에 해당하는 음성 파일이 유효한지 확인
-      const source = userSex === 'M' ? ddukFiles[currentStep - 1] : ddakFiles[currentStep - 1];
+      const source =
+        userSex === 'M'
+          ? ddukFiles[currentStep - 1]
+          : ddakFiles[currentStep - 1];
       if (!source || !isMounted) {
         return;
       }
@@ -88,11 +87,14 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
         await soundObject.stopAsync();
         await soundObject.unloadAsync();
       }
-  
+
       // 새 소리 로드
-      const voiceFile = userSex === 'M' ? ddukFiles[currentStep - 1] : ddakFiles[currentStep - 1];
+      const voiceFile =
+        userSex === 'M'
+          ? ddukFiles[currentStep - 1]
+          : ddakFiles[currentStep - 1];
       const newSoundObject = new Audio.Sound();
-  
+
       try {
         await newSoundObject.loadAsync(voiceFile);
         await newSoundObject.playAsync();
@@ -101,10 +103,10 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
         console.error('Error loading voice:', error);
       }
     };
-  
+
     updateMainImage();
     loadVoice();
-  
+
     return () => {
       isMounted = false;
       soundObject?.unloadAsync(); // 컴포넌트 언마운트 시 언로드

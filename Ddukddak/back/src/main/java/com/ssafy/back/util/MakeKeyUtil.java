@@ -21,7 +21,7 @@ public class MakeKeyUtil {
 
 	//bookId 를 이용한 동화책 그림 키 제작
 	public static String page(int bookId, int pageSeq, boolean isFace) {
-		return "default_book/" + bookId + (isFace ? "/nonblank/" : "/blank/") + pageSeq+".png";
+		return "default_book/" + bookId + (isFace ? "/nonblank/" : "/blank/") + pageSeq + ".png";
 	}
 
 	//대화 상대 역할 기본 이미지
@@ -56,6 +56,11 @@ public class MakeKeyUtil {
 
 	//기본 동화 스크립트 음성 키
 	public static String bookScriptSound(int bookId, int pageSeq, int scriptSeq) {
-		return "default_book/" + bookId + "/sound/" + pageSeq + "/" + scriptSeq+".mp3";
+		return "default_book/" + bookId + "/sound/" + pageSeq + "/" + scriptSeq + ".mp3";
+	}
+
+	//대화 뚝딱 환영 인사
+	public static String welcomeComment(int bookId) {
+		return "default_book/" + bookId + "/sound/" + "welcomeComment.mp3";
 	}
 }

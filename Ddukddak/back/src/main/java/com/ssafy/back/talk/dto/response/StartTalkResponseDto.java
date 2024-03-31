@@ -19,9 +19,13 @@ public class StartTalkResponseDto extends ResponseDto {
 	private String subName;
 	private String subBasic;
 	private String subTalk;
+	private String welcomeComment;
+	private String welcomeCommentSound;
 
-	public static ResponseEntity<StartTalkResponseDto> success(String subName, String subBasic, String subTalk) {
-		StartTalkResponseDto responseBody = new StartTalkResponseDto(subName, subBasic, subTalk);
+	public static ResponseEntity<StartTalkResponseDto> success(String subName, String subBasic, String subTalk,
+		String welcomeComment, String welcomeCommentSound) {
+		StartTalkResponseDto responseBody = new StartTalkResponseDto(subName, subBasic, subTalk, welcomeComment,
+			welcomeCommentSound);
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
 	}
 

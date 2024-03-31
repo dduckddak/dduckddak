@@ -42,16 +42,22 @@ public class BookEntity {
 	@Column(name = "book_page", nullable = false)
 	private Integer bookPage;
 
-	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
-	private List<MakeBookEntity> makeBookEntities = new ArrayList<>();
+	@Column(name = "main_person", nullable = true, length = 30)
+	private String mainPerson;
+
+	@Column(name = "sub_person", nullable = true, length = 30)
+	private String subPerson;
 
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
-	private List<PersonEntity> personEntities = new ArrayList<>();
+	private List<MakeBookEntity> makeBookEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "bookEntity", fetch = FetchType.LAZY)
 	private List<ScriptEntity> scriptEntities = new ArrayList<>();
+
+	@OneToOne(mappedBy = "bookEntity", fetch = FetchType.LAZY)
+	private PersonEntity personEntity = new PersonEntity();
 
 }

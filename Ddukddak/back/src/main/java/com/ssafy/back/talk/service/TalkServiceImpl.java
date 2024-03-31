@@ -23,6 +23,7 @@ import com.mashape.unirest.http.Unirest;
 import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
+import com.ssafy.back.talk.dto.StartTalkDto;
 import com.ssafy.back.talk.dto.request.SttRequestDto;
 import com.ssafy.back.talk.dto.request.TalkRequestDto;
 import com.ssafy.back.talk.dto.response.StartTalkResponseDto;
@@ -63,10 +64,10 @@ public class TalkServiceImpl implements TalkService {
 
 	@Override
 	public ResponseEntity<? super StartTalkResponseDto> startTalk(int bookId) {
-		String subName = talkRepository.findPersonName_bookId(bookId);
+		StartTalkDto startTalkDto = talkRepository.findPersonName_bookId(bookId);
 
 		//찾는 값이 없는 경우
-		if (subName == null) {
+		if (startTalkDto == null) {
 			logger.debug(bookId + " : " + ResponseMessage.DATABASE_ERROR);
 
 			return ResponseDto.databaseError();
@@ -74,17 +75,21 @@ public class TalkServiceImpl implements TalkService {
 
 		String basicKey = MakeKeyUtil.subBasic(bookId);
 		String talkKey = MakeKeyUtil.subTalk(bookId);
+		String welcomeCommentKey = MakeKeyUtil.welcomeComment(bookId);
 
-		if (amazonS3.doesObjectExist(bucket, basicKey) && amazonS3.doesObjectExist(bucket, talkKey)) {
+		if (amazonS3.doesObjectExist(bucket, basicKey) && amazonS3.doesObjectExist(bucket, talkKey)
+			&& amazonS3.doesObjectExist(bucket, welcomeCommentKey)) {
 			String subBasic = amazonS3.getUrl(bucket, basicKey).toString();
 			String subTalk = amazonS3.getUrl(bucket, talkKey).toString();
+			String welcomeCommentSound = amazonS3.getUrl(bucket, welcomeCommentKey).toString();
 
 			logger.info(bookId + " :\n"
-				+ "역할 이름 - " + subName + "\n"
+				+ "역할 이름 - " + startTalkDto.getSubName() + "\n"
 				+ "기본 이미지 경로 - " + subBasic + "\n"
 				+ "대화 이미지 경로 - " + subTalk);
 
-			return StartTalkResponseDto.success(subName, subBasic, subTalk);
+			return StartTalkResponseDto.success(startTalkDto.getSubName(), subBasic, subTalk,
+				startTalkDto.getWelcomeComment(), welcomeCommentSound);
 		} else {
 			logger.debug(ResponseMessage.S3_ERROR);
 			logger.error("S3에서 파일을 찾을 수 없습니다.");

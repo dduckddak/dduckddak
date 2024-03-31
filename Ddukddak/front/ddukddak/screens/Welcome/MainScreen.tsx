@@ -15,8 +15,8 @@ interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
+const screenWidth = Dimensions.get('screen').height;
+const screenHeight = Dimensions.get('screen').width;
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
@@ -155,21 +155,21 @@ const styles = StyleSheet.create({
   },
   cloud: {
     position: 'absolute',
-    top: screenHeight * 0.01,
+    top: screenHeight * 0.001,
     left: screenWidth * 0.12,
   },
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.01,
-    left: screenWidth * 0.45,
-    width: screenWidth * 0.15,
-    height: screenHeight * 0.2,
+    top: screenHeight * 0.001,
+    left: screenWidth * 0.7,
+    width: screenWidth * 0.16,
+    height: screenHeight * 0.12,
     transform: [{ scaleX: -1 }],
   },
   cloud3: {
     position: 'absolute',
-    top: screenHeight * 0.2,
-    left: screenWidth * 0.82,
+    top: screenHeight * 0.1,
+    right: -screenWidth * 1.1,
   },
   mainContainer: {
     flex: 1,
@@ -190,19 +190,19 @@ const styles = StyleSheet.create({
   // 내가주인공 말풍선
   greenButton: { left: screenWidth * 0.26, top: screenHeight * 0.06 },
   icon: {
-    width: screenWidth * 0.34,
-    height: screenHeight * 0.17,
+    width: screenWidth * 0.55,
+    height: screenHeight * 0.1,
     margin: 40,
   },
   bookicon: {
-    width: screenWidth * 0.585,
-    height: screenHeight * 0.275,
+    width: screenWidth * 0.85,
+    height: screenHeight * 0.16,
   },
   ddak2: {
     position: 'absolute',
     left: screenWidth * 0.008,
     top: screenHeight * 0.2,
-    width: screenWidth * 0.31,
-    height: screenHeight * 0.53,
+    width: screenWidth * 0.37,
+    height: screenHeight * 0.26,
   },
 });

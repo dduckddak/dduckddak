@@ -8,13 +8,14 @@ import {
   ImageBackground,
   Dimensions, // Dimensions import 추가
 } from 'react-native';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { getMakeBookDetail } from '../../api/makeBookApi';
 import { BookDetail, PageData } from '../../types/types';
 import { Audio, AVPlaybackStatus } from 'expo-av';
 
 import * as url from 'node:url';
 import { Sound } from 'expo-av/build/Audio/Sound';
+import ReloadModal from '../../components/ReloadModal';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -29,6 +30,8 @@ const MakingBook: React.FC = () => {
   const [bookDetails, setBookDetails] = useState<PageData[]>([]);
   const [isPlay, setIsPlay] = useState<boolean[]>([]);
   const soundObjectRef = useRef<Sound | null>(null);
+  const [isReloadModal, setIsReloadModal] = useState(false);
+  const navigation = useNavigation()
 
   const route = useRoute<BookDetailScreenRouteProp>();
   const makeBookId = route.params.makeBookId;
@@ -68,7 +71,7 @@ const MakingBook: React.FC = () => {
     ];
 
     const playSounds = async () => {
-      for (const sound of combinedScriptSounds) {
+      for (const [i, sound] of combinedScriptSounds.entries()) {
         // 현재 진행중이던 페이지 인덱스에서 벗어났으면 해당 스크립트들에 대한 재생 종료
         if (!isPlay[currentIndex]) {
           break;
@@ -101,7 +104,15 @@ const MakingBook: React.FC = () => {
 
         await soundObject.unloadAsync();
         soundObjectRef.current = null;
+
+        // console.log(`진행상황 체크 i = ${i} , 스크립트 길이 = ${combinedScriptSounds.length}, currentIndex = ${currentIndex}, bookdetails.length = ${bookDetails.length}`)
+        // 마지막 요소에 도착했을 때, currentIndex가 bookDetails.length - 1과 같으면 isReloadModal을 true로 설정한다.
+        if (i === combinedScriptSounds.length - 1 && currentIndex === bookDetails.length - 2) {
+
+          setIsReloadModal(true);
+        }
       }
+
     };
 
     playSounds();
@@ -201,6 +212,19 @@ const MakingBook: React.FC = () => {
           />
         </TouchableOpacity>
       </View>
+      <ReloadModal
+        isVisible={isReloadModal}
+        onRepeat={() => {
+          setCurrentIndex(0)
+          setIsReloadModal(false);
+        } /* 다시읽기 버튼을 클릭하면 첫 페이지로 이동하면서 모달 닫기 */}
+        onHome={() => {
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          });
+        } /* 홈으로 버튼이 클릭되었을 때 수행할 동작을 정의합니다 */}
+      />
     </View>
   );
 };

@@ -75,6 +75,12 @@ function PictureScreen() {
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [refreshKey, setRefreshKey] = useState(0); // 사진 업로드 시 새로 고침
+
+  const onUploadSuccess = () => {
+    setRefreshKey((prevKey) => prevKey + 1); // 사진 업로드 성공 후 refreshKey 업데이트
+  };
+
   // 오리야 놀아라
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   useEffect(() => {
@@ -121,7 +127,7 @@ function PictureScreen() {
 
   useEffect(() => {
     readPhotos();
-  }, [imageData]);
+  }, [refreshKey]);
 
   // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {

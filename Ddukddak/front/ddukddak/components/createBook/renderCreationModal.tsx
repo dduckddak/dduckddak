@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
-import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
 import { useUserStore } from '../../store/userStore';
 import SkyButton from '../SkyButton';
+import Loading from '../Loading';
 
 const CreationModal = ({
   creationModalVisible,
@@ -15,19 +15,33 @@ const CreationModal = ({
   handleMakeBook: () => Promise<boolean>;
 }) => {
   const navigation = useNavigation();
+
   // 이걸 어떻게 해야할지 고민
   // 동화생성 완료 후 너가 할지 이름 넣어줄지,,,
   const userName = useUserStore((state) => state.userName);
 
   const makeBookConfirm = async () => {
+    // setIsLoading(true);
     const success = await handleMakeBook();
 
     if (success) {
+      // setIsLoading(false);
       navigation.navigate('home' as never);
     } else {
+      // setIsLoading(false);
       console.log('뭔가잘못됨...');
     }
   };
+
+  // if (isLoading) {
+  //   return (
+  //     <Modal visible={isLoading} transparent={true} animationType="fade">
+  //       <View style={styles.centeredLoadingView}>
+  //         <Loading />
+  //       </View>
+  //     </Modal>
+  //   );
+  // }
 
   return (
     <Modal visible={creationModalVisible} transparent animationType="slide">
@@ -96,5 +110,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
     gap: 20,
+  },
+  centeredLoadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });

@@ -9,17 +9,25 @@ import {
   ImageBackground,
   Dimensions,
   Animated,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
 
-import { getMakeBookList, MakeBookListData } from '../../api/makeBookApi';
+import {
+  deleteMakeBook,
+  getMakeBookList,
+  MakeBookListData,
+} from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 
 interface BookItemsProps {
   title: string;
-  coverImage: any;
+  coverImage: string;
   makeBookId: number;
+  isDeleteMode: boolean;
+  selectedItems: number[];
+  setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
   navigation: any;
 }
 
@@ -27,12 +35,30 @@ const BookItems: React.FC<BookItemsProps> = ({
   title,
   coverImage,
   makeBookId,
+  isDeleteMode,
+  selectedItems,
+  setSelectedItems,
   navigation,
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   useEffect(() => {
     return () => CharrrrAnimation.removeAllListeners();
   });
+
+  const isSelected = selectedItems.includes(makeBookId);
+
+  const handleSelectItem = () => {
+    if (isDeleteMode) {
+      // 삭제 모드일 때의 로직
+      const newSelectedItems = isSelected
+        ? selectedItems.filter((id) => id !== makeBookId)
+        : [...selectedItems, makeBookId];
+      setSelectedItems(newSelectedItems);
+    } else {
+      // 삭제 모드가 아닐 때의 로직 (상세 페이지로 이동 등)
+      handlePress();
+    }
+  };
 
   const handlePress = () => {
     CharrrrAnimation.setValue(1);
@@ -53,23 +79,25 @@ const BookItems: React.FC<BookItemsProps> = ({
   };
 
   return (
-    <TouchableOpacity style={styles.bookItem} onPress={handlePress}>
-      <Animated.View
+    <TouchableOpacity style={styles.bookItem} onPress={handleSelectItem}>
+      <View
         style={[
-          {
-            transform: [{ scale: CharrrrAnimation }],
-          },
+          styles.bookContainer,
+          isSelected && isDeleteMode ? styles.selectedItem : {},
         ]}
       >
         <Image source={{ uri: coverImage }} style={styles.coverImage} />
         <Text style={styles.title}>{title}</Text>
-      </Animated.View>
+      </View>
     </TouchableOpacity>
   );
 };
 
 const BookListScreen: React.FC = () => {
   const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
+
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const fetchMakeBooks = async () => {
     try {
@@ -84,6 +112,19 @@ const BookListScreen: React.FC = () => {
   useEffect(() => {
     fetchMakeBooks();
   }, []);
+
+  const handleDeleteItems = async () => {
+    console.log(selectedItems);
+    try {
+      await deleteMakeBook(selectedItems);
+      setIsDeleteMode(false);
+      setSelectedItems([]);
+      fetchMakeBooks();
+    } catch (error) {
+      console.error('Failed to delete items', error);
+      Alert.alert('Error', 'Failed to delete books');
+    }
+  };
 
   const navigation = useNavigation();
 
@@ -101,6 +142,9 @@ const BookListScreen: React.FC = () => {
               title={item.makeBookTitle}
               coverImage={item.makeBookCover}
               makeBookId={item.makeBookId}
+              isDeleteMode={isDeleteMode}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
               navigation={navigation}
             />
           )}
@@ -109,10 +153,23 @@ const BookListScreen: React.FC = () => {
           contentContainerStyle={styles.bookList}
         />
       </View>
-      <Image
-        source={require('../../assets/images/Trash.png')}
+      <TouchableOpacity
         style={styles.trash}
-      />
+        onPress={() => setIsDeleteMode(!isDeleteMode)}
+      >
+        <Image
+          source={require('../../assets/images/Trash.png')}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </TouchableOpacity>
+      {isDeleteMode && (
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={handleDeleteItems}
+        >
+          <Text>Delete Selected</Text>
+        </TouchableOpacity>
+      )}
     </ImageBackground>
   );
 };
@@ -158,4 +215,11 @@ const styles = StyleSheet.create({
     right: '92.5%',
     top: '86%',
   },
+  deleteButton: {
+    position: 'absolute',
+    right: '92.5%',
+    top: '96%',
+  },
+  bookContainer: {},
+  selectedItem: {},
 });

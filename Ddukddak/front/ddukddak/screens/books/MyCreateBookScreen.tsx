@@ -13,7 +13,11 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
 
-import { getMakeBookList, MakeBookListData } from '../../api/makeBookApi';
+import {
+  getMakeBookList,
+  MakeBookListData,
+  deleteMakeBook,
+} from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 
 interface BookItemsProps {
@@ -23,6 +27,54 @@ interface BookItemsProps {
   navigation: any;
 }
 
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
+
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const cloudAnimationValue = useState(new Animated.Value(0))[0];
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -20],
+  });
+
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: screenHeight * 0.05,
+        left: screenWidth * 0.005,
+        width: screenWidth * 0.2,
+        height: screenHeight * 0.2,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
+
 const BookItems: React.FC<BookItemsProps> = ({
   title,
   coverImage,
@@ -30,13 +82,15 @@ const BookItems: React.FC<BookItemsProps> = ({
   navigation,
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
+
   useEffect(() => {
-    return () => CharrrrAnimation.removeAllListeners();
-  });
+    return () => {
+      CharrrrAnimation.removeAllListeners();
+    };
+  }, []);
 
   const handlePress = () => {
     CharrrrAnimation.setValue(1);
-    // CharrrrAnimation.addListener(({ value }) => console.log(value));
 
     setTimeout(() => {
       CharrrrAnimation.stopAnimation();
@@ -87,11 +141,66 @@ const BookListScreen: React.FC = () => {
 
   const navigation = useNavigation();
 
+  const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(duckPosition, {
+          toValue: { x: screenWidth * 0.1, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+        Animated.timing(duckPosition, {
+          toValue: { x: 2, y: 0 },
+          duration: 2000,
+          useNativeDriver: false,
+        }),
+      ]),
+    ).start();
+  }, [duckPosition]);
+
   return (
     <ImageBackground
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud1}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
+      <Animated.Image
+        source={require('../../assets/images/duck.png')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      />
       <View>
         <FlatList
           ListEmptyComponent={<EmptyListComponent />}
@@ -124,17 +233,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 90,
   },
+  cloud: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.15,
+  },
+  cloud1: {
+    position: 'absolute',
+    top: screenHeight * 0.03,
+    left: screenWidth * 0.35,
+    width: screenWidth * 0.17,
+    height: screenHeight * 0.2,
+  },
+  cloud2: {
+    position: 'absolute',
+    top: screenHeight * 0.005,
+    left: screenWidth * 0.71,
+    width: screenWidth * 0.1,
+    height: screenHeight * 0.17,
+    transform: [{ scaleX: -1 }],
+  },
+  cloud3: {
+    position: 'absolute',
+    top: screenHeight * 0.15,
+    left: screenWidth * 0.88,
+  },
+  duck: {
+    position: 'absolute',
+    bottom: screenHeight * 0.15,
+    left: screenWidth * 0.04,
+    width: screenWidth * 0.09,
+    height: screenHeight * 0.1,
+  },
   bookItem: {
-    margin: 20,
+    marginHorizontal: screenWidth * 0.048,
+    marginTop: screenHeight * 0.04,
     alignItems: 'center',
   },
   coverImage: {
-    width: Dimensions.get('screen').width * 0.4,
-    height: Dimensions.get('screen').height * 0.65,
+    width: Dimensions.get('screen').width * 0.35,
+    height: Dimensions.get('screen').height * 0.56,
     resizeMode: 'cover',
     borderRadius: 10,
-    borderWidth: 6,
-    borderColor: Colors.green,
+    borderWidth: 4,
+    borderColor: 'black',
     zIndex: 20,
   },
   title: {
@@ -143,7 +285,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: 'center',
     textShadowColor: 'white',
-    textShadowOffset: { width: 5, height: 4 },
+    textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 3,
   },
   imageBackground: {
@@ -155,7 +297,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 90,
     height: 90,
-    right: '92.5%',
+    left: '92%',
     top: '86%',
+    elevation: 5,
   },
 });

@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height * 0.7,
     width: Dimensions.get('screen').width * 0.9,
     paddingVertical: 20,
-    marginTop: '2%',
+    marginTop: Dimensions.get('screen').height * 0.01,
     padding: '2%',
     borderRadius: 15,
   },
   naviBtn: {
     width: Dimensions.get('screen').width * 0.2,
-    marginTop: Dimensions.get('screen').height * 0.02,
+    marginTop: Dimensions.get('screen').height * 0.01,
   },
 
   imageContainer: {
@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'im-hyemin-bold',
     fontSize: 48,
+    marginTop: Dimensions.get('screen').height * 0.08,
   },
 });
 

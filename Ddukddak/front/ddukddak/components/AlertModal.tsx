@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: screenWidth * 0.5,
     height: screenHeight * 0.35,
     backgroundColor: '#0084BE',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
     alignItems: 'center',
     flexDirection: 'column',
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   modalText: {
+    fontFamily: 'im-hyemin-bold',
     color: '#FFFFFF',
     marginBottom: 20,
     fontSize: screenWidth * 0.027,

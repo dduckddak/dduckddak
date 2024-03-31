@@ -107,7 +107,7 @@ const MakingBook: React.FC = () => {
 
         // console.log(`진행상황 체크 i = ${i} , 스크립트 길이 = ${combinedScriptSounds.length}, currentIndex = ${currentIndex}, bookdetails.length = ${bookDetails.length}`)
         // 마지막 요소에 도착했을 때, currentIndex가 bookDetails.length - 1과 같으면 isReloadModal을 true로 설정한다.
-        if (i === combinedScriptSounds.length - 1 && currentIndex === bookDetails.length - 2) {
+        if (i === combinedScriptSounds.length - 1 && currentIndex === bookDetails.length - 2 && isPlay[currentIndex]) {
 
           setIsReloadModal(true);
         }

@@ -192,7 +192,7 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
       </View>
       <TouchableOpacity onPress={handleSave}>
         <Image
-          source={require('../../assets/images/coloring/plane.png')}
+          source={require('../../assets/images/coloring/tulip.png')}
           style={styles.saveButtonContainer}
         />
       </TouchableOpacity>
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   webviewContainer: {
-    marginTop: Dimensions.get('window').height * 0.11,
+    marginTop: Dimensions.get('window').height * 0.13,
     height: Dimensions.get('screen').height * 0.8,
     width: Dimensions.get('screen').width * 0.85,
     padding: 25,
@@ -230,24 +230,24 @@ const styles = StyleSheet.create({
   sideImageTop: {
     position: 'absolute',
     transform: [{ rotate: '-90deg' }],
-    top: -85,
-    left: 185,
+    top: -Dimensions.get('screen').height * 0.115,
+    left: Dimensions.get('screen').width * 0.02,
     width: 100,
     height: 100,
   },
   sideImageBottom: {
     position: 'absolute',
     transform: [{ rotate: '-90deg' }],
-    top: -80,
-    left: 85,
+    top: -Dimensions.get('screen').height * 0.108,
+    left: Dimensions.get('screen').width * 0.12,
     width: 93,
     height: 100,
   },
   ballon: {
     position: 'absolute',
-    top: -80,
-    right: 80,
-    width: 700,
+    top: -Dimensions.get('screen').height * 0.1,
+    right: Dimensions.get('screen').width * 0.064,
+    width: 708,
     height: 95,
   },
   paletteButtonContainer: {
@@ -262,9 +262,9 @@ const styles = StyleSheet.create({
   },
   saveButtonContainer: {
     position: 'absolute',
-    top: -Dimensions.get('screen').height * 0.15,
-    left: Dimensions.get('screen').width * 0.4,
-    width: 110,
+    top: -Dimensions.get('screen').height * 0.16,
+    left: Dimensions.get('screen').width * 0.39,
+    width: 120,
     height: 130,
   },
 });

@@ -16,6 +16,7 @@ import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
 import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import AlertModal from '../../components/AlertModal';
+import useTouchEffect from '../../components/sound/TouchEffect'
 
 interface Voice {
   voiceId: number;
@@ -46,7 +47,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -70,6 +71,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 
 function VoiceScreen() {
   const navigation = useNavigation();
+  const { playTouch } = useTouchEffect();
 
   // 오리야 놀아라
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
@@ -79,12 +81,12 @@ function VoiceScreen() {
         Animated.timing(duckPosition, {
           toValue: { x: screenWidth * 0.1, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
         Animated.timing(duckPosition, {
           toValue: { x: 2, y: 0 },
           duration: 2000,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }),
       ]),
     ).start();
@@ -223,18 +225,21 @@ function VoiceScreen() {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Animated.Image
-        source={require('../../assets/images/duck.png')}
-        style={[
-          styles.duck,
-          {
-            transform: [
-              { translateX: duckPosition.x },
-              { translateY: duckPosition.y },
-            ],
-          },
-        ]}
-      />
+      <TouchableOpacity onPress={() =>
+        playTouch('duck')
+      } style={[styles.duck,
+      {
+        transform: [
+          { translateX: duckPosition.x },
+          { translateY: duckPosition.y },
+        ],
+      }
+      ]}>
+        <Animated.Image
+          source={require('../../assets/images/duck.png')}
+          style={styles.duckImage}
+        />
+      </TouchableOpacity>
       <FlatList
         data={voiceData}
         renderItem={renderItem}
@@ -310,6 +315,7 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.04,
     width: screenWidth * 0.09,
     height: screenHeight * 0.1,
+    zIndex: 1
   },
   imageBackground: {
     flex: 1,
@@ -356,5 +362,14 @@ const styles = StyleSheet.create({
     fontSize: screenWidth * 0.016,
     color: 'white',
   },
-  trash: { width: screenWidth * 0.05, height: screenHeight * 0.08 },
+
+  trash: {
+    width: screenWidth * 0.05,
+    height: screenHeight * 0.08
+  },
+
+  duckImage: {
+    width: '100%',
+    height: '100%',
+  }
 });

@@ -21,19 +21,23 @@ type Images = {
 }[];
 
 interface SketchbookProps {
-  images: Images,
-  navigation: NavigationProp<ParamListBase>,
-  isLoading?: boolean
+  images: Images;
+  navigation: NavigationProp<ParamListBase>;
+  isLoading?: boolean;
 }
 
-const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images, isLoading }) => {
+const SketchbookList: React.FC<SketchbookProps> = ({
+  navigation,
+  images,
+  isLoading,
+}) => {
   const handlePress = (item: { coloringFile: string; coloringId: number }) => {
     navigation.navigate('coloringDetail', item); // 이동
   };
 
   const renderItem = ({
-                        item,
-                      }: {
+    item,
+  }: {
     item: { coloringFile: string; coloringId: number };
   }) => (
     <TouchableOpacity
@@ -55,8 +59,11 @@ const SketchbookList: React.FC<SketchbookProps> = ({ navigation, images, isLoadi
           keyExtractor={(item) => item.coloringId.toString()}
           numColumns={2}
           contentContainerStyle={styles.flatListContentContainer}
-          ListEmptyComponent={isLoading && images.length === 0 ? <EmptyListComponent imageHeightRatio={0.55} /> : null}
-
+          ListEmptyComponent={
+            isLoading && images.length === 0 ? (
+              <EmptyListComponent imageHeightRatio={0.55} />
+            ) : null
+          }
         />
       </View>
       <GreenButton
@@ -136,7 +143,7 @@ const styles = StyleSheet.create({
   },
   naviBtn: {
     width: Dimensions.get('screen').width * 0.15,
-    marginTop: Dimensions.get('screen').height * 0.02,
+    marginTop: Dimensions.get('screen').height * 0.01,
   },
 });
 

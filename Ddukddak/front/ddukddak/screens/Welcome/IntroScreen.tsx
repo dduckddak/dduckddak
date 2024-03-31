@@ -29,8 +29,12 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const [mainPageCharacter, setMainPageCharacter] = useState();
   const [soundObject, setSoundObject] = useState<Audio.Sound>();
 
-  const handleNextStep = () =>
+  const handleNextStep = async() => {
+    if (soundObject) {
+      await soundObject.stopAsync();
+    }
     setCurrentStep((prevStep) => (prevStep < 6 ? prevStep + 1 : prevStep));
+  }
   const handlePreviousStep = () =>
     setCurrentStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
 
@@ -38,18 +42,31 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
     navigation.navigate('MainCharacterScreen');
   };
 
-  const dduk1 = require('../../assets/sound/dduk_1.mp3');
-  const dduk2 = require('../../assets/sound/dduk_2.mp3');
-  const ddak1 = require('../../assets/sound/ddak_1.mp3');
-  const ddak2 = require('../../assets/sound/ddak_2.mp3');
+  const characterName = userSex === 'M' ? '뚝이' : '딱이';
+
+  const ddukFiles = [
+    require('../../assets/sound/dduk_1.mp3'),
+    require('../../assets/sound/dduk_2.mp3'),
+    require('../../assets/sound/dduk_3.mp3'),
+    require('../../assets/sound/dduk_4.mp3'),
+    require('../../assets/sound/dduk_5.mp3'),
+  ];
+
+  const ddakFiles = [
+    require('../../assets/sound/ddak_1.mp3'),
+    require('../../assets/sound/ddak_2.mp3'),
+    require('../../assets/sound/ddak_3.mp3'),
+    require('../../assets/sound/ddak_4.mp3'),
+    require('../../assets/sound/ddak_5.mp3'),
+  ];
 
   useEffect(() => {
     const setIntroCheck = async () => {
       await SecureStore.setItemAsync('introChecked', 'true');
     };
-
+  
     setIntroCheck();
-
+  
     const updateMainImage = () => {
       if (userSex === 'M') {
         setMainPageCharacter(require('../../assets/images/DD/뚝이.png'));
@@ -58,37 +75,39 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
       }
     };
 
-    const loadVoice = async (who: any) => {
-      const voice = new Audio.Sound();
-      setSoundObject(soundObject);
+    let isMounted = true; // 컴포넌트 마운트 상태를 추적하는 플래그
+  
+    const loadVoice = async () => {
+      // currentStep에 해당하는 음성 파일이 유효한지 확인
+      const source = userSex === 'M' ? ddukFiles[currentStep - 1] : ddakFiles[currentStep - 1];
+      if (!source || !isMounted) {
+        return;
+      }
+      // 현재 재생 중인 소리가 있으면 멈추고 언로드
+      if (soundObject) {
+        await soundObject.stopAsync();
+        await soundObject.unloadAsync();
+      }
+  
+      // 새 소리 로드
+      const voiceFile = userSex === 'M' ? ddukFiles[currentStep - 1] : ddakFiles[currentStep - 1];
+      const newSoundObject = new Audio.Sound();
+  
       try {
-        console.log(who);
-        await voice.loadAsync(who);
-        await voice.playAsync();
+        await newSoundObject.loadAsync(voiceFile);
+        await newSoundObject.playAsync();
+        setSoundObject(newSoundObject); // 상태 업데이트
       } catch (error) {
-        console.error('Error loading voice: ', error);
+        console.error('Error loading voice:', error);
       }
     };
-
+  
     updateMainImage();
-
-    if (currentStep === 1 && userSex === 'M') {
-      loadVoice(dduk1).catch(console.error);
-    }
-    if (currentStep === 1 && userSex === 'F') {
-      loadVoice(ddak1).catch(console.error);
-    }
-    if (currentStep === 2 && userSex === 'M') {
-      loadVoice(dduk2).catch(console.error);
-    }
-    if (currentStep === 2 && userSex === 'F') {
-      loadVoice(ddak2).catch(console.error);
-    }
-
+    loadVoice();
+  
     return () => {
-      if (soundObject) {
-        soundObject.unloadAsync();
-      }
+      isMounted = false;
+      soundObject?.unloadAsync(); // 컴포넌트 언마운트 시 언로드
     };
   }, [currentStep, userSex]);
 
@@ -157,7 +176,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                   style={styles.ballon}
                 />
                 <Text style={styles.ballontext}>
-                  안녕? {'\n'}난 딱이야!{'\n'}
+                  안녕? {'\n'}난 {characterName}야!{'\n'}
                   뚝딱마을에 온 걸{'\n'} 환영해!
                 </Text>
               </View>

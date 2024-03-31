@@ -6,18 +6,14 @@ import {
   ImageBackground,
   StyleSheet,
   StatusBar,
-  Modal,
   Pressable,
   BackHandler,
-  Keyboard,
-  TouchableWithoutFeedback,
   Image,
   Dimensions,
   Animated,
 } from 'react-native';
 
 import GreenButton from '../../components/GreenButton';
-import SkyButton from '../../components/SkyButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
 import { useFairyStore } from '../../store/fairyStore';
 import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';

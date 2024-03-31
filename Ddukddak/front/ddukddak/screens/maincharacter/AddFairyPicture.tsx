@@ -55,7 +55,7 @@ function AddPicture({ route, navigation }: any) {
   useEffect(() => {
     console.log('Role:', route.params);
     readPhotos();
-  }, []);
+  }, [imageData]);
 
   // 이미지 선택
   const handleSelectImage = (index: number) => {

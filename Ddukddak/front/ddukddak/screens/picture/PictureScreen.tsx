@@ -14,7 +14,7 @@ import ImagePickerComponent from '../../components/picture/ImagePicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getPhotos, deletePhotos } from '../../api/photoApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
-import useTouchEffect from '../../components/sound/TouchEffect'
+import useTouchEffect from '../../components/sound/TouchEffect';
 
 const { width } = Dimensions.get('screen');
 
@@ -46,7 +46,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -123,7 +123,7 @@ function PictureScreen() {
 
   useEffect(() => {
     readPhotos();
-  }, []);
+  }, [imageData]);
 
   // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {
@@ -215,16 +215,18 @@ function PictureScreen() {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity onPress={() =>
-        playTouch('duck')
-      } style={[styles.duck,
-      {
-        transform: [
-          { translateX: duckPosition.x },
-          { translateY: duckPosition.y },
-        ],
-      }
-      ]}>
+      <TouchableOpacity
+        onPress={() => playTouch('duck')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      >
         <Animated.Image
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
@@ -261,7 +263,6 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
     justifyContent: 'center',
-
   },
   duck: {
     position: 'absolute',
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.04,
     width: screenWidth * 0.09,
     height: screenHeight * 0.1,
-    zIndex: 10
+    zIndex: 10,
   },
   cloud: {
     position: 'absolute',
@@ -337,5 +338,5 @@ const styles = StyleSheet.create({
   duckImage: {
     width: '100%',
     height: '100%',
-  }
+  },
 });

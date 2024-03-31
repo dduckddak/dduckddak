@@ -9,22 +9,26 @@ import {
   ImageBackground,
   Dimensions,
   Animated,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
 
 import {
+  deleteMakeBook,
   getMakeBookList,
   MakeBookListData,
-  deleteMakeBook,
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import useTouchEffect from '../../components/sound/TouchEffect';
 
 interface BookItemsProps {
   title: string;
-  coverImage: any;
+  coverImage: string;
   makeBookId: number;
+  isDeleteMode: boolean;
+  selectedItems: number[];
+  setSelectedItems: React.Dispatch<React.SetStateAction<number[]>>;
   navigation: any;
 }
 
@@ -52,7 +56,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
 
   const cloud1TranslateY = cloudAnimationValue.interpolate({
@@ -80,6 +84,9 @@ const BookItems: React.FC<BookItemsProps> = ({
   title,
   coverImage,
   makeBookId,
+  isDeleteMode,
+  selectedItems,
+  setSelectedItems,
   navigation,
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
@@ -90,6 +97,21 @@ const BookItems: React.FC<BookItemsProps> = ({
       CharrrrAnimation.removeAllListeners();
     };
   }, []);
+
+  const isSelected = selectedItems.includes(makeBookId);
+
+  const handleSelectItem = () => {
+    if (isDeleteMode) {
+      // 삭제 모드일 때의 로직
+      const newSelectedItems = isSelected
+        ? selectedItems.filter((id) => id !== makeBookId)
+        : [...selectedItems, makeBookId];
+      setSelectedItems(newSelectedItems);
+    } else {
+      // 삭제 모드가 아닐 때의 로직 (상세 페이지로 이동 등)
+      handlePress();
+    }
+  };
 
   const handlePress = () => {
     playTouch('open');
@@ -110,17 +132,16 @@ const BookItems: React.FC<BookItemsProps> = ({
   };
 
   return (
-    <TouchableOpacity style={styles.bookItem} onPress={handlePress}>
-      <Animated.View
+    <TouchableOpacity style={styles.bookItem} onPress={handleSelectItem}>
+      <View
         style={[
-          {
-            transform: [{ scale: CharrrrAnimation }],
-          },
+          styles.bookContainer,
+          isSelected && isDeleteMode ? styles.selectedItem : {},
         ]}
       >
         <Image source={{ uri: coverImage }} style={styles.coverImage} />
         <Text style={styles.title}>{title}</Text>
-      </Animated.View>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -128,6 +149,9 @@ const BookItems: React.FC<BookItemsProps> = ({
 const BookListScreen: React.FC = () => {
   const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
   const { playTouch } = useTouchEffect();
+
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
   const fetchMakeBooks = async () => {
     try {
@@ -142,6 +166,20 @@ const BookListScreen: React.FC = () => {
   useEffect(() => {
     fetchMakeBooks();
   }, []);
+
+  const handleDeleteItems = async () => {
+    console.log(selectedItems);
+    try {
+      const response = await deleteMakeBook(selectedItems);
+      console.log(response);
+      setIsDeleteMode(false);
+      setSelectedItems([]);
+      fetchMakeBooks();
+    } catch (error) {
+      console.error('Failed to delete items', error);
+      Alert.alert('Error', 'Failed to delete books');
+    }
+  };
 
   const navigation = useNavigation();
 
@@ -193,16 +231,18 @@ const BookListScreen: React.FC = () => {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity onPress={() =>
-        playTouch('duck')
-      } style={[styles.duck,
-      {
-        transform: [
-          { translateX: duckPosition.x },
-          { translateY: duckPosition.y },
-        ],
-      }
-      ]}>
+      <TouchableOpacity
+        onPress={() => playTouch('duck')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+            ],
+          },
+        ]}
+      >
         <Animated.Image
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
@@ -217,6 +257,9 @@ const BookListScreen: React.FC = () => {
               title={item.makeBookTitle}
               coverImage={item.makeBookCover}
               makeBookId={item.makeBookId}
+              isDeleteMode={isDeleteMode}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
               navigation={navigation}
             />
           )}
@@ -225,10 +268,23 @@ const BookListScreen: React.FC = () => {
           contentContainerStyle={styles.bookList}
         />
       </View>
-      <Image
-        source={require('../../assets/images/Trash.png')}
+      <TouchableOpacity
         style={styles.trash}
-      />
+        onPress={() => setIsDeleteMode(!isDeleteMode)}
+      >
+        <Image
+          source={require('../../assets/images/Trash.png')}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </TouchableOpacity>
+      {isDeleteMode && (
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={handleDeleteItems}
+        >
+          <Text>Delete Selected</Text>
+        </TouchableOpacity>
+      )}
     </ImageBackground>
   );
 };
@@ -271,7 +327,7 @@ const styles = StyleSheet.create({
     left: screenWidth * 0.04,
     width: screenWidth * 0.09,
     height: screenHeight * 0.1,
-    zIndex: 1
+    zIndex: 1,
   },
   bookItem: {
     marginHorizontal: screenWidth * 0.048,
@@ -309,9 +365,19 @@ const styles = StyleSheet.create({
     top: '86%',
     elevation: 5,
   },
+  deleteButton: {
+    position: 'absolute',
+    right: '92.5%',
+    top: '96%',
+  },
+  bookContainer: {},
+  selectedItem: {
+    borderWidth: 3,
+    // borderColor: 'blue',
+  },
 
   duckImage: {
     width: '100%',
     height: '100%',
-  }
+  },
 });

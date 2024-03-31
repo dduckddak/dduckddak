@@ -97,9 +97,9 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     };
     // 여기 accept imcomming 하면 되겠지 ??
     updateMainImage();
-    console.log(bookList);
+    // console.log(bookList);
     fetchBooks();
-  }, []);
+  }, [bookList]);
 
   const nextPage = () => {
     setCurrentPage(

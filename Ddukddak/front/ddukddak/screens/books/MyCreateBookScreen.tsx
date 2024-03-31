@@ -116,7 +116,8 @@ const BookListScreen: React.FC = () => {
   const handleDeleteItems = async () => {
     console.log(selectedItems);
     try {
-      await deleteMakeBook(selectedItems);
+      const response = await deleteMakeBook(selectedItems);
+      console.log(response);
       setIsDeleteMode(false);
       setSelectedItems([]);
       fetchMakeBooks();
@@ -221,5 +222,8 @@ const styles = StyleSheet.create({
     top: '96%',
   },
   bookContainer: {},
-  selectedItem: {},
+  selectedItem: {
+    borderWidth: 3,
+    borderColor: 'blue',
+  },
 });

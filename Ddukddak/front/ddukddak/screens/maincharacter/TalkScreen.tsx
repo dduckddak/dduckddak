@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     position: 'absolute',
-    top: Dimensions.get('screen').height * 0.12,
+    top: Dimensions.get('screen').height * 0.22,
     left: Dimensions.get('screen').width * 0.08,
     width: Dimensions.get('screen').width * 0.44,
     height: Dimensions.get('screen').height * 0.5,

@@ -67,7 +67,6 @@ function LogoTitle() {
   const onPress = () => {
     playTouch('touch');
     navigation.navigate('script' as never);
-
   };
   return (
     <TouchableOpacity onPress={onPress}>
@@ -185,7 +184,7 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => { });
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   const [initialRouteName, setInitialRouteName] =
@@ -194,7 +193,7 @@ export default function App() {
   const { playTouch } = useTouchEffect();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => { });
+    SplashScreen.hideAsync().catch(() => {});
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -205,7 +204,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => { });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 
@@ -301,7 +300,9 @@ export default function App() {
             <Stack.Screen
               name="talk"
               component={TalkSceren}
-              options={{ headerShown: false }}
+              options={{
+                headerRight: () => <LogoRight isHomeScreen={false} />,
+              }}
             />
             {/* ------------------------ 동화뚝딱 페이지 ------------------------ */}
             <Stack.Screen

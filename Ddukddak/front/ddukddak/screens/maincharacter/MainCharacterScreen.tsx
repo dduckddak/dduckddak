@@ -101,7 +101,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
     updateMainImage();
     // console.log(bookList);
     fetchBooks();
-  }, [bookList]);
+  }, []);
 
   const nextPage = () => {
     setCurrentPage(

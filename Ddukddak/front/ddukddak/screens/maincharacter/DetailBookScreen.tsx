@@ -152,7 +152,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background3.png')}
+      source={require('../../assets/images/background/morning.jpg')}
       style={styles.imageBackground}
     >
       <CloudAnimation>
@@ -168,7 +168,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         </CloudAnimation>
       </CloudAnimation>
       <View style={styles.container}>
-        <Text style={styles.headerText}>이런책이에요 !</Text>
+        <Text style={styles.headerText}>📚 이런책이에요 !📚</Text>
         <View style={styles.contentContainer}>
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
@@ -201,8 +201,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               {selectedBook?.bookStory && (
                 <Text style={styles.detailText2}>
                   줄거리 :{' '}
-                  {selectedBook.bookStory.length > 80
-                    ? selectedBook.bookStory.slice(0, 80) + ' ...'
+                  {selectedBook.bookStory.length > 110
+                    ? selectedBook.bookStory.slice(0, 110) + ' ...'
                     : selectedBook.bookStory}
                 </Text>
               )}
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: screenHeight * 0.065,
   },
   headerText: {
     fontSize: 65,
@@ -275,12 +275,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     textAlign: 'center',
     justifyContent: 'center',
-    width: '70%',
+    width: screenWidth * 0.31,
   },
   buttonStyle: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: screenHeight * 0.02,
+    marginBottom: -10,
   },
   text: {
     fontFamily: 'im-hyemin-bold',
@@ -307,7 +308,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 2,
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   bookDetails: {
     // flex: 1,
@@ -315,27 +316,30 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     width: Dimensions.get('screen').width * 0.65,
     height: Dimensions.get('screen').height * 0.65,
-    backgroundColor: '#C7DFB0',
+    backgroundColor: '#B2DAC8',
+    borderWidth: 2,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 10,
     elevation: 5,
     margin: 10,
+    marginTop: 40,
     padding: 25,
   },
   button: {
     padding: 10,
-    margin: 10,
+    marginVertical: 22,
     borderRadius: 5,
   },
   image: {
     width: 333,
     height: 210,
-    marginTop: 10,
+    marginTop: screenHeight * 0.01,
   },
   coverImage: {
     width: '95%',
-    height: '90%',
+    height: screenHeight * 0.45,
     resizeMode: 'contain',
+    borderWidth: 5,
   },
 });
 

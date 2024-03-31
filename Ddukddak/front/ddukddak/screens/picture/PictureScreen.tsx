@@ -95,7 +95,7 @@ function PictureScreen() {
   }, []);
   // 추가 끝
 
-  const readPhotos = async () => {
+  const readPhotos = useCallback(async () => {
     setIsLoading(true);
     try {
       const response = await getPhotos();
@@ -117,11 +117,13 @@ function PictureScreen() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => {
-    readPhotos();
-  }, [imageData]);
+  useFocusEffect(
+    useCallback(() => {
+      readPhotos();
+    }, [readPhotos]),
+  );
 
   // 이미지 선택 로직
   const toggleImageSelected = (index: number) => {

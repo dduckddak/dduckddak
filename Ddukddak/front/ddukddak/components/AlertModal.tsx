@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '50%',
-    height: '30%',
+    height: '43%',
     backgroundColor: '#0084BE',
     borderRadius: 20,
     padding: 20,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     color: '#FFFFFF',
     marginBottom: 20,
-    fontSize: 28,
+    fontSize: 48,
     textAlign: 'center',
   },
   buttonContainer: {

@@ -260,7 +260,7 @@ function VoiceScreen() {
       />
       <AlertModal
         isVisible={sAlertModal}
-        text={['삭제 성공', '목소리가 성공적으로 삭제되었습니다.']}
+        text={['삭제 성공', '목소리가 성공적으로 \n 삭제되었습니다.']}
         onConfirm={handleModalClose}
       />
 

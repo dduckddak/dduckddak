@@ -103,21 +103,21 @@ function RecordScreen() {
     if (recording) {
       if (timerId) clearTimeout(timerId);
       const elapsedTime = Date.now() - recordingStartTime;
+
       if (elapsedTime < 30000) {
         setTimeModal(true);
-        // Alert.alert(
-        // '녹음이 너무 짧습니다',
-        // '녹음은 최소 30초 이상이어야 합니다.',
-        // );
         return;
       }
 
       console.log('녹음 종료');
       await recording.stopAndUnloadAsync();
+
       const uri = recording.getURI();
       console.log('요기다', uri);
+
       setVoiceUri(uri);
       setRecording(undefined);
+
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: false,
       });
@@ -179,6 +179,8 @@ function RecordScreen() {
           recordingUri={voiceUri} // 녹음된 URI를 넘깁니다
         />
       </View>
+
+      {/* 모달 위치 */}
       <AlertModal
         isVisible={timeModal}
         text={['녹음이 너무 짧습니다', '녹음은 최소 30초 이상이어야 합니다.']}
@@ -190,6 +192,7 @@ function RecordScreen() {
         text={['권한 승인이 거절되었습니다.']}
         onConfirm={handleModalClose}
       />
+      {/* 모달 위치 */}
     </ImageBackground>
   );
 }

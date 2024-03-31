@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getBookList } from '../../api/bookApi';
-
+import { useFocusEffect } from '@react-navigation/native';
 import { BookSummary } from '../../types/types';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
@@ -75,32 +75,31 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   const userSex = useUserStore((state) => state.sex);
   const [mainPageCharacter, setMainPageCharacter] = useState();
 
-  useEffect(() => {
-    const updateMainImage = () => {
-      if (userSex === 'M') {
-        setMainPageCharacter(require('../../assets/images/DD/뚝이3.png'));
-      } else {
-        setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
-      }
-    };
+  const updateMainImage = useCallback(() => {
+    if (userSex === 'M') {
+      setMainPageCharacter(require('../../assets/images/DD/뚝이3.png'));
+    } else {
+      setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
+    }
+  }, [userSex]);
 
-    const fetchBooks = async () => {
-      try {
-        const books = await getBookList();
-
-        if (books.bookList) {
-          setBookList(books.bookList);
-        }
-        // setBookList(tempBookData.bookList);
-      } catch (error) {
-        console.error('Failed:', error);
+  const fetchBooks = useCallback(async () => {
+    try {
+      const books = await getBookList();
+      if (books.bookList) {
+        setBookList(books.bookList);
       }
-    };
-    // 여기 accept imcomming 하면 되겠지 ??
-    updateMainImage();
-    // console.log(bookList);
-    fetchBooks();
+    } catch (error) {
+      console.error('Failed:', error);
+    }
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      updateMainImage();
+      fetchBooks();
+    }, [updateMainImage, fetchBooks]),
+  );
 
   const nextPage = () => {
     setCurrentPage(

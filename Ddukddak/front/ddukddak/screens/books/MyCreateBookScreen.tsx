@@ -57,7 +57,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {
+    };
   }, [cloudAnimationValue]);
 
   const cloud1TranslateY = cloudAnimationValue.interpolate({
@@ -82,15 +83,15 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 };
 
 const BookItems: React.FC<BookItemsProps> = ({
-  title,
-  coverImage,
-  makeBookId,
-  isDeleteMode,
-  selectedItems,
-  setSelectedItems,
-  navigation,
-  toggleDeleteMode,
-}) => {
+                                               title,
+                                               coverImage,
+                                               makeBookId,
+                                               isDeleteMode,
+                                               selectedItems,
+                                               setSelectedItems,
+                                               navigation,
+                                               toggleDeleteMode,
+                                             }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
 
@@ -104,7 +105,6 @@ const BookItems: React.FC<BookItemsProps> = ({
   const isSelected = selectedItems.includes(makeBookId);
 
   const handleSelectItem = () => {
-    console.log('Long press detected');
     if (isDeleteMode) {
       // 삭제 모드일 때의 로직
       const newSelectedItems = isSelected
@@ -135,7 +135,6 @@ const BookItems: React.FC<BookItemsProps> = ({
   return (
     <TouchableOpacity
       style={styles.bookItem}
-      onLongPress={toggleDeleteMode} // 길게 누를 때 실행
       onPress={() => {
         if (isDeleteMode) {
           handleSelectItem();
@@ -144,13 +143,8 @@ const BookItems: React.FC<BookItemsProps> = ({
         }
       }}
     >
-      <View
-        style={[
-          styles.bookContainer,
-          isSelected && isDeleteMode ? styles.selectedItem : {},
-        ]}
-      >
-        <Image source={{ uri: coverImage }} style={styles.coverImage} />
+      <View style={styles.bookContainer}>
+        <Image source={{ uri: coverImage }} style={[styles.coverImage, isSelected && styles.selectedBook]} />
         <Text style={styles.title}>{title}</Text>
       </View>
     </TouchableOpacity>
@@ -158,12 +152,14 @@ const BookItems: React.FC<BookItemsProps> = ({
 };
 
 const BookListScreen: React.FC = () => {
-  const toggleDeleteMode = () => setIsDeleteMode(!isDeleteMode);
   const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
-  const { playTouch } = useTouchEffect();
-
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const toggleDeleteMode = () => setIsDeleteMode(!isDeleteMode);
+
+
+  const { playTouch } = useTouchEffect();
+
 
   const fetchMakeBooks = async () => {
     try {
@@ -179,33 +175,26 @@ const BookListScreen: React.FC = () => {
     fetchMakeBooks();
   }, []);
 
-  const test = async (makeBookIds: number[]) => {
+  const handleTrashButton = async () => {
+    // delete Mode 가 아니거나 delete Mode 인데 선택된게 없으면 deleteMode 토글
+    if (!isDeleteMode || (isDeleteMode && selectedItems.length === 0)) {
+      toggleDeleteMode();
+      return;
+    }
+
     try {
-      const response = await deleteMakeBook(makeBookIds);
+      console.log(selectedItems);
+      const response = await deleteMakeBook(selectedItems);
       console.log(response);
       setIsDeleteMode(false);
       setSelectedItems([]);
-      fetchMakeBooks();
+
+      await fetchMakeBooks();
+
     } catch (error: any) {
       console.error('Error deleting:', error.message);
-      // Alert.alert('삭제 실패', '목소리 삭제 중 오류가 발생했습니다.');
-      // setFAlertModal(true);
     }
   };
-
-  // const handleDeleteItems = async () => {
-  //   console.log(selectedItems);
-  //   try {
-  //     const response = await deleteMakeBook(selectedItems);
-  //     console.log(response);
-  //     setIsDeleteMode(false);
-  //     setSelectedItems([]);
-  //     fetchMakeBooks();
-  //   } catch (error) {
-  //     console.error('Failed to delete items', error);
-  //     Alert.alert('Error', 'Failed to delete books');
-  //   }
-  // };
 
   const navigation = useNavigation();
 
@@ -278,7 +267,7 @@ const BookListScreen: React.FC = () => {
             transform: [
               { translateX: duckPosition.x },
               { translateY: duckPosition.y },
-              { scaleX: shouldFlip ? -1 : 1 }
+              { scaleX: shouldFlip ? -1 : 1 },
             ],
           },
         ]}
@@ -311,11 +300,11 @@ const BookListScreen: React.FC = () => {
       </View>
       <TouchableOpacity
         style={styles.trash}
-        onPress={() => test(selectedItems)}
+        onPress={handleTrashButton}
       >
         <Image
           source={require('../../assets/images/Trash.png')}
-          style={{ width: '100%', height: '100%' }}
+          style={[{ width: '100%', height: '100%' }, isDeleteMode && styles.deleteModeTrashCan]}
         />
       </TouchableOpacity>
     </ImageBackground>
@@ -404,13 +393,19 @@ const styles = StyleSheet.create({
     top: '96%',
   },
   bookContainer: {},
-  selectedItem: {
-    borderWidth: 3,
-    // borderColor: 'blue',
-  },
-
   duckImage: {
     width: '100%',
     height: '100%',
   },
+
+  selectedBook: {
+    borderWidth: 5,
+    borderColor: 'rgba(180, 130, 210, 0.5)',
+  },
+
+  deleteModeTrashCan: {
+    borderWidth: 5,
+    borderColor: 'rgba(180, 130, 210, 0.5)',
+  },
+
 });

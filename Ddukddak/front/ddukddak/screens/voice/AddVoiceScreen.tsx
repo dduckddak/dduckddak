@@ -1,8 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, Text, View, StyleSheet, Image } from 'react-native';
+import {
+  ImageBackground,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Animated,
+} from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
 import { useUserStore } from '../../store/userStore';
+
+const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
+  const [cloudAnimationValue] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const animateClouds = () => {
+      const cloudAnimation = Animated.sequence([
+        Animated.timing(cloudAnimationValue, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(cloudAnimationValue, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]);
+
+      Animated.loop(cloudAnimation).start();
+    };
+    animateClouds();
+    return () => {};
+  }, [cloudAnimationValue]);
+  const cloud1TranslateY = cloudAnimationValue.interpolate({
+    inputRange: [0, 2],
+    outputRange: [0, -20],
+  });
+  return (
+    <Animated.View
+      style={{
+        position: 'absolute',
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
+        transform: [{ translateY: cloud1TranslateY }],
+      }}
+    >
+      {children}
+    </Animated.View>
+  );
+};
 
 function AddVoiceScreen() {
   const userSex = useUserStore((state) => state.sex);
@@ -24,6 +74,24 @@ function AddVoiceScreen() {
       source={require('../../assets/images/background/morning.jpg')}
       style={styles.ImageBackground}
     >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud2}
+        />
+      </CloudAnimation>
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud3}
+        />
+      </CloudAnimation>
       <View style={styles.container}>
         <Image source={character} style={styles.dd}></Image>
         <Image
@@ -58,6 +126,27 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
+
+  cloud: {
+    position: 'absolute',
+    top: 5,
+    left: 240,
+    transform: [{ scaleX: -1 }],
+  },
+  cloud2: {
+    position: 'absolute',
+    top: 85,
+    left: 350,
+    width: 200,
+    height: 130,
+  },
+  cloud3: {
+    position: 'absolute',
+    top: 55,
+    left: 1050,
+    width: 150,
+    height: 120,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -67,18 +156,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 20,
     width: 500,
-    height: 500,
+    height: 450,
     bottom: -320,
   },
   ballon: {
     position: 'absolute',
-    top: 40,
+    top: 50,
     right: 60,
   },
   ballontext: {
     position: 'absolute',
     right: 130,
-    top: 210,
+    top: 230,
+    zIndex: 20,
   },
   text: {
     textAlign: 'center',

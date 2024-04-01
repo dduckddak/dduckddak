@@ -45,7 +45,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -75,7 +75,7 @@ function VoiceScreen() {
   // 오리야 놀아라
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const [shouldFlip, setShouldFlip] = useState(false);
-  
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -229,8 +229,6 @@ function VoiceScreen() {
     </TouchableOpacity>
   );
 
-
-
   return (
     <ImageBackground
       source={require('../../assets/images/background/MainBackground.png')}
@@ -291,6 +289,7 @@ function VoiceScreen() {
           !isLoading && voiceData.length === 0 ? <EmptyListComponent /> : null
         }
       />
+
       <GreenButton
         content="목소리 추가하기"
         style={{ width: 220, paddingBottom: 40 }}
@@ -348,7 +347,7 @@ const styles = StyleSheet.create({
   cloud3: { position: 'absolute', top: 125, left: 1000 },
   duck: {
     position: 'absolute',
-    bottom: '-17%',
+    bottom: '17%',
     left: '2%',
     width: '10%',
     height: '12%',

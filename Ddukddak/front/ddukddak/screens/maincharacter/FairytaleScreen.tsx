@@ -477,7 +477,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         handleMakeBook={handleMakeBook}
 
       />
-      { isMakeLoading && <Loading />}
+      {/* { isMakeLoading && <Loading />} */}
       {/* 모달 영역 */}
     </View>
   );

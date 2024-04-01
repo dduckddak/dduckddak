@@ -1,6 +1,6 @@
 import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
-import { Image, Text, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Image, Text, TouchableOpacity, View, StyleSheet, Alert, Platform } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -40,13 +40,16 @@ import { TransitionPresets } from '@react-navigation/stack';
 
 import { AppInitializer } from './components/AppInitializer';
 import { BookSummary, DetailBook } from './types/types';
-import { getUserInfo } from './api/userApi';
-import { useUserStore } from './store/userStore';
 import { useBgmStore } from './store/BgmStore';
 
 import BGMPlayer from './components/sound/BgmPlayer';
 import useTouchEffect from './components/sound/TouchEffect';
 import { useTimeStore } from './store/timeStore'
+
+import messaging from '@react-native-firebase/messaging';
+import notifee, { AndroidImportance } from '@notifee/react-native';
+import * as Notifications from 'expo-notifications';
+
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -184,10 +187,81 @@ export type RootStackParamList = {
   script: undefined;
 };
 
+
+type message = {
+  title: any;
+  body: any;
+}
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function App() {
+  // 푸시 알림 권한 요청
+  async function registerForPushNotificationsAsync() {
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('푸시 알림 권한을 허용해야 푸시 알림을 받을 수 있습니다.');
+    }
+  }
+
+  //push 알림 설정
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+
+    messaging().getInitialNotification().then(async (remoteMessage) => {
+      if (remoteMessage) {
+        console.log(remoteMessage.notification);
+      }
+    })
+
+    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+      console.log(remoteMessage.notification);
+    });
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log(remoteMessage.notification);
+    });
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      const title = remoteMessage?.data?.title;
+      const body = remoteMessage?.data?.body;
+      onDisplayNotification({ title, body });
+      Alert.alert(title)
+    });
+
+    return unsubscribe;
+  }, [])
+
+  //앱 실행 중일 때 push 알림
+  const onDisplayNotification = async ({
+    title = '',
+    body = '',
+  }: message) => {
+    const channelId = await notifee.createChannel({
+      id: 'channelId',
+      name: 'channelName',
+      importance: AndroidImportance.HIGH,
+    });
+
+    await notifee.displayNotification({
+      title,
+      body,
+      android: {
+        channelId,
+      },
+    });
+  };
+
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
@@ -206,7 +280,6 @@ export default function App() {
       setBackgroundSrc(require('./assets/images/background/evening.jpg'))
       setFontColor('#FFF');
     }
-
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -217,7 +290,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => { });
     }
   }, [fontsLoaded]);
 

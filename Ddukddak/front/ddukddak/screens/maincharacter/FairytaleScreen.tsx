@@ -441,6 +441,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         text={['책 만들기를 그만 하시겠습니까?']}
         onConfirm={closeModal}
         onCancel={() => setIsExitModal(false)}
+        btnConfirmText={'그만하기'}
+        btnCancelText={'돌아가기'}
       />
       <CreationModal
         creationModalVisible={isMakeBookModal}

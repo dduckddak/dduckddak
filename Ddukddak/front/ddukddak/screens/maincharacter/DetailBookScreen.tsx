@@ -168,7 +168,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         </CloudAnimation>
       </CloudAnimation>
       <View style={styles.container}>
-        <Text style={styles.headerText}>📚 이런책이에요 !📚</Text>
+        <Text style={styles.headerText}>📚 이런책이에요 📚</Text>
         <View style={styles.contentContainer}>
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
@@ -185,7 +185,10 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleSadPress()}
-                  style={styles.buttonStyle}
+                  style={[
+                    styles.buttonStyle,
+                    { marginTop: screenHeight * 0.023 },
+                  ]}
                 >
                   <Image source={sadImage} />
                 </TouchableOpacity>

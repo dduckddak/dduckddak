@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ImageBackground,
   Text,
@@ -6,11 +6,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
 import EndRecordModal from '../../components/voice/EndRecordModal';
 import AlertModal from '../../components/AlertModal';
+import useTouchEffect from '../../components/sound/TouchEffect';
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 const scripts = [
   {
@@ -68,6 +74,38 @@ function RecordScreen() {
     }
   };
 
+  const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const [shouldFlip, setShouldFlip] = useState(false);
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(duckPosition, {
+          toValue: { x: screenWidth * 0.1, y: 0 },
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(duckPosition, {
+          toValue: { x: 2, y: 0 },
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, []);
+
+  //오리 반전
+  duckPosition.x.addListener((value) => {
+    // 움직임이 끝에 도달했을 때 반전
+    if (value.value == screenWidth * 0.1) {
+      setShouldFlip(true);
+    }
+    if (value.value == 0) {
+      setShouldFlip(false);
+    }
+  });
+
+  const { playTouch } = useTouchEffect();
   async function startRecording() {
     const { status } = await Audio.requestPermissionsAsync();
     try {
@@ -140,6 +178,24 @@ function RecordScreen() {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.ImageBackground}
     >
+      <TouchableOpacity
+        onPress={() => playTouch('duck')}
+        style={[
+          styles.duck,
+          {
+            transform: [
+              { translateX: duckPosition.x },
+              { translateY: duckPosition.y },
+              { scaleX: shouldFlip ? -1 : 1 },
+            ],
+          },
+        ]}
+      >
+        <Animated.Image
+          source={require('../../assets/images/duck.png')}
+          style={styles.duckImage}
+        />
+      </TouchableOpacity>
       <View style={styles.outerContainer}>
         <View style={styles.buttonTextContainer}>
           <TouchableOpacity
@@ -245,5 +301,17 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.5,
+  },
+  duck: {
+    position: 'absolute',
+    bottom: screenHeight * 0.15,
+    left: screenWidth * 0.04,
+    width: screenWidth * 0.09,
+    height: screenHeight * 0.1,
+    zIndex: 1,
+  },
+  duckImage: {
+    width: '100%',
+    height: '100%',
   },
 });

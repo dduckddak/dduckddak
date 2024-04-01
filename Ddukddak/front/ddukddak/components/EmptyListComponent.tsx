@@ -1,6 +1,4 @@
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
-
-const { width, height } = Dimensions.get('screen');
+import { View, Image, StyleSheet } from 'react-native';
 
 interface EmptyListComponentProps {
   // 비율을 결정할 prop을 추가
@@ -8,16 +6,12 @@ interface EmptyListComponentProps {
   imageHeightRatio?: number;
 }
 
-function EmptyListComponent({
-  imageHeightRatio = 0.6,
-}: EmptyListComponentProps) {
-  const imageHeight = height * imageHeightRatio;
-
+function EmptyListComponent({}: EmptyListComponentProps) {
   return (
     <View style={styles.emptyContainer}>
       <Image
         source={require('../assets/images/emptyList.png')}
-        style={{ ...styles.emptyImage, height: imageHeight }}
+        style={styles.emptyImage}
       />
     </View>
   );
@@ -32,8 +26,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   emptyImage: {
-    width: width - 40,
-    height: height * 0.5,
+    width: 700,
+    height: 400,
     resizeMode: 'contain',
   },
 });

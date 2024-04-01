@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   FlatList,
   ImageBackground,
   Image,
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ddd',
     borderRadius: 5,
-    width: Dimensions.get('screen').width * 0.22,
+    width: 265,
     height: 300,
     justifyContent: 'center',
   },
@@ -181,7 +180,7 @@ const styles = StyleSheet.create({
   green: {
     margin: 20,
     marginTop: 10,
-    width: Dimensions.get('screen').width * 0.15,
+    width: 170,
     alignSelf: 'center',
   },
 });

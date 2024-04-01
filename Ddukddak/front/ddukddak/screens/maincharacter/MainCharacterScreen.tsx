@@ -16,7 +16,6 @@ import { BookSummary } from '../../types/types';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
 import { useUserStore } from '../../store/userStore';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -144,25 +143,24 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         />
       </CloudAnimation>
       <Text style={styles.howabout}>이 책 어때요??</Text>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
-        <View style={styles.flexContainer}>
-          <View
-            style={{
-              flex: 1,
-            }}
-          />
-          <BookList
-            bookList={bookList}
-            currentPage={currentPage}
-            previousPage={previousPage}
-            nextPage={nextPage}
-            goToDetail={goToDetail}
-            navigation={navigation}
-          />
-          <Dots bookList={bookList} currentPage={currentPage} />
-        </View>
-      </TouchableWithoutFeedback>
+
+      {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
+      <View style={styles.flexContainer}>
+        <View
+          style={{
+            flex: 1,
+          }}
+        />
+        <BookList
+          bookList={bookList}
+          currentPage={currentPage}
+          previousPage={previousPage}
+          nextPage={nextPage}
+          goToDetail={goToDetail}
+          navigation={navigation}
+        />
+        <Dots bookList={bookList} currentPage={currentPage} />
+      </View>
       <Image source={mainPageCharacter} style={styles.ddak2} />
     </ImageBackground>
   );

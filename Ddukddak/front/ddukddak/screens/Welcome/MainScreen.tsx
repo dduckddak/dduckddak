@@ -5,7 +5,6 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  Dimensions,
   Animated,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -14,9 +13,6 @@ import { useUserStore } from '../../store/userStore';
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
-
-const screenWidth = Dimensions.get('screen').height;
-const screenHeight = Dimensions.get('screen').width;
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));

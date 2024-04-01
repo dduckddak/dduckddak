@@ -7,9 +7,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  Dimensions,
   Animated,
-  Alert,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
@@ -33,7 +32,6 @@ interface BookItemsProps {
   toggleDeleteMode: () => void;
 }
 
-const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
@@ -57,8 +55,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {
-    };
+    return () => {};
   }, [cloudAnimationValue]);
 
   const cloud1TranslateY = cloudAnimationValue.interpolate({
@@ -70,10 +67,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.05,
-        left: screenWidth * 0.005,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.2,
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -83,15 +80,15 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 };
 
 const BookItems: React.FC<BookItemsProps> = ({
-                                               title,
-                                               coverImage,
-                                               makeBookId,
-                                               isDeleteMode,
-                                               selectedItems,
-                                               setSelectedItems,
-                                               navigation,
-                                               toggleDeleteMode,
-                                             }) => {
+  title,
+  coverImage,
+  makeBookId,
+  isDeleteMode,
+  selectedItems,
+  setSelectedItems,
+  navigation,
+  toggleDeleteMode,
+}) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
 
@@ -144,7 +141,10 @@ const BookItems: React.FC<BookItemsProps> = ({
       }}
     >
       <View style={styles.bookContainer}>
-        <Image source={{ uri: coverImage }} style={[styles.coverImage, isSelected && styles.selectedBook]} />
+        <Image
+          source={{ uri: coverImage }}
+          style={[styles.coverImage, isSelected && styles.selectedBook]}
+        />
         <Text style={styles.title}>{title}</Text>
       </View>
     </TouchableOpacity>
@@ -157,9 +157,7 @@ const BookListScreen: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const toggleDeleteMode = () => setIsDeleteMode(!isDeleteMode);
 
-
   const { playTouch } = useTouchEffect();
-
 
   const fetchMakeBooks = async () => {
     try {
@@ -190,7 +188,6 @@ const BookListScreen: React.FC = () => {
       setSelectedItems([]);
 
       await fetchMakeBooks();
-
     } catch (error: any) {
       console.error('Error deleting:', error.message);
     }
@@ -228,7 +225,6 @@ const BookListScreen: React.FC = () => {
       setShouldFlip(false);
     }
   });
-
 
   return (
     <ImageBackground
@@ -298,13 +294,13 @@ const BookListScreen: React.FC = () => {
           contentContainerStyle={styles.bookList}
         />
       </View>
-      <TouchableOpacity
-        style={styles.trash}
-        onPress={handleTrashButton}
-      >
+      <TouchableOpacity style={styles.trash} onPress={handleTrashButton}>
         <Image
           source={require('../../assets/images/Trash.png')}
-          style={[{ width: '100%', height: '100%' }, isDeleteMode && styles.deleteModeTrashCan]}
+          style={[
+            { width: '100%', height: '100%' },
+            isDeleteMode && styles.deleteModeTrashCan,
+          ]}
         />
       </TouchableOpacity>
     </ImageBackground>
@@ -320,45 +316,45 @@ const styles = StyleSheet.create({
   },
   cloud: {
     position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.15,
+    top: 5,
+    left: 100,
   },
   cloud1: {
     position: 'absolute',
-    top: screenHeight * 0.03,
-    left: screenWidth * 0.35,
-    width: screenWidth * 0.17,
-    height: screenHeight * 0.2,
+    top: 5,
+    left: 350,
+    width: 200,
+    height: 130,
   },
   cloud2: {
     position: 'absolute',
-    top: screenHeight * 0.005,
-    left: screenWidth * 0.71,
-    width: screenWidth * 0.1,
-    height: screenHeight * 0.17,
+    top: 5,
+    left: 700,
+    width: 120,
+    height: 100,
     transform: [{ scaleX: -1 }],
   },
   cloud3: {
     position: 'absolute',
-    top: screenHeight * 0.15,
-    left: screenWidth * 0.88,
+    top: 65,
+    left: 1000,
   },
   duck: {
     position: 'absolute',
-    bottom: screenHeight * 0.15,
-    left: screenWidth * 0.04,
-    width: screenWidth * 0.09,
-    height: screenHeight * 0.1,
+    bottom: 110,
+    left: 60,
+    width: 110,
+    height: 75,
     zIndex: 1,
   },
   bookItem: {
-    marginHorizontal: screenWidth * 0.048,
-    marginTop: screenHeight * 0.04,
+    marginHorizontal: 58,
+    marginTop: 10,
     alignItems: 'center',
   },
   coverImage: {
-    width: Dimensions.get('screen').width * 0.35,
-    height: Dimensions.get('screen').height * 0.56,
+    width: 420,
+    height: 420,
     resizeMode: 'cover',
     borderRadius: 10,
     borderWidth: 4,
@@ -407,5 +403,4 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: 'rgba(180, 130, 210, 0.5)',
   },
-
 });

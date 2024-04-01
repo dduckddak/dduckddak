@@ -305,12 +305,12 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: '20%',
-    marginLeft: 10,
+    marginHorizontal: 11.5,
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 5,
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    width: 220,
+    height: 220,
   },
   cardImage: {
     width: '100%',

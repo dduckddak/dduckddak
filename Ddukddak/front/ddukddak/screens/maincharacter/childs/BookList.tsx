@@ -150,8 +150,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: -80,
-    width: Dimensions.get('screen').width * 0.65,
-    height: Dimensions.get('screen').height * 0.65,
+    width: 785,
+    height: 490,
     borderRadius: 20,
   },
   text: {

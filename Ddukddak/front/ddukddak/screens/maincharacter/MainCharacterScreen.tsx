@@ -17,6 +17,7 @@ import BookList from './childs/BookList';
 import Dots from './childs/Dots';
 import { useUserStore } from '../../store/userStore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import useTimeStore from '../../store/timeStore';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -49,6 +50,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     inputRange: [0, 1],
     outputRange: [0, -20],
   });
+
   return (
     <Animated.View
       style={{
@@ -73,6 +75,8 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   // 구름 두둥실
 
   const userSex = useUserStore((state) => state.sex);
+  const { fontColor, backgroundSrc } = useTimeStore();
+
   const [mainPageCharacter, setMainPageCharacter] = useState();
 
   const updateMainImage = useCallback(() => {
@@ -120,7 +124,8 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/morning.jpg')}
+      // source={require('../../assets/images/background/morning.jpg')}
+      source={backgroundSrc}
       style={styles.imageBackground}
     >
       <CloudAnimation>
@@ -142,7 +147,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Text style={styles.howabout}>이 책 어때요??</Text>
+      <Text style={[styles.howabout, {color : fontColor}]}>이 책 어때요??</Text>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
         <View style={styles.flexContainer}>

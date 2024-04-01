@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   naviBtn: {
-    width: Dimensions.get('screen').width * 0.15,
-    marginTop: Dimensions.get('screen').height * 0.04,
+    width: 200,
+    marginTop: 0,
   },
 });
 

@@ -15,6 +15,7 @@ import { getBookDetail } from '../../api/bookApi';
 import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
 import { Dimensions } from 'react-native';
+import useTimeStore from '../../store/timeStore';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -40,7 +41,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => {
+    };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -80,6 +82,9 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
 
   const [isHappySelected, setIsHappySelected] = useState(false);
   const [isSadSelected, setIsSadSelected] = useState(false);
+
+  const { fontColor, backgroundSrc } = useTimeStore();
+
 
   const updateReview = async (like: boolean) => {
     // 리뷰 생성 또는 업데이트 로직
@@ -152,7 +157,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/morning.jpg')}
+      // source={require('../../assets/images/background/morning.jpg')}
+      source={backgroundSrc}
       style={styles.imageBackground}
     >
       <CloudAnimation>
@@ -168,7 +174,7 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         </CloudAnimation>
       </CloudAnimation>
       <View style={styles.container}>
-        <Text style={styles.headerText}>📚 이런책이에요 !📚</Text>
+        <Text style={[styles.headerText, { color: fontColor }]}>📚 이런책이에요 📚</Text>
         <View style={styles.contentContainer}>
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
@@ -185,7 +191,10 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => handleSadPress()}
-                  style={styles.buttonStyle}
+                  style={[
+                    styles.buttonStyle,
+                    { marginTop: screenHeight * 0.023 },
+                  ]}
                 >
                   <Image source={sadImage} />
                 </TouchableOpacity>

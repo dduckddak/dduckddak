@@ -115,7 +115,7 @@ function EndRecordModal({ visible, onClose, recordingUri }: VoiceModalProps) {
       </Modal>
       <AlertModal
         isVisible={sAlertModal}
-        text={['목소리 업로드 성공 !!']}
+        text={['사진 업로드 성공 !!']}
         onConfirm={handleSuccess}
       />
       <AlertModal

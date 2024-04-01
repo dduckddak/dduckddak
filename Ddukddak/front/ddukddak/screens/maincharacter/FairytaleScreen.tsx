@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   TextInput,
@@ -7,16 +7,23 @@ import {
   StyleSheet,
   StatusBar,
   Pressable,
-  BackHandler,
   Image,
   Dimensions,
   Animated,
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import GreenButton from '../../components/GreenButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
 import { useFairyStore } from '../../store/fairyStore';
-import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import {
   BookSummary,
@@ -80,6 +87,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     useFairyStore(); // zustand 상태 변수, 함수
 
   const [isExitModal, setIsExitModal] = useState(false); // 나갈때 모달
+  const [goBackAction, setGoBackAction] = useState(); // navigation의 goBack 이벤트를 보류해놓기 위한 state
+
   const [isMakeBookModal, setIsMakeBookModal] = useState(false); // 다 만들었을때 모달
 
   const route = useRoute<FairyRouteProp>();
@@ -97,25 +106,36 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     }
   };
 
+  // 컴포넌트가 마운트될 때 뚝이와 딱이를 성별에 따라 다르게 나오기 위한 함수 실행
   useEffect(() => {
     updateMainImage();
-
-    const backAction = () => {
-      setIsExitModal(true);
-      return true;
-    };
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-    return () => backHandler.remove(); // 컴포넌트가 unmount 될 때 이벤트 제거
   }, []);
 
+  // 뒤로가기 관련 설정 시작
+
+  // 뒤로가기가 실행되면 goBack을 함수의 event를 보류하여 저장해놓은 뒤, modal을 열어준다
+  const checkCanGoBack = useCallback((e: any) => {
+    e.preventDefault();
+    setIsExitModal(true);
+    setGoBackAction(e.data.action);
+  }, []);
+
+  // 컴포넌트 마운트가 해제되기전에 실행될 함수를 마운트 해준다.
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', checkCanGoBack);
+    return unsubscribe;
+  }, [checkCanGoBack]);
+
+  // 뒤로가기를 눌렀을 때 나타나는 modal을 confirm했을 때 모달을 닫고, 스토어를 초기화한 후 뒤로가기를 수행한다.
   const closeModal = () => {
     setIsExitModal(false); // 모달 닫기
-    resetStore();
-    navigation.goBack(); // 뒤로가기
+    resetStore(); // zustand의 voice, image 선택한 데이터들 초기화
+    if (goBackAction) navigation.dispatch(goBackAction); // 보류되었던 뒤로가기를 수행함
+    // @ts-ignore
+    setGoBackAction(null);
   };
+
+  // 뒤로가기 관련 설정 끝
 
   const handleMakeBook = async () => {
     const requestBody = {

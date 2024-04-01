@@ -126,13 +126,11 @@ public class AuthServiceImpl implements AuthService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
 
-		String userId = customUserDetails.getUserId();
+		int userSeq = customUserDetails.getUserSeq();
 
-		UserEntity userEntity = userRepository.findByUserId(userId);
-
-		userEntity.setFcmToken(dto.getFcmToken());
-
-		userRepository.save(userEntity);
+		//레디스에 유저별 fcmToken저장
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+		valueOperations.set(String.valueOf(userSeq), dto.getFcmToken());
 
 		return FCMTokenResponseDto.success();
 	}

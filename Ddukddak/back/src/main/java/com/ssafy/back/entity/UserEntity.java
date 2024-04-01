@@ -49,9 +49,6 @@ public class UserEntity {
 	@Column(name = "first_login", nullable = false)
 	private Boolean firstLogin;
 
-	@Column(name = "fcm_token", nullable = false)
-	private String fcmToken;
-
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
 	private List<VoiceEntity> voiceEntities = new ArrayList<>();
 
@@ -74,7 +71,5 @@ public class UserEntity {
 		this.userId = dto.getUserId();
 		this.userPassword = dto.getUserPassword();
 		this.firstLogin = true;
-		this.fcmToken = "";
 	}
-
 }

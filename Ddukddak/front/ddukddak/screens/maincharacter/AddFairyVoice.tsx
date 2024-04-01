@@ -40,7 +40,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -67,6 +67,8 @@ function AddVoice({ route, navigation }: any) {
 
   // 오리
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const [shouldFlip, setShouldFlip] = useState(false);
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -83,6 +85,17 @@ function AddVoice({ route, navigation }: any) {
       ]),
     ).start();
   }, []);
+
+  //오리 반전
+  duckPosition.x.addListener((value) => {
+    // 움직임이 끝에 도달했을 때 반전
+    if (value.value == screenWidth * 0.1) {
+      setShouldFlip(true);
+    }
+    if (value.value == 0) {
+      setShouldFlip(false);
+    }
+  });
 
   const { currentStep, role } = route.params;
 
@@ -252,6 +265,7 @@ function AddVoice({ route, navigation }: any) {
             transform: [
               { translateX: duckPosition.x },
               { translateY: duckPosition.y },
+              { scaleX: shouldFlip ? -1 : 1 }
             ],
           },
         ]}

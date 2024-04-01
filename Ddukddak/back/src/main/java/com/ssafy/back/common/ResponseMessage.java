@@ -25,9 +25,9 @@ public interface ResponseMessage {
 	String BAD_REQUEST = "Bad Request";
 
 	String UNIREST_ERROR = "Unirest error.";
-	String FastApi_ERROR = "FastApi error.";
 	String ELEVENLABS_ERROR = "ElevenLabs error.";
 	String FASTAPI_ERROR = "FastAPI error.";
 	String GPT_ERROR = "Gpt error.";
+	String FIREBASE_ERROR = "FireBase error.";
 
 }

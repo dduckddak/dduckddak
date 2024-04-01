@@ -8,6 +8,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +46,8 @@ import com.ssafy.back.makebook.dto.response.InsertMakeBookResponseDto;
 import com.ssafy.back.makebook.dto.response.ListMakeBookResponseDto;
 import com.ssafy.back.makebook.repository.MakeBookRepository;
 import com.ssafy.back.makebook.repository.ScriptRepository;
+import com.ssafy.back.push.dto.request.PushSendRequestDto;
+import com.ssafy.back.push.service.PushAlarmService;
 import com.ssafy.back.util.MakeKeyUtil;
 import com.ssafy.back.voice.repository.VoiceRepository;
 
@@ -62,6 +66,10 @@ public class MakeBookServiceImpl implements MakeBookService {
 	private final ScriptRepository scriptRepository;
 
 	private final VoiceRepository voiceRepository;
+
+	private final PushAlarmService pushAlarmService;
+
+	private final RedisTemplate<String, String> redisTemplate;
 
 	private final AmazonS3 amazonS3;
 
@@ -357,6 +365,16 @@ public class MakeBookServiceImpl implements MakeBookService {
 				}
 			}
 		}
+
+		//완료 시 사용자에게 push 알림 전송
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+		String fcmToken = valueOperations.get(String.valueOf(userSeq));
+
+		PushSendRequestDto pushSendRequestDto =
+			new PushSendRequestDto(fcmToken, "뚝딱! 동화가 완성되었어요.", request.getMakeBookTitle() + " 완성.");
+		pushAlarmService.sendNotification(pushSendRequestDto);
+
 		return ResponseDto.success();
 	}
 

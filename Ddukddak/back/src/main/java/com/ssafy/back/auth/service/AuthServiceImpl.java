@@ -132,6 +132,8 @@ public class AuthServiceImpl implements AuthService {
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 		valueOperations.set(String.valueOf(userSeq), dto.getFcmToken());
 
+		logger.info(userSeq + " 토큰 저장 : " + dto.getFcmToken());
+
 		return FCMTokenResponseDto.success();
 	}
 

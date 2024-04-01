@@ -49,6 +49,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     inputRange: [0, 1],
     outputRange: [0, -20],
   });
+
   return (
     <Animated.View
       style={{

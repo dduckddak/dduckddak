@@ -90,16 +90,16 @@ export const postMakeBook = async (
  * 동화뚝딱 삭제
  * @remarks
  * DELETE 요청을 '/api/v1/make-books' 엔드포인트에 보냅니다. 성공시 메시지를 반환합니다.
- * @param {number[]} makeBookIds 삭제할 동화뚝딱의 ID들을 담은 배열
+ * @param {number[]} deleteMakeBookIds 삭제할 동화뚝딱의 ID들을 담은 배열
  * @returns {Promise<ApiResponse>} "Success." 메시지를 반환합니다.
  * @throws 401 "Certification failed." 또는 403 "RefreshToken error.", 404 "Not Found." 오류를 반환할 수 있습니다.
  */
 export const deleteMakeBook = async (
-  makeBookIds: number[],
+  deleteMakeBookIds: number[],
 ): Promise<ApiResponse> => {
   try {
     const response = await apiClient.delete<ApiResponse>(`/api/v1/make-books`, {
-      data: { makeBookIds }, // DELETE 메서드의 본문에 makeBookId 배열을 담아 전송
+      data: { deleteMakeBookIds }, // DELETE 메서드의 본문에 makeBookId 배열을 담아 전송
     });
     return response.data;
   } catch (error) {

@@ -34,6 +34,7 @@ import {
 import ConfirmModal from '../../components/ConfirmModal';
 import { postMakeBook } from '../../api/makeBookApi';
 import { useUserStore } from '../../store/userStore';
+import Loading from '../../components/Loading';
 
 type FairyRouteProp = RouteProp<RootStackParamList, 'fairy'>;
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
@@ -82,6 +83,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [currentStep, setCurrentStep] = useState(1); // 현재 진행 단계(1 : 메인 캐릭터 2: 서브 캐릭 3 : 내레이션 4 : 만들기)
   const [makeBookTitle, setMakeBookTitle] = useState(''); // 클라이언트가 자신이 만들 책 제목을 지정하기 위한 state
+  const [isMakeLoading, setIsMakeLoading] = useState<boolean>(false);
+
 
   const { mainImage, mainVoice, subImage, subVoice, narration, resetStore } =
     useFairyStore(); // zustand 상태 변수, 함수
@@ -116,6 +119,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   // 뒤로가기가 실행되면 goBack을 함수의 event를 보류하여 저장해놓은 뒤, modal을 열어준다
   const checkCanGoBack = useCallback((e: any) => {
     e.preventDefault();
+
+
     setIsExitModal(true);
     setGoBackAction(e.data.action);
   }, []);
@@ -149,6 +154,8 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     };
     console.log(requestBody);
 
+    setIsMakeLoading(true);
+    navigation.removeListener('beforeRemove', checkCanGoBack);
     const response = await postMakeBook(requestBody);
     resetStore();
     console.log(response);
@@ -468,7 +475,9 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         creationModalVisible={isMakeBookModal}
         setCreationModalVisible={setIsMakeBookModal}
         handleMakeBook={handleMakeBook}
+
       />
+      { isMakeLoading && <Loading />}
       {/* 모달 영역 */}
     </View>
   );

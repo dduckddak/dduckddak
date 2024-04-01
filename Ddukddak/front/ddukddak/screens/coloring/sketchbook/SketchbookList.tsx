@@ -60,7 +60,7 @@ const SketchbookList: React.FC<SketchbookProps> = ({
           numColumns={2}
           contentContainerStyle={styles.flatListContentContainer}
           ListEmptyComponent={
-            isLoading && images.length === 0 ? (
+            !isLoading && images.length === 0 ? (
               <EmptyListComponent imageHeightRatio={0.55} />
             ) : null
           }

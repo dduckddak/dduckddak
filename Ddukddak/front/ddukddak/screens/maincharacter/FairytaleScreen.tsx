@@ -7,16 +7,23 @@ import {
   StyleSheet,
   StatusBar,
   Pressable,
-  BackHandler,
   Image,
   Dimensions,
-  Animated, Alert,
+  Animated,
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import GreenButton from '../../components/GreenButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
 import { useFairyStore } from '../../store/fairyStore';
-import { NavigationProp, RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import {
   BookSummary,
@@ -50,8 +57,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {
-    };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -105,7 +111,6 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     updateMainImage();
   }, []);
 
-
   // 뒤로가기 관련 설정 시작
 
   // 뒤로가기가 실행되면 goBack을 함수의 event를 보류하여 저장해놓은 뒤, modal을 열어준다
@@ -124,7 +129,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   // 뒤로가기를 눌렀을 때 나타나는 modal을 confirm했을 때 모달을 닫고, 스토어를 초기화한 후 뒤로가기를 수행한다.
   const closeModal = () => {
     setIsExitModal(false); // 모달 닫기
-    resetStore();  // zustand의 voice, image 선택한 데이터들 초기화
+    resetStore(); // zustand의 voice, image 선택한 데이터들 초기화
     if (goBackAction) navigation.dispatch(goBackAction); // 보류되었던 뒤로가기를 수행함
     // @ts-ignore
     setGoBackAction(null);
@@ -184,10 +189,10 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   };
 
   const buttonComponent = ({
-                             role,
-                             image,
-                             voice,
-                           }: {
+    role,
+    image,
+    voice,
+  }: {
     role: string;
     image: PhotoData | null;
     voice: VoiceData | null;

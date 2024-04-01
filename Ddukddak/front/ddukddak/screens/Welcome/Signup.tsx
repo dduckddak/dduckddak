@@ -226,6 +226,7 @@ const Signup: React.FC<{ navigation: any }> = ({ navigation }) => {
                       onChangeText={(text) =>
                         handleInputChange('birthDate', text)
                       }
+                      keyboardType="number-pad"
                     />
                   </View>
                 </View>

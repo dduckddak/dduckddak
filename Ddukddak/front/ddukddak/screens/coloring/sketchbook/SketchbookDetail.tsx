@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: Dimensions.get('screen').height * 0.07,
+    marginTop: 65,
   },
   innerContainer: {
     justifyContent: 'center',
@@ -106,9 +106,9 @@ const styles = StyleSheet.create({
   },
   header: {
     position: 'absolute',
-    top: '-3%',
+    top: '-5%',
     width: '90%',
-    height: Dimensions.get('screen').height * 0.13,
+    height: 104,
     resizeMode: 'stretch',
   },
   imageStyle: {
@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   naviBtn: {
-    width: Dimensions.get('screen').width * 0.15,
-    marginTop: Dimensions.get('screen').height * 0.04,
+    width: 200,
+    marginTop: 15,
   },
 });
 

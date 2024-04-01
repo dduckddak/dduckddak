@@ -134,7 +134,7 @@ const MainRending: React.FC = () => {
       case 2:
         return (
           <ImageBackground
-            source={require('../assets/images/Rendering/Rending2.png')}
+            source={require('../assets/images/Rendering/Rending22.png')}
             style={styles.imageBackground}
           >
             <View>
@@ -157,7 +157,7 @@ const MainRending: React.FC = () => {
       case 3:
         return (
           <ImageBackground
-            source={require('../assets/images/Rendering/Rending3.png')}
+            source={require('../assets/images/Rendering/Rending33.png')}
             style={styles.imageBackground}
           >
             <View>
@@ -180,7 +180,7 @@ const MainRending: React.FC = () => {
       case 4:
         return (
           <ImageBackground
-            source={require('../assets/images/Rendering/Rending4.png')}
+            source={require('../assets/images/Rendering/Rending44.png')}
             style={styles.imageBackground}
           >
             <View>
@@ -230,7 +230,9 @@ const MainRending: React.FC = () => {
           onPress={handlePreviousStep}
           style={[styles.buttonWrapper, styles.backbutton]}
         >
-          <Image source={require('../assets/images/button/back_button.png')} />
+          <Image
+            source={require('../assets/images/button/white_back_button.png')}
+          />
         </TouchableOpacity>
       )}
       {currentStep < 5 && (
@@ -238,7 +240,9 @@ const MainRending: React.FC = () => {
           onPress={handleNextStep}
           style={[styles.buttonWrapper, styles.nextbutton]}
         >
-          <Image source={require('../assets/images/button/next_button.png')} />
+          <Image
+            source={require('../assets/images/button/white_next_button.png')}
+          />
         </TouchableOpacity>
       )}
     </View>
@@ -263,8 +267,11 @@ const styles = StyleSheet.create({
   },
   nextbutton: {
     alignSelf: 'flex-end',
+    resizeMode: 'cover',
     bottom: 300,
-    right: 10,
+    right: 20,
+    // width: 120,
+    // height: 110,
   },
   backbutton: {
     top: 340,
@@ -286,7 +293,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   centeredImage1: {
-    marginTop: '25%',
+    marginTop: '70%',
     width: '100%',
     height: 350,
     resizeMode: 'contain',
@@ -303,8 +310,9 @@ const styles = StyleSheet.create({
     marginLeft: '5%',
   },
   rendingthree: {
-    marginTop: '4%',
+    marginTop: '24%',
     marginLeft: '5%',
+    transform: [{ rotateZ: '-10deg' }],
   },
   rendingfour: {
     marginTop: '31%',

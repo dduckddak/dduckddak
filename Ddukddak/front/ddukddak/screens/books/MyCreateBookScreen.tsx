@@ -367,7 +367,8 @@ const styles = StyleSheet.create({
   },
   selectedBook: {
     borderWidth: 5,
-    borderColor: 'rgba(180, 130, 210, 0.5)',
+    borderColor: 'rgba(184, 247, 10, 0.5)',
+    // borderColor: 'rgba(180, 130, 210, 0.5)',
   },
   deleteModeTrashCan: {
     borderWidth: 5,

@@ -204,7 +204,40 @@ const MainRending: React.FC = () => {
             style={styles.imageBackground}
           >
             <View>
-              <Image source={require('../assets/images/DD/뚝이2.png')} />
+              <Animated.Image
+                source={require('../assets/images/DD/뚝이.png')}
+                style={[
+                  styles.dduck,
+                  {
+                    transform: [
+                      {
+                        rotateZ: dduckAnimation.interpolate({
+                          inputRange: [-20, 20],
+                          outputRange: ['-20deg', '20deg'],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </View>
+            <View>
+              <Animated.Image
+                source={require('../assets/images/DD/딱이.png')}
+                style={[
+                  styles.ddak,
+                  {
+                    transform: [
+                      {
+                        rotateZ: ddakAnimation.interpolate({
+                          inputRange: [-20, 20],
+                          outputRange: ['20deg', '-20deg'],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
             </View>
             <View style={styles.buttonStyle}>
               <GreenButton
@@ -230,9 +263,7 @@ const MainRending: React.FC = () => {
           onPress={handlePreviousStep}
           style={[styles.buttonWrapper, styles.backbutton]}
         >
-          <Image
-            source={require('../assets/images/button/white_back_button.png')}
-          />
+          <Image source={require('../assets/images/button/back_button.png')} />
         </TouchableOpacity>
       )}
       {currentStep < 5 && (
@@ -240,9 +271,7 @@ const MainRending: React.FC = () => {
           onPress={handleNextStep}
           style={[styles.buttonWrapper, styles.nextbutton]}
         >
-          <Image
-            source={require('../assets/images/button/white_next_button.png')}
-          />
+          <Image source={require('../assets/images/button/next_button.png')} />
         </TouchableOpacity>
       )}
     </View>
@@ -267,15 +296,14 @@ const styles = StyleSheet.create({
   },
   nextbutton: {
     alignSelf: 'flex-end',
-    resizeMode: 'cover',
-    bottom: 300,
+    bottom: 320,
     right: 20,
     // width: 120,
     // height: 110,
   },
   backbutton: {
-    top: 340,
-    left: 10,
+    top: 310,
+    left: 20,
   },
   buttonWrapper: {
     position: 'absolute',
@@ -287,19 +315,22 @@ const styles = StyleSheet.create({
   },
   // 새로운 이미지 스타일 추가
   centeredImage: {
-    marginTop: '70%',
+    marginTop: '75%',
     width: '100%',
+    marginLeft: '10%',
     height: 350,
     resizeMode: 'contain',
   },
   centeredImage1: {
-    marginTop: '70%',
+    marginTop: '75%',
     width: '100%',
+    marginLeft: '10%',
     height: 350,
     resizeMode: 'contain',
   },
   centeredImage2: {
-    marginTop: '80%',
+    marginTop: '88%',
+    marginLeft: '-8%',
     width: '100%',
     height: 350,
     resizeMode: 'contain',
@@ -307,20 +338,20 @@ const styles = StyleSheet.create({
   rendingtwo: {
     marginTop: '24%',
     transform: [{ rotateZ: '-10deg' }],
-    marginLeft: '5%',
+    marginLeft: '8%',
   },
   rendingthree: {
     marginTop: '24%',
-    marginLeft: '5%',
+    marginLeft: '8%',
     transform: [{ rotateZ: '-10deg' }],
   },
   rendingfour: {
-    marginTop: '31%',
+    marginTop: '29%',
     transform: [
       { scaleX: -1 }, // 좌우 반전
       { rotateZ: '-10deg' },
     ],
-    marginLeft: '69%',
+    marginLeft: '65%',
   },
   skipButton: {
     position: 'absolute',

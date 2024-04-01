@@ -46,6 +46,7 @@ import { useBgmStore } from './store/BgmStore';
 
 import BGMPlayer from './components/sound/BgmPlayer';
 import useTouchEffect from './components/sound/TouchEffect';
+import { useTimeStore } from './store/timeStore'
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -192,8 +193,20 @@ export default function App() {
 
   const { playTouch } = useTouchEffect();
 
+  const { setBackgroundSrc, setFontColor } = useTimeStore();
+
   useEffect(() => {
     SplashScreen.hideAsync().catch(() => {});
+
+    const hour = new Date().getHours();
+    const isDayTime = hour >= 6 && hour < 18;
+    console.log(`isDayTime = ${isDayTime}`)
+
+    if (!isDayTime) {
+      setBackgroundSrc(require('./assets/images/background/evening.jpg'))
+      setFontColor('#FFF');
+    }
+
   }, []);
 
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);

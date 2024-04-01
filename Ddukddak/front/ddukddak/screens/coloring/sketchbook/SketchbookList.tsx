@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   container: {
-    marginTop: Dimensions.get('screen').height * 0.04,
+    marginTop: 31,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '8%',
     width: '90%',
-    height: Dimensions.get('screen').height * 0.13,
+    height: 105,
     resizeMode: 'stretch',
   },
   flatList: {
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   naviBtn: {
-    width: Dimensions.get('screen').width * 0.15,
+    width: 220,
     marginTop: Dimensions.get('screen').height * 0.01,
   },
 });

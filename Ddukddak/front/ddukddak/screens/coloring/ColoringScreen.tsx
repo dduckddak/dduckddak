@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     height: 110,
     transform: [{ scaleX: -1 }],
   },
-  cloud3: { position: 'absolute', top: 35, left: 1060 },
+  cloud3: { position: 'absolute', top: 35, left: 1050 },
   flexContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -193,16 +193,16 @@ const styles = StyleSheet.create({
   },
   box: {
     backgroundColor: 'rgba(205, 234, 185, 0.48)',
-    height: Dimensions.get('screen').height * 0.7,
-    width: Dimensions.get('screen').width * 0.9,
+    height: 550,
+    width: 1100,
     paddingVertical: 20,
-    marginTop: Dimensions.get('screen').height * 0.01,
+    marginTop: 5,
     padding: '2%',
     borderRadius: 15,
   },
   naviBtn: {
-    width: Dimensions.get('screen').width * 0.2,
-    marginTop: Dimensions.get('screen').height * 0.01,
+    width: 250,
+    marginTop: 5,
   },
 
   imageContainer: {
@@ -212,8 +212,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get('screen').width / 2.5,
-    height: Dimensions.get('screen').width / 3,
+    width: 505,
+    height: 420,
     resizeMode: 'cover',
     alignSelf: 'center',
     backgroundColor: 'white',
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'im-hyemin-bold',
     fontSize: 48,
-    marginTop: Dimensions.get('screen').height * 0.08,
+    marginTop: 30,
   },
 });
 

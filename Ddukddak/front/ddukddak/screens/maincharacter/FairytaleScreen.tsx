@@ -11,8 +11,10 @@ import {
   Image,
   Dimensions,
   Animated,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import GreenButton from '../../components/GreenButton';
 import CreationModal from '../../components/createBook/renderCreationModal';
 import { useFairyStore } from '../../store/fairyStore';

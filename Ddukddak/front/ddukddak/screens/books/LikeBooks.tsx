@@ -170,6 +170,9 @@ const styles = StyleSheet.create({
     bottom: -35,
     fontFamily: 'im-hyemin-bold',
     fontSize: 25,
+    textShadowColor: 'white',
+    textShadowOffset: { width: 3, height: 3 },
+    textShadowRadius: 3,
   },
   selected: {
     borderColor: Colors.green,

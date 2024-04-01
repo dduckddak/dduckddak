@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, Text, View, StyleSheet, Image } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
+import { useUserStore } from '../../store/userStore';
 
 function AddVoiceScreen() {
+  const userSex = useUserStore((state) => state.sex);
+  const [character, setCharacter] = useState();
   const navigation = useNavigation();
+  useEffect(() => {
+    const updateMainImage = () => {
+      if (userSex === 'M') {
+        setCharacter(require('../../assets/images/Main/뚝이zip.gif'));
+      } else {
+        setCharacter(require('../../assets/images/Main/딱이zip3.gif'));
+      }
+    };
 
+    updateMainImage();
+  }, []);
   return (
     <ImageBackground
-      source={require('../../assets/images/background/fairybackground.png')}
+      source={require('../../assets/images/background/morning.jpg')}
       style={styles.ImageBackground}
     >
       <View style={styles.container}>
-        <Image
-          source={require('../../assets/images/Main/딱이zip.gif')}
-          style={styles.dd}
-        ></Image>
+        <Image source={character} style={styles.dd}></Image>
         <Image
           source={require('../../assets/images/Main/ballon.png')}
           style={styles.ballon}
@@ -55,10 +65,10 @@ const styles = StyleSheet.create({
   },
   dd: {
     position: 'absolute',
-    left: 30,
+    left: 20,
     width: 500,
     height: 500,
-    bottom: -300,
+    bottom: -320,
   },
   ballon: {
     position: 'absolute',

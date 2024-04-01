@@ -65,7 +65,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
 
     const updateMainImage = () => {
       if (userSex === 'M') {
-        setMainPageCharacter(require('../../assets/images/DD/뚝이.png'));
+        setMainPageCharacter(require('../../assets/images/DD/뚝이3.png'));
       } else {
         setMainPageCharacter(require('../../assets/images/DD/딱이.png'));
       }
@@ -162,9 +162,9 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
               </View>
 
               <View style={styles.speechBubble}>
-                {selectedId === 1 ? (
+                {userSex === 'M' ? (
                   <Image
-                    source={require('../../assets/images/Main/뚝이zip.gif')}
+                    source={require('../../assets/images/Main/뚝이gif2.gif')}
                     style={styles.ddak}
                   />
                 ) : (
@@ -230,10 +230,17 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
               </View>
 
               <View style={styles.speechBubble}>
-                <Image
-                  source={require('../../assets/images/Main/딱이zip.gif')}
-                  style={styles.ddak}
-                />
+                {userSex === 'M' ? (
+                  <Image
+                    source={require('../../assets/images/Main/뚝이gif2.gif')}
+                    style={styles.ddak}
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/images/Main/딱이zip.gif')}
+                    style={styles.ddak}
+                  />
+                )}
                 <Image
                   source={require('../../assets/images/Main/ballon.png')}
                   style={styles.ballon}
@@ -264,7 +271,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
-                    style={styles.bookicon}
+                    style={styles.bookicon1}
                   />
                 </Pressable>
               </View>
@@ -323,7 +330,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
-                    style={styles.bookicon}
+                    style={styles.bookicon1}
                   />
                 </Pressable>
               </View>
@@ -389,7 +396,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
-                    style={styles.bookicon}
+                    style={styles.bookicon2}
                   />
                 </Pressable>
               </View>
@@ -416,10 +423,17 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
               </View>
 
               <View style={styles.speechBubble}>
-                <Image
-                  source={require('../../assets/images/Main/딱이zip.gif')}
-                  style={styles.ddak}
-                />
+                {userSex === 'M' ? (
+                  <Image
+                    source={require('../../assets/images/Main/뚝이gif2.gif')}
+                    style={styles.ddaks}
+                  />
+                ) : (
+                  <Image
+                    source={require('../../assets/images/Main/딱이zip.gif')}
+                    style={styles.ddaks}
+                  />
+                )}
                 <Image
                   source={require('../../assets/images/Main/ballon3.png')}
                   style={styles.ballon4}
@@ -505,6 +519,17 @@ const styles = StyleSheet.create({
   bookicon: {
     width: 710,
     height: 210,
+    bottom: -20,
+  },
+  bookicon1: {
+    width: 710,
+    height: 210,
+    bottom: -20,
+    left: 5,
+  },
+  bookicon2: {
+    width: 710,
+    height: 210,
   },
   buttonWrapper: {
     position: 'absolute',
@@ -530,10 +555,17 @@ const styles = StyleSheet.create({
   ballon4: { left: '59%', top: '12%' },
   ddak: {
     position: 'absolute',
-    left: '6%',
+    left: '3%',
     top: '20%',
-    width: 400,
-    height: 550,
+    width: 455,
+    height: 520,
+  },
+  ddaks: {
+    position: 'absolute',
+    left: '4%',
+    top: '25%',
+    width: 350,
+    height: 380,
   },
   ddak2: {
     position: 'absolute',
@@ -571,9 +603,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     position: 'absolute',
     fontFamily: 'im-hyemin-bold',
-    fontSize: 40,
-    left: '68%',
-    top: '29%',
+    fontSize: 45,
+    left: '66%',
+    top: '26%',
     flexDirection: 'column',
   },
 });

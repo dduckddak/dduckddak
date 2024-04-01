@@ -292,11 +292,6 @@ function AddVoice({ route, navigation }: any) {
           style={{ width: 220, paddingBottom: 40 }}
           onPress={handleSelectButtonPress}
         />
-        <GreenButton
-          content="목소리 추가하기"
-          style={{ width: 220, paddingBottom: 40 }}
-          onPress={() => navigation.navigate('addvoice' as never)}
-        />
       </View>
     </ImageBackground>
   );

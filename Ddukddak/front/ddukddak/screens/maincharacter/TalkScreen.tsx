@@ -45,7 +45,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -105,6 +105,8 @@ function TalkScreen({ route }: TalkScreenProps) {
       setSubName(result.subName);
       setSubBasic(result.subBasic);
       setSubTalk(result.subTalk);
+      setCharacterScript(result.welcomeComment);
+      playAudio(result.welcomeCommentSound);
     } catch (error) {
       console.error('load Talk :', error);
     }
@@ -214,70 +216,87 @@ function TalkScreen({ route }: TalkScreenProps) {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" />
-      <ImageBackground
-        source={require('../../assets/images/background/background3.png')}
-        style={styles.imageBackground}
-      >
+  const playAudio = async (File: string) => {
+
+    const soundObject = new Audio.Sound();
+
+    await soundObject.loadAsync({ uri: File });
+
+    await soundObject.playAsync();
+
+    // soundObject.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate())
+  };
+
+  // const onPlaybackStatusUpdate = (playbackStatus: any,File : Audio.Sound) => {
+  //   if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
+  //     File.unloadAsync();
+  //   }
+  // };
+
+return (
+  <View style={styles.container}>
+    <StatusBar translucent backgroundColor="transparent" />
+    <ImageBackground
+      source={require('../../assets/images/background/background3.png')}
+      style={styles.imageBackground}
+    >
+      <CloudAnimation>
+        <Image
+          source={require('../../assets/images/Main/cloud.png')}
+          style={styles.cloud}
+        />
         <CloudAnimation>
           <Image
             source={require('../../assets/images/Main/cloud.png')}
-            style={styles.cloud}
+            style={styles.cloud1}
           />
-          <CloudAnimation>
-            <Image
-              source={require('../../assets/images/Main/cloud.png')}
-              style={styles.cloud1}
-            />
-          </CloudAnimation>
         </CloudAnimation>
-        <Image source={{ uri: subBasic }} style={styles.characterImage} />
+      </CloudAnimation>
+      <Image source={{ uri: subBasic }} style={styles.characterImage} />
 
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 60,
-            paddingRight: Dimensions.get('screen').width * 0.4,
-          }}
-        >
-          {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
-          <Image
-            source={require('../../assets/images/talk/talk.png')}
-            style={characterTalking ? {} : { transform: [{ scaleX: -1 }] }}
-          />
-          <View style={styles.textContainer}>
-            <Text style={styles.bigtext}>
-              {characterTalking ? characterScript : userScript}
-            </Text>
-          </View>
-          {/* 대화 말풍선 나올 영역 끝 */}
-
-          {isRecording ? (
-            <GreenButton
-              onPress={stopRecording}
-              content={'대화끝내기'}
-              style={{
-                width: '35%',
-                marginLeft: Dimensions.get('screen').width * 0.2,
-              }}
-            />
-          ) : (
-            <GreenButton
-              onPress={startRecording}
-              content={'대화하기'}
-              style={{
-                width: '35%',
-                marginLeft: Dimensions.get('screen').width * 0.2,
-              }}
-            />
-          )}
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 60,
+          paddingRight: Dimensions.get('screen').width * 0.4,
+        }}
+      >
+        {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
+        <Image
+          source={require('../../assets/images/talk/talk.png')}
+          style={characterTalking ? {} : { transform: [{ scaleX: -1 }] }}
+        />
+        <View style={styles.textContainer}>
+          <Text style={styles.bigtext}>
+            {characterTalking ? characterScript : userScript}
+          </Text>
         </View>
-      </ImageBackground>
-    </View>
-  );
+        {/* 대화 말풍선 나올 영역 끝 */}
+
+        {isRecording ? (
+          <GreenButton
+            onPress={stopRecording}
+            content={'대화끝내기'}
+            style={{
+              width: '35%',
+              marginLeft: Dimensions.get('screen').width * 0.2,
+            }}
+          />
+        ) : (
+          <GreenButton
+            onPress={startRecording}
+            content={'대화하기'}
+            style={{
+              width: '35%',
+              marginLeft: Dimensions.get('screen').width * 0.2,
+            }}
+          />
+        )}
+      </View>
+    </ImageBackground>
+  </View>
+);
 }
 
 export default TalkScreen;

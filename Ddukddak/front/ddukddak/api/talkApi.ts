@@ -10,6 +10,8 @@ interface TalkDetailData {
   subName: string;
   subBasic: string;
   subTalk: string;
+  welcomeComment: string;
+  welcomeCommentSound: string;
 }
 
 type TalkDetailResponse = ApiResponse & TalkDetailData;

@@ -7,6 +7,8 @@ interface ConfirmModalProps {
   text: string[];
   onConfirm: () => void;
   onCancel: () => void;
+  btnConfirmText: string;
+  btnCancelText: string;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -14,6 +16,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   text,
   onConfirm,
   onCancel,
+  btnConfirmText,
+  btnCancelText,
 }) => {
   return (
     <Modal visible={isVisible} transparent={true} animationType="slide">
@@ -24,12 +28,12 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
             <SkyButton
               onPress={onConfirm}
               style={styles.buttonStyle}
-              content="그만하기"
+              content={btnConfirmText}
             />
             <SkyButton
               onPress={onCancel}
               style={styles.buttonStyle}
-              content="계속 만들기"
+              content={btnCancelText}
             />
           </View>
         </View>

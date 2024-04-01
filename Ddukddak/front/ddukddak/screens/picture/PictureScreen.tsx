@@ -235,7 +235,7 @@ function PictureScreen() {
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
           ListEmptyComponent={
-            !isLoading && imageData.length === 0 ? <EmptyListComponent /> : null
+            isLoading && imageData.length === 0 ? <EmptyListComponent /> : null
           }
           style={styles.imagelist}
         />
@@ -266,7 +266,6 @@ const styles = StyleSheet.create({
     left: '2%',
     width: '10%',
     height: '12%',
-
     zIndex: 10,
   },
   cloud: { position: 'absolute', top: 5, left: 200 },

@@ -17,6 +17,7 @@ import { Audio } from 'expo-av';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import AlertModal from '../../components/AlertModal';
 import useTouchEffect from '../../components/sound/TouchEffect';
+import ConfirmModal from '../../components/ConfirmModal';
 
 interface Voice {
   voiceId: number;
@@ -110,10 +111,21 @@ function VoiceScreen() {
   // 현재 재생 중인 사운드를 추적하는 상태 변수
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
 
+  // 삭제 확인 모달
+  const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
+  // 삭제하려고 한 Id 저장
+  const [selectedVoiceId, setSelectedVoiceId] = useState<number | null>(null);
+
   // 삭제 성공 모달
   const [sAlertModal, setSAlertModal] = useState(false);
   // 삭제 실패 모달
   const [fAlertModal, setFAlertModal] = useState(false);
+
+  // 삭제 확인 모달
+  const promptDeleteVoice = (voiceId: number) => {
+    setSelectedVoiceId(voiceId);
+    setConfirmDeleteModal(true);
+  };
 
   const readList = async () => {
     setIsLoading(true);
@@ -161,6 +173,14 @@ function VoiceScreen() {
     }
   };
 
+  const confirmDelete = async () => {
+    if (selectedVoiceId !== null) {
+      await deleteVoice(selectedVoiceId);
+      setConfirmDeleteModal(false); // 삭제 확인 모달 닫기
+      setSelectedVoiceId(null); // 선택된 voiceId 초기화
+    }
+  };
+
   // 삭제 기능
   const deleteVoice = async (voiceId: number) => {
     try {
@@ -179,6 +199,7 @@ function VoiceScreen() {
   const handleModalClose = () => {
     setSAlertModal(false);
     setFAlertModal(false);
+    setConfirmDeleteModal(false);
   };
 
   const renderItem = ({ item }: any) => (
@@ -196,7 +217,7 @@ function VoiceScreen() {
             >
               <Text style={styles.buttonText}>미리듣기</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
+            <TouchableOpacity onPress={() => promptDeleteVoice(item.voiceId)}>
               <Image
                 source={require('../../assets/images/Trash.png')}
                 style={styles.trash}
@@ -275,6 +296,17 @@ function VoiceScreen() {
         style={{ width: 220, paddingBottom: 40 }}
         onPress={() => navigation.navigate('addvoice' as never)}
       />
+
+      {/* 모달 위치 */}
+      <ConfirmModal
+        isVisible={confirmDeleteModal}
+        text={['삭제 확인', '정말로 삭제하시겠습니까?']}
+        onConfirm={confirmDelete}
+        onCancel={handleModalClose}
+        btnConfirmText={'삭제하기'}
+        btnCancelText={'돌아가기'}
+      />
+
       <AlertModal
         isVisible={sAlertModal}
         text={['삭제 성공', '목소리가 성공적으로 \n 삭제되었습니다.']}
@@ -286,6 +318,7 @@ function VoiceScreen() {
         text={['삭제 실패', ' 다시 시도해 주세요.']}
         onConfirm={handleModalClose}
       />
+      {/* 모달 위치 */}
     </ImageBackground>
   );
 }
@@ -315,7 +348,7 @@ const styles = StyleSheet.create({
   cloud3: { position: 'absolute', top: 125, left: 1000 },
   duck: {
     position: 'absolute',
-    bottom: '17%',
+    bottom: '-17%',
     left: '2%',
     width: '10%',
     height: '12%',

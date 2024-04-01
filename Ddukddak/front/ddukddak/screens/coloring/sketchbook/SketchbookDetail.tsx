@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Image, ImageSourcePropType, StyleSheet, Dimensions } from 'react-native';
+import {
+  View,
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import GreenButton from '../../../components/GreenButton';
 import SkyButton from '../../../components/SkyButton';
 import ConfirmModal from '../../../components/ConfirmModal';
@@ -13,12 +19,14 @@ type SketchImage = {
 };
 
 interface SketchbookDetailProps {
-  image: SketchImage,
-  navigation: NavigationProp<ParamListBase>
+  image: SketchImage;
+  navigation: NavigationProp<ParamListBase>;
 }
 
-const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image, navigation }) => {
-
+const SketchbookDetail: React.FC<SketchbookDetailProps> = ({
+  image,
+  navigation,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleDelete = () => {
@@ -27,45 +35,49 @@ const SketchbookDetail: React.FC<SketchbookDetailProps> = ({ image, navigation }
 
   const handleConfirm = async () => {
     const requestBody = {
-      deleteColoringIds : [image.coloringId]
+      deleteColoringIds: [image.coloringId],
     };
 
-    const response = await deleteColorings(requestBody)
+    const response = await deleteColorings(requestBody);
     // TODO 예외처리 아직 안함
 
     setModalVisible(false);
     navigation.goBack();
-
   };
 
   const handleCancel = () => {
     setModalVisible(false);
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.imagesContainer}>
-          <Image source={{ uri: image.coloringFile }} style={styles.imageStyle} />
+          <Image
+            source={{ uri: image.coloringFile }}
+            style={styles.imageStyle}
+          />
         </View>
       </View>
       <GreenButton
         content="삭제하기"
         style={styles.naviBtn}
-        onPress={() => setModalVisible(true)} />
-
+        onPress={() => setModalVisible(true)}
+      />
 
       <ConfirmModal
         isVisible={modalVisible}
         text={['정말 이 작품을 버리실건가요?', '이제 다신 못봐요']}
         onConfirm={handleConfirm}
         onCancel={handleCancel}
+        btnConfirmText={'삭제하기'}
+        btnCancelText={'취소하기'}
       />
 
       <Image
         source={require('../../../assets/images/sketchbookheader.png')}
-        style={styles.header} />
+        style={styles.header}
+      />
     </View>
   );
 };
@@ -107,8 +119,7 @@ const styles = StyleSheet.create({
   },
   naviBtn: {
     width: Dimensions.get('screen').width * 0.15,
-    marginTop:
-      Dimensions.get('screen').height * 0.04,
+    marginTop: Dimensions.get('screen').height * 0.04,
   },
 });
 

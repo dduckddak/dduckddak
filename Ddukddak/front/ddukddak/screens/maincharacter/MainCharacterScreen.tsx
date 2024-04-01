@@ -16,6 +16,7 @@ import { BookSummary } from '../../types/types';
 import BookList from './childs/BookList';
 import Dots from './childs/Dots';
 import { useUserStore } from '../../store/userStore';
+import useTimeStore from '../../store/timeStore';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -73,6 +74,8 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
   // 구름 두둥실
 
   const userSex = useUserStore((state) => state.sex);
+  const { fontColor, backgroundSrc } = useTimeStore();
+
   const [mainPageCharacter, setMainPageCharacter] = useState();
 
   const updateMainImage = useCallback(() => {
@@ -120,7 +123,8 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/morning.jpg')}
+      // source={require('../../assets/images/background/morning.jpg')}
+      source={backgroundSrc}
       style={styles.imageBackground}
     >
       <CloudAnimation>

@@ -16,10 +16,11 @@ import {
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
-import { getUserInfo, login } from '../../api/userApi';
+import { getUserInfo, login,updateFcmToken } from '../../api/userApi';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as SecureStore from 'expo-secure-store';
 import { useUserStore } from '../../store/userStore';
+import messaging from '@react-native-firebase/messaging';
 
 type Props = {
   navigation: NavigationProp<any>;
@@ -79,6 +80,12 @@ const Login: React.FC<Props> = ({ navigation }) => {
       if (typeof refreshToken === 'string') {
         await SecureStore.setItemAsync('refreshToken', refreshToken);
       }
+
+      //push 알림을 위한 fcmToken을 레디스에 저장
+      const fcmToken = await messaging().getToken();
+      console.log(fcmToken);
+
+      await updateFcmToken(fcmToken);
 
       // 로그인 성공했을 떄, 첫 로그인이면 선호 책을 조사하는 페이지로 그 이외이면 메인 페이지로 이동
       if (firstLogin) {

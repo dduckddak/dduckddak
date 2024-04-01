@@ -5,6 +5,28 @@ import { useUserStore } from '../../store/userStore';
 import SkyButton from '../SkyButton';
 import Loading from '../Loading';
 
+function attachIga(userName: string): string {
+  const slicedUserName = userName.slice(1); // remove first character of user's name
+  const lastWord = userName.charAt(userName.length-1); // get last character of user's name
+
+  const korBegin = 0xAC00;
+  const korEnd = 0xD7A3;
+  const lastWordCode = lastWord.charCodeAt(0);
+
+  // 종성있으면 '이'붙여서 없으면 그냥 이름
+  if (korBegin <= lastWordCode && lastWordCode <= korEnd) {
+    const korJong = (lastWordCode - korBegin) % 28;
+    if (korJong !== 0) {
+      return slicedUserName + "이";
+    }
+    else {
+      return slicedUserName;
+    }
+  }
+  return userName;
+}
+
+
 const CreationModal = ({
   creationModalVisible,
   setCreationModalVisible,
@@ -19,6 +41,8 @@ const CreationModal = ({
   // 이걸 어떻게 해야할지 고민
   // 동화생성 완료 후 너가 할지 이름 넣어줄지,,,
   const userName = useUserStore((state) => state.userName);
+  const modifiedUserName = attachIga(userName);
+
 
   const makeBookConfirm = async () => {
     // setIsLoading(true);
@@ -48,7 +72,7 @@ const CreationModal = ({
       <View style={styles.modalContainer}>
         <View style={styles.endmodalContent}>
           <Text style={styles.modalText}>
-            {userName}이가 재료를 모두 찾아준 덕분에
+            {modifiedUserName}가 재료를 모두 찾아준 덕분에
             {'\n'}책이 잘 만들어지고 있어!
             {'\n'}다 만들어지면 알려줄게
           </Text>

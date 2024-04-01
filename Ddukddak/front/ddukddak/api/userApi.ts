@@ -111,22 +111,17 @@ export const refreshToken = async (
  * 알림 - Firebase Cloud Messaging 토큰 업데이트
  * @remarks
  * POST 요청을 '/api/v1/auth/fcmToken' 엔드포인트에 보냅니다. 성공시 메시지를 반환합니다.
- * @param {string} userId 사용자 ID
  * @param {string} fcmToken 새 FCM 토큰 값
  * @returns {Promise<ApiResponse>} "Success." 메시지를 반환합니다.
  * @throws 에러 발생 시 적절한 오류 메시지를 반환합니다.
  */
 export const updateFcmToken = async (
-  userId: string,
-  fcmToken: string,
+  fcmToken: string
 ): Promise<ApiResponse> => {
   try {
     const response = await apiClient.post<ApiResponse>(
       '/api/v1/auth/fcmToken',
-      {
-        userId,
-        fcmToken,
-      },
+      { fcmToken }
     );
     return response.data;
   } catch (error) {

@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
-
 import {
   deleteMakeBook,
   getMakeBookList,
@@ -20,7 +19,6 @@ import {
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import useTouchEffect from '../../components/sound/TouchEffect';
-
 interface BookItemsProps {
   title: string;
   coverImage: string;
@@ -33,10 +31,8 @@ interface BookItemsProps {
 }
 
 const screenWidth = Dimensions.get('screen').width;
-
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const cloudAnimationValue = useState(new Animated.Value(0))[0];
-
   useEffect(() => {
     const animateClouds = () => {
       const cloudAnimation = Animated.sequence([
@@ -51,18 +47,15 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
           useNativeDriver: true,
         }),
       ]);
-
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
     return () => {};
   }, [cloudAnimationValue]);
-
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -20],
   });
-
   return (
     <Animated.View
       style={{
@@ -78,7 +71,6 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     </Animated.View>
   );
 };
-
 const BookItems: React.FC<BookItemsProps> = ({
   title,
   coverImage,
@@ -91,16 +83,13 @@ const BookItems: React.FC<BookItemsProps> = ({
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
-
   useEffect(() => {
     console.log(isDeleteMode);
     return () => {
       CharrrrAnimation.removeAllListeners();
     };
   }, []);
-
   const isSelected = selectedItems.includes(makeBookId);
-
   const handleSelectItem = () => {
     if (isDeleteMode) {
       // 삭제 모드일 때의 로직
@@ -110,15 +99,12 @@ const BookItems: React.FC<BookItemsProps> = ({
       setSelectedItems(newSelectedItems);
     }
   };
-
   const handlePress = () => {
     playTouch('open');
     CharrrrAnimation.setValue(1);
-
     setTimeout(() => {
       CharrrrAnimation.stopAnimation();
     }, 1000);
-
     Animated.timing(CharrrrAnimation, {
       toValue: 2,
       duration: 1000,
@@ -128,7 +114,6 @@ const BookItems: React.FC<BookItemsProps> = ({
       navigation.navigate('makingBook', { makeBookId: makeBookId });
     });
   };
-
   return (
     <TouchableOpacity
       style={styles.bookItem}
@@ -150,7 +135,6 @@ const BookItems: React.FC<BookItemsProps> = ({
     </TouchableOpacity>
   );
 };
-
 const BookListScreen: React.FC = () => {
   const [makeBookList, setMakeBookList] = useState<MakeBookListData>();
   const [isDeleteMode, setIsDeleteMode] = useState(false);
@@ -168,36 +152,29 @@ const BookListScreen: React.FC = () => {
       console.log('에러!', error);
     }
   };
-
   useEffect(() => {
     fetchMakeBooks();
   }, []);
-
   const handleTrashButton = async () => {
     // delete Mode 가 아니거나 delete Mode 인데 선택된게 없으면 deleteMode 토글
     if (!isDeleteMode || (isDeleteMode && selectedItems.length === 0)) {
       toggleDeleteMode();
       return;
     }
-
     try {
       console.log(selectedItems);
       const response = await deleteMakeBook(selectedItems);
       console.log(response);
       setIsDeleteMode(false);
       setSelectedItems([]);
-
       await fetchMakeBooks();
     } catch (error: any) {
       console.error('Error deleting:', error.message);
     }
   };
-
   const navigation = useNavigation();
-
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const [shouldFlip, setShouldFlip] = useState(false);
-
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -214,7 +191,6 @@ const BookListScreen: React.FC = () => {
       ]),
     ).start();
   }, []);
-
   //오리 반전
   duckPosition.x.addListener((value) => {
     // 움직임이 끝에 도달했을 때 반전
@@ -306,9 +282,7 @@ const BookListScreen: React.FC = () => {
     </ImageBackground>
   );
 };
-
 export default BookListScreen;
-
 const styles = StyleSheet.create({
   bookList: {
     alignItems: 'center',
@@ -393,14 +367,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-
   selectedBook: {
     borderWidth: 5,
-    borderColor: 'rgba(180, 130, 210, 0.5)',
+    borderColor: 'rgba(184, 247, 10, 0.5)',
+    // borderColor: 'rgba(180, 130, 210, 0.5)',
   },
-
   deleteModeTrashCan: {
     borderWidth: 5,
-    borderColor: 'rgba(180, 130, 210, 0.5)',
+    borderColor: 'rgba(184, 247, 10, 0.5)',
+    borderRadius: 100,
+    backgroundColor: 'rgba(184, 247, 10, 0.5)',
   },
 });

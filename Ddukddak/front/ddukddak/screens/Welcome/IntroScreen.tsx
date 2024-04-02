@@ -464,7 +464,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       {YourComponent({ currentStep })}
-      {currentStep > 1 && currentStep < 6 && (
+      {currentStep > 1 && currentStep < 5 && (
         <TouchableOpacity
           onPress={handlePreviousStep}
           style={[styles.buttonWrapper, styles.backbutton]}
@@ -472,7 +472,15 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
           <Image source={require('../../assets/images/button/egun.png')} />
         </TouchableOpacity>
       )}
-      {currentStep < 6 && (
+      {currentStep === 5 && (
+        <TouchableOpacity
+          onPress={handleNextStep}
+          style={[styles.buttonWrapper, styles.nextbutton]}
+        >
+          <Image source={require('../../assets/images/button/gotomake.png')} />
+        </TouchableOpacity>
+      )}
+      {currentStep < 5 && (
         <TouchableOpacity
           onPress={handleNextStep}
           style={[styles.buttonWrapper, styles.nextbutton]}

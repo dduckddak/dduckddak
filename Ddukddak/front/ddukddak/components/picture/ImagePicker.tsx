@@ -7,7 +7,11 @@ import { addPhoto } from '../../api/photoApi';
 import AlertModal from '../AlertModal';
 import Loading from '../Loading';
 
-const ImagePickerComponent: React.FC = () => {
+interface ImagePickerComponentProps {
+  readPhotos: () => Promise<void>;
+}
+
+const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ readPhotos }) => {
   // 카메라, 갤러리 모달
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   // 성공 모달
@@ -52,6 +56,7 @@ const ImagePickerComponent: React.FC = () => {
       const response = await addPhoto({ photoFile: photoFile as File });
       console.log(response);
       setSAlertModal(true);
+      readPhotos();
     } catch (error: unknown) {
       console.error(error);
 

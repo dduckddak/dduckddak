@@ -5,10 +5,9 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  TouchableOpacity,
   ImageBackground,
   Animated,
-  Dimensions,
+  Dimensions, Pressable, TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
@@ -19,7 +18,6 @@ import {
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import useTouchEffect from '../../components/sound/TouchEffect';
-import { useBgmStore } from '../../store/BgmStore';
 
 interface BookItemsProps {
   title: string;
@@ -85,14 +83,7 @@ const BookItems: React.FC<BookItemsProps> = ({
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
-  const bgmStore = useBgmStore();
 
-  const pauseBGM = async () => {
-    if (bgmStore.isPlaying) {
-      await bgmStore.bgmSound?.pauseAsync();
-      bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    }
-  };
 
   useEffect(() => {
     console.log(isDeleteMode);
@@ -111,7 +102,6 @@ const BookItems: React.FC<BookItemsProps> = ({
     }
   };
   const handlePress = () => {
-    pauseBGM();
     playTouch('open');
     CharrrrAnimation.setValue(1);
     setTimeout(() => {
@@ -127,8 +117,12 @@ const BookItems: React.FC<BookItemsProps> = ({
     });
   };
   return (
-    <TouchableOpacity
-      style={styles.bookItem}
+    <Pressable
+
+      style={({ pressed }) => [
+        styles.bookItem,
+        { opacity: pressed ? 0.3 : 1 }
+      ]}
       onPress={() => {
         if (isDeleteMode) {
           handleSelectItem();
@@ -144,7 +138,7 @@ const BookItems: React.FC<BookItemsProps> = ({
         />
         <Text style={styles.title}>{title}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 const BookListScreen: React.FC = () => {
@@ -282,7 +276,16 @@ const BookListScreen: React.FC = () => {
           contentContainerStyle={styles.bookList}
         />
       </View>
-      <TouchableOpacity style={styles.trash} onPress={handleTrashButton}>
+      <Pressable
+        onPress={handleTrashButton}
+        style={({ pressed }) => [
+          styles.trash,
+          {
+            opacity: pressed ? .3 : 1,
+          },
+
+        ]}
+      >
         <Image
           source={require('../../assets/images/Trash.png')}
           style={[
@@ -290,7 +293,7 @@ const BookListScreen: React.FC = () => {
             isDeleteMode && styles.deleteModeTrashCan,
           ]}
         />
-      </TouchableOpacity>
+      </Pressable>
     </ImageBackground>
   );
 };

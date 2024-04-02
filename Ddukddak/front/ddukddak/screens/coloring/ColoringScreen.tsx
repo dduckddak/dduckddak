@@ -6,8 +6,7 @@ import {
   Image,
   FlatList,
   Text,
-  TouchableOpacity,
-  Animated,
+  Animated, Pressable,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -100,7 +99,15 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
 
   const renderItem = ({ item }: { item: string }) => (
     <View style={styles.imageContainer}>
-      <TouchableOpacity onPress={() => handleImageSelect(item)}>
+      <Pressable
+        onPress={() => handleImageSelect(item)}
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? .3 : 1,
+          },
+
+        ]}
+      >
         <Image
           source={{ uri: item }}
           style={[
@@ -108,7 +115,7 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
             selectedImage === item ? styles.selectedImage : null,
           ]}
         />
-      </TouchableOpacity>
+      </Pressable>
     </View>
   );
 

@@ -62,17 +62,23 @@ function AddVoiceScreen() {
   const [sound, setSound] = useState<Audio.Sound>();
   const navigation = useNavigation();
 
-  const bgmStore = useBgmStore();
+  const { bgmSound, isPlaying } = useBgmStore();
 
-  const pauseBGM = async () => {
-    if (bgmStore.isPlaying) {
-      await bgmStore.bgmSound?.pauseAsync();
-      bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    }
-  };
 
   useEffect(() => {
-    pauseBGM();
+    if (bgmSound) {
+      bgmSound.stopAsync();
+    }
+
+    return () => {
+      if (isPlaying) {
+        bgmSound?.playAsync();
+      }
+    }
+
+  }, []);
+
+  useEffect(() => {
     const soundObject = new Audio.Sound();
     setSound(soundObject)
 

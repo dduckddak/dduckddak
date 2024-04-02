@@ -6,7 +6,6 @@ import {
   Image,
   ImageBackground,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import MainScreen from './MainScreen';
@@ -126,12 +125,20 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
           >
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
-                <TouchableOpacity onPress={handlePress}>
+                <Pressable
+                  onPress={handlePress}
+                  style={({ pressed }) => [
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
+                  ]}
+                >
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}
                   />
-                </TouchableOpacity>
+                </Pressable>
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
@@ -194,12 +201,20 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
           >
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
-                <TouchableOpacity onPress={handlePress}>
+                <Pressable
+                  onPress={handlePress}
+                  style={({ pressed }) => [
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
+                  ]}
+                >
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}
                   />
-                </TouchableOpacity>
+                </Pressable>
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
@@ -261,13 +276,21 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
           >
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
-                <TouchableOpacity onPress={handlePress}>
+                <Pressable
+                  onPress={handlePress}
+                  style={({ pressed }) => [
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
+                  ]}
+                >
                   <Image source={mainPageCharacter} style={styles.ddak2} />
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}
                   />
-                </TouchableOpacity>
+                </Pressable>
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
@@ -320,13 +343,21 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
           >
             <View style={styles.mainContainer}>
               <View style={styles.leftContainer}>
-                <TouchableOpacity onPress={handlePress}>
+                <Pressable
+                  onPress={handlePress}
+                  style={({ pressed }) => [
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
+                  ]}
+                >
                   <Image source={mainPageCharacter} style={styles.ddak2} />
                   <Image
                     source={require('../../assets/images/Main/maincharacter.png')}
                     style={styles.greenButton}
                   />
-                </TouchableOpacity>
+                </Pressable>
                 <Pressable onPress={() => navigation.navigate('mybook')}>
                   <Image
                     source={require('../../assets/images/Main/books.png')}
@@ -385,12 +416,20 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                   content="내가 주인공으로 갈 친구"
                   style={styles.greenButton}
                 /> */}
-                  <TouchableOpacity onPress={handlePress}>
+                  <Pressable
+                    onPress={handlePress}
+                    style={({ pressed }) => [
+                      {
+                        opacity: pressed ? .3 : 1,
+                      },
+
+                    ]}
+                  >
                     <Image
                       source={require('../../assets/images/Main/maincharacter.png')}
                       style={styles.greenButton}
                     />
-                  </TouchableOpacity>
+                  </Pressable>
                 </View>
 
                 <Pressable onPress={() => navigation.navigate('mybook')}>
@@ -465,28 +504,43 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       {YourComponent({ currentStep })}
       {currentStep > 1 && currentStep < 5 && (
-        <TouchableOpacity
+        <Pressable
           onPress={handlePreviousStep}
-          style={[styles.buttonWrapper, styles.backbutton]}
+          style={({ pressed}) => [
+            styles.buttonWrapper, styles.backbutton,
+            {
+              opacity: pressed ? .3 : 1,
+            }
+          ]}
         >
           <Image source={require('../../assets/images/button/egun.png')} />
-        </TouchableOpacity>
+        </Pressable>
       )}
       {currentStep === 5 && (
-        <TouchableOpacity
+        <Pressable
           onPress={handleNextStep}
-          style={[styles.buttonWrapper, styles.nextbutton]}
+          style={({ pressed}) => [
+            styles.buttonWrapper, styles.backbutton,
+            {
+              opacity: pressed ? .3 : 1,
+            }
+          ]}
         >
           <Image source={require('../../assets/images/button/gotomake.png')} />
-        </TouchableOpacity>
+        </Pressable>
       )}
       {currentStep < 5 && (
-        <TouchableOpacity
+        <Pressable
           onPress={handleNextStep}
-          style={[styles.buttonWrapper, styles.nextbutton]}
+          style={({ pressed}) => [
+            styles.buttonWrapper, styles.backbutton,
+            {
+              opacity: pressed ? .3 : 1,
+            }
+          ]}
         >
           <Image source={require('../../assets/images/button/daum.png')} />
-        </TouchableOpacity>
+        </Pressable>
       )}
     </View>
   );

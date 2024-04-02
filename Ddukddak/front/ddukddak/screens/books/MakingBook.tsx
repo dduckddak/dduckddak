@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  Dimensions, // Dimensions import 추가
+  Dimensions, Pressable, // Dimensions import 추가
 } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { getMakeBookDetail } from '../../api/makeBookApi';
@@ -224,18 +224,34 @@ const MakingBook: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.imageContainer}>{pageRendering()}</View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={onPrevPress}>
+        <Pressable
+          onPress={onPrevPress}
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? .3 : 1,
+            },
+
+          ]}
+        >
           <Image
             source={require('../../assets/images/button/white_back_button.png')}
             style={styles.backbutton}
           />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onNextPress}>
+        </Pressable>
+        <Pressable
+          onPress={onNextPress}
+          style={({ pressed }) => [
+            {
+              opacity: pressed ? .3 : 1,
+            },
+
+          ]}
+        >
           <Image
             source={require('../../assets/images/button/white_back_button.png')}
             style={styles.nextbutton}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
       <ReloadModal
         isVisible={isReloadModal}

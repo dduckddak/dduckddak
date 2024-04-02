@@ -4,9 +4,8 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
   ImageBackground,
-  Animated,
+  Animated, Pressable,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,7 +15,6 @@ import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
 import { Dimensions } from 'react-native';
 import useTimeStore from '../../store/timeStore';
-import { useBgmStore } from '../../store/BgmStore';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -84,14 +82,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [isSadSelected, setIsSadSelected] = useState(false);
 
   const { fontColor, backgroundSrc } = useTimeStore();
-  const bgmStore = useBgmStore();
-
-  const pauseBGM = async () => {
-    if (bgmStore.isPlaying) {
-      await bgmStore.bgmSound?.pauseAsync();
-      bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    }
-  };
 
   const updateReview = async (like: boolean) => {
     // 리뷰 생성 또는 업데이트 로직
@@ -143,7 +133,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   };
 
   const goToTalk = (id: number) => {
-    pauseBGM();
     navigation.navigate('talk', { bookId: id });
   };
 
@@ -193,21 +182,31 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity
+                <Pressable
                   onPress={() => handleHappyPress()}
-                  style={styles.buttonStyle}
+                  style={({ pressed }) => [
+                    styles.buttonStyle,
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
+                  ]}
                 >
                   <Image source={happyImage} />
-                </TouchableOpacity>
-                <TouchableOpacity
+                </Pressable>
+                <Pressable
                   onPress={() => handleSadPress()}
-                  style={[
+                  style={({ pressed }) => [
                     styles.buttonStyle,
                     { marginTop: screenHeight * 0.023 },
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
                   ]}
                 >
                   <Image source={sadImage} />
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -228,8 +227,14 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             </View>
           </View>
           <View>
-            <TouchableOpacity
-              style={styles.button}
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
               onPress={() =>
                 selectedBook &&
                 bookSummary &&
@@ -243,16 +248,22 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 source={require('../../assets/images/button/donghwabutton.png')}
                 style={styles.image}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
               onPress={() => goToTalk(bookSummary.bookId)}
             >
               <Image
                 source={require('../../assets/images/button/talkbutton.png')}
                 style={styles.image}
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>

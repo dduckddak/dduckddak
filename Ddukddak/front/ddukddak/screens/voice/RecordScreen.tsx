@@ -4,10 +4,9 @@ import {
   Text,
   View,
   StyleSheet,
-  TouchableOpacity,
   Image,
   Animated,
-  Dimensions,
+  Dimensions, Pressable, TouchableOpacity,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
@@ -198,27 +197,39 @@ function RecordScreen() {
       </TouchableOpacity>
       <View style={styles.outerContainer}>
         <View style={styles.buttonTextContainer}>
-          <TouchableOpacity
-            style={[styles.button, !recordingStarted && styles.disabledButton]}
+          <Pressable
+            style={({ pressed }) => [
+              styles.button, !recordingStarted && styles.disabledButton,
+              {
+                opacity: pressed ? .3 : 1,
+              },
+
+            ]}
             onPress={handlePreviousStep}
             disabled={!recordingStarted || currentScriptIndex === 0}
           >
             <Image source={require('../../assets/images/button/before.png')} />
-          </TouchableOpacity>
+          </Pressable>
           <View style={styles.scriptTextContainer}>
             <Text style={styles.text}>
               {scripts[currentScriptIndex].content}
             </Text>
           </View>
-          <TouchableOpacity
-            style={[styles.button, !recordingStarted && styles.disabledButton]}
+          <Pressable
+            style={({ pressed }) => [
+              styles.button, !recordingStarted && styles.disabledButton,
+              {
+                opacity: pressed ? .3 : 1,
+              },
+
+            ]}
             onPress={handleNextStep}
             disabled={
               !recordingStarted || currentScriptIndex === scripts.length - 1
             }
           >
             <Image source={require('../../assets/images/button/next.png')} />
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <Text style={styles.counterText}>
           {scripts[currentScriptIndex].id} / {scripts.length}

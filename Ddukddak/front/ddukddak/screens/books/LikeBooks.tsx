@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   FlatList,
   ImageBackground,
-  Image,
+  Image, Pressable,
 } from 'react-native';
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
@@ -79,16 +78,21 @@ const BookSelectionScreen = () => {
   };
 
   const renderItem = ({ item }: { item: Book }) => (
-    <TouchableOpacity
-      style={[
-        styles.bookItem,
-        selectedBooks.includes(item.id) && styles.selected,
+    <Pressable
+      style={({ pressed }) => [
+        [
+          styles.bookItem,
+          selectedBooks.includes(item.id) && styles.selected,
+          {
+            opacity: pressed ? .3 : 1,
+          },
+        ]
       ]}
       onPress={() => toggleSelection(item.id)}
     >
       <Image source={{ uri: item.image }} style={styles.bookImage} />
       <Text style={styles.bookTitle}>{item.title}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
   return (
     <ImageBackground

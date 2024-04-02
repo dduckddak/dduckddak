@@ -6,8 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
-  TouchableOpacity,
-  Text,
+  Text, Pressable,
 } from 'react-native';
 import GreenButton from '../../../components/GreenButton';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -40,12 +39,15 @@ const SketchbookList: React.FC<SketchbookProps> = ({
   }: {
     item: { coloringFile: string; coloringId: number };
   }) => (
-    <TouchableOpacity
-      style={styles.imageContainer}
+    <Pressable
+      style={({ pressed }) => [
+        styles.imageContainer,
+        { opacity: pressed ? 0.3 : 1 }
+      ]}
       onPress={() => handlePress(item)}
     >
       <Image source={{ uri: item.coloringFile }} style={styles.image} />
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (

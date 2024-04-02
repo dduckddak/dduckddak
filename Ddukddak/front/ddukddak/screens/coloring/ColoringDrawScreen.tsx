@@ -184,7 +184,7 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
         <WebView
           ref={webViewRef}
           // source={{ uri: 'http://192.168.30.124:3000' }}
-          source={{ uri: 'http://j10e203.p.ssafy.io:7090' }}
+          source={{ uri: 'https://j10e203.p.ssafy.io/' }}
           style={styles.webviewStyle}
           injectedJavaScript={injectedJavaScript}
           onMessage={handleMessage}

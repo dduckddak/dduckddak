@@ -41,8 +41,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {
-    };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -84,7 +83,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [isSadSelected, setIsSadSelected] = useState(false);
 
   const { fontColor, backgroundSrc } = useTimeStore();
-
 
   const updateReview = async (like: boolean) => {
     // 리뷰 생성 또는 업데이트 로직
@@ -174,7 +172,9 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
         </CloudAnimation>
       </CloudAnimation>
       <View style={styles.container}>
-        <Text style={[styles.headerText, { color: fontColor }]}>📚 이런책이에요 📚</Text>
+        <Text style={[styles.headerText, { color: fontColor }]}>
+          📚 이런책이에요 📚
+        </Text>
         <View style={styles.contentContainer}>
           <View style={styles.bookDetails}>
             <View style={styles.imageContainer}>
@@ -210,8 +210,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               {selectedBook?.bookStory && (
                 <Text style={styles.detailText2}>
                   줄거리 :{' '}
-                  {selectedBook.bookStory.length > 110
-                    ? selectedBook.bookStory.slice(0, 110) + ' ...'
+                  {selectedBook.bookStory.length > 100
+                    ? selectedBook.bookStory.slice(0, 100) + ' ...'
                     : selectedBook.bookStory}
                 </Text>
               )}
@@ -298,10 +298,10 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 35,
     fontFamily: 'im-hyemin-bold',
-    marginVertical: 5,
+    marginVertical: 15,
   },
   detailText2: {
-    fontSize: 29,
+    fontSize: 33,
     fontFamily: 'im-hyemin',
     marginVertical: 10,
   },

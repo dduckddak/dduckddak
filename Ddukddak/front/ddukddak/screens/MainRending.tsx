@@ -134,7 +134,7 @@ const MainRending: React.FC = () => {
       case 2:
         return (
           <ImageBackground
-            source={require('../assets/images/Rendering/Rending22.png')}
+            source={require('../assets/images/Rendering/Rending2.png')}
             style={styles.imageBackground}
           >
             <View>
@@ -157,7 +157,7 @@ const MainRending: React.FC = () => {
       case 3:
         return (
           <ImageBackground
-            source={require('../assets/images/Rendering/Rending33.png')}
+            source={require('../assets/images/Rendering/Rending3.png')}
             style={styles.imageBackground}
           >
             <View>
@@ -180,7 +180,7 @@ const MainRending: React.FC = () => {
       case 4:
         return (
           <ImageBackground
-            source={require('../assets/images/Rendering/Rending44.png')}
+            source={require('../assets/images/Rendering/Rending4.png')}
             style={styles.imageBackground}
           >
             <View>
@@ -315,43 +315,46 @@ const styles = StyleSheet.create({
   },
   // 새로운 이미지 스타일 추가
   centeredImage: {
-    marginTop: '75%',
+    marginTop: '70%',
     width: '100%',
-    marginLeft: '10%',
+    marginLeft: '-19%',
     height: 350,
     resizeMode: 'contain',
   },
   centeredImage1: {
-    marginTop: '75%',
+    marginTop: '24%',
     width: '100%',
-    marginLeft: '10%',
+    marginLeft: '20%',
     height: 350,
     resizeMode: 'contain',
   },
   centeredImage2: {
-    marginTop: '88%',
-    marginLeft: '-8%',
+    marginTop: '80%',
+    marginLeft: '-20%',
     width: '100%',
     height: 350,
     resizeMode: 'contain',
   },
   rendingtwo: {
     marginTop: '24%',
-    transform: [{ rotateZ: '-10deg' }],
-    marginLeft: '8%',
-  },
-  rendingthree: {
-    marginTop: '24%',
-    marginLeft: '8%',
-    transform: [{ rotateZ: '-10deg' }],
-  },
-  rendingfour: {
-    marginTop: '29%',
+    marginLeft: '62%',
     transform: [
       { scaleX: -1 }, // 좌우 반전
       { rotateZ: '-10deg' },
     ],
-    marginLeft: '65%',
+  },
+  rendingthree: {
+    marginTop: '2%',
+    marginLeft: '12%',
+    transform: [{ rotateZ: '-10deg' }],
+  },
+  rendingfour: {
+    marginTop: '29.8%',
+    marginLeft: '63%',
+    transform: [
+      { scaleX: -1 }, // 좌우 반전
+      { rotateZ: '-10deg' },
+    ],
   },
   skipButton: {
     position: 'absolute',

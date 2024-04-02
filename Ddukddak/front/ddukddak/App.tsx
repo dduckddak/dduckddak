@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Text,
@@ -97,6 +97,7 @@ interface LogoRightProps {
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
   const { playTouch } = useTouchEffect();
+  const [isImageOne, setIsImageOne] = useState(true);
 
   const toggleBGM = async () => {
     playTouch('touch');
@@ -107,6 +108,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
       await bgmStore.bgmSound?.playAsync();
     }
     bgmStore.setIsPlaying(!bgmStore.isPlaying);
+    setIsImageOne(!isImageOne);
   };
 
   const navigation = useNavigation();
@@ -153,7 +155,11 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
       <TouchableOpacity onPress={toggleBGM}>
         <Image
           style={styles.buttonImage}
-          source={require('./assets/images/button/pengshu.png')}
+          source={
+            isImageOne
+              ? require('./assets/images/button/pengshu.png')
+              : require('./assets/images/button/sound_off.png')
+          }
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={handlePress}>

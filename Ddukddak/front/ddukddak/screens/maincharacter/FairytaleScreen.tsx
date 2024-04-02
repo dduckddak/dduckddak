@@ -154,11 +154,13 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
 
     setIsMakeLoading(true);
     navigation.removeListener('beforeRemove', checkCanGoBack);
-    const response = await postMakeBook(requestBody);
+    // const response = await postMakeBook(requestBody);
+    postMakeBook(requestBody);
     resetStore();
-    console.log(response);
+    return true;
+    // console.log(response);
 
-    return response.message === 'Success.';
+    // return response.message === 'Success.';
   };
 
   /**
@@ -476,7 +478,6 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         setCreationModalVisible={setIsMakeBookModal}
         handleMakeBook={handleMakeBook}
       />
-      {/* { isMakeLoading && <Loading />} */}
       {/* 모달 영역 */}
     </View>
   );

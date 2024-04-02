@@ -8,7 +8,7 @@ import {
   Alert,
   Dimensions,
   Animated,
-  Image, Pressable,
+  Image, Pressable, TouchableOpacity,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice } from '../../api/voiceApi';
@@ -270,7 +270,7 @@ function AddVoice({ route, navigation }: any) {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Pressable
+      <TouchableOpacity
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -287,7 +287,7 @@ function AddVoice({ route, navigation }: any) {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </Pressable>
+      </TouchableOpacity>
       <FlatList
         data={voiceData}
         renderItem={renderItem}

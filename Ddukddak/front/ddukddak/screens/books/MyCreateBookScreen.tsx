@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ImageBackground,
   Animated,
-  Dimensions, Pressable,
+  Dimensions, Pressable, TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
@@ -234,7 +234,7 @@ const BookListScreen: React.FC = () => {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Pressable
+      <TouchableOpacity
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -251,7 +251,7 @@ const BookListScreen: React.FC = () => {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </Pressable>
+      </TouchableOpacity>
       <View>
         <FlatList
           ListEmptyComponent={<EmptyListComponent />}

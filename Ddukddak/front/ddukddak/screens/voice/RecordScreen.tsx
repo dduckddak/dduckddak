@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Image,
   Animated,
-  Dimensions, Pressable,
+  Dimensions, Pressable, TouchableOpacity,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
@@ -177,7 +177,7 @@ function RecordScreen() {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.ImageBackground}
     >
-      <Pressable
+      <TouchableOpacity
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -194,7 +194,7 @@ function RecordScreen() {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </Pressable>
+      </TouchableOpacity>
       <View style={styles.outerContainer}>
         <View style={styles.buttonTextContainer}>
           <Pressable

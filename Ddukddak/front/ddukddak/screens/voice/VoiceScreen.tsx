@@ -8,7 +8,7 @@ import {
   FlatList,
   Image,
   Animated,
-  Dimensions, Pressable,
+  Dimensions, Pressable, TouchableOpacity,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
@@ -271,7 +271,7 @@ function VoiceScreen() {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Pressable
+      <TouchableOpacity
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -288,7 +288,7 @@ function VoiceScreen() {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </Pressable>
+      </TouchableOpacity>
       <FlatList
         data={voiceData}
         renderItem={renderItem}

@@ -56,7 +56,7 @@ const ImagePickerComponent: React.FC<ImagePickerComponentProps> = ({ readPhotos 
       const response = await addPhoto({ photoFile: photoFile as File });
       console.log(response);
       setSAlertModal(true);
-      readPhotos();
+      await readPhotos();
     } catch (error: unknown) {
       console.error(error);
 

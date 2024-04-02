@@ -84,9 +84,9 @@ function AddPicture({ route, navigation }: any) {
   };
 
   const renderImageItem = ({
-    item,
-    index,
-  }: {
+                             item,
+                             index,
+                           }: {
     item: SelectablePhotoData;
     index: number;
   }) => (
@@ -121,7 +121,9 @@ function AddPicture({ route, navigation }: any) {
           onPress={handleCompleteSelection}
           style={styles.button}
         />
-        <ImagePickerComponent />
+        <ImagePickerComponent
+          readPhotos={readPhotos}
+         />
       </View>
     </ImageBackground>
   );

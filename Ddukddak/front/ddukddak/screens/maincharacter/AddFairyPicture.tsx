@@ -155,12 +155,13 @@ const styles = StyleSheet.create({
     marginTop: -30,
   },
   card: {
-    margin: 5,
-    marginTop: 0,
+    marginTop: '20%',
+    marginHorizontal: 11.5,
     borderRadius: 10,
     overflow: 'hidden',
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    elevation: 5,
+    width: 220,
+    height: 220,
   },
   cardImage: {
     width: '100%',

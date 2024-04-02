@@ -1,6 +1,14 @@
 import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
-import { Image, Text, TouchableOpacity, View, StyleSheet, Alert, Platform } from 'react-native';
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Alert,
+  Platform,
+} from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -44,12 +52,12 @@ import { useBgmStore } from './store/BgmStore';
 
 import BGMPlayer from './components/sound/BgmPlayer';
 import useTouchEffect from './components/sound/TouchEffect';
-import { useTimeStore } from './store/timeStore'
+import { useTimeStore } from './store/timeStore';
 
 import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import * as Notifications from 'expo-notifications';
-
+import AlertModal from './components/AlertModal';
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -187,14 +195,13 @@ export type RootStackParamList = {
   script: undefined;
 };
 
-
 type message = {
   title: any;
   body: any;
-}
+};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => { });
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   // 푸시 알림 권한 요청
@@ -214,39 +221,41 @@ export default function App() {
     }
   }
 
+  const [alertModalVisible, setAlertModalVisible] = React.useState(false);
+  const [alertModalText, setAlertModalText] = React.useState<string[]>([]);
+
   //push 알림 설정
   useEffect(() => {
     registerForPushNotificationsAsync();
 
-    messaging().getInitialNotification().then(async (remoteMessage) => {
-      if (remoteMessage) {
-        console.log(remoteMessage.notification);
-      }
-    })
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log(remoteMessage.notification);
+        }
+      });
 
     messaging().onNotificationOpenedApp(async (remoteMessage) => {
       console.log(remoteMessage.notification);
     });
 
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
+    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
       console.log(remoteMessage.notification);
     });
 
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       const title = remoteMessage?.data?.title;
       const body = remoteMessage?.data?.body;
-      onDisplayNotification({ title, body });
-      Alert.alert(title)
+      setAlertModalText([title, body] as any);
+      setAlertModalVisible(true);
     });
 
     return unsubscribe;
-  }, [])
+  }, []);
 
   //앱 실행 중일 때 push 알림
-  const onDisplayNotification = async ({
-    title = '',
-    body = '',
-  }: message) => {
+  const onDisplayNotification = async ({ title = '', body = '' }: message) => {
     const channelId = await notifee.createChannel({
       id: 'channelId',
       name: 'channelName',
@@ -276,7 +285,7 @@ export default function App() {
     const isDayTime = hour >= 6 && hour < 18;
 
     if (!isDayTime) {
-      setBackgroundSrc(require('./assets/images/background/evening.jpg'))
+      setBackgroundSrc(require('./assets/images/background/evening.jpg'));
       setFontColor('#FFF');
     }
   }, []);
@@ -289,7 +298,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => { });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 
@@ -508,6 +517,14 @@ export default function App() {
           </Stack.Navigator>
         )}
       </NavigationContainer>
+
+      <AlertModal
+        isVisible={alertModalVisible}
+        text={alertModalText}
+        onConfirm={() => {
+          setAlertModalVisible(false);
+        }}
+      />
     </GestureHandlerRootView>
   );
 }

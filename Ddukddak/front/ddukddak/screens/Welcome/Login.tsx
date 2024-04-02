@@ -10,12 +10,13 @@ import {
   TextInput,
   Alert,
   Keyboard,
-  TouchableWithoutFeedback, Pressable,
+  TouchableWithoutFeedback,
+  Pressable,
 } from 'react-native';
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
 import { NavigationProp } from '@react-navigation/native';
-import { getUserInfo, login,updateFcmToken } from '../../api/userApi';
+import { getUserInfo, login, updateFcmToken } from '../../api/userApi';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as SecureStore from 'expo-secure-store';
 import { useUserStore } from '../../store/userStore';
@@ -158,9 +159,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
                     onPress={() => navigation.navigate('signup')}
                     style={({ pressed }) => [
                       {
-                        opacity: pressed ? .3 : 1,
+                        opacity: pressed ? 0.3 : 1,
                       },
-
                     ]}
                   >
                     <Text>회원가입</Text>
@@ -190,7 +190,6 @@ const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: 'cover',
-    padding: 30,
   },
   login: {
     marginTop: 90,
@@ -218,7 +217,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   TopContainer: {
-    paddingLeft: '27%',
+    paddingLeft: '28%',
     fontSize: 24,
     paddingTop: '20%',
     alignContent: 'center',

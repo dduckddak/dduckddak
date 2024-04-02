@@ -51,10 +51,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.05,
-        left: screenWidth * 0.005,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.2,
+        top: 45,
+        left: 50,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -218,8 +218,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               {selectedBook?.bookStory && (
                 <Text style={styles.detailText2}>
                   줄거리 :{' '}
-                  {selectedBook.bookStory.length > 80
-                    ? selectedBook.bookStory.slice(0, 80) + ' ...'
+                  {selectedBook.bookStory.length > 110
+                    ? selectedBook.bookStory.slice(0, 110) + ' ...'
                     : selectedBook.bookStory}
                 </Text>
               )}
@@ -276,22 +276,22 @@ const styles = StyleSheet.create({
   },
   cloud: {
     position: 'absolute',
-    top: screenHeight * 0.025,
-    left: screenWidth * 0.2,
-    width: screenWidth * 0.1,
-    height: screenHeight * 0.15,
+    top: 60,
+    left: 150,
+    width: 100,
+    height: 110,
   },
   cloud1: {
     position: 'absolute',
-    top: screenHeight * 0.03,
-    left: screenWidth * 0.75,
-    width: screenWidth * 0.17,
-    height: screenHeight * 0.2,
+    top: 5,
+    left: 800,
+    width: 170,
+    height: 150,
   },
   container: {
     flex: 1,
     alignItems: 'center',
-    marginTop: screenHeight * 0.065,
+    marginTop: 50,
   },
   headerText: {
     fontSize: 65,
@@ -316,10 +316,10 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 35,
     fontFamily: 'im-hyemin-bold',
-    marginVertical: 15,
+    marginVertical: 5,
   },
   detailText2: {
-    fontSize: 33,
+    fontSize: 30,
     fontFamily: 'im-hyemin',
     marginVertical: 10,
   },

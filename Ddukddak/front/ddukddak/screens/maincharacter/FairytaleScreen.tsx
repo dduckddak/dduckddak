@@ -60,8 +60,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {
-    };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -83,27 +82,24 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-
 function attachWaGwa(userName: string): string {
   const lastWord = userName.charAt(userName.length - 1); // get last character of user's name
 
-  const korBegin = 0xAC00;
-  const korEnd = 0xD7A3;
+  const korBegin = 0xac00;
+  const korEnd = 0xd7a3;
   const lastWordCode = lastWord.charCodeAt(0);
 
   // 종성있으면 '과'붙여서 없으면 그냥 이름
   if (korBegin <= lastWordCode && lastWordCode <= korEnd) {
     const korJong = (lastWordCode - korBegin) % 28;
     if (korJong !== 0) {
-      return userName + "과";
-    }
-    else {
-      return userName + "와";
+      return userName + '과';
+    } else {
+      return userName + '와';
     }
   }
   return userName;
 }
-
 
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const { bgmSound, isPlaying } = useBgmStore();
@@ -144,8 +140,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
       if (isPlaying) {
         bgmSound?.playAsync();
       }
-    }
-
+    };
   }, []);
 
   // 컴포넌트가 마운트될 때 뚝이와 딱이를 성별에 따라 다르게 나오기 위한 함수 실행
@@ -154,10 +149,14 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
 
     const playAudio = async () => {
       if (userSex == 'M')
-        await soundObject.loadAsync(require('../../assets/sound/makebook_dduk.mp3'));
+        await soundObject.loadAsync(
+          require('../../assets/sound/makebook_dduk.mp3'),
+        );
 
-      if ((userSex == 'F'))
-        await soundObject.loadAsync(require('../../assets/sound/makebook_ddak.mp3'));
+      if (userSex == 'F')
+        await soundObject.loadAsync(
+          require('../../assets/sound/makebook_ddak.mp3'),
+        );
 
       await soundObject.playAsync();
     };
@@ -167,7 +166,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
 
     return () => {
       soundObject?.unloadAsync();
-    }
+    };
   }, []);
 
   // 뒤로가기 관련 설정 시작
@@ -263,7 +262,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const IntroComponent = ({ role, roles }: { role: string; roles: string }) => {
     return (
       <View>
-        <CloudAnimation>
+        {/* <CloudAnimation>
           <Image
             source={require('../../assets/images/Main/cloud.png')}
             style={styles.cloud}
@@ -280,7 +279,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
             source={require('../../assets/images/Main/cloud.png')}
             style={styles.cloud3}
           />
-        </CloudAnimation>
+        </CloudAnimation> */}
         <View style={styles.containers}>
           <Image
             source={require('../../assets/images/Main/ballon.png')}

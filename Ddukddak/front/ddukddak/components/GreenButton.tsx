@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     height: 65,
     textAlignVertical: 'center',
-    fontSize: 25,
+    fontSize: 30,
   },
 });
 

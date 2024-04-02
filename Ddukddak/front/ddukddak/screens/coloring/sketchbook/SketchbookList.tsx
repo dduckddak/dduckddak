@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Dimensions,
   FlatList,
-  Text, Pressable,
+  Text,
+  Pressable,
 } from 'react-native';
 import GreenButton from '../../../components/GreenButton';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -42,7 +43,7 @@ const SketchbookList: React.FC<SketchbookProps> = ({
     <Pressable
       style={({ pressed }) => [
         styles.imageContainer,
-        { opacity: pressed ? 0.3 : 1 }
+        { opacity: pressed ? 0.3 : 1 },
       ]}
       onPress={() => handlePress(item)}
     >
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   },
   naviBtn: {
     width: 220,
-    marginTop: Dimensions.get('screen').height * 0.01,
+    marginTop: 5,
   },
 });
 

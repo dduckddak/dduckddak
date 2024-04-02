@@ -105,8 +105,8 @@ function AddVoice({ route, navigation }: any) {
     {
       voiceId: -1,
       voiceName: `${role} 기본`,
-      selected: false
-    }
+      selected: false,
+    },
   ]);
   const [selectedVoice, setSelectedVoice] = useState<VoiceData | null>(null);
 
@@ -125,15 +125,13 @@ function AddVoice({ route, navigation }: any) {
         {
           voiceId: -1,
           voiceName: `${role} 기본`,
-          selected: false
+          selected: false,
         },
-        ...result.voiceList.map(
-          (voice) => ({
-            voiceId: voice.voiceId,
-            voiceName: voice.voiceName,
-            selected: false,
-          }),
-        )
+        ...result.voiceList.map((voice) => ({
+          voiceId: voice.voiceId,
+          voiceName: voice.voiceName,
+          selected: false,
+        })),
       ];
       setVoiceData(fetchedVoiceData);
     } catch (error) {
@@ -148,9 +146,8 @@ function AddVoice({ route, navigation }: any) {
 
   // 미리듣기 기능
   const preview = async (voiceId: number) => {
-
     if (voiceId === -1) {
-      alert('기본 목소리는 미리듣기가 제공되지 않습니다.')
+      alert('기본 목소리는 미리듣기가 제공되지 않습니다.');
       return;
     }
     try {
@@ -307,6 +304,7 @@ function AddVoice({ route, navigation }: any) {
         />
       </TouchableOpacity>
       <FlatList
+        style={{ marginBottom: 200 }}
         data={voiceData}
         renderItem={renderItem}
         keyExtractor={(item) => item.voiceId.toString()}
@@ -391,7 +389,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end', // 가로로 오른쪽 정렬
     alignItems: 'center',
-    gap: 10, //미리듣기랑 쓰레기통 사이 간격
   },
   card: {
     backgroundColor: '#B7E29B',
@@ -420,7 +417,8 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'im-hyemin-bold',
     fontSize: 48,
-    marginTop: 25,
+    marginTop: 55,
+    zIndex: 10,
   },
   duckImage: {
     width: '100%',

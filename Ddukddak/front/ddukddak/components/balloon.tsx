@@ -31,5 +31,6 @@ export default Balloons;
 const styles = StyleSheet.create({
   Container: {
     alignItems: 'center',
+    paddingRight: 10,
   },
 });

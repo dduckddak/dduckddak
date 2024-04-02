@@ -6,7 +6,8 @@ import {
   Image,
   FlatList,
   Text,
-  Animated, Pressable,
+  Animated,
+  Pressable,
 } from 'react-native';
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
@@ -103,9 +104,8 @@ const ColoringScreen: React.FC<ColoringScreenProps> = ({ navigation }) => {
         onPress={() => handleImageSelect(item)}
         style={({ pressed }) => [
           {
-            opacity: pressed ? .3 : 1,
+            opacity: pressed ? 0.3 : 1,
           },
-
         ]}
       >
         <Image
@@ -200,9 +200,9 @@ const styles = StyleSheet.create({
   },
   box: {
     backgroundColor: 'rgba(205, 234, 185, 0.48)',
-    height: 550,
+    height: 530,
     width: 1100,
-    paddingVertical: 20,
+    paddingVertical: 10,
     marginTop: 5,
     padding: '2%',
     borderRadius: 15,

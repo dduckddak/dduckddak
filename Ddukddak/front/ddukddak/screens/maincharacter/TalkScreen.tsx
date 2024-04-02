@@ -43,7 +43,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -122,8 +122,7 @@ function TalkScreen({ route }: TalkScreenProps) {
       if (isPlaying) {
         bgmSound?.playAsync();
       }
-    }
-
+    };
   }, []);
 
   useEffect(() => {
@@ -284,7 +283,10 @@ function TalkScreen({ route }: TalkScreenProps) {
           {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
           <Image
             source={require('../../assets/images/talk/talk.png')}
-            style={characterTalking ? {} : { transform: [{ scaleX: -1 }] }}
+            style={[
+              characterTalking ? {} : { transform: [{ scaleX: -1 }] },
+              { width: 720, height: 555, marginLeft: -50, marginTop: 35 },
+            ]}
           />
           <View style={styles.textContainer}>
             <Text style={styles.bigtext}>
@@ -299,7 +301,7 @@ function TalkScreen({ route }: TalkScreenProps) {
               content={'대화끝내기'}
               style={{
                 width: '35%',
-                marginLeft: 256,
+                marginLeft: 200,
               }}
             />
           ) : (
@@ -308,7 +310,7 @@ function TalkScreen({ route }: TalkScreenProps) {
               content={'대화하기'}
               style={{
                 width: '35%',
-                marginLeft: 256,
+                marginLeft: 200,
               }}
             />
           )}
@@ -353,7 +355,7 @@ const styles = StyleSheet.create({
   textContainer: {
     position: 'absolute',
     top: 100,
-    left: 105,
+    left: 50,
     width: 580,
     height: 400,
     display: 'flex',

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
   Animated,
-  Pressable
+  Pressable,
 } from 'react-native';
 import GreenButton from '../components/GreenButton';
 
@@ -90,7 +90,7 @@ const MainRending: React.FC = () => {
               onPress={SkipToPage5}
               style={({ pressed }) => [
                 styles.skipButton,
-                { opacity: pressed ? 0.3 : 1 }
+                { opacity: pressed ? 0.3 : 1 },
               ]}
             >
               <Text style={styles.skipText}>Skip</Text>
@@ -267,8 +267,9 @@ const MainRending: React.FC = () => {
         <Pressable
           onPress={handlePreviousStep}
           style={({ pressed }) => [
-            styles.buttonWrapper, styles.backbutton,
-            { opacity: pressed ? 0.3 : 1 }
+            styles.buttonWrapper,
+            styles.nextbutton,
+            { opacity: pressed ? 0.3 : 1 },
           ]}
         >
           <Image source={require('../assets/images/button/back_button.png')} />
@@ -278,8 +279,9 @@ const MainRending: React.FC = () => {
         <Pressable
           onPress={handleNextStep}
           style={({ pressed }) => [
-            styles.buttonWrapper, styles.backbutton,
-            { opacity: pressed ? 0.3 : 1 }
+            styles.buttonWrapper,
+            styles.backbutton,
+            { opacity: pressed ? 0.3 : 1 },
           ]}
         >
           <Image source={require('../assets/images/button/next_button.png')} />
@@ -306,15 +308,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   nextbutton: {
-    alignSelf: 'flex-end',
-    bottom: 320,
-    right: 20,
+    bottom: 310,
+    left: 20,
     // width: 120,
     // height: 110,
   },
   backbutton: {
-    top: 310,
-    left: 20,
+    top: 301,
+    right: 20,
   },
   buttonWrapper: {
     position: 'absolute',
@@ -347,8 +348,8 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   rendingtwo: {
-    marginTop: '24%',
-    marginLeft: '62%',
+    marginTop: '23.5%',
+    marginLeft: '64%',
     transform: [
       { scaleX: -1 }, // 좌우 반전
       { rotateZ: '-10deg' },
@@ -356,11 +357,11 @@ const styles = StyleSheet.create({
   },
   rendingthree: {
     marginTop: '2%',
-    marginLeft: '12%',
+    marginLeft: '10%',
     transform: [{ rotateZ: '-10deg' }],
   },
   rendingfour: {
-    marginTop: '29.8%',
+    marginTop: '28%',
     marginLeft: '63%',
     transform: [
       { scaleX: -1 }, // 좌우 반전

@@ -157,8 +157,8 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
           style={styles.buttonImage}
           source={
             isImageOne
-              ? require('./assets/images/button/pengshu.png')
-              : require('./assets/images/button/sound_off.png')
+              ? require('./assets/images/button/sound_off.png')
+              : require('./assets/images/button/pengshu.png')
           }
         />
       </TouchableOpacity>

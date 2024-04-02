@@ -180,7 +180,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   };
 
   const handleNextStep = () => {
-    if (currentStep < 4) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
     } else {
       // 여기서 데이터를 서버에 POST 요청
@@ -193,6 +193,56 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
+  };
+  const IntroComponent = ({ role, roles }: { role: string; roles: string }) => {
+    return (
+      <View>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud}
+          />
+        </CloudAnimation>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud2}
+          />
+        </CloudAnimation>
+        <CloudAnimation>
+          <Image
+            source={require('../../assets/images/Main/cloud.png')}
+            style={styles.cloud3}
+          />
+        </CloudAnimation>
+        <View style={styles.containers}>
+          <Image
+            source={require('../../assets/images/Main/ballon.png')}
+            style={styles.ballon}
+          ></Image>
+          <View style={styles.ballontext}>
+            <Text style={styles.text}>동화 뚝딱을 눌렀구나?</Text>
+            <Text style={styles.text}>
+              나와함께 동화를 만들기위해{'\n'}
+              {role}와/과 {roles}의{'\n'}
+              얼굴과 목소리 재료를{'\n'}
+              구하러 떠나볼래?
+            </Text>
+          </View>
+        </View>
+        <View style={styles.buttonContainer}></View>
+        <View style={styles.handleStepContainer}>
+          <GreenButton
+            onPress={handleNextStep}
+            content="재료 구하러가기"
+            style={{
+              width: 250,
+              bottom: -43,
+            }}
+          />
+        </View>
+      </View>
+    );
   };
 
   const buttonComponent = ({
@@ -391,20 +441,25 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
+        return IntroComponent({
+          role: selectedBook.mainName,
+          roles: selectedBook.subName,
+        });
+      case 2:
         return buttonComponent({
           role: selectedBook.mainName,
           image: mainImage,
           voice: mainVoice,
         });
-      case 2:
+      case 3:
         return buttonComponent({
           role: selectedBook.subName,
           image: subImage,
           voice: subVoice,
         });
-      case 3:
-        return narrationSelectComponent();
       case 4:
+        return narrationSelectComponent();
+      case 5:
         return inputBookTitleContainer();
       default:
         return <View />;
@@ -667,6 +722,49 @@ const styles = StyleSheet.create({
     marginBottom: '5%',
     fontSize: 35,
     fontFamily: 'im-hyemin-bold',
-    // color: 'white',
+    // color: 'white',ImageBackground: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+
+  containers: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dd: {
+    position: 'absolute',
+    left: 20,
+    width: 500,
+    height: 450,
+    bottom: -320,
+  },
+  ballon: {
+    position: 'absolute',
+    top: 50,
+    right: 100,
+  },
+  ballontext: {
+    position: 'absolute',
+    right: 140,
+    width: 600,
+    top: 200,
+    zIndex: 20,
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 50,
+    fontFamily: 'im-hyemin-bold',
+  },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 50,
+  },
+  buttonStyle: {
+    width: '20%',
+    bottom: -10,
   },
 });

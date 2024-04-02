@@ -93,7 +93,8 @@ function AddVoiceScreen() {
         />
       </CloudAnimation>
       <View style={styles.container}>
-        <Image source={character} style={styles.dd}></Image>
+        {character && <Image source={character} style={styles.dd} />}
+
         <Image
           source={require('../../assets/images/Main/ballon.png')}
           style={styles.ballon}

@@ -19,11 +19,11 @@
     "expo": "~50.0.14",
     "expo-av": "~13.10.5",
     "expo-camera": "~14.1.1",
-    "expo-dev-client": "~3.3.11",
     "expo-font": "~11.10.3",
     "expo-image-picker": "~14.7.1",
+    "expo-notifications": "~0.27.6",
     "expo-screen-orientation": "~6.4.1",
-    "expo-secure-store": "~12.8.1",
+    "expo-secure-store": "^12.8.1",
     "expo-splash-screen": "^0.26.4",
     "expo-status-bar": "~1.11.1",
     "form-data": "^4.0.0",
@@ -39,7 +39,7 @@
     "react-native-webview": "13.6.4",
     "reanimated-color-picker": "^3.0.3",
     "zustand": "^4.5.2",
-    "expo-notifications": "~0.27.6"
+    "expo-dev-client": "~3.3.11"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

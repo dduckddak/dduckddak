@@ -85,7 +85,6 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [makeBookTitle, setMakeBookTitle] = useState(''); // 클라이언트가 자신이 만들 책 제목을 지정하기 위한 state
   const [isMakeLoading, setIsMakeLoading] = useState<boolean>(false);
 
-
   const { mainImage, mainVoice, subImage, subVoice, narration, resetStore } =
     useFairyStore(); // zustand 상태 변수, 함수
 
@@ -119,7 +118,6 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   // 뒤로가기가 실행되면 goBack을 함수의 event를 보류하여 저장해놓은 뒤, modal을 열어준다
   const checkCanGoBack = useCallback((e: any) => {
     e.preventDefault();
-
 
     setIsExitModal(true);
     setGoBackAction(e.data.action);
@@ -456,7 +454,9 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           {/* 딱이 들어갈 영역 화면 좌측 1 : 2 찾아주기 버튼들 나올 영역*/}
           <View style={styles.leftSideContainer}>
             {/* <Text>이 박스에 딱이 들어감</Text> */}
-            <Image source={mainPageCharacter} style={styles.ddak2} />
+            {mainPageCharacter && (
+              <Image source={mainPageCharacter} style={styles.ddak2} />
+            )}
           </View>
           {renderStep()}
         </View>
@@ -475,7 +475,6 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         creationModalVisible={isMakeBookModal}
         setCreationModalVisible={setIsMakeBookModal}
         handleMakeBook={handleMakeBook}
-
       />
       {/* { isMakeLoading && <Loading />} */}
       {/* 모달 영역 */}

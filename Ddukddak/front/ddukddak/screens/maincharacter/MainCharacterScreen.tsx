@@ -165,7 +165,9 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         />
         <Dots bookList={bookList} currentPage={currentPage} />
       </View>
-      <Image source={mainPageCharacter} style={styles.ddak2} />
+      {mainPageCharacter && (
+        <Image source={mainPageCharacter} style={styles.ddak2} />
+      )}
     </ImageBackground>
   );
 };

@@ -101,7 +101,9 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
             <Pressable
               onPress={() => navigation.navigate('MainCharacterScreen')}
             >
-              <Image source={mainPageCharacter} style={styles.ddak2} />
+              {mainPageCharacter && (
+                <Image source={mainPageCharacter} style={styles.ddak2} />
+              )}
               <Image
                 source={require('../../assets/images/Main/maincharacter.png')}
                 style={styles.greenButton}

@@ -58,7 +58,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => {
+    };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -79,6 +80,28 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     </Animated.View>
   );
 };
+
+
+function attachWaGwa(userName: string): string {
+  const lastWord = userName.charAt(userName.length-1); // get last character of user's name
+
+  const korBegin = 0xAC00;
+  const korEnd = 0xD7A3;
+  const lastWordCode = lastWord.charCodeAt(0);
+
+  // 종성있으면 '과'붙여서 없으면 그냥 이름
+  if (korBegin <= lastWordCode && lastWordCode <= korEnd) {
+    const korJong = (lastWordCode - korBegin) % 28;
+    if (korJong !== 0) {
+      return userName + "과";
+    }
+    else {
+      return userName + "와";
+    }
+  }
+  return userName;
+}
+
 
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   const [currentStep, setCurrentStep] = useState(1); // 현재 진행 단계(1 : 메인 캐릭터 2: 서브 캐릭 3 : 내레이션 4 : 만들기)
@@ -138,17 +161,26 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     setGoBackAction(null);
   };
 
+  const handleBeforeMakeBook = () => {
+    // console.log(mainVoice, mainImage, subVoice, subImage, narration);
+    // if (mainVoice === null || mainImage === null || subVoice === null || subImage === null || narration === null) {
+    //   alert('선택되지 않은 데이터가 있습니다.');
+    //   return;
+    // }
+    setIsMakeBookModal(true);
+  };
+
   // 뒤로가기 관련 설정 끝
 
   const handleMakeBook = async () => {
     const requestBody = {
       bookId: bookSummary.bookId,
       makeBookTitle: makeBookTitle,
-      mainVoice: mainVoice?.voiceId,
-      mainPhoto: mainImage?.photoId,
-      subVoice: subVoice?.voiceId,
-      subPhoto: subImage?.photoId,
-      narration: narration?.voiceId,
+      mainVoice: mainVoice?.voiceId === -1 ? undefined : mainVoice?.voiceId,
+      mainPhoto: mainImage?.photoId === -1 ? undefined : mainImage?.photoId,
+      subVoice: subVoice?.voiceId === -1 ? undefined : subVoice?.voiceId,
+      subPhoto: subImage?.photoId === -1 ? undefined : subImage?.photoId,
+      narration: narration?.voiceId === -1 ? undefined : narration?.voiceId,
     };
     console.log(requestBody);
 
@@ -224,7 +256,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
             <Text style={styles.text}>동화 뚝딱을 눌렀구나?</Text>
             <Text style={styles.text}>
               나와함께 동화를 만들기위해{'\n'}
-              {role}와/과 {roles}의{'\n'}
+              {attachWaGwa(role)} {roles}의{'\n'}
               얼굴과 목소리 재료를{'\n'}
               구하러 떠나볼래?
             </Text>
@@ -246,10 +278,10 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   };
 
   const buttonComponent = ({
-    role,
-    image,
-    voice,
-  }: {
+                             role,
+                             image,
+                             voice,
+                           }: {
     role: string;
     image: PhotoData | null;
     voice: VoiceData | null;
@@ -421,7 +453,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
                 }}
               />
               <GreenButton
-                onPress={() => setIsMakeBookModal(true)}
+                onPress={handleBeforeMakeBook}
                 content="나만의 동화책 만들기"
                 style={{
                   width: '60%',
@@ -724,7 +756,7 @@ const styles = StyleSheet.create({
     fontFamily: 'im-hyemin-bold',
     // color: 'white',ImageBackground: {
     flex: 1,
-    resizeMode: 'cover',
+    // resizeMode: 'cover',
     justifyContent: 'center',
   },
 

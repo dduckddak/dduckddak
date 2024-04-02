@@ -99,7 +99,13 @@ function AddVoice({ route, navigation }: any) {
   const { currentStep, role } = route.params;
 
   const [selectMode, setSelectMode] = useState<boolean>();
-  const [voiceData, setVoiceData] = useState<SelectableVoiceData[]>([]);
+  const [voiceData, setVoiceData] = useState<SelectableVoiceData[]>([
+    {
+      voiceId: -1,
+      voiceName: `${role} 기본`,
+      selected: false
+    }
+  ]);
   const [selectedVoice, setSelectedVoice] = useState<VoiceData | null>(null);
 
   const [currentSound, setCurrentSound] = useState<Audio.Sound>();
@@ -113,13 +119,20 @@ function AddVoice({ route, navigation }: any) {
         console.log('목소리 목록 불러오는데 실패했음');
         return;
       }
-      const fetchedVoiceData: SelectableVoiceData[] = result.voiceList.map(
-        (voice) => ({
-          voiceId: voice.voiceId,
-          voiceName: voice.voiceName,
-          selected: false,
-        }),
-      );
+      const fetchedVoiceData: SelectableVoiceData[] = [
+        {
+          voiceId: -1,
+          voiceName: `${role} 기본`,
+          selected: false
+        },
+        ...result.voiceList.map(
+          (voice) => ({
+            voiceId: voice.voiceId,
+            voiceName: voice.voiceName,
+            selected: false,
+          }),
+        )
+      ];
       setVoiceData(fetchedVoiceData);
     } catch (error) {
       console.error('Error fetching voices:', error);
@@ -133,6 +146,11 @@ function AddVoice({ route, navigation }: any) {
 
   // 미리듣기 기능
   const preview = async (voiceId: number) => {
+
+    if (voiceId === -1) {
+      alert('기본 목소리는 미리듣기가 제공되지 않습니다.')
+      return;
+    }
     try {
       const result = await previewVoice(voiceId);
       const previewFile = result.previewFile;
@@ -181,13 +199,13 @@ function AddVoice({ route, navigation }: any) {
 
   const handleSelectButtonPress = () => {
     switch (currentStep) {
-      case 1:
+      case 2:
         setMainVoice(selectedVoice);
         break;
-      case 2:
+      case 3:
         setSubVoice(selectedVoice);
         break;
-      case 3:
+      case 4:
         setNarration(selectedVoice);
         break;
       default:

@@ -100,9 +100,13 @@ const MainScreen: React.FC<MainScreenProps> = ({ navigation }) => {
           <View style={{ zIndex: 999 }}>
             <Pressable
               onPress={() => navigation.navigate('MainCharacterScreen')}
+              style={styles.pressableContainer}
             >
               {mainPageCharacter && (
-                <Image source={mainPageCharacter} style={styles.ddak2} />
+                <Image
+                  source={mainPageCharacter}
+                  style={styles.characterImage}
+                />
               )}
               <Image
                 source={require('../../assets/images/Main/maincharacter.png')}
@@ -151,6 +155,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
+
   cloud: { position: 'absolute', top: 5, left: 120 },
   cloud2: {
     position: 'absolute',
@@ -180,14 +185,37 @@ const styles = StyleSheet.create({
   rightContainer: {
     justifyContent: 'center',
     alignItems: 'flex-end',
+    marginTop: 60,
     marginRight: 20,
   },
 
+  pressableContainer: {
+    position: 'absolute',
+    left: -5,
+    top: -330,
+    width: 650,
+    height: 380,
+    paddingRight: 240,
+  },
+  characterImage: {
+    width: '100%', // Pressable 내부에서 전체 크기를 차지하도록
+    height: '100%', // Pressable 내부에서 전체 크기를 차지하도록
+    resizeMode: 'contain',
+
+    // 이미지가 비율을 유지하며 전체 공간을 차지하도록
+  },
   // 내가주인공 말풍선
-  greenButton: { left: '68%', top: 40 },
+  greenButton: {
+    position: 'absolute',
+    bottom: 40,
+    left: 300,
+    width: 450,
+    height: 450,
+    resizeMode: 'contain',
+  },
   icon: {
     width: 360,
-    height: 125,
+    height: 120,
     margin: 40,
   },
   bookicon: {
@@ -197,10 +225,8 @@ const styles = StyleSheet.create({
     top: 5,
   },
   ddak2: {
-    position: 'absolute',
-    left: '2%',
-    top: '31%',
-    width: '78%',
-    height: '80%',
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 });

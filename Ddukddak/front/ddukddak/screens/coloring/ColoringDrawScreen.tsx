@@ -23,7 +23,6 @@ import ColorPicker, {
   PreviewText,
 } from 'reanimated-color-picker';
 import type { returnedResults } from 'reanimated-color-picker';
-import GreenButton from '../../components/GreenButton';
 import AlertModal from '../../components/AlertModal';
 import { addColoring } from '../../api/coloringApi';
 import Balloons from '../../components/balloon';
@@ -114,7 +113,7 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
       <Pressable
         style={({ pressed }) => [
           styles.paletteButtonContainer,
-          { opacity: pressed ? 0.3 : 1 }
+          { opacity: pressed ? 0.3 : 1 },
         ]}
         onPress={() => setShowModal(true)}
       >
@@ -195,15 +194,15 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
       <Pressable
         onPress={handleSave}
         style={({ pressed }) => [
+          styles.saveButtonPressable,
           {
-            opacity: pressed ? .3 : 1,
+            opacity: pressed ? 0.3 : 1,
           },
-
         ]}
       >
         <Image
           source={require('../../assets/images/coloring/tulip.png')}
-          style={styles.saveButtonContainer}
+          style={styles.saveButton}
         />
       </Pressable>
       {/* <GreenButton
@@ -276,6 +275,22 @@ const styles = StyleSheet.create({
     left: 499,
     width: 120,
     height: 130,
+  },
+  saveButtonPressable: {
+    position: 'absolute',
+    bottom: 20,
+    right: 30,
+    opacity: 1, // 초기 상태의 투명도 설정
+    width: 120, // Image 크기와 동일하게 조정
+    height: 130, // Image 크기와 동일하게 조정
+    alignItems: 'center', // 자식 요소를 중앙 정렬
+    justifyContent: 'center', // 자식 요소를 중앙 정렬
+  },
+
+  //스타일을 saveButton으로 이름 변경 및 스타일 조정
+  saveButton: {
+    width: '100%', // Pressable에 맞게 가로 폭 100%
+    height: '100%', // Pressable에 맞게 세로 높이 100%
   },
 });
 

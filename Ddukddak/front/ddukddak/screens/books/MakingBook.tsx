@@ -1,17 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ImageBackground,
-  Dimensions, Pressable, // Dimensions import 추가
-} from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { getMakeBookDetail } from '../../api/makeBookApi';
-import { BookDetail, PageData } from '../../types/types';
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import { PageData } from '../../types/types';
+import { Audio } from 'expo-av';
 
 import * as url from 'node:url';
 import { Sound } from 'expo-av/build/Audio/Sound';
@@ -19,9 +11,6 @@ import ReloadModal from '../../components/ReloadModal';
 import useBgmStore from '../../store/BgmStore';
 
 import useTouchEffect from '../../components/sound/TouchEffect';
-
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
 
 type BookDetailScreenRouteProp = RouteProp<
   { params: { makeBookId: string } },
@@ -56,7 +45,6 @@ const MakingBook: React.FC = () => {
     );
   };
 
-
   useEffect(() => {
     if (bgmSound) {
       bgmSound.stopAsync();
@@ -66,10 +54,8 @@ const MakingBook: React.FC = () => {
       if (isPlaying) {
         bgmSound?.playAsync();
       }
-    }
-
+    };
   }, []);
-
 
   /**
    * 현재 인덱스가 변경될때마다 실행됨, 변경된 인덱스를 기반으로 음성파일의 링크들을 배열로 만들고,
@@ -224,34 +210,22 @@ const MakingBook: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.imageContainer}>{pageRendering()}</View>
       <View style={styles.buttonContainer}>
-        <Pressable
-          onPress={onPrevPress}
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? .3 : 1,
-            },
-
-          ]}
-        >
-          <Image
-            source={require('../../assets/images/button/white_back_button.png')}
-            style={styles.backbutton}
-          />
-        </Pressable>
-        <Pressable
-          onPress={onNextPress}
-          style={({ pressed }) => [
-            {
-              opacity: pressed ? .3 : 1,
-            },
-
-          ]}
-        >
-          <Image
-            source={require('../../assets/images/button/white_back_button.png')}
-            style={styles.nextbutton}
-          />
-        </Pressable>
+        <View style={styles.backButtonContainer}>
+          <Pressable onPress={onPrevPress}>
+            <Image
+              source={require('../../assets/images/button/white_back_button.png')}
+              style={styles.buttonImage}
+            />
+          </Pressable>
+        </View>
+        <View style={styles.nextButtonContainer}>
+          <Pressable onPress={onNextPress}>
+            <Image
+              source={require('../../assets/images/button/white_back_button.png')}
+              style={[styles.buttonImage, { transform: [{ scaleX: -1 }] }]}
+            />
+          </Pressable>
+        </View>
       </View>
       <ReloadModal
         isVisible={isReloadModal}
@@ -308,20 +282,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
   },
-  backbutton: {
-    width: 71,
-    height: 107,
+  backButtonContainer: {
     position: 'absolute',
-    right: screenWidth * 0.42,
-    bottom: screenHeight * 0.4,
+    right: 520,
+    bottom: 300,
   },
-  nextbutton: {
+  nextButtonContainer: {
+    position: 'absolute',
+    left: 510,
+    bottom: 300,
+  },
+  buttonImage: {
     width: 71,
     height: 107,
-    transform: [{ scaleX: -1 }],
-    position: 'absolute',
-    left: screenWidth * 0.42,
-    bottom: screenHeight * 0.4,
   },
   bookFrameContainer: {
     flexDirection: 'row',
@@ -330,7 +303,7 @@ const styles = StyleSheet.create({
   bookInnerContainer: {
     position: 'relative',
     height: '100%',
-    width: screenWidth * 0.5,
+    width: 601,
     borderWidth: 1,
   },
   pageImage: {
@@ -341,7 +314,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     position: 'absolute',
     bottom: 0, // 이미지 아래에 위치
-    width: screenWidth * 0.5, // 부모 요소에 꽉 차게 설정
+    width: 600, // 부모 요소에 꽉 차게 설정
     fontFamily: 'im-hyemin-bold',
     fontSize: 28,
     backgroundColor: 'rgba(255, 255, 255, 0.7)',

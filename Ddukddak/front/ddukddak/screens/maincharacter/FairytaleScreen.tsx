@@ -35,6 +35,8 @@ import ConfirmModal from '../../components/ConfirmModal';
 import { postMakeBook } from '../../api/makeBookApi';
 import { useUserStore } from '../../store/userStore';
 import Loading from '../../components/Loading';
+import { Audio } from 'expo-av';
+import useBgmStore from '../../store/BgmStore';
 
 type FairyRouteProp = RouteProp<RootStackParamList, 'fairy'>;
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
@@ -83,7 +85,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 
 
 function attachWaGwa(userName: string): string {
-  const lastWord = userName.charAt(userName.length-1); // get last character of user's name
+  const lastWord = userName.charAt(userName.length - 1); // get last character of user's name
 
   const korBegin = 0xAC00;
   const korEnd = 0xD7A3;
@@ -104,6 +106,8 @@ function attachWaGwa(userName: string): string {
 
 
 function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
+  const { bgmSound, isPlaying } = useBgmStore();
+
   const [currentStep, setCurrentStep] = useState(1); // 현재 진행 단계(1 : 메인 캐릭터 2: 서브 캐릭 3 : 내레이션 4 : 만들기)
   const [makeBookTitle, setMakeBookTitle] = useState(''); // 클라이언트가 자신이 만들 책 제목을 지정하기 위한 state
   const [isMakeLoading, setIsMakeLoading] = useState<boolean>(false);
@@ -131,9 +135,39 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
     }
   };
 
+  useEffect(() => {
+    if (bgmSound) {
+      bgmSound.stopAsync();
+    }
+
+    return () => {
+      if (isPlaying) {
+        bgmSound?.playAsync();
+      }
+    }
+
+  }, []);
+
   // 컴포넌트가 마운트될 때 뚝이와 딱이를 성별에 따라 다르게 나오기 위한 함수 실행
   useEffect(() => {
+    const soundObject = new Audio.Sound();
+
+    const playAudio = async () => {
+      if (userSex == 'M')
+        await soundObject.loadAsync(require('../../assets/sound/makebook_dduk.mp3'));
+
+      if ((userSex == 'F'))
+        await soundObject.loadAsync(require('../../assets/sound/makebook_ddak.mp3'));
+
+      await soundObject.playAsync();
+    };
+
     updateMainImage();
+    playAudio();
+
+    return () => {
+      soundObject?.unloadAsync();
+    }
   }, []);
 
   // 뒤로가기 관련 설정 시작
@@ -278,10 +312,10 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
   };
 
   const buttonComponent = ({
-                             role,
-                             image,
-                             voice,
-                           }: {
+    role,
+    image,
+    voice,
+  }: {
     role: string;
     image: PhotoData | null;
     voice: VoiceData | null;

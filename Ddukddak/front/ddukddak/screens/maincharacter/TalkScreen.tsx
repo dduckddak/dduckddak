@@ -21,9 +21,6 @@ import { getTalkDetail, sttTalk, triggerTalk } from '../../api/talkApi';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
 
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
-
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
 
@@ -81,6 +78,9 @@ function TalkScreen({ route }: TalkScreenProps) {
   const [subName, setSubName] = useState<string>();
   const [subBasic, setSubBasic] = useState<string>();
   const [subTalk, setSubTalk] = useState<string>();
+
+  // 음... 상태
+  const [isWaiting, setIsWaiting] = useState(false);
 
   /*
     처음 화면에 들어왔을 때 캐릭터쪽에 말풍선이 생겨 있다. (ex. 안녕 지금부터 회원이가 빨간모자야)
@@ -148,11 +148,15 @@ function TalkScreen({ route }: TalkScreenProps) {
       setRecording(undefined);
 
       if (uri !== null) {
+        setIsWaiting(true);
+        setCharacterTalking(true);
         const sttResult = await handleUploadSound(uri);
         if (sttResult != null) {
           // 유저 스크립트를 화면에 출력( 텍스트로 변환된 유저의 대화 내용을 userScript에 담아주고 chracterTalking을 false로 바꾸면서 유저 말풍선 출력
           setUserScript(sttResult);
-          setCharacterTalking(false);
+          // setCharacterTalking(false);
+
+          setCharacterTalking(true);
           await handleDownloadSound(sttResult);
         }
       }
@@ -184,11 +188,13 @@ function TalkScreen({ route }: TalkScreenProps) {
     };
 
     try {
+      setCharacterScript('음...');
       const response = await triggerTalk(talkParams);
       // 정상적으로 답변이 전달되었을 때 캐릭터의 대화내용을 characterScript에 담아주고
       // characterTalking을 true로 바꾸면서 유저 말풍선을 끄고 캐릭터 말풍선을 렌더링
       setCharacterScript(response.gptScript);
       setCharacterTalking(true);
+      setIsWaiting(false);
       await playBase64Audio(response.gptVoiceFile);
     } catch (error) {
       console.error(error);

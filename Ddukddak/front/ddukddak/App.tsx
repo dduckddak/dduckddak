@@ -211,7 +211,7 @@ type message = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => { });
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   // 푸시 알림 권한 요청
@@ -287,7 +287,7 @@ export default function App() {
   const { setBackgroundSrc, setFontColor } = useTimeStore();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => { });
+    SplashScreen.hideAsync().catch(() => {});
 
     const hour = new Date().getHours();
     const isDayTime = hour >= 6 && hour < 18;
@@ -306,7 +306,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => { });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 

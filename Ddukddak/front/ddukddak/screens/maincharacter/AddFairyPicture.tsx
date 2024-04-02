@@ -106,8 +106,10 @@ function AddPicture({ route, navigation }: any) {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
-      <Text style={styles.textStyle}>{role}의 얼굴 찾아주기</Text>
-      <Text style={styles.textStyle}>사진을 선택하지 않으면 동화속 인물의 얼굴이 들어가요</Text>
+      <Text style={styles.textStyle}>{role}의 얼굴을 찾아줘</Text>
+      <Text style={styles.textStyle2}>
+        ( 사진을 선택하지 않으면 동화속 인물의 얼굴이 들어가요)
+      </Text>
       <FlatList
         data={imageData}
         renderItem={renderImageItem}
@@ -142,26 +144,25 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    marginTop: -12,
     alignItems: 'center',
   },
   button: {
     width: '14%',
   },
   imagelist: {
-    width: '80%',
-    height: '80%',
-    marginHorizontal: '11%',
-    marginVertical: '7%',
-    marginTop: -30,
+    width: '85%',
+    height: '70%',
+    marginTop: 10,
   },
   card: {
     margin: 5,
     marginTop: 0,
     borderRadius: 10,
     overflow: 'hidden',
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    elevation: 5,
+    width: 250,
+    height: 250,
   },
   cardImage: {
     width: '100%',
@@ -174,6 +175,11 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'im-hyemin-bold',
     fontSize: 48,
-    marginTop: 25,
+    marginTop: 55,
+  },
+  textStyle2: {
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 28,
+    marginTop: 20,
   },
 });

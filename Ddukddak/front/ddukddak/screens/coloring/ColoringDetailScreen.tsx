@@ -5,7 +5,6 @@ import {
   ImageBackground,
   FlatList,
   ImageSourcePropType,
-  Dimensions,
 } from 'react-native';
 
 import { NavigationProp, RouteProp, useRoute } from '@react-navigation/native';

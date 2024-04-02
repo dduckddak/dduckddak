@@ -23,13 +23,13 @@ type BookListProps = {
 };
 
 const BookList = ({
-                    bookList,
-                    currentPage,
-                    previousPage,
-                    nextPage,
-                    goToDetail,
-                    navigation,
-                  }: BookListProps) => {
+  bookList,
+  currentPage,
+  previousPage,
+  nextPage,
+  goToDetail,
+  navigation,
+}: BookListProps) => {
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
 
@@ -77,15 +77,15 @@ const BookList = ({
       <Pressable
         onPress={previousPage}
         style={({ pressed }) => [
+          styles.beforeStyle, // Pressable 전체 스타일을 지정
           {
-            opacity: pressed ? .3 : 1,
+            opacity: pressed ? 0.3 : 1,
           },
-
         ]}
       >
         <Image
           source={require('../../../assets/images/button/before.png')}
-          style={styles.beforebutton}
+          style={[styles.beforeImage, { zIndex: -999 }]}
         />
       </Pressable>
       <View style={styles.textContainer}>
@@ -107,15 +107,15 @@ const BookList = ({
       <Pressable
         onPress={nextPage}
         style={({ pressed }) => [
+          styles.nextStyle,
           {
-            opacity: pressed ? .3 : 1,
+            opacity: pressed ? 0.3 : 1,
           },
-
         ]}
       >
         <Image
           source={require('../../../assets/images/button/next.png')}
-          style={styles.nextbutton}
+          style={styles.nextStyle}
         />
       </Pressable>
       <View style={styles.searchButtonAndInputContainer}>
@@ -169,6 +169,28 @@ const styles = StyleSheet.create({
     height: 490,
     borderRadius: 20,
   },
+  beforeStyle: {
+    position: 'relative',
+    top: -10,
+    left: 80,
+  },
+  beforeImage: {
+    // Image의 스타일
+    top: 0,
+    left: 0,
+    position: 'relative',
+  },
+  nextStyle: {
+    position: 'relative',
+    top: -10,
+    right: 40,
+  },
+  nextImage: {
+    // Image의 스타일
+    top: 0,
+    left: 0,
+    position: 'relative',
+  },
   text: {
     textAlign: 'center',
     fontFamily: 'im-hyemin-bold',
@@ -187,7 +209,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   nextbutton: { right: '100%', bottom: '8%' },
-  beforebutton: { left: '100%', bottom: '8%' },
+  beforebutton: { left: '100%', bottom: '8%', zIndex: 0 },
   searchButtonAndInputContainer: {
     position: 'absolute',
     right: 14,

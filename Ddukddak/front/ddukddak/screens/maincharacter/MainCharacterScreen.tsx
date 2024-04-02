@@ -8,7 +8,7 @@ import {
   Text,
   Animated,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getBookList } from '../../api/bookApi';
@@ -45,7 +45,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -170,8 +170,16 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         <Dots bookList={bookList} currentPage={currentPage} />
       </View>
       {mainPageCharacter && (
-        <TouchableOpacity onPress={() => { playTouch(userSex) }} style={styles.ddak2}>
-          <Image source={mainPageCharacter} style={{ width: '100%', height: '100%' }} />
+        <TouchableOpacity
+          onPress={() => {
+            playTouch(userSex);
+          }}
+          style={styles.ddak2}
+        >
+          <Image
+            source={mainPageCharacter}
+            style={{ width: '100%', height: '100%' }}
+          />
         </TouchableOpacity>
       )}
     </ImageBackground>

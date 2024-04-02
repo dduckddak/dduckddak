@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ImageBackground,
   Animated,
-  Dimensions, Pressable, TouchableOpacity,
+  Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
@@ -30,7 +31,6 @@ interface BookItemsProps {
   toggleDeleteMode: () => void;
 }
 
-const screenWidth = Dimensions.get('screen').width;
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const cloudAnimationValue = useState(new Animated.Value(0))[0];
   useEffect(() => {
@@ -50,7 +50,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -83,7 +83,6 @@ const BookItems: React.FC<BookItemsProps> = ({
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
-
 
   useEffect(() => {
     console.log(isDeleteMode);
@@ -118,11 +117,7 @@ const BookItems: React.FC<BookItemsProps> = ({
   };
   return (
     <Pressable
-
-      style={({ pressed }) => [
-        styles.bookItem,
-        { opacity: pressed ? 0.3 : 1 }
-      ]}
+      style={({ pressed }) => [styles.bookItem, { opacity: pressed ? 0.3 : 1 }]}
       onPress={() => {
         if (isDeleteMode) {
           handleSelectItem();
@@ -185,12 +180,12 @@ const BookListScreen: React.FC = () => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(duckPosition, {
-          toValue: { x: screenWidth * 0.1, y: 0 },
+          toValue: { x: 150, y: 0 },
           duration: 2000,
           useNativeDriver: true,
         }),
         Animated.timing(duckPosition, {
-          toValue: { x: 2, y: 0 },
+          toValue: { x: 0, y: 0 },
           duration: 2000,
           useNativeDriver: true,
         }),
@@ -200,7 +195,7 @@ const BookListScreen: React.FC = () => {
   //오리 반전
   duckPosition.x.addListener((value) => {
     // 움직임이 끝에 도달했을 때 반전
-    if (value.value == screenWidth * 0.1) {
+    if (value.value == 150) {
       setShouldFlip(true);
     }
     if (value.value == 0) {
@@ -281,9 +276,8 @@ const BookListScreen: React.FC = () => {
         style={({ pressed }) => [
           styles.trash,
           {
-            opacity: pressed ? .3 : 1,
+            opacity: pressed ? 0.3 : 1,
           },
-
         ]}
       >
         <Image

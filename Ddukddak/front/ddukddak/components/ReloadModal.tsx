@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Dimensions,
-  Modal, Pressable,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, Modal, Pressable } from 'react-native';
 
 type ReloadModalProps = {
   isVisible: boolean;
@@ -25,11 +18,11 @@ const ReloadModal = ({ isVisible, onRepeat, onHome }: ReloadModalProps) => {
           style={({ pressed }) => [
             styles.button,
             {
-              opacity: pressed ? .3 : 1,
+              opacity: pressed ? 0.3 : 1,
             },
-
           ]}
-          onPress={onRepeat}>
+          onPress={onRepeat}
+        >
           <Image source={repeatBtnImage} style={styles.returnimage} />
           <Text style={styles.text}>다시읽기</Text>
         </Pressable>
@@ -37,11 +30,11 @@ const ReloadModal = ({ isVisible, onRepeat, onHome }: ReloadModalProps) => {
           style={({ pressed }) => [
             styles.button,
             {
-              opacity: pressed ? .3 : 1,
+              opacity: pressed ? 0.3 : 1,
             },
-
           ]}
-          onPress={onHome}>
+          onPress={onHome}
+        >
           <Image source={homeBtnImage} style={styles.homeimage} />
           <Text style={styles.text}>홈으로</Text>
         </Pressable>
@@ -61,8 +54,8 @@ const styles = StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: Dimensions.get('screen').width * 0.3,
-    height: Dimensions.get('screen').width * 0.3,
+    width: 400,
+    height: 400,
     borderRadius: 10,
   },
   returnimage: {

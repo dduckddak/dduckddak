@@ -15,7 +15,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -25,9 +28,10 @@
       },
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
+        "android.permission.RECORD_AUDIO"
       ],
       "package": "com.bavocado.ddukddak",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -61,6 +65,9 @@
         "projectId": "ef343ebb-045c-49a3-9582-cd48a212bfa9"
       }
     },
-    "owner": "bavocado"
+    "owner": "bavocado",
+    "updates": {
+      "url": "https://u.expo.dev/ef343ebb-045c-49a3-9582-cd48a212bfa9"
+    }
   }
 }

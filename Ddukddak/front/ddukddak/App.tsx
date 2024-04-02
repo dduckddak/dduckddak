@@ -274,7 +274,6 @@ export default function App() {
 
     const hour = new Date().getHours();
     const isDayTime = hour >= 6 && hour < 18;
-    console.log(`isDayTime = ${isDayTime}`)
 
     if (!isDayTime) {
       setBackgroundSrc(require('./assets/images/background/evening.jpg'))

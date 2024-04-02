@@ -107,6 +107,7 @@ function AddPicture({ route, navigation }: any) {
       style={styles.imageBackground}
     >
       <Text style={styles.textStyle}>{role}의 얼굴 찾아주기</Text>
+      <Text style={styles.textStyle}>사진을 선택하지 않으면 동화속 인물의 얼굴이 들어가요</Text>
       <FlatList
         data={imageData}
         renderItem={renderImageItem}

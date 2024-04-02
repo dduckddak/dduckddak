@@ -6,7 +6,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  Dimensions, Pressable, // Dimensions import 추가
+  Dimensions,
+  Pressable, // Dimensions import 추가
 } from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { getMakeBookDetail } from '../../api/makeBookApi';
@@ -56,7 +57,6 @@ const MakingBook: React.FC = () => {
     );
   };
 
-
   useEffect(() => {
     if (bgmSound) {
       bgmSound.stopAsync();
@@ -66,10 +66,8 @@ const MakingBook: React.FC = () => {
       if (isPlaying) {
         bgmSound?.playAsync();
       }
-    }
-
+    };
   }, []);
-
 
   /**
    * 현재 인덱스가 변경될때마다 실행됨, 변경된 인덱스를 기반으로 음성파일의 링크들을 배열로 만들고,
@@ -228,9 +226,8 @@ const MakingBook: React.FC = () => {
           onPress={onPrevPress}
           style={({ pressed }) => [
             {
-              opacity: pressed ? .3 : 1,
+              opacity: pressed ? 0.3 : 1,
             },
-
           ]}
         >
           <Image
@@ -242,9 +239,8 @@ const MakingBook: React.FC = () => {
           onPress={onNextPress}
           style={({ pressed }) => [
             {
-              opacity: pressed ? .3 : 1,
+              opacity: pressed ? 0.3 : 1,
             },
-
           ]}
         >
           <Image

@@ -303,7 +303,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           style={styles.find}
         />
         <View style={styles.handleStepContainer}>
-          {currentStep > 1 && currentStep < 4 && (
+          {currentStep > 1 && currentStep < 5 && (
             <GreenButton
               onPress={handlePreviousStep}
               content="이전"

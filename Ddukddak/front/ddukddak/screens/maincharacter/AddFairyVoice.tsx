@@ -8,7 +8,9 @@ import {
   Alert,
   Dimensions,
   Animated,
-  Image, Pressable, TouchableOpacity,
+  Image,
+  Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice } from '../../api/voiceApi';
@@ -181,13 +183,13 @@ function AddVoice({ route, navigation }: any) {
 
   const handleSelectButtonPress = () => {
     switch (currentStep) {
-      case 1:
+      case 2:
         setMainVoice(selectedVoice);
         break;
-      case 2:
+      case 3:
         setSubVoice(selectedVoice);
         break;
-      case 3:
+      case 4:
         setNarration(selectedVoice);
         break;
       default:
@@ -203,9 +205,8 @@ function AddVoice({ route, navigation }: any) {
       onPress={() => handleSelectVoice(index)}
       style={({ pressed }) => [
         {
-          opacity: pressed ? .3 : 1,
+          opacity: pressed ? 0.3 : 1,
         },
-
       ]}
     >
       <View
@@ -227,9 +228,8 @@ function AddVoice({ route, navigation }: any) {
               style={({ pressed }) => [
                 styles.prelisten,
                 {
-                  opacity: pressed ? .3 : 1,
+                  opacity: pressed ? 0.3 : 1,
                 },
-
               ]}
             >
               <Text style={styles.buttonText}>미리듣기</Text>

@@ -69,10 +69,10 @@ function AddPicture({ route, navigation }: any) {
 
   const handleCompleteSelection = () => {
     switch (currentStep) {
-      case 1:
+      case 2:
         setMainImage(selectedImage);
         break;
-      case 2:
+      case 3:
         setSubImage(selectedImage);
         break;
       default:
@@ -84,9 +84,9 @@ function AddPicture({ route, navigation }: any) {
   };
 
   const renderImageItem = ({
-                             item,
-                             index,
-                           }: {
+    item,
+    index,
+  }: {
     item: SelectablePhotoData;
     index: number;
   }) => (
@@ -121,9 +121,7 @@ function AddPicture({ route, navigation }: any) {
           onPress={handleCompleteSelection}
           style={styles.button}
         />
-        <ImagePickerComponent
-          readPhotos={readPhotos}
-         />
+        <ImagePickerComponent readPhotos={readPhotos} />
       </View>
     </ImageBackground>
   );

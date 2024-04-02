@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  Animated, Pressable,
+  Animated,
+  Pressable,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -187,9 +188,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                   style={({ pressed }) => [
                     styles.buttonStyle,
                     {
-                      opacity: pressed ? .3 : 1,
+                      opacity: pressed ? 0.3 : 1,
                     },
-
                   ]}
                 >
                   <Image source={happyImage} />
@@ -200,9 +200,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                     styles.buttonStyle,
                     { marginTop: screenHeight * 0.023 },
                     {
-                      opacity: pressed ? .3 : 1,
+                      opacity: pressed ? 0.3 : 1,
                     },
-
                   ]}
                 >
                   <Image source={sadImage} />
@@ -219,8 +218,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               {selectedBook?.bookStory && (
                 <Text style={styles.detailText2}>
                   줄거리 :{' '}
-                  {selectedBook.bookStory.length > 100
-                    ? selectedBook.bookStory.slice(0, 100) + ' ...'
+                  {selectedBook.bookStory.length > 80
+                    ? selectedBook.bookStory.slice(0, 80) + ' ...'
                     : selectedBook.bookStory}
                 </Text>
               )}
@@ -231,9 +230,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               style={({ pressed }) => [
                 styles.button,
                 {
-                  opacity: pressed ? .3 : 1,
+                  opacity: pressed ? 0.3 : 1,
                 },
-
               ]}
               onPress={() =>
                 selectedBook &&
@@ -253,9 +251,8 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
               style={({ pressed }) => [
                 styles.button,
                 {
-                  opacity: pressed ? .3 : 1,
+                  opacity: pressed ? 0.3 : 1,
                 },
-
               ]}
               onPress={() => goToTalk(bookSummary.bookId)}
             >

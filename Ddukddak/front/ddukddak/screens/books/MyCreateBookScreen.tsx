@@ -19,7 +19,6 @@ import {
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import useTouchEffect from '../../components/sound/TouchEffect';
-import { useBgmStore } from '../../store/BgmStore';
 
 interface BookItemsProps {
   title: string;
@@ -85,14 +84,7 @@ const BookItems: React.FC<BookItemsProps> = ({
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
-  const bgmStore = useBgmStore();
 
-  const pauseBGM = async () => {
-    if (bgmStore.isPlaying) {
-      await bgmStore.bgmSound?.pauseAsync();
-      bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    }
-  };
 
   useEffect(() => {
     console.log(isDeleteMode);
@@ -111,7 +103,6 @@ const BookItems: React.FC<BookItemsProps> = ({
     }
   };
   const handlePress = () => {
-    pauseBGM();
     playTouch('open');
     CharrrrAnimation.setValue(1);
     setTimeout(() => {

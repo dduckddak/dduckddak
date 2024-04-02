@@ -16,7 +16,6 @@ import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
 import { Dimensions } from 'react-native';
 import useTimeStore from '../../store/timeStore';
-import { useBgmStore } from '../../store/BgmStore';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -84,14 +83,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [isSadSelected, setIsSadSelected] = useState(false);
 
   const { fontColor, backgroundSrc } = useTimeStore();
-  const bgmStore = useBgmStore();
-
-  const pauseBGM = async () => {
-    if (bgmStore.isPlaying) {
-      await bgmStore.bgmSound?.pauseAsync();
-      bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    }
-  };
 
   const updateReview = async (like: boolean) => {
     // 리뷰 생성 또는 업데이트 로직
@@ -143,7 +134,6 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   };
 
   const goToTalk = (id: number) => {
-    pauseBGM();
     navigation.navigate('talk', { bookId: id });
   };
 

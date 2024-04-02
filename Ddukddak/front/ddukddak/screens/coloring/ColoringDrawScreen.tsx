@@ -5,7 +5,6 @@ import {
   ImageBackground,
   Image,
   Dimensions,
-  TouchableOpacity,
   Modal,
   Pressable,
   Text,
@@ -112,15 +111,18 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
-      <TouchableOpacity
-        style={styles.paletteButtonContainer}
+      <Pressable
+        style={({ pressed }) => [
+          styles.paletteButtonContainer,
+          { opacity: pressed ? 0.3 : 1 }
+        ]}
         onPress={() => setShowModal(true)}
       >
         <Image
           source={require('../../assets/images/coloring/palette.png')}
           style={styles.paletteButton}
         />
-      </TouchableOpacity>
+      </Pressable>
       <Modal
         onRequestClose={() => setShowModal(false)}
         visible={showModal}
@@ -190,12 +192,20 @@ const ColoringDrawScreen: React.FC<ColoringDrawScreenProps> = ({
           onMessage={handleMessage}
         />
       </View>
-      <TouchableOpacity onPress={handleSave}>
+      <Pressable
+        onPress={handleSave}
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? .3 : 1,
+          },
+
+        ]}
+      >
         <Image
           source={require('../../assets/images/coloring/tulip.png')}
           style={styles.saveButtonContainer}
         />
-      </TouchableOpacity>
+      </Pressable>
       {/* <GreenButton
         style={styles.saveButtonContainer}
         onPress={handleSave}

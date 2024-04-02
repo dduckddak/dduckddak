@@ -5,10 +5,9 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  TouchableOpacity,
   ImageBackground,
   Animated,
-  Dimensions,
+  Dimensions, Pressable,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../components/Ui/styles';
@@ -115,8 +114,12 @@ const BookItems: React.FC<BookItemsProps> = ({
     });
   };
   return (
-    <TouchableOpacity
-      style={styles.bookItem}
+    <Pressable
+
+      style={({ pressed }) => [
+        styles.bookItem,
+        { opacity: pressed ? 0.3 : 1 }
+      ]}
       onPress={() => {
         if (isDeleteMode) {
           handleSelectItem();
@@ -132,7 +135,7 @@ const BookItems: React.FC<BookItemsProps> = ({
         />
         <Text style={styles.title}>{title}</Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 const BookListScreen: React.FC = () => {
@@ -231,7 +234,7 @@ const BookListScreen: React.FC = () => {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity
+      <Pressable
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -248,7 +251,7 @@ const BookListScreen: React.FC = () => {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </TouchableOpacity>
+      </Pressable>
       <View>
         <FlatList
           ListEmptyComponent={<EmptyListComponent />}
@@ -270,7 +273,16 @@ const BookListScreen: React.FC = () => {
           contentContainerStyle={styles.bookList}
         />
       </View>
-      <TouchableOpacity style={styles.trash} onPress={handleTrashButton}>
+      <Pressable
+        onPress={handleTrashButton}
+        style={({ pressed }) => [
+          styles.trash,
+          {
+            opacity: pressed ? .3 : 1,
+          },
+
+        ]}
+      >
         <Image
           source={require('../../assets/images/Trash.png')}
           style={[
@@ -278,7 +290,7 @@ const BookListScreen: React.FC = () => {
             isDeleteMode && styles.deleteModeTrashCan,
           ]}
         />
-      </TouchableOpacity>
+      </Pressable>
     </ImageBackground>
   );
 };

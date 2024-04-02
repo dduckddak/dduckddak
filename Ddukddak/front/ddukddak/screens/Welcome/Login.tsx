@@ -8,10 +8,9 @@ import {
   Image,
   SafeAreaView,
   TextInput,
-  TouchableOpacity,
   Alert,
   Keyboard,
-  TouchableWithoutFeedback,
+  TouchableWithoutFeedback, Pressable,
 } from 'react-native';
 import { Colors } from '../../components/Ui/styles';
 import GreenButton from '../../components/GreenButton';
@@ -155,12 +154,17 @@ const Login: React.FC<Props> = ({ navigation }) => {
                   </View>
                 </View>
                 <View style={styles.middleContainer}>
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => navigation.navigate('signup')}
-                    activeOpacity={0.5}
+                    style={({ pressed }) => [
+                      {
+                        opacity: pressed ? .3 : 1,
+                      },
+
+                    ]}
                   >
                     <Text>회원가입</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                   <Text>|</Text>
                   <Text>ID 찾기</Text>
                   <Text>|</Text>

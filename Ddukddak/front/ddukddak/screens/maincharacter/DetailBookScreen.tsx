@@ -4,9 +4,8 @@ import {
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity,
   ImageBackground,
-  Animated,
+  Animated, Pressable,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -183,21 +182,31 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 style={styles.coverImage}
               />
               <View style={styles.buttonsContainer}>
-                <TouchableOpacity
+                <Pressable
                   onPress={() => handleHappyPress()}
-                  style={styles.buttonStyle}
+                  style={({ pressed }) => [
+                    styles.buttonStyle,
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
+                  ]}
                 >
                   <Image source={happyImage} />
-                </TouchableOpacity>
-                <TouchableOpacity
+                </Pressable>
+                <Pressable
                   onPress={() => handleSadPress()}
-                  style={[
+                  style={({ pressed }) => [
                     styles.buttonStyle,
                     { marginTop: screenHeight * 0.023 },
+                    {
+                      opacity: pressed ? .3 : 1,
+                    },
+
                   ]}
                 >
                   <Image source={sadImage} />
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
             <View style={styles.textContainer}>
@@ -218,8 +227,14 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
             </View>
           </View>
           <View>
-            <TouchableOpacity
-              style={styles.button}
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
               onPress={() =>
                 selectedBook &&
                 bookSummary &&
@@ -233,16 +248,22 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                 source={require('../../assets/images/button/donghwabutton.png')}
                 style={styles.image}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
+            </Pressable>
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
               onPress={() => goToTalk(bookSummary.bookId)}
             >
               <Image
                 source={require('../../assets/images/button/talkbutton.png')}
                 style={styles.image}
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>

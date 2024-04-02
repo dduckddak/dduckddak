@@ -2,11 +2,10 @@ import React from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   Image,
   StyleSheet,
   Dimensions,
-  Modal,
+  Modal, Pressable,
 } from 'react-native';
 
 type ReloadModalProps = {
@@ -22,14 +21,30 @@ const ReloadModal = ({ isVisible, onRepeat, onHome }: ReloadModalProps) => {
   return (
     <Modal visible={isVisible} transparent>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={onRepeat}>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            {
+              opacity: pressed ? .3 : 1,
+            },
+
+          ]}
+          onPress={onRepeat}>
           <Image source={repeatBtnImage} style={styles.returnimage} />
           <Text style={styles.text}>다시읽기</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={onHome}>
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.button,
+            {
+              opacity: pressed ? .3 : 1,
+            },
+
+          ]}
+          onPress={onHome}>
           <Image source={homeBtnImage} style={styles.homeimage} />
           <Text style={styles.text}>홈으로</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </Modal>
   );

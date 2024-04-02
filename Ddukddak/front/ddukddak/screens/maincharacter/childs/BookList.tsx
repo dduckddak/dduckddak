@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   Pressable,
   StyleSheet,
   TextInput,
@@ -24,13 +23,13 @@ type BookListProps = {
 };
 
 const BookList = ({
-  bookList,
-  currentPage,
-  previousPage,
-  nextPage,
-  goToDetail,
-  navigation,
-}: BookListProps) => {
+                    bookList,
+                    currentPage,
+                    previousPage,
+                    nextPage,
+                    goToDetail,
+                    navigation,
+                  }: BookListProps) => {
   const [showSearch, setShowSearch] = useState(false); // 검색 입력 창 표시 여부
   const [searchText, setSearchText] = useState('');
 
@@ -75,12 +74,20 @@ const BookList = ({
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={previousPage}>
+      <Pressable
+        onPress={previousPage}
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? .3 : 1,
+          },
+
+        ]}
+      >
         <Image
           source={require('../../../assets/images/button/before.png')}
           style={styles.beforebutton}
         />
-      </TouchableOpacity>
+      </Pressable>
       <View style={styles.textContainer}>
         {bookList.length > 0 && (
           <Pressable onPress={() => goToDetail(bookList[currentPage])}>
@@ -97,12 +104,20 @@ const BookList = ({
           </Pressable>
         )}
       </View>
-      <TouchableOpacity onPress={nextPage}>
+      <Pressable
+        onPress={nextPage}
+        style={({ pressed }) => [
+          {
+            opacity: pressed ? .3 : 1,
+          },
+
+        ]}
+      >
         <Image
           source={require('../../../assets/images/button/next.png')}
           style={styles.nextbutton}
         />
-      </TouchableOpacity>
+      </Pressable>
       <View style={styles.searchButtonAndInputContainer}>
         <Pressable onPress={handleToggleOrSearch}>
           {/* <MaterialCommunityIcons

@@ -5,11 +5,10 @@ import {
   ImageBackground,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
   Alert,
   Dimensions,
   Animated,
-  Image,
+  Image, Pressable,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice } from '../../api/voiceApi';
@@ -200,7 +199,15 @@ function AddVoice({ route, navigation }: any) {
   };
 
   const renderItem = ({ item, index }: { item: VoiceData; index: number }) => (
-    <TouchableOpacity onPress={() => handleSelectVoice(index)}>
+    <Pressable
+      onPress={() => handleSelectVoice(index)}
+      style={({ pressed }) => [
+        {
+          opacity: pressed ? .3 : 1,
+        },
+
+      ]}
+    >
       <View
         style={[
           styles.card,
@@ -215,12 +222,18 @@ function AddVoice({ route, navigation }: any) {
           </View>
 
           <View style={styles.container2}>
-            <TouchableOpacity
+            <Pressable
               onPress={() => preview(item.voiceId)}
-              style={styles.prelisten}
+              style={({ pressed }) => [
+                styles.prelisten,
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
             >
               <Text style={styles.buttonText}>미리듣기</Text>
-            </TouchableOpacity>
+            </Pressable>
             {/* <TouchableOpacity onPress={() => deleteVoice(item.voiceId)}>
               <Image
                 source={require('../../assets/images/Trash.png')}
@@ -230,7 +243,7 @@ function AddVoice({ route, navigation }: any) {
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -257,7 +270,7 @@ function AddVoice({ route, navigation }: any) {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity
+      <Pressable
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -274,7 +287,7 @@ function AddVoice({ route, navigation }: any) {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </TouchableOpacity>
+      </Pressable>
       <FlatList
         data={voiceData}
         renderItem={renderItem}

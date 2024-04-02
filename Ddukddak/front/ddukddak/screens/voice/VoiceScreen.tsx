@@ -6,10 +6,9 @@ import {
   ImageBackground,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
   Image,
   Animated,
-  Dimensions,
+  Dimensions, Pressable,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
@@ -203,7 +202,7 @@ function VoiceScreen() {
   };
 
   const renderItem = ({ item }: any) => (
-    <TouchableOpacity onPress={() => console.log(item.voiceName)}>
+    <Pressable onPress={() => console.log(item.voiceName)}>
       <View style={styles.card}>
         <View style={styles.container1}>
           <View style={styles.textContainer}>
@@ -211,22 +210,36 @@ function VoiceScreen() {
           </View>
 
           <View style={styles.container2}>
-            <TouchableOpacity
+            <Pressable
               onPress={() => preview(item.voiceId)}
-              style={styles.prelisten}
+              style={({ pressed }) => [
+                styles.prelisten,
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
             >
               <Text style={styles.buttonText}>미리듣기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => promptDeleteVoice(item.voiceId)}>
+            </Pressable>
+            <Pressable
+              onPress={() => promptDeleteVoice(item.voiceId)}
+              style={({ pressed }) => [
+                {
+                  opacity: pressed ? .3 : 1,
+                },
+
+              ]}
+            >
               <Image
                 source={require('../../assets/images/Trash.png')}
                 style={styles.trash}
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -258,7 +271,7 @@ function VoiceScreen() {
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <TouchableOpacity
+      <Pressable
         onPress={() => playTouch('duck')}
         style={[
           styles.duck,
@@ -275,7 +288,7 @@ function VoiceScreen() {
           source={require('../../assets/images/duck.png')}
           style={styles.duckImage}
         />
-      </TouchableOpacity>
+      </Pressable>
       <FlatList
         data={voiceData}
         renderItem={renderItem}

@@ -7,8 +7,7 @@ import {
   StyleSheet,
   Image,
   Animated,
-  TouchableOpacity,
-  Button,
+  Pressable
 } from 'react-native';
 import GreenButton from '../components/GreenButton';
 
@@ -87,9 +86,15 @@ const MainRending: React.FC = () => {
             source={require('../assets/images/Rendering/Rending.png')}
             style={styles.imageBackground}
           >
-            <TouchableOpacity onPress={SkipToPage5} style={styles.skipButton}>
+            <Pressable
+              onPress={SkipToPage5}
+              style={({ pressed }) => [
+                styles.skipButton,
+                { opacity: pressed ? 0.3 : 1 }
+              ]}
+            >
               <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
+            </Pressable>
             <View>
               <Text style={{ fontSize: 40 }}> </Text>
               <View>
@@ -259,20 +264,26 @@ const MainRending: React.FC = () => {
       {RendingPages()}
 
       {currentStep > 1 && (
-        <TouchableOpacity
+        <Pressable
           onPress={handlePreviousStep}
-          style={[styles.buttonWrapper, styles.backbutton]}
+          style={({ pressed }) => [
+            styles.buttonWrapper, styles.backbutton,
+            { opacity: pressed ? 0.3 : 1 }
+          ]}
         >
           <Image source={require('../assets/images/button/back_button.png')} />
-        </TouchableOpacity>
+        </Pressable>
       )}
       {currentStep < 5 && (
-        <TouchableOpacity
+        <Pressable
           onPress={handleNextStep}
-          style={[styles.buttonWrapper, styles.nextbutton]}
+          style={({ pressed }) => [
+            styles.buttonWrapper, styles.backbutton,
+            { opacity: pressed ? 0.3 : 1 }
+          ]}
         >
           <Image source={require('../assets/images/button/next_button.png')} />
-        </TouchableOpacity>
+        </Pressable>
       )}
     </View>
   );

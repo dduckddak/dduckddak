@@ -45,7 +45,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -222,8 +222,6 @@ function TalkScreen({ route }: TalkScreenProps) {
     await soundObject.loadAsync({ uri: File });
 
     await soundObject.playAsync();
-
-    // soundObject.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate())
   };
 
   // const onPlaybackStatusUpdate = (playbackStatus: any,File : Audio.Sound) => {

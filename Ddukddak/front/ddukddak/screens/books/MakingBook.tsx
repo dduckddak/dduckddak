@@ -17,6 +17,8 @@ import * as url from 'node:url';
 import { Sound } from 'expo-av/build/Audio/Sound';
 import ReloadModal from '../../components/ReloadModal';
 
+import useTouchEffect from '../../components/sound/TouchEffect';
+
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
 
@@ -36,13 +38,17 @@ const MakingBook: React.FC = () => {
   const route = useRoute<BookDetailScreenRouteProp>();
   const makeBookId = route.params.makeBookId;
 
+  const { playTouch } = useTouchEffect();
+
   const onNextPress = () => {
+    playTouch('page');
     setCurrentIndex((prevIndex) =>
       prevIndex + 2 < bookDetails.length ? prevIndex + 2 : prevIndex,
     );
   };
 
   const onPrevPress = () => {
+    playTouch('page');
     setCurrentIndex((prevIndex) =>
       prevIndex - 2 >= 0 ? prevIndex - 2 : prevIndex,
     );

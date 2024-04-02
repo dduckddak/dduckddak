@@ -19,6 +19,8 @@ import {
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import useTouchEffect from '../../components/sound/TouchEffect';
+import { useBgmStore } from '../../store/BgmStore';
+
 interface BookItemsProps {
   title: string;
   coverImage: string;
@@ -50,7 +52,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -83,6 +85,15 @@ const BookItems: React.FC<BookItemsProps> = ({
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
+  const bgmStore = useBgmStore();
+
+  const pauseBGM = async () => {
+    if (bgmStore.isPlaying) {
+      await bgmStore.bgmSound?.pauseAsync();
+      bgmStore.setIsPlaying(!bgmStore.isPlaying);
+    }
+  };
+
   useEffect(() => {
     console.log(isDeleteMode);
     return () => {
@@ -100,6 +111,7 @@ const BookItems: React.FC<BookItemsProps> = ({
     }
   };
   const handlePress = () => {
+    pauseBGM();
     playTouch('open');
     CharrrrAnimation.setValue(1);
     setTimeout(() => {

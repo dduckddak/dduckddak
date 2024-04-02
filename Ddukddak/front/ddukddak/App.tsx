@@ -265,8 +265,6 @@ export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
-  const { playTouch } = useTouchEffect();
-
   const { setBackgroundSrc, setFontColor } = useTimeStore();
 
   useEffect(() => {

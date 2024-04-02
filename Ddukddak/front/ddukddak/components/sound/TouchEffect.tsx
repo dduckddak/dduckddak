@@ -7,9 +7,11 @@ const useTouchEffect = () => {
   const duck = require('../../assets/sound/Duck.mp3');
   const touch = require('../../assets/sound/Touch.mp3');
   const open = require('../../assets/sound/Open.mp3');
+  const dduk = require('../../assets/sound/dduk.mp3');
+  const ddak = require('../../assets/sound/ddak.mp3');
+  const page = require('../../assets/sound/Page.mp3');
 
   const playTouch = async (effect: string) => {
-    console.log("실행")
     const soundObject = new Audio.Sound();
 
     if (effect === 'duck')
@@ -17,9 +19,18 @@ const useTouchEffect = () => {
 
     if (effect === 'touch')
       await soundObject.loadAsync(touch);
-    
-      if (effect === 'open')
+
+    if (effect === 'open')
       await soundObject.loadAsync(open);
+
+    if (effect === 'M')
+      await soundObject.loadAsync(dduk);
+
+    if (effect === 'F')
+      await soundObject.loadAsync(ddak);
+
+    if (effect === 'page')
+      await soundObject.loadAsync(page);
 
 
     setTouchSound(soundObject);

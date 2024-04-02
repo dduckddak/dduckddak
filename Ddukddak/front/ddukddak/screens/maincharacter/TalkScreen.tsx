@@ -20,6 +20,7 @@ import { RootStackParamList } from '../../App';
 import { getTalkDetail, sttTalk, triggerTalk } from '../../api/talkApi';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
+import useBgmStore from '../../store/BgmStore';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -45,7 +46,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -77,7 +78,7 @@ interface TalkScreenProps {
 
 function TalkScreen({ route }: TalkScreenProps) {
   const bookId = route.params.bookId;
-
+  const { bgmSound, isPlaying } = useBgmStore();
   const [subName, setSubName] = useState<string>();
   const [subBasic, setSubBasic] = useState<string>();
   const [subTalk, setSubTalk] = useState<string>();
@@ -111,6 +112,19 @@ function TalkScreen({ route }: TalkScreenProps) {
       console.error('load Talk :', error);
     }
   };
+
+  useEffect(() => {
+    if (bgmSound) {
+      bgmSound.stopAsync();
+    }
+
+    return () => {
+      if (isPlaying) {
+        bgmSound?.playAsync();
+      }
+    }
+
+  }, []);
 
   useEffect(() => {
     loadTalk(bookId);
@@ -222,8 +236,6 @@ function TalkScreen({ route }: TalkScreenProps) {
     await soundObject.loadAsync({ uri: File });
 
     await soundObject.playAsync();
-
-    // soundObject.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate())
   };
 
   // const onPlaybackStatusUpdate = (playbackStatus: any,File : Audio.Sound) => {

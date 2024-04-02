@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Image,
   Text,
@@ -97,6 +97,7 @@ interface LogoRightProps {
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
   const { playTouch } = useTouchEffect();
+  const [isImageOne, setIsImageOne] = useState(true);
 
   const toggleBGM = async () => {
     playTouch('touch');
@@ -107,6 +108,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
       await bgmStore.bgmSound?.playAsync();
     }
     bgmStore.setIsPlaying(!bgmStore.isPlaying);
+    setIsImageOne(!isImageOne);
   };
 
   const navigation = useNavigation();
@@ -129,7 +131,11 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
         <TouchableOpacity onPress={toggleBGM}>
           <Image
             style={styles.buttonImage}
-            source={require('./assets/images/button/pengshu.png')}
+            source={
+              isImageOne
+                ? require('./assets/images/button/sound_off.png')
+                : require('./assets/images/button/pengshu.png')
+            }
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleLogout}>
@@ -153,7 +159,11 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
       <TouchableOpacity onPress={toggleBGM}>
         <Image
           style={styles.buttonImage}
-          source={require('./assets/images/button/pengshu.png')}
+          source={
+            isImageOne
+              ? require('./assets/images/button/sound_off.png')
+              : require('./assets/images/button/pengshu.png')
+          }
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={handlePress}>
@@ -201,7 +211,7 @@ type message = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.preventAutoHideAsync().catch(() => { });
 
 export default function App() {
   // 푸시 알림 권한 요청
@@ -274,12 +284,10 @@ export default function App() {
   const [initialRouteName, setInitialRouteName] =
     React.useState<keyof RootStackParamList>();
 
-  const { playTouch } = useTouchEffect();
-
   const { setBackgroundSrc, setFontColor } = useTimeStore();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {});
+    SplashScreen.hideAsync().catch(() => { });
 
     const hour = new Date().getHours();
     const isDayTime = hour >= 6 && hour < 18;
@@ -298,7 +306,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => {});
+      SplashScreen.hideAsync().catch(() => { });
     }
   }, [fontsLoaded]);
 

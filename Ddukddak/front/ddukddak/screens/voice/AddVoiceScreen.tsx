@@ -10,6 +10,8 @@ import {
 import GreenButton from '../../components/GreenButton';
 import { useNavigation } from '@react-navigation/native';
 import { useUserStore } from '../../store/userStore';
+import { Audio } from 'expo-av';
+import { useBgmStore } from '../../store/BgmStore';
 
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
@@ -32,7 +34,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 2],
@@ -57,8 +59,29 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 function AddVoiceScreen() {
   const userSex = useUserStore((state) => state.sex);
   const [character, setCharacter] = useState();
+  const [sound, setSound] = useState<Audio.Sound>();
   const navigation = useNavigation();
+
+  const { bgmSound, isPlaying } = useBgmStore();
+
+
   useEffect(() => {
+    if (bgmSound) {
+      bgmSound.stopAsync();
+    }
+
+    return () => {
+      if (isPlaying) {
+        bgmSound?.playAsync();
+      }
+    }
+
+  }, []);
+
+  useEffect(() => {
+    const soundObject = new Audio.Sound();
+    setSound(soundObject)
+
     const updateMainImage = () => {
       if (userSex === 'M') {
         setCharacter(require('../../assets/images/Main/뚝이zip.gif'));
@@ -67,7 +90,22 @@ function AddVoiceScreen() {
       }
     };
 
+    const playAudio = async () => {
+      if (userSex == 'M')
+        await soundObject.loadAsync(require('../../assets/sound/add_voice_dduk.mp3'));
+
+      if ((userSex == 'F'))
+        await soundObject.loadAsync(require('../../assets/sound/add_voice_ddak.mp3'));
+
+      await soundObject.playAsync();
+    };
+
     updateMainImage();
+    playAudio();
+
+    return () => {
+      soundObject?.unloadAsync();
+    }
   }, []);
   return (
     <ImageBackground
@@ -111,7 +149,10 @@ function AddVoiceScreen() {
       <View style={styles.buttonContainer}>
         <GreenButton
           content="녹음하러가기"
-          onPress={() => navigation.navigate('record' as never)}
+          onPress={() => {
+            sound?.unloadAsync();
+            navigation.navigate('record' as never)
+          }}
           style={styles.buttonStyle}
         />
       </View>

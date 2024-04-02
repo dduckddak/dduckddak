@@ -18,6 +18,7 @@ import {
 } from '../../api/makeBookApi';
 import EmptyListComponent from '../../components/EmptyListComponent';
 import useTouchEffect from '../../components/sound/TouchEffect';
+
 interface BookItemsProps {
   title: string;
   coverImage: string;
@@ -49,7 +50,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -82,6 +83,8 @@ const BookItems: React.FC<BookItemsProps> = ({
 }) => {
   const CharrrrAnimation = useRef(new Animated.Value(1)).current;
   const { playTouch } = useTouchEffect();
+
+
   useEffect(() => {
     console.log(isDeleteMode);
     return () => {

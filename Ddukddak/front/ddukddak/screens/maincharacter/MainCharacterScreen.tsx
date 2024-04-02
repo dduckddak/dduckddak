@@ -8,6 +8,7 @@ import {
   Text,
   Animated,
   Image,
+  TouchableOpacity
 } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { getBookList } from '../../api/bookApi';
@@ -17,6 +18,7 @@ import BookList from './childs/BookList';
 import Dots from './childs/Dots';
 import { useUserStore } from '../../store/userStore';
 import useTimeStore from '../../store/timeStore';
+import useTouchEffect from '../../components/sound/TouchEffect';
 
 interface MainCharacterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -43,7 +45,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -71,6 +73,8 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookList, setBookList] = useState<BookSummary[]>([]);
+  const { playTouch } = useTouchEffect();
+
   // 구름 두둥실
 
   const userSex = useUserStore((state) => state.sex);
@@ -166,7 +170,9 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
         <Dots bookList={bookList} currentPage={currentPage} />
       </View>
       {mainPageCharacter && (
-        <Image source={mainPageCharacter} style={styles.ddak2} />
+        <TouchableOpacity onPress={() => { playTouch(userSex) }} style={styles.ddak2}>
+          <Image source={mainPageCharacter} style={{ width: '100%', height: '100%' }} />
+        </TouchableOpacity>
       )}
     </ImageBackground>
   );

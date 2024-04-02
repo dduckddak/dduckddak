@@ -119,12 +119,12 @@ function AddPicture({ route, navigation }: any) {
         style={styles.imagelist}
       />
       <View style={styles.buttonContainer}>
+        <ImagePickerComponent readPhotos={readPhotos} />
         <GreenButton
           content={selectMode ? '선택완료' : '선택하기'}
           onPress={handleCompleteSelection}
           style={styles.button}
         />
-        <ImagePickerComponent readPhotos={readPhotos} />
       </View>
     </ImageBackground>
   );
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   imagelist: {
     width: '85%',
     height: '70%',
-    marginTop: 10,
+    marginTop: 15,
   },
   card: {
     margin: 5,

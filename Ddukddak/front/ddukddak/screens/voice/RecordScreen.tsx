@@ -6,7 +6,9 @@ import {
   StyleSheet,
   Image,
   Animated,
-  Dimensions, Pressable, TouchableOpacity,
+  Dimensions,
+  Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import { Audio } from 'expo-av';
 import GreenButton from '../../components/GreenButton';
@@ -36,7 +38,7 @@ const scripts = [
   {
     id: 4,
     content:
-      '마녀는 소녀가 하늘을 나는 모습을 바라보며 행복해했고,\n 소녀는 자신의 꿈을 \n실현한 것에 대해 깊은 감사를 느꼈어요.',
+      '마녀는 소녀가 하늘을 나는 모습을 \n 바라보며 행복해했고,\n 소녀는 자신의 꿈을 \n실현한 것에 대해 깊은 감사를 느꼈어요.',
   },
   {
     id: 5,
@@ -199,11 +201,11 @@ function RecordScreen() {
         <View style={styles.buttonTextContainer}>
           <Pressable
             style={({ pressed }) => [
-              styles.button, !recordingStarted && styles.disabledButton,
+              styles.button,
+              !recordingStarted && styles.disabledButton,
               {
-                opacity: pressed ? .3 : 1,
+                opacity: pressed ? 0.3 : 1,
               },
-
             ]}
             onPress={handlePreviousStep}
             disabled={!recordingStarted || currentScriptIndex === 0}
@@ -217,11 +219,11 @@ function RecordScreen() {
           </View>
           <Pressable
             style={({ pressed }) => [
-              styles.button, !recordingStarted && styles.disabledButton,
+              styles.button,
+              !recordingStarted && styles.disabledButton,
               {
-                opacity: pressed ? .3 : 1,
+                opacity: pressed ? 0.3 : 1,
               },
-
             ]}
             onPress={handleNextStep}
             disabled={
@@ -238,7 +240,7 @@ function RecordScreen() {
         <GreenButton
           content={recording ? '녹음 종료' : '녹음 시작'}
           onPress={recording ? stopRecording : startRecording}
-          style={{ width: '15%', margin: 70, marginBottom: -15 }}
+          style={{ width: '15%', margin: 45, marginBottom: -5 }}
         />
         <EndRecordModal
           visible={modalVisible}

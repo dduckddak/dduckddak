@@ -129,9 +129,8 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                   onPress={handlePress}
                   style={({ pressed }) => [
                     {
-                      opacity: pressed ? .3 : 1,
+                      opacity: pressed ? 0.3 : 1,
                     },
-
                   ]}
                 >
                   <Image
@@ -182,7 +181,10 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                 )}
                 <Image
                   source={require('../../assets/images/Main/ballon.png')}
-                  style={styles.ballon}
+                  style={[
+                    styles.ballon,
+                    { width: 650, height: 500, marginLeft: 20 },
+                  ]}
                 />
                 <Text style={styles.ballontext}>
                   안녕? {'\n'}난 {characterName}야!{'\n'}
@@ -205,9 +207,8 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                   onPress={handlePress}
                   style={({ pressed }) => [
                     {
-                      opacity: pressed ? .3 : 1,
+                      opacity: pressed ? 0.3 : 1,
                     },
-
                   ]}
                 >
                   <Image
@@ -258,7 +259,10 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                 )}
                 <Image
                   source={require('../../assets/images/Main/ballon.png')}
-                  style={styles.ballon}
+                  style={[
+                    styles.ballon,
+                    { width: 650, height: 500, marginLeft: 20 },
+                  ]}
                 />
                 <Text style={styles.ballontext}>
                   동화 속{'\n'}주인공이{'\n'} 되어보고 싶지 {'\n'}않았니?
@@ -280,9 +284,8 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                   onPress={handlePress}
                   style={({ pressed }) => [
                     {
-                      opacity: pressed ? .3 : 1,
+                      opacity: pressed ? 0.3 : 1,
                     },
-
                   ]}
                 >
                   <Image source={mainPageCharacter} style={styles.ddak2} />
@@ -347,9 +350,8 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                   onPress={handlePress}
                   style={({ pressed }) => [
                     {
-                      opacity: pressed ? .3 : 1,
+                      opacity: pressed ? 0.3 : 1,
                     },
-
                   ]}
                 >
                   <Image source={mainPageCharacter} style={styles.ddak2} />
@@ -420,9 +422,8 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
                     onPress={handlePress}
                     style={({ pressed }) => [
                       {
-                        opacity: pressed ? .3 : 1,
+                        opacity: pressed ? 0.3 : 1,
                       },
-
                     ]}
                   >
                     <Image
@@ -503,14 +504,15 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       {YourComponent({ currentStep })}
-      {currentStep > 1 && currentStep < 5 && (
+      {currentStep > 1 && currentStep < 6 && (
         <Pressable
           onPress={handlePreviousStep}
-          style={({ pressed}) => [
-            styles.buttonWrapper, styles.backbutton,
+          style={({ pressed }) => [
+            styles.buttonWrapper,
+            styles.backbutton,
             {
-              opacity: pressed ? .3 : 1,
-            }
+              opacity: pressed ? 0.3 : 1,
+            },
           ]}
         >
           <Image source={require('../../assets/images/button/egun.png')} />
@@ -519,11 +521,12 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
       {currentStep === 5 && (
         <Pressable
           onPress={handleNextStep}
-          style={({ pressed}) => [
-            styles.buttonWrapper, styles.backbutton,
+          style={({ pressed }) => [
+            styles.buttonWrapper,
+            styles.nextbutton,
             {
-              opacity: pressed ? .3 : 1,
-            }
+              opacity: pressed ? 0.3 : 1,
+            },
           ]}
         >
           <Image source={require('../../assets/images/button/gotomake.png')} />
@@ -532,11 +535,12 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
       {currentStep < 5 && (
         <Pressable
           onPress={handleNextStep}
-          style={({ pressed}) => [
-            styles.buttonWrapper, styles.backbutton,
+          style={({ pressed }) => [
+            styles.buttonWrapper,
+            styles.nextbutton,
             {
-              opacity: pressed ? .3 : 1,
-            }
+              opacity: pressed ? 0.3 : 1,
+            },
           ]}
         >
           <Image source={require('../../assets/images/button/daum.png')} />
@@ -611,20 +615,20 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  ballon: { left: '39%', top: '12%' },
+  ballon: { left: '40%', top: '12%' },
   ballon2: { left: '20%', top: '3%' },
   ballon3: { left: '20%', top: '32%' },
-  ballon4: { left: '59%', top: '12%' },
+  ballon4: { left: '60%', top: '15%', width: 450, height: 490 },
   ddak: {
     position: 'absolute',
     left: '3%',
     top: '20%',
-    width: 455,
+    width: 460,
     height: 520,
   },
   ddaks: {
     position: 'absolute',
-    left: '4%',
+    left: '2%',
     top: '25%',
     width: 350,
     height: 380,
@@ -641,15 +645,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     fontFamily: 'im-hyemin-bold',
     fontSize: 70,
-    left: '50%',
-    top: '26%',
+    left: '51%',
+    top: '23%',
     textAlign: 'center',
   },
   ballontext2: {
     textAlign: 'center',
     position: 'absolute',
     fontFamily: 'im-hyemin-bold',
-    fontSize: 40,
+    fontSize: 42,
     left: '28%',
     top: '13%',
   },

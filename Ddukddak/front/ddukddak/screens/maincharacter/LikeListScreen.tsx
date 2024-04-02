@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   FlatList,
   ImageBackground,
   Image,
@@ -128,8 +127,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ddd',
     borderRadius: 5,
-    width: Dimensions.get('screen').width * 0.22,
-    height: 300,
+    width: 250,
+    height: 280,
     justifyContent: 'center',
   },
   bookImage: {
@@ -143,7 +142,7 @@ const styles = StyleSheet.create({
     position: 'absolute', // 책 이름을 책 아래에 위치시키기 위해 절대 위치로 설정
     bottom: -35,
     fontFamily: 'im-hyemin-bold',
-    fontSize: 25,
+    fontSize: 27,
   },
 });
 

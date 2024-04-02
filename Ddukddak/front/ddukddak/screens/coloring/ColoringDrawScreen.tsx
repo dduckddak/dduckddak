@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   webviewContainer: {
     marginTop: 100,
-    height: 640,
+    height: 600,
     width: 1090,
     padding: 25,
     backgroundColor: '#D1A271',
@@ -248,16 +248,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     transform: [{ rotate: '-90deg' }],
     top: -83,
-    left: 170,
+    left: 150,
     width: 93,
     height: 100,
   },
   ballon: {
     position: 'absolute',
     top: -80,
-    right: 80,
-    width: 708,
-    height: 95,
+    right: 130,
+    width: 710,
+    height: 93,
   },
   paletteButtonContainer: {
     position: 'absolute',
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   },
   saveButtonPressable: {
     position: 'absolute',
-    bottom: 20,
+    bottom: 15,
     right: 30,
     opacity: 1, // 초기 상태의 투명도 설정
     width: 120, // Image 크기와 동일하게 조정

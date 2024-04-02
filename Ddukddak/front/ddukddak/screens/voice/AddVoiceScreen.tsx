@@ -34,7 +34,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => { };
+    return () => {};
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 2],
@@ -64,7 +64,6 @@ function AddVoiceScreen() {
 
   const { bgmSound, isPlaying } = useBgmStore();
 
-
   useEffect(() => {
     if (bgmSound) {
       bgmSound.stopAsync();
@@ -74,13 +73,12 @@ function AddVoiceScreen() {
       if (isPlaying) {
         bgmSound?.playAsync();
       }
-    }
-
+    };
   }, []);
 
   useEffect(() => {
     const soundObject = new Audio.Sound();
-    setSound(soundObject)
+    setSound(soundObject);
 
     const updateMainImage = () => {
       if (userSex === 'M') {
@@ -92,10 +90,14 @@ function AddVoiceScreen() {
 
     const playAudio = async () => {
       if (userSex == 'M')
-        await soundObject.loadAsync(require('../../assets/sound/add_voice_dduk.mp3'));
+        await soundObject.loadAsync(
+          require('../../assets/sound/add_voice_dduk.mp3'),
+        );
 
-      if ((userSex == 'F'))
-        await soundObject.loadAsync(require('../../assets/sound/add_voice_ddak.mp3'));
+      if (userSex == 'F')
+        await soundObject.loadAsync(
+          require('../../assets/sound/add_voice_ddak.mp3'),
+        );
 
       await soundObject.playAsync();
     };
@@ -105,7 +107,7 @@ function AddVoiceScreen() {
 
     return () => {
       soundObject?.unloadAsync();
-    }
+    };
   }, []);
   return (
     <ImageBackground
@@ -151,7 +153,7 @@ function AddVoiceScreen() {
           content="녹음하러가기"
           onPress={() => {
             sound?.unloadAsync();
-            navigation.navigate('record' as never)
+            navigation.navigate('record' as never);
           }}
           style={styles.buttonStyle}
         />
@@ -204,17 +206,19 @@ const styles = StyleSheet.create({
   ballon: {
     position: 'absolute',
     top: 50,
-    right: 60,
+    right: 70,
+    width: 650,
+    height: 500,
   },
   ballontext: {
     position: 'absolute',
-    right: 130,
-    top: 230,
+    right: 120,
+    top: 205,
     zIndex: 20,
   },
   text: {
     textAlign: 'center',
-    fontSize: 50,
+    fontSize: 47,
     fontFamily: 'im-hyemin-bold',
   },
   buttonContainer: {

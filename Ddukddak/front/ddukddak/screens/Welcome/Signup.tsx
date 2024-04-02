@@ -252,15 +252,15 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   signup: {
-    marginLeft: 215,
-    marginTop: 45,
+    marginLeft: 160,
+    marginTop: 33,
     width: 800,
   },
   maxcontainer: {
     flex: 1,
   },
   TopContainer: {
-    paddingLeft: '25%',
+    paddingLeft: '22.5%',
     paddingTop: '18%',
     alignContent: 'center',
     justifyContent: 'center',
@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     alignItems: 'center',
     marginTop: 5,
+    marginRight: 22,
   },
 });
 

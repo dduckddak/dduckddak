@@ -16,6 +16,7 @@ import { Audio, AVPlaybackStatus } from 'expo-av';
 import * as url from 'node:url';
 import { Sound } from 'expo-av/build/Audio/Sound';
 import ReloadModal from '../../components/ReloadModal';
+import useBgmStore from '../../store/BgmStore';
 
 import useTouchEffect from '../../components/sound/TouchEffect';
 
@@ -39,6 +40,7 @@ const MakingBook: React.FC = () => {
   const makeBookId = route.params.makeBookId;
 
   const { playTouch } = useTouchEffect();
+  const { bgmSound, isPlaying } = useBgmStore();
 
   const onNextPress = () => {
     playTouch('page');
@@ -53,6 +55,21 @@ const MakingBook: React.FC = () => {
       prevIndex - 2 >= 0 ? prevIndex - 2 : prevIndex,
     );
   };
+
+
+  useEffect(() => {
+    if (bgmSound) {
+      bgmSound.stopAsync();
+    }
+
+    return () => {
+      if (isPlaying) {
+        bgmSound?.playAsync();
+      }
+    }
+
+  }, []);
+
 
   /**
    * 현재 인덱스가 변경될때마다 실행됨, 변경된 인덱스를 기반으로 음성파일의 링크들을 배열로 만들고,

@@ -55,10 +55,10 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
     <Animated.View
       style={{
         position: 'absolute',
-        top: screenHeight * 0.05,
-        left: screenWidth * 0.005,
-        width: screenWidth * 0.2,
-        height: screenHeight * 0.2,
+        top: 40,
+        left: 20,
+        width: 200,
+        height: 130,
         transform: [{ translateY: cloud1TranslateY }],
       }}
     >
@@ -279,7 +279,7 @@ function TalkScreen({ route }: TalkScreenProps) {
               content={'대화끝내기'}
               style={{
                 width: '35%',
-                marginLeft: Dimensions.get('screen').width * 0.2,
+                marginLeft: 256,
               }}
             />
           ) : (
@@ -288,7 +288,7 @@ function TalkScreen({ route }: TalkScreenProps) {
               content={'대화하기'}
               style={{
                 width: '35%',
-                marginLeft: Dimensions.get('screen').width * 0.2,
+                marginLeft: 256,
               }}
             />
           )}
@@ -306,17 +306,17 @@ const styles = StyleSheet.create({
   },
   cloud: {
     position: 'absolute',
-    top: screenHeight * 0.17,
-    left: screenWidth * 0.07,
-    width: screenWidth * 0.1,
-    height: screenHeight * 0.15,
+    top: 100,
+    left: 85,
+    width: 120,
+    height: 120,
   },
   cloud1: {
     position: 'absolute',
-    top: -screenHeight * 0.04,
-    left: screenWidth * 0.27,
-    width: screenWidth * 0.2,
-    height: screenHeight * 0.27,
+    top: -20,
+    left: 300,
+    width: 250,
+    height: 170,
   },
   imageBackground: {
     flex: 1,
@@ -325,17 +325,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   characterImage: {
-    width: Dimensions.get('screen').width * 0.35,
-    height: Dimensions.get('screen').width * 0.35,
-    marginLeft: Dimensions.get('screen').width * 0.4,
-    marginTop: Dimensions.get('screen').width * 0.2,
+    width: 452,
+    height: 450,
+    marginLeft: 510,
+    marginTop: 255,
   },
   textContainer: {
     position: 'absolute',
-    top: Dimensions.get('screen').height * 0.22,
-    left: Dimensions.get('screen').width * 0.08,
-    width: Dimensions.get('screen').width * 0.44,
-    height: Dimensions.get('screen').height * 0.5,
+    top: 100,
+    left: 105,
+    width: 580,
+    height: 400,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

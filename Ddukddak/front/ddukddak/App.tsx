@@ -97,7 +97,6 @@ interface LogoRightProps {
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
   const { playTouch } = useTouchEffect();
-  const [isImageOne, setIsImageOne] = useState(true);
 
   const toggleBGM = async () => {
     playTouch('touch');
@@ -107,8 +106,8 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     } else {
       await bgmStore.bgmSound?.playAsync();
     }
+    console.log(bgmStore.isPlaying);
     bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    setIsImageOne(!isImageOne);
   };
 
   const navigation = useNavigation();
@@ -132,9 +131,9 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
           <Image
             style={styles.buttonImage}
             source={
-              isImageOne
-                ? require('./assets/images/button/sound_off.png')
-                : require('./assets/images/button/pengshu.png')
+              bgmStore.isPlaying
+                ? require('./assets/images/button/pengshu.png')
+                : require('./assets/images/button/sound_off.png')
             }
           />
         </TouchableOpacity>
@@ -160,9 +159,9 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
         <Image
           style={styles.buttonImage}
           source={
-            isImageOne
-              ? require('./assets/images/button/sound_off.png')
-              : require('./assets/images/button/pengshu.png')
+            bgmStore.isPlaying
+              ? require('./assets/images/button/pengshu.png')
+              : require('./assets/images/button/sound_off.png')
           }
         />
       </TouchableOpacity>
@@ -211,7 +210,7 @@ type message = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-SplashScreen.preventAutoHideAsync().catch(() => { });
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function App() {
   // 푸시 알림 권한 요청
@@ -288,7 +287,7 @@ export default function App() {
   const { setBackgroundSrc, setFontColor } = useTimeStore();
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => { });
+    SplashScreen.hideAsync().catch(() => {});
 
     const hour = new Date().getHours();
     const isDayTime = hour >= 6 && hour < 18;
@@ -307,7 +306,7 @@ export default function App() {
 
   useEffect(() => {
     if (fontsLoaded) {
-      SplashScreen.hideAsync().catch(() => { });
+      SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded]);
 
@@ -547,6 +546,6 @@ const styles = StyleSheet.create({
   buttonImage: {
     width: 70,
     height: 70,
-    marginRight: 5,
+    marginRight: 3,
   },
 });

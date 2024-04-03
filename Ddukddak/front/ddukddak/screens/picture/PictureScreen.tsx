@@ -118,6 +118,7 @@ function PictureScreen() {
 
   useFocusEffect(
     useCallback(() => {
+
       readPhotos();
     }, [readPhotos]),
   );
@@ -232,7 +233,7 @@ function PictureScreen() {
           keyExtractor={(item, index) => index.toString()}
           numColumns={4}
           ListEmptyComponent={
-            isLoading && imageData.length === 0 ? <EmptyListComponent /> : null
+            !isLoading && imageData.length === 0 ? <EmptyListComponent /> : null
           }
           style={styles.imagelist}
         />

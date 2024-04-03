@@ -59,6 +59,7 @@ const MakingBook: React.FC = () => {
   };
 
   const onNextPress = () => {
+    playTouch('page')
     fadeOut(); // Start fading out
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
@@ -69,6 +70,7 @@ const MakingBook: React.FC = () => {
   };
 
   const onPrevPress = () => {
+    playTouch('page')
     fadeOut();
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
@@ -230,6 +232,7 @@ const MakingBook: React.FC = () => {
             <Text style={styles.caption}>
               {bookDetails[currentIndex].pageDetail
                 .map((detail) => detail.scriptContent)
+                .filter(content => content !== "(효과음)") // 효과음 스크립트 컨텐츠 필터링
                 .join('\n')}
             </Text>
           </View>
@@ -243,6 +246,7 @@ const MakingBook: React.FC = () => {
             <Text style={styles.caption}>
               {bookDetails[currentIndex + 1].pageDetail
                 .map((detail) => detail.scriptContent)
+                .filter(content => content !== "(효과음)") // 효과음 스크립트 컨텐츠 필터링
                 .join('\n')}
             </Text>
           </View>

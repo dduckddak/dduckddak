@@ -252,7 +252,7 @@ function RecordScreen() {
       {/* 모달 위치 */}
       <AlertModal
         isVisible={timeModal}
-        text={['녹음이 너무 짧습니다', '녹음은 최소 30초 이상이어야 합니다.']}
+        text={['녹음이 너무 짧습니다', '녹음은 최소 30초 이상이어야 합니다']}
         onConfirm={handleModalClose}
       />
 

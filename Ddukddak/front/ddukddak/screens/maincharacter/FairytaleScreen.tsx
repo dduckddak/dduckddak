@@ -288,7 +288,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           <View style={styles.ballontext}>
             <Text style={styles.text}>동화 뚝딱을 눌렀구나?</Text>
             <Text style={styles.text}>
-              나와함께 동화를 만들기위해{'\n'}
+              나와 함께 동화를 만들기위해{'\n'}
               {attachWaGwa(role)} {roles}의{'\n'}
               얼굴과 목소리 재료를{'\n'}
               구하러 떠나볼래?
@@ -404,11 +404,11 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         </View>
         <View style={styles.narrationButtonContainer}>
           <Image
-            source={require('../../assets/images/books/snail.png')}
+            source={require('../../assets/images/books/snail2.png')}
             style={styles.snail}
           />
           <Image
-            source={require('../../assets/images/books/snail.png')}
+            source={require('../../assets/images/books/snail2.png')}
             style={styles.snail2}
           />
           <Pressable
@@ -716,7 +716,7 @@ const styles = StyleSheet.create({
   textcenter: {
     fontFamily: 'im-hyemin-bold',
     textAlign: 'center',
-    color: 'black',
+    color: 'white',
     fontSize: 35,
   },
   stepFourContainer: {

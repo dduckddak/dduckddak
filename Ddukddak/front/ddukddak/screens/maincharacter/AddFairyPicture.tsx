@@ -6,7 +6,6 @@ import {
   ImageBackground,
   FlatList,
   Image,
-  Dimensions,
   Alert,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
@@ -16,11 +15,6 @@ import { getPhotos } from '../../api/photoApi';
 
 import { SelectablePhotoData, PhotoData } from '../../types/types';
 import { useFairyStore } from '../../store/fairyStore';
-
-const { width } = Dimensions.get('screen');
-
-const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
-const CARD_HEIGHT = CARD_WIDTH;
 
 function AddPicture({ route, navigation }: any) {
   const { currentStep, role } = route.params;

@@ -8,7 +8,7 @@ import {
   Image,
   Pressable,
 } from 'react-native';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
 import { getLikeList, LikeBookListData } from '../../api/bookApi';
 import { BookSummary } from '../../types/types';
 
@@ -24,23 +24,25 @@ const LikeListScreen: React.FC<LikeListScreenProps> = ({ navigation }) => {
   // 오류 메시지 상태
   const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    const LikeList = async () => {
-      setIsLoading(true);
-      try {
-        const response = await getLikeList();
-        setLikeList(response);
-        console.log(response);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Failed:', error);
-        setErrorMessage('좋아요한 책 리스트를 가져오는 데 실패했습니다.');
-        setIsLoading(false);
-      }
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const LikeList = async () => {
+        setIsLoading(true);
+        try {
+          const response = await getLikeList();
+          setLikeList(response);
+          console.log(response);
+          setIsLoading(false);
+        } catch (error) {
+          console.error('Failed:', error);
+          setErrorMessage('좋아요한 책 리스트를 가져오는 데 실패했습니다.');
+          setIsLoading(false);
+        }
+      };
 
-    LikeList();
-  }, []);
+      LikeList();
+    }, []), // dependencies 변경
+  );
 
   const goToDetail = (bookSummary: BookSummary | undefined) => {
     console.log(bookSummary);

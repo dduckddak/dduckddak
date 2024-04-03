@@ -43,7 +43,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => {
+    };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -79,6 +80,7 @@ function TalkScreen({ route }: TalkScreenProps) {
   const [subName, setSubName] = useState<string>();
   const [subBasic, setSubBasic] = useState<string>();
   const [subTalk, setSubTalk] = useState<string>();
+  const [isSoundPlayed, setIsSoundPlayed] = useState(false);
 
   // 음... 상태
   const [isWaiting, setIsWaiting] = useState(false);
@@ -98,20 +100,80 @@ function TalkScreen({ route }: TalkScreenProps) {
 
   const [userScript, setUserScript] = useState<string | null>('');
   const [characterScript, setCharacterScript] = useState<string | null>('');
+  const [displayedCharacterScript, setDisplayedCharacterScript] = useState('');
+  const [displayedUserScript, setDisplayedUserScript] = useState('');
 
   const loadTalk = async (bookId: number) => {
     try {
       const result = await getTalkDetail(bookId);
+      console.log(result);
       //   name 캐릭터 이름 , basic 기본 이미지, talk 말하는 이미지
       setSubName(result.subName);
       setSubBasic(result.subBasic);
       setSubTalk(result.subTalk);
       setCharacterScript(result.welcomeComment);
+
       playAudio(result.welcomeCommentSound);
     } catch (error) {
       console.error('load Talk :', error);
     }
   };
+
+
+  useEffect(() => {
+
+    let index = 0;
+    // 이미 타이머가 실행중이라면 이전 타이머를 멈춥니다.
+    let timerId: NodeJS.Timeout;
+    setDisplayedCharacterScript('');
+
+    function typeWriter() {
+      if (index < (characterScript || '').length) {
+        setDisplayedCharacterScript((prevScript) => prevScript + characterScript?.charAt(index));
+        index++;
+      } else {
+        setIsSoundPlayed(false);
+        clearTimeout(timerId);
+      }
+    }
+
+    // 글자가 나타나는 타이머를 설정합니다.
+    timerId = setInterval(typeWriter, 150);
+
+    return () => {
+      clearTimeout(timerId); // 컴포넌트가 언마운트시 타이머를 멈춥니다.
+
+    };
+  }, [characterScript]);
+
+
+  useEffect(() => {
+    let index = 0;
+    // 이미 타이머가 실행중이라면 이전 타이머를 멈춥니다.
+
+    if (!userScript) {
+      return;
+    }
+    let timerId: NodeJS.Timeout;
+    setDisplayedUserScript('');
+
+    function typeWriter() {
+      if (index < (userScript || '').length) {
+        setDisplayedUserScript((prevScript) => prevScript + userScript?.charAt(index));
+        index++;
+      } else {
+        // setCharacterScript('음...');
+        // setCharacterTalking(true);
+        clearTimeout(timerId);
+      }
+    }
+    // 글자가 나타나는 타이머를 설정합니다.
+    timerId = setInterval(typeWriter, 150);
+
+    return () => {
+      clearTimeout(timerId); // 컴포넌트가 언마운트시 타이머를 멈춥니다.
+    };
+  }, [userScript]);
 
   useEffect(() => {
     if (bgmSound) {
@@ -161,15 +223,13 @@ function TalkScreen({ route }: TalkScreenProps) {
       setRecording(undefined);
 
       if (uri !== null) {
-        setIsWaiting(true);
-        setCharacterTalking(true);
+
         const sttResult = await handleUploadSound(uri);
         if (sttResult != null) {
           // 유저 스크립트를 화면에 출력( 텍스트로 변환된 유저의 대화 내용을 userScript에 담아주고 chracterTalking을 false로 바꾸면서 유저 말풍선 출력
           setUserScript(sttResult);
-          // setCharacterTalking(false);
+          setCharacterTalking(false);
 
-          setCharacterTalking(true);
           await handleDownloadSound(sttResult);
         }
       }
@@ -201,13 +261,16 @@ function TalkScreen({ route }: TalkScreenProps) {
     };
 
     try {
-      setCharacterScript('음...');
       const response = await triggerTalk(talkParams);
       // 정상적으로 답변이 전달되었을 때 캐릭터의 대화내용을 characterScript에 담아주고
       // characterTalking을 true로 바꾸면서 유저 말풍선을 끄고 캐릭터 말풍선을 렌더링
+      if (subTalk) {
+        setIsSoundPlayed(true);
+      }
       setCharacterScript(response.gptScript);
       setCharacterTalking(true);
-      setIsWaiting(false);
+
+
       await playBase64Audio(response.gptVoiceFile);
     } catch (error) {
       console.error(error);
@@ -268,8 +331,8 @@ function TalkScreen({ route }: TalkScreenProps) {
             />
           </CloudAnimation>
         </CloudAnimation>
-        {subBasic && (
-          <Image source={{ uri: subBasic }} style={styles.characterImage} />
+        {subBasic && subTalk && (
+          <Image source={{ uri: isSoundPlayed ? subTalk : subBasic }} style={styles.characterImage} />
         )}
 
         <View
@@ -280,7 +343,6 @@ function TalkScreen({ route }: TalkScreenProps) {
             paddingRight: Dimensions.get('screen').width * 0.4,
           }}
         >
-          {/* TODO 현재 임시로 Text로 구현, 나중에 말풍선 안에 텍스트가 담기게 CSS 수정해야함 */}
           <Image
             source={require('../../assets/images/talk/talk.png')}
             style={[
@@ -290,7 +352,7 @@ function TalkScreen({ route }: TalkScreenProps) {
           />
           <View style={styles.textContainer}>
             <Text style={styles.bigtext}>
-              {characterTalking ? characterScript : userScript}
+              {characterTalking ? displayedCharacterScript : displayedUserScript}
             </Text>
           </View>
           {/* 대화 말풍선 나올 영역 끝 */}

@@ -12,7 +12,6 @@ import {
 
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import GreenButton from '../../components/GreenButton';
-import { Dimensions } from 'react-native';
 import { getColoringBases } from '../../api/coloringApi';
 import AlertModal from '../../components/AlertModal';
 

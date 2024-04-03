@@ -45,7 +45,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => {
+    };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -69,8 +70,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
 };
 
 const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
-  navigation,
-}) => {
+                                                                   navigation,
+                                                                 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookList, setBookList] = useState<BookSummary[]>([]);
   const { playTouch } = useTouchEffect();
@@ -150,7 +151,7 @@ const MainCharacterScreen: React.FC<MainCharacterScreenProps> = ({
           style={styles.cloud3}
         />
       </CloudAnimation>
-      <Text style={styles.howabout}>이 책 어때요??</Text>
+      <Text style={[styles.howabout, { color: fontColor }]}>이 책 어때요??</Text>
 
       {/* 1(공백) : 4(책 목록)  1(도트컨테이너)로 flex 분배 해놓음*/}
       <View style={styles.flexContainer}>

@@ -6,10 +6,8 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
-  Dimensions,
 } from 'react-native';
 import { BookSummary } from '../../../types/types';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { searchBooks } from '../../../api/bookApi';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 

@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  Animated,
+} from 'react-native';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { getMakeBookDetail } from '../../api/makeBookApi';
 import { PageData } from '../../types/types';
@@ -31,19 +38,59 @@ const MakingBook: React.FC = () => {
   const { playTouch } = useTouchEffect();
   const { bgmSound, isPlaying } = useBgmStore();
 
+  // Existing state and refs
+
+  const fadeAnim = useRef(new Animated.Value(1)).current; // Initial opacity
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const onNextPress = () => {
-    playTouch('page');
-    setCurrentIndex((prevIndex) =>
-      prevIndex + 2 < bookDetails.length ? prevIndex + 2 : prevIndex,
-    );
+    fadeOut(); // Start fading out
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex + 2 < bookDetails.length ? prevIndex + 2 : prevIndex,
+      );
+      fadeIn(); // Fade in after updating the index
+    }, 500);
   };
 
   const onPrevPress = () => {
-    playTouch('page');
-    setCurrentIndex((prevIndex) =>
-      prevIndex - 2 >= 0 ? prevIndex - 2 : prevIndex,
-    );
+    fadeOut();
+    setTimeout(() => {
+      setCurrentIndex((prevIndex) =>
+        prevIndex - 2 >= 0 ? prevIndex - 2 : prevIndex,
+      );
+      fadeIn();
+    }, 500);
   };
+
+  // const onNextPress = () => {
+  //   playTouch('page');
+  //   setCurrentIndex((prevIndex) =>
+  //     prevIndex + 2 < bookDetails.length ? prevIndex + 2 : prevIndex,
+  //   );
+  // };
+
+  // const onPrevPress = () => {
+  //   playTouch('page');
+  //   setCurrentIndex((prevIndex) =>
+  //     prevIndex - 2 >= 0 ? prevIndex - 2 : prevIndex,
+  //   );
+  // };
 
   useEffect(() => {
     if (bgmSound) {
@@ -172,35 +219,37 @@ const MakingBook: React.FC = () => {
     }
 
     return (
-      <View style={styles.bookFrameContainer}>
-        <View style={styles.bookInnerContainer}>
-          <Image
-            style={styles.pageImage}
-            source={{ uri: bookDetails[currentIndex].pageImage }}
-            resizeMode="cover"
-          />
-          <Text style={styles.caption}>
-            {bookDetails[currentIndex].pageDetail
-              .map((detail) => detail.scriptContent)
-              .filter(content => content !== "(효과음)") // 효과음 스크립트 컨텐츠 필터링
-              .join('\n')}
-          </Text>
-        </View>
+      <Animated.View style={[styles.bookFrameContainer, { opacity: fadeAnim }]}>
+        <View style={styles.bookFrameContainer}>
+          <View style={styles.bookInnerContainer}>
+            <Image
+              style={styles.pageImage}
+              source={{ uri: bookDetails[currentIndex].pageImage }}
+              resizeMode="cover"
+            />
+            <Text style={styles.caption}>
+              {bookDetails[currentIndex].pageDetail
+                .map((detail) => detail.scriptContent)
+                .filter(content => content !== "(효과음)") // 효과음 스크립트 컨텐츠 필터링
+                .join('\n')}
+            </Text>
+          </View>
 
-        <View style={styles.bookInnerContainer}>
-          <Image
-            style={styles.pageImage}
-            source={{ uri: bookDetails[currentIndex + 1].pageImage }}
-            resizeMode="cover"
-          />
-          <Text style={styles.caption}>
-            {bookDetails[currentIndex + 1].pageDetail
-              .map((detail) => detail.scriptContent)
-              .filter(content => content !== "(효과음)") // 효과음 스크립트 컨텐츠 필터링
-              .join('\n')}
-          </Text>
+          <View style={styles.bookInnerContainer}>
+            <Image
+              style={styles.pageImage}
+              source={{ uri: bookDetails[currentIndex + 1].pageImage }}
+              resizeMode="cover"
+            />
+            <Text style={styles.caption}>
+              {bookDetails[currentIndex + 1].pageDetail
+                .map((detail) => detail.scriptContent)
+                .filter(content => content !== "(효과음)") // 효과음 스크립트 컨텐츠 필터링
+                .join('\n')}
+            </Text>
+          </View>
         </View>
-      </View>
+      </Animated.View>
     );
   };
 

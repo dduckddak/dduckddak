@@ -16,6 +16,7 @@ import { BookSummary, DetailBook } from '../../types/types';
 import { createReview } from '../../api/bookApi';
 import { Dimensions } from 'react-native';
 import useTimeStore from '../../store/timeStore';
+import AlertModal from '../../components/AlertModal';
 
 const screenHeight = Dimensions.get('screen').height;
 const screenWidth = Dimensions.get('screen').width;
@@ -76,6 +77,7 @@ interface DetailBookScreenProps {
 
 function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
   const [selectedBook, setSelectedBook] = useState<DetailBook>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const bookSummary: BookSummary = route.params;
 
@@ -233,14 +235,18 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                   opacity: pressed ? 0.3 : 1,
                 },
               ]}
-              onPress={() =>
-                selectedBook &&
-                bookSummary &&
-                navigation.navigate('fairy', {
-                  selectedBook: selectedBook,
-                  bookSummary: bookSummary,
-                })
-              }
+              onPress={() => {
+                if (![121, 122, 123].includes(bookSummary.bookId)) {
+                  setModalVisible(true);
+                } else {
+                  selectedBook &&
+                    bookSummary &&
+                    navigation.navigate('fairy', {
+                      selectedBook: selectedBook,
+                      bookSummary: bookSummary,
+                    });
+                }
+              }}
             >
               <Image
                 source={require('../../assets/images/button/donghwabutton.png')}
@@ -254,7 +260,14 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
                   opacity: pressed ? 0.3 : 1,
                 },
               ]}
-              onPress={() => goToTalk(bookSummary.bookId)}
+              onPress={() => {
+                if (![121, 122, 123].includes(bookSummary.bookId)) {
+                  setModalVisible(true);
+                } else {
+                  // Proceed with the function if the book ID is allowed
+                  goToTalk(bookSummary.bookId);
+                }
+              }}
             >
               <Image
                 source={require('../../assets/images/button/talkbutton.png')}
@@ -264,6 +277,14 @@ function DetailBookScreen({ route, navigation }: DetailBookScreenProps) {
           </View>
         </View>
       </View>
+
+      {/* 모달 위치 */}
+      <AlertModal
+        isVisible={modalVisible}
+        text={['이 동화는', '추후 공개 예정입니다.']}
+        onConfirm={() => setModalVisible(false)}
+      />
+      {/* 모달 위치 */}
     </ImageBackground>
   );
 }

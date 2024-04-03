@@ -6,7 +6,7 @@
 
 ## ✅ 프로젝트 소개
 
-▪️**기획의도 및 배경**
+▪️ **기획의도 및 배경**
 
 - 만 4-6세의 아동기 아이들의 책 읽기 흥미 향상
 
@@ -17,28 +17,27 @@
 → 부모와의 물리적, **심리적 거리가 멀어지고** 외벌이 가족과 비교했을 때 상대적으로 **정서적 스트레스, 불안감**을 느끼는 아이가 많아짐.
 
 [문제제기 2]
+아이들이 읽어달라는 책을 모두 읽어주다 성대결절이 온 부모님도 계심
 
-결제 때 마다 미리 할인 혜택을 알아보는 것이 귀찮기도 하고, 결제 직전에 ‘잠깐만요!’를 외치며 주섬주섬 적합한 카드를 찾는게 민망한 상황이 연출 되기도 함
+[문제제기 3]
+맞벌이로 인해 힘도들고 지친상태에서 육아까지 하려니 많이 힘든 부모님들
+
+[문제제기 4]
+하지만 책을 안읽어주자니 책읽기의 수많은 장점들..
 
 [솔루션 도출]
+아이가 주인공이 되어 책읽기에 흥미도 붙이고 창의력도 높아질 수 있도록함
+목소리를 학습해서 주인공과 등장인물의 목소리 및 내래이션의 목소리를 선택하여 세상에 단 하나밖에 없는 나만의 동화책을 생성할 수 있음
 
-부모의 목소리를 AI를 통해 동화를 낭독하여, 아이의 정서적 안정감을 채워주자
+▪️ **서비스 목적**
 
-▪️**서비스 목적**
+- 부모님이 지치고 힘들어도 녹음되어 있는 목소리로 아이에게 동화책을 만들어 읽어줄 수도 있고, 맞벌이 부모를 둔 아이의 심리적 안정감과 책읽기에 대한 흥미도 또한 올려줄 수 있음
 
-- AI를 활용한 부모의 목소리를 통해 부모와 아이의 심리적 거리를 좁혀주고 아이에게 심리적 안정감을 제공하는 것.
-
-▪️**서비스 목표**
-
-- 부모의 목소리를 녹음하여 가상의 목소리 생성
-- 위에서 생성된 목소리를 활용한 동화 낭독
-- 그 외, 부모 아이간 유대감을 형성할 수 있는 컨텐츠 제작 (편지, 앨범 등)
-
-▪️**기대효과**
+▪️ **기대효과**
 
 - 부모 아이간 물리적으로 거리가 멀어도, 동화를 직접 읽어주었을때의 긍정적 효과를 얻을 수 있음
-- 부모 아이간 정서적 안정감, 유대감 형성
-- 아이가 책에 대한 친밀감 형성
+- 원하는 목소리를 녹음하면 학습되어 어떠한 동화든 읽어줄 수 있음
+- 아이들이 책읽기에 대한 흥미 및 창의력을 향상시킬 수 있음
 
 ## ✅ 개발 환경
 
@@ -88,7 +87,7 @@
         <td><strong>랜딩화면</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/아이로그인.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/랜딩.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -104,8 +103,8 @@
         <td><strong>회원가입</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/로그인.gif"> </td>
-        <td> <img src= "assets/아이/회원가입.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/로그인.jpg" alt="" width="500px"> </td>
+        <td> <img src="/Ddukddak/README_assets/회원가입.jpg" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -123,7 +122,7 @@
         <td><strong>인트로</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/공통/스플래시.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/인트로.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -141,7 +140,7 @@
         <td><strong>메인</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/아이메인.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/메인.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -156,7 +155,7 @@
         <td><strong>사진 뚝딱</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/토끼와거북이.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/사진뚝딱.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -173,7 +172,7 @@
         <td><strong>소리 뚝딱</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/아이/동물고르기.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/목소리추가.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -189,7 +188,7 @@
         <td><strong>색칠 뚝딱</strong></td>
     </tr>
     <tr align="center"> 
-        <td> <img src= "assets/부모/녹음및다시듣기.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/색칠하기.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -205,7 +204,7 @@
         <td><strong>동화 뚝딱</strong></td>
     </tr>
     <tr align="center">
-        <td> <img src= "assets/공통/편지보내기.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/동화뚝딱.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -224,7 +223,7 @@
         <td><strong>뚝딱 대화</strong></td>
     </tr>
     <tr align="center">
-        <td> <img src= "assets/공통/편지보내기.gif"> </td>
+        <td> <img src="/Ddukddak/README_assets/뚝딱대화.gif" alt="" width="500px"> </td>
     </tr>
     <tr> 
         <td>
@@ -242,7 +241,7 @@
         <td><strong>API 명세서</strong></td>
     </tr>
     <tr align="center">
-        <td> <img src="README_assets/ERD_DDUKDDAK.png"></td>
+        <td> <img src="README_assets/ERD_DDUKDDAK.png" width="500"></td>
         <td> <img src="assets/api명세서.png"></td>
     </tr>
 </table>
@@ -252,8 +251,8 @@
       <td><strong>아키텍처</strong></td>
     </tr>
     <tr align="center">
-        <td> <img title="" src="/Ddukddak/README_assets/architecture.png" alt="" width="800px" /></td>
-        <td> <img src="README_assets/ERD_DDUKDDAK.png"></td>
+        <td> <img title="" src="/Ddukddak/README_assets/ERD_DDUKDDAK.png" alt="" width="500px" /></td>
+        <td> <img src="/Ddukddak/README_assets/architecture.png" alt="" width="500px" /></td>
     </tr>
 
 </table>
@@ -267,11 +266,11 @@
         <th>1주차 번다운차트</th>
     </tr>
     <tr align="center">
-        <td> <img src="README_assets/5ndB.png"> </td>
-        <td> <img src="README_assets/4ndB.png"> </td>
-        <td><img src="README_assets/3ndB.png"></td>
-        <td><img src="README_assets/2ndB.png"></td>
-        <td><img src="README_assets/1ndB.png"></td>
+        <td> <img src="/Ddukddak/README_assets/5ndB.PNG" alt="" width="500px"> </td>
+        <td> <img  src="/Ddukddak/README_assets/4ndB.PNG" alt="" width="500px"> </td>
+        <td><img  src="/Ddukddak/README_assets/3ndB.PNG" alt="" width="500px"></td>
+        <td><img  src="/Ddukddak/README_assets/2ndB.PNG" alt="" width="500px"></td>
+        <td><img  src="/Ddukddak/README_assets/1ndB.PNG" alt="" width="500px"></td>
     </tr>
 </table>
 
@@ -413,3 +412,5 @@
 </details>
 
 ## ✅ 팀원소개
+
+<img  src="/Ddukddak/README_assets/팀원.PNG" alt="" width="500px">

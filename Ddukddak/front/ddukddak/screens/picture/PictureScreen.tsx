@@ -19,9 +19,6 @@ import useTouchEffect from '../../components/sound/TouchEffect';
 
 const { width } = Dimensions.get('screen');
 
-const CARD_WIDTH = (width - 50) / 4; // 여기서 50은 카드 사이의 총 마진입니다.
-const CARD_HEIGHT = CARD_WIDTH;
-
 // 구름 두둥실
 const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
   const [cloudAnimationValue] = useState(new Animated.Value(0));
@@ -246,9 +243,7 @@ function PictureScreen() {
           onPress={onDelete}
           style={styles.buttonStyle}
         />
-        <ImagePickerComponent
-          readPhotos={readPhotos}
-        />
+        <ImagePickerComponent readPhotos={readPhotos} />
       </View>
     </ImageBackground>
   );

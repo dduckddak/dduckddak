@@ -7,8 +7,6 @@ import {
   ImageBackground,
   Animated,
   Pressable,
-  Alert,
-  BackHandler,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';

@@ -95,8 +95,8 @@ const MakingBook: React.FC = () => {
   // };
 
   useEffect(() => {
-    if (bgmSound) {
-      bgmSound.stopAsync();
+    if (isPlaying) {
+      bgmSound?.pauseAsync();
     }
 
     return () => {

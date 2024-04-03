@@ -629,7 +629,7 @@ const styles = StyleSheet.create({
     left: 50,
     top: 230,
     width: 350,
-    height: 350,
+    height: 360,
     zIndex: 20,
   },
   tree1: {

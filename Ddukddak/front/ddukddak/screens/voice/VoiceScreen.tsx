@@ -19,6 +19,7 @@ import EmptyListComponent from '../../components/EmptyListComponent';
 import AlertModal from '../../components/AlertModal';
 import useTouchEffect from '../../components/sound/TouchEffect';
 import ConfirmModal from '../../components/ConfirmModal';
+import useBgmStore from '../../store/BgmStore';
 
 interface Voice {
   voiceId: number;
@@ -46,7 +47,7 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => { };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -76,6 +77,7 @@ function VoiceScreen() {
   // 오리야 놀아라
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const [shouldFlip, setShouldFlip] = useState(false);
+  const { bgmSound, isPlaying } = useBgmStore();
 
   useEffect(() => {
     Animated.loop(
@@ -150,6 +152,10 @@ function VoiceScreen() {
 
   // 미리듣기 기능
   const preview = async (voiceId: number) => {
+    if (isPlaying) {
+      bgmSound?.pauseAsync();
+    }
+
     try {
       const result = await previewVoice(voiceId);
       const previewFile = result.previewFile;
@@ -168,10 +174,34 @@ function VoiceScreen() {
 
         // 현재 재생 중인 사운드를 상태에 설정
         setCurrentSound(newSound);
+
+        // 사운드 재생이 완료될 때까지 기다림
+        await new Promise<void>(resolve => newSound.setOnPlaybackStatusUpdate(status => {
+          if (
+            !status.isLoaded ||
+            (status.positionMillis !== undefined &&
+              status.durationMillis !== undefined &&
+              status.positionMillis === status.durationMillis)
+          ) {
+            resolve();
+          }
+        }));
+
+        // BGM 재생
+        if (isPlaying) {
+          bgmSound?.playAsync();
+        }
       }
     } catch (error: any) {
       console.error('Error playing sound:', error.message);
     }
+
+    return () => {
+      if (isPlaying) {
+        bgmSound?.playAsync();
+      }
+    };
+
   };
 
   const confirmDelete = async () => {

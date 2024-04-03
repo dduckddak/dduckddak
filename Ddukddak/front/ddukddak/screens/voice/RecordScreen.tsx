@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   ImageBackground,
   Text,
@@ -43,7 +43,7 @@ const scripts = [
   {
     id: 5,
     content:
-      '이 사건 이후로 소녀는 \n 모든 사람이 꿈을 이룰 수 있다고 굳게 믿게 되었습니다.\n 마녀는 오늘도 숲속에서 \n 다른 사람들의 꿈을 실현시키기 위해 \n마법을 준비하고 있습니다.',
+      '이 사건 이후로 소녀는 \n 모든 사람이 꿈을 이룰 수 있다고 굳게 믿게 되었습니다.\n 마녀는 오늘도 숲 속에서 \n 다른 사람들의 꿈을 실현시키기 위해 \n마법을 준비하고 있습니다.',
   },
 ];
 
@@ -78,7 +78,21 @@ function RecordScreen() {
   const duckPosition = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const [shouldFlip, setShouldFlip] = useState(false);
 
-  useEffect(() => {
+  // 페이지를 떠날 때 녹음 중지
+  const cleanup = useCallback(async () => {
+    // 녹음 중이라면 녹음 중지
+    if (recording) {
+      console.log("실행")
+      await recording.stopAndUnloadAsync();
+      setRecording(undefined);
+
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+      });
+    }
+  }, [recording]); // recording 상태에 의존하는 cleanup 함수
+
+  useEffect((): any => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(duckPosition, {
@@ -94,6 +108,12 @@ function RecordScreen() {
       ]),
     ).start();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      cleanup();
+    }
+  }, [cleanup])
 
   //오리 반전
   duckPosition.x.addListener((value) => {

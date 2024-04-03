@@ -176,8 +176,8 @@ function TalkScreen({ route }: TalkScreenProps) {
   }, [userScript]);
 
   useEffect(() => {
-    if (bgmSound) {
-      bgmSound.stopAsync();
+    if (isPlaying) {
+      bgmSound?.pauseAsync();
     }
 
     return () => {

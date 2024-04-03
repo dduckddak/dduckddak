@@ -66,7 +66,7 @@ function AddVoiceScreen() {
 
   useEffect(() => {
     if (bgmSound) {
-      bgmSound.stopAsync();
+      bgmSound.pauseAsync();
     }
 
     return () => {

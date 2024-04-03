@@ -97,7 +97,6 @@ interface LogoRightProps {
 function LogoRight({ isHomeScreen }: LogoRightProps) {
   const bgmStore = useBgmStore();
   const { playTouch } = useTouchEffect();
-  const [isImageOne, setIsImageOne] = useState(true);
 
   const toggleBGM = async () => {
     playTouch('touch');
@@ -107,8 +106,8 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     } else {
       await bgmStore.bgmSound?.playAsync();
     }
+    console.log(bgmStore.isPlaying)
     bgmStore.setIsPlaying(!bgmStore.isPlaying);
-    setIsImageOne(!isImageOne);
   };
 
   const navigation = useNavigation();
@@ -132,7 +131,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
           <Image
             style={styles.buttonImage}
             source={
-              isImageOne
+              bgmStore.isPlaying
                 ? require('./assets/images/button/sound_off.png')
                 : require('./assets/images/button/pengshu.png')
             }
@@ -160,7 +159,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
         <Image
           style={styles.buttonImage}
           source={
-            isImageOne
+            bgmStore.isPlaying
               ? require('./assets/images/button/sound_off.png')
               : require('./assets/images/button/pengshu.png')
           }

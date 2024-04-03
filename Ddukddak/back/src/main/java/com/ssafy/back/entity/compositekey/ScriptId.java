@@ -1,4 +1,4 @@
-package com.ssafy.back.entity.compositeKey;
+package com.ssafy.back.entity.compositekey;
 
 import java.io.Serializable;
 
@@ -16,12 +16,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @Embeddable
 @EqualsAndHashCode
-public class ReviewId implements Serializable {
+public class ScriptId implements Serializable {
 
 	@Column(name = "book_id", nullable = false)
 	private Integer bookId;
 
-	@Column(name = "user_seq", nullable = false)
-	private Integer userSeq;
+	@Column(name = "page_seq", nullable = false)
+	private Integer pageSeq;
+
+	@Column(name = "script_seq", nullable = false)
+	private Integer scriptSeq;
 
 }

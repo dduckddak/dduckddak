@@ -1,6 +1,6 @@
 package com.ssafy.back.entity;
 
-import com.ssafy.back.entity.compositeKey.ReviewId;
+import com.ssafy.back.entity.compositekey.ReviewId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;

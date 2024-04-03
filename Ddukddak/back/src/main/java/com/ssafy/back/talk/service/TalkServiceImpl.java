@@ -51,7 +51,7 @@ public class TalkServiceImpl implements TalkService {
 	private String bucket;
 
 	@Value("${fast-api.url}")
-	private String FastapiURL;
+	private String fastApiURL;
 
 	@Value("${eleven-labs.key}")
 	private String elevenLabsKey;
@@ -99,7 +99,7 @@ public class TalkServiceImpl implements TalkService {
 	public ResponseEntity<? super SttResponseDto> stt(SttRequestDto request) {
 		//FastAPI로 요청을 보내고 사용자의 말을 받아옴
 		try (InputStream inputStream = request.getTalkFile().getInputStream()) {
-			HttpResponse<String> response = Unirest.post(FastapiURL + "/api/v1/f/stt")
+			HttpResponse<String> response = Unirest.post(fastApiURL + "/api/v1/f/stt")
 				.field("file", inputStream, request.getTalkFile().getOriginalFilename())
 				.asString();
 

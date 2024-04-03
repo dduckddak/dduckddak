@@ -44,10 +44,7 @@ public class TalkServiceImpl implements TalkService {
 	private final TalkRepository talkRepository;
 
 	private final RedisTemplate<String, String> redisTemplate;
-
-	// 책이름을 가져오기 위해
-	// private final BookRepository bookRepository;
-
+	
 	private final AmazonS3 amazonS3;
 
 	@Value("${cloud.aws.s3.bucket}")

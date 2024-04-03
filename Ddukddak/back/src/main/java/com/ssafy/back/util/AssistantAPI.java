@@ -38,7 +38,7 @@ public class AssistantAPI {
 		Gson gson = new Gson();
 
 		try {
-			HttpResponse<String> response = Unirest.post(DEFAULT_BASE_URL + "/threads/" + threadId + "/messages")
+			Unirest.post(DEFAULT_BASE_URL + "/threads/" + threadId + "/messages")
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + openAIKey)
 				.header("OpenAI-Beta", "assistants=v1")

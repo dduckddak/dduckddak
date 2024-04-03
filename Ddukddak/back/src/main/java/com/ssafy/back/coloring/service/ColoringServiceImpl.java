@@ -169,9 +169,8 @@ public class ColoringServiceImpl implements ColoringService {
 			List<S3ObjectSummary> objects = result.getObjectSummaries();
 
 			List<String> coloringBaseList = new ArrayList<>();
-			objects.forEach(object -> {
-				coloringBaseList.add(amazonS3.getUrl(bucket, object.getKey()).toString());
-			});
+			objects.forEach(object ->
+				coloringBaseList.add(amazonS3.getUrl(bucket, object.getKey()).toString()));
 
 			//폴더 객체는 제외
 			coloringBaseList.remove(0);

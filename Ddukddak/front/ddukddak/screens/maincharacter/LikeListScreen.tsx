@@ -50,6 +50,10 @@ const LikeListScreen: React.FC<LikeListScreenProps> = ({ navigation }) => {
   const renderItem = ({ item }: { item: BookSummary }) => (
     <Pressable onPress={() => goToDetail(item)}>
       <View style={styles.bookItem}>
+        <Image
+          source={require('../../assets/images/books/brownbookcover.png')}
+          style={styles.bookcover}
+        />
         <Image source={{ uri: item.coverImage }} style={styles.bookImage} />
         <Text style={styles.bookTitle}>{item.bookTitle}</Text>
       </View>
@@ -79,6 +83,7 @@ const LikeListScreen: React.FC<LikeListScreenProps> = ({ navigation }) => {
     >
       <View style={styles.container}>
         <Text style={styles.liketext}>좋아요한 책 목록</Text>
+
         <FlatList
           data={likeList?.likeBookList}
           renderItem={renderItem}
@@ -120,29 +125,35 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 40,
     marginTop: 0,
+    marginLeft: -10,
   },
   bookItem: {
-    margin: 10,
-    marginTop: 50,
+    margin: 30,
+    marginBottom: 80,
     alignItems: 'center',
-    backgroundColor: '#ddd',
+    // backgroundColor: '#ddd',
     borderRadius: 5,
     width: 250,
     height: 280,
     justifyContent: 'center',
+    position: 'relative',
+  },
+  bookcover: {
+    position: 'absolute',
+    top: 20,
+    left: 0,
+    zIndex: -20,
+    width: '120%',
+    height: '125%',
   },
   bookImage: {
     width: '100%',
-    height: '100%', // 이미지가 전체 컨테이너의 80%를 차지하도록 설정
+    height: '105%',
     resizeMode: 'cover',
-    borderRadius: 5,
-  },
-  bookTitle: {
-    textAlign: 'center',
-    position: 'absolute', // 책 이름을 책 아래에 위치시키기 위해 절대 위치로 설정
-    bottom: -35,
-    fontFamily: 'im-hyemin-bold',
-    fontSize: 27,
+    position: 'absolute', // bookcover 위에 겹쳐지도록 절대 위치로 설정
+    top: 25,
+    left: 20,
+    zIndex: 1,
   },
 });
 

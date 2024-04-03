@@ -404,11 +404,11 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
         </View>
         <View style={styles.narrationButtonContainer}>
           <Image
-            source={require('../../assets/images/books/snail.png')}
+            source={require('../../assets/images/books/snail2.png')}
             style={styles.snail}
           />
           <Image
-            source={require('../../assets/images/books/snail.png')}
+            source={require('../../assets/images/books/snail2.png')}
             style={styles.snail2}
           />
           <Pressable
@@ -716,7 +716,7 @@ const styles = StyleSheet.create({
   textcenter: {
     fontFamily: 'im-hyemin-bold',
     textAlign: 'center',
-    color: 'black',
+    color: 'white',
     fontSize: 35,
   },
   stepFourContainer: {

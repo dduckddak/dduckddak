@@ -105,7 +105,7 @@ public class VoiceServiceImpl implements VoiceService {
 			Gson gson = new Gson();
 			json = new JsonObject();
 			json.addProperty("model_id", "eleven_multilingual_v2");
-			json.addProperty("text", "뚝딱 마을에 오신 걸 환영합니다.");
+			json.addProperty("text", "뚝딱 마을에 온 걸 환영해.");
 
 			HttpResponse<InputStream> preview = Unirest.post(
 					"https://api.elevenlabs.io/v1/text-to-speech/" + voiceModelId)

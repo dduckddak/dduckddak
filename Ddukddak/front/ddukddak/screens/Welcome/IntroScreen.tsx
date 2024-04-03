@@ -12,6 +12,7 @@ import MainScreen from './MainScreen';
 import * as SecureStore from 'expo-secure-store';
 import { useUserStore } from '../../store/userStore';
 import { Audio } from 'expo-av';
+import useBgmStore from '../../store/BgmStore';
 
 interface MainScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -23,6 +24,7 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
   const userSex = useUserStore((state) => state.sex);
   const [mainPageCharacter, setMainPageCharacter] = useState();
   const [soundObject, setSoundObject] = useState<Audio.Sound>();
+  const { bgmSound, isPlaying } = useBgmStore();
 
   const handleNextStep = async () => {
     if (soundObject) {
@@ -111,6 +113,20 @@ const Intro: React.FC<MainScreenProps> = ({ navigation }) => {
       soundObject?.unloadAsync(); // 컴포넌트 언마운트 시 언로드
     };
   }, [currentStep, userSex]);
+
+  useEffect(() => {
+    if (currentStep >= 1 && currentStep < 6) {
+      if (bgmSound) {
+        bgmSound.stopAsync();
+      }
+
+      return () => {
+        if (isPlaying) {
+          bgmSound?.playAsync();
+        }
+      };
+    }
+  }, [currentStep]);
 
   const YourComponent: React.FC<{ currentStep: number }> = ({
     currentStep,

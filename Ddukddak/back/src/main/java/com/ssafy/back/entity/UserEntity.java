@@ -53,16 +53,16 @@ public class UserEntity {
 	private List<VoiceEntity> voiceEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
-	private List<ColoringEntity> ColoringEntities = new ArrayList<>();
+	private List<ColoringEntity> coloringEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
-	private List<MakeBookEntity> MakeBookEntities = new ArrayList<>();
+	private List<MakeBookEntity> makeBookEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
-	private List<PhotoEntity> PhotoEntities = new ArrayList<>();
+	private List<PhotoEntity> photoEntities = new ArrayList<>();
 
 	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY)
-	private List<ReviewEntity> ReviewEntities = new ArrayList<>();
+	private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
 	public UserEntity(SignUpRequestDto dto) {
 		this.userName = dto.getUserName();

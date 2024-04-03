@@ -1,6 +1,6 @@
 package com.ssafy.back.entity;
 
-import com.ssafy.back.entity.compositeKey.ScriptId;
+import com.ssafy.back.entity.compositekey.ScriptId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.entity.ReviewEntity;
-import com.ssafy.back.entity.compositeKey.ReviewId;
+import com.ssafy.back.entity.compositekey.ReviewId;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {

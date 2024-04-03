@@ -26,7 +26,6 @@ import com.mashape.unirest.http.Unirest;
 import com.ssafy.back.auth.dto.CustomUserDetails;
 import com.ssafy.back.book.dto.BookDetailDto;
 import com.ssafy.back.book.dto.BookSummaryDto;
-import com.ssafy.back.book.dto.ReviewDto;
 import com.ssafy.back.book.dto.request.ChoiceBookListRequestDto;
 import com.ssafy.back.book.dto.request.CreateReviewRequestDto;
 import com.ssafy.back.book.dto.response.BookDetailResponseDto;
@@ -41,7 +40,7 @@ import com.ssafy.back.book.repository.ReviewRepository;
 import com.ssafy.back.common.ResponseDto;
 import com.ssafy.back.common.ResponseMessage;
 import com.ssafy.back.entity.ReviewEntity;
-import com.ssafy.back.entity.compositeKey.ReviewId;
+import com.ssafy.back.entity.compositekey.ReviewId;
 import com.ssafy.back.util.MakeKeyUtil;
 
 import jakarta.transaction.Transactional;
@@ -98,7 +97,7 @@ public class BookServiceImpl implements BookService {
 			logger.info("fast api 응답 : " + response);
 		} catch (Exception e) {
 			logger.error(e);
-			return ListBookRecommendResponseDto.HttpRequestError();
+			return ListBookRecommendResponseDto.httpRequestError();
 		}
 		try {
 			List<BookSummaryDto> bookList = bookRepository.findAllById(bookIds);
@@ -288,7 +287,6 @@ public class BookServiceImpl implements BookService {
 		try {
 			bookIds.forEach(bookId -> {
 				reviewRepository.insertReviewNative(bookId, userSeq, true);
-				System.out.println(bookId);
 				logger.info("User {}'s review for book {} created.", userSeq, bookId);
 				});
 			return ChoiceBookResponseDto.success();

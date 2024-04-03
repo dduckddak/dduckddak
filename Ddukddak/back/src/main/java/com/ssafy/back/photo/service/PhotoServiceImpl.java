@@ -71,7 +71,6 @@ public class PhotoServiceImpl implements PhotoService {
 
 			JsonObject bodyJson = new JsonObject();
 			bodyJson.addProperty("userSeq", userSeq);
-			//bodyJson.addProperty("photoId", savedPhotoEntity.getPhotoId());
 			bodyJson.addProperty("photo", photoBase64); // Base64 인코딩된 이미지 데이터 추가
 
 			String endpoint = fastApiUrl + "/api/v1/f/extract-face/";

@@ -467,7 +467,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           <View style={styles.titleInputBox}>
             <TextInput
               style={styles.titleInput}
-              placeholder="여기에 입력하세요"
+              placeholder="여기에 제목을 적어줘"
               onChangeText={(text) => setMakeBookTitle(text)}
               value={makeBookTitle}
             />
@@ -475,7 +475,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
-                marginBottom: '5%',
+                marginBottom: '8%',
               }}
             >
               <GreenButton
@@ -628,8 +628,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 50,
     top: 230,
-    width: 300,
-    height: 330,
+    width: 350,
+    height: 350,
+    zIndex: 20,
   },
   tree1: {
     position: 'absolute',
@@ -656,7 +657,7 @@ const styles = StyleSheet.create({
     bottom: 5,
     right: 12,
     width: 422,
-    height: 325,
+    height: 330,
   },
   snail2: {
     position: 'absolute',
@@ -668,8 +669,8 @@ const styles = StyleSheet.create({
   },
   findfin: {
     position: 'absolute',
-    top: -25,
-    right: 290,
+    top: -40,
+    right: 260,
   },
   naming: {
     position: 'absolute',
@@ -768,7 +769,7 @@ const styles = StyleSheet.create({
   titleInputBox: {
     backgroundColor: '#C8E8B2',
     width: 625,
-    height: 285,
+    height: 330,
     flexDirection: 'column',
     justifyContent: 'center',
     paddingTop: 30,
@@ -784,7 +785,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#519567',
     borderBottomWidth: 6,
     textAlign: 'center',
-    marginBottom: '5%',
+    marginBottom: '7%',
     fontSize: 35,
     fontFamily: 'im-hyemin-bold',
     // color: 'white',ImageBackground: {
@@ -808,13 +809,13 @@ const styles = StyleSheet.create({
   ballon: {
     position: 'absolute',
     top: 50,
-    right: 100,
+    right: 75,
   },
   ballontext: {
     position: 'absolute',
     right: 140,
     width: 600,
-    top: 200,
+    top: 160,
     zIndex: 20,
   },
   text: {

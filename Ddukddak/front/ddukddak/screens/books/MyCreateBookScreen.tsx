@@ -333,6 +333,7 @@ const styles = StyleSheet.create({
   bookItem: {
     marginHorizontal: 58,
     marginTop: 10,
+    marginBottom: 30,
     alignItems: 'center',
   },
   coverImage: {

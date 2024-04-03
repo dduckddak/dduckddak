@@ -266,7 +266,7 @@ function AddVoice({ route, navigation }: any) {
       source={require('../../assets/images/background/MainBackground.png')}
       style={styles.imageBackground}
     >
-      <Text style={styles.textStyle}>{role}의 목소리 찾아주기</Text>
+      <Text style={styles.textStyle}>{role}의 목소리를 찾아줘</Text>
       <CloudAnimation>
         <Image
           source={require('../../assets/images/Main/cloud.png')}
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#B7E29B',
     width: 500,
-    margin: 30,
+    margin: 20,
     padding: 15,
     borderRadius: 5,
     elevation: 15,

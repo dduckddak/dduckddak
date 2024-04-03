@@ -118,7 +118,6 @@ function PictureScreen() {
 
   useFocusEffect(
     useCallback(() => {
-
       readPhotos();
     }, [readPhotos]),
   );
@@ -282,10 +281,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imagelist: {
-    width: '80%',
+    width: '90%',
     height: '80%',
-    marginHorizontal: '11%',
     marginVertical: '7%',
+    marginLeft: 85,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -303,7 +302,7 @@ const styles = StyleSheet.create({
   },
   card: {
     marginTop: '20%',
-    marginHorizontal: 11.5,
+    marginHorizontal: 20,
     borderRadius: 10,
     overflow: 'hidden',
     elevation: 5,

@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
   image: {
     width: 333,
     height: 210,
-    marginTop: screenHeight * 0.01,
+    marginTop: screenHeight * 0.015,
   },
   coverImage: {
     width: '95%',

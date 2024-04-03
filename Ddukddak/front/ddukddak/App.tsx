@@ -58,6 +58,7 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import * as Notifications from 'expo-notifications';
 import AlertModal from './components/AlertModal';
+import ConfirmModal from './components/ConfirmModal';
 
 // function LeftSide() {
 //   const navigation = useNavigation();
@@ -91,12 +92,14 @@ function LogoTitle() {
 }
 
 interface LogoRightProps {
-  isHomeScreen: any;
+  isHomeScreen: boolean;
+  ismakingbook?: boolean; // 옵셔널 프로퍼티로 추가
 }
-
-function LogoRight({ isHomeScreen }: LogoRightProps) {
+function LogoRight({ isHomeScreen, ismakingbook }: LogoRightProps) {
   const bgmStore = useBgmStore();
   const { playTouch } = useTouchEffect();
+  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const toggleBGM = async () => {
     playTouch('touch');
@@ -110,11 +113,21 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     bgmStore.setIsPlaying(!bgmStore.isPlaying);
   };
 
-  const navigation = useNavigation();
-
   const handlePress = () => {
-    playTouch('touch');
-    navigation.goBack();
+    // ismakingbook이 true일 경우, 모달을 표시합니다.
+    if (ismakingbook) {
+      setModalVisible(true);
+    } else {
+      playTouch('touch');
+      navigation.goBack();
+    }
+  };
+
+  const handleConfirmModalClose = (confirmed: boolean) => {
+    setModalVisible(false);
+    if (confirmed) {
+      navigation.goBack(); // 사용자가 확인을 눌렀을 경우 뒤로 가기
+    }
   };
 
   const handleLogout = async () => {
@@ -171,6 +184,15 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
           source={require('./assets/images/button/Back.png')}
         />
       </TouchableOpacity>
+
+      <ConfirmModal
+        isVisible={modalVisible}
+        text={['동화책 읽기를 그만할래?']}
+        onConfirm={() => handleConfirmModalClose(true)}
+        onCancel={() => handleConfirmModalClose(false)}
+        btnConfirmText="그만 읽기"
+        btnCancelText="계속 읽기"
+      />
     </View>
   );
 }
@@ -338,7 +360,9 @@ export default function App() {
               name="login"
               component={Login}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 회원가입 페이지 ------------------------ */}
@@ -346,7 +370,9 @@ export default function App() {
               name="signup"
               component={Signup}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 인트로 페이지 ------------------------ */}
@@ -355,7 +381,9 @@ export default function App() {
               component={Intro}
               options={{
                 headerTitle: LogoTitle,
-                headerRight: () => <LogoRight isHomeScreen={true} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={true} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 메인 페이지 ------------------------ */}
@@ -365,18 +393,9 @@ export default function App() {
               options={{
                 // headerLeft: LeftSide,
                 headerTitle: () => <LogoTitle />,
-                headerRight: () => <LogoRight isHomeScreen={true} />,
-              }}
-            />
-            {/* ------------------------ 사용설명서 ------------------------ */}
-            <Stack.Screen
-              name="script"
-              component={Script}
-              options={{
-                title: '사용설명서',
-                headerTitle: LogoTitle,
-                headerRight: () => <LogoRight isHomeScreen={true} />,
-                // ...TransitionPresets.ModalSlideFromTop,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={true} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 내가 주인공 페이지 ------------------------ */}
@@ -385,7 +404,9 @@ export default function App() {
               component={MainCharacterScreen}
               options={{
                 // headerTitle: LogoTitle,
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 책 상세 페이지 ------------------------ */}
@@ -393,7 +414,9 @@ export default function App() {
               name="detail"
               component={DetailBookScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 맘에드는 책 고르는 페이지 ------------------------ */}
@@ -403,7 +426,9 @@ export default function App() {
               name="talk"
               component={TalkSceren}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 동화뚝딱 페이지 ------------------------ */}
@@ -411,21 +436,27 @@ export default function App() {
               name="fairy"
               component={FairytaleScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             <Stack.Screen
               name="addfairypicture"
               component={AddFairyPicture}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             <Stack.Screen
               name="addfairyvoice"
               component={AddFairyVoice}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 사진뚝딱 페이지 ------------------------ */}
@@ -433,7 +464,9 @@ export default function App() {
               name="picture"
               component={PictureScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 소리뚝딱 페이지 ------------------------ */}
@@ -441,7 +474,9 @@ export default function App() {
               name="voice"
               component={VoiceScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 내가만든책 페이지 ------------------------ */}
@@ -449,7 +484,9 @@ export default function App() {
               name="mybook"
               component={MyCreateBookScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 진짜 책 페이지 ------------------------ */}
@@ -457,7 +494,9 @@ export default function App() {
               name="makingBook"
               component={MakingBook}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={true} />
+                ),
               }}
             />
             {/* ------------------------ 소리추가 페이지 ------------------------ */}
@@ -465,7 +504,9 @@ export default function App() {
               name="addvoice"
               component={AddVoiceScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/* ------------------------ 녹음 페이지 ------------------------ */}
@@ -473,7 +514,9 @@ export default function App() {
               name="record"
               component={RecordScreen}
               options={{
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/*  색칠뚝딱 페이지*/}
@@ -482,7 +525,9 @@ export default function App() {
               component={ColoringScreen}
               options={{
                 headerBackVisible: false,
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             <Stack.Screen
@@ -491,7 +536,9 @@ export default function App() {
               options={{
                 headerTransparent: true,
                 headerBackVisible: false,
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             <Stack.Screen
@@ -500,7 +547,9 @@ export default function App() {
               options={{
                 headerTransparent: true,
                 headerBackVisible: false,
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             <Stack.Screen
@@ -509,7 +558,9 @@ export default function App() {
               options={{
                 headerTransparent: true,
                 headerBackVisible: false,
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
             {/*  좋아요 한 책 페이지*/}
@@ -519,7 +570,9 @@ export default function App() {
               options={{
                 headerTransparent: true,
                 headerBackVisible: false,
-                headerRight: () => <LogoRight isHomeScreen={false} />,
+                headerRight: () => (
+                  <LogoRight isHomeScreen={false} ismakingbook={false} />
+                ),
               }}
             />
           </Stack.Navigator>

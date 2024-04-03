@@ -59,6 +59,7 @@ const MakingBook: React.FC = () => {
   };
 
   const onNextPress = () => {
+    playTouch('page')
     fadeOut(); // Start fading out
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>
@@ -69,6 +70,7 @@ const MakingBook: React.FC = () => {
   };
 
   const onPrevPress = () => {
+    playTouch('page')
     fadeOut();
     setTimeout(() => {
       setCurrentIndex((prevIndex) =>

@@ -145,27 +145,23 @@ public class MakeBookServiceImpl implements MakeBookService {
 							amazonS3.getUrl(bucket, MakeKeyUtil.bookScriptSound(makeBookDto.getBookId(), i, j))
 								.toString());
 
-					} else {//역할이 있는 경우
-						if (script.getRole().equals("M")) {
-							//음성이 설정되어 있는 경우
-							if (makeBookDto.isMainVoice())
-								makeBookScript.setScriptSound(
-									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
-										.toString());
+					} else {//역할이 있고 음성이 설정되어 있는 경우
+						if (script.getRole().equals("M") && makeBookDto.isMainVoice()) {
+							makeBookScript.setScriptSound(
+								amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+									.toString());
 						}
 
-						if (script.getRole().equals("S")) {
-							if (makeBookDto.isSubVoice())
-								makeBookScript.setScriptSound(
-									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
-										.toString());
+						if (script.getRole().equals("S") && makeBookDto.isSubVoice()) {
+							makeBookScript.setScriptSound(
+								amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+									.toString());
 						}
 
-						if (script.getRole().equals("N")) {
-							if (makeBookDto.isNarration())
-								makeBookScript.setScriptSound(
-									amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
-										.toString());
+						if (script.getRole().equals("N") && makeBookDto.isNarration()) {
+							makeBookScript.setScriptSound(
+								amazonS3.getUrl(bucket, MakeKeyUtil.makeScriptSound(userSeq, makeBookId, i, j))
+									.toString());
 						}
 
 						//역할별 음성 교체가 가능하지만 설정하지 않은 경우
@@ -409,9 +405,8 @@ public class MakeBookServiceImpl implements MakeBookService {
 					// 삭제할 객체들의 키 목록 생성
 					List<DeleteObjectsRequest.KeyVersion> keysToDelete = new ArrayList<>();
 
-					result.getObjectSummaries().forEach(objectSummary -> {
-						keysToDelete.add(new DeleteObjectsRequest.KeyVersion(objectSummary.getKey()));
-					});
+					result.getObjectSummaries().forEach(objectSummary ->
+						keysToDelete.add(new DeleteObjectsRequest.KeyVersion(objectSummary.getKey())));
 
 					// 객체들을 삭제
 					if (!keysToDelete.isEmpty()) {

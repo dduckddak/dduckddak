@@ -2,9 +2,7 @@ package com.ssafy.back.book.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -70,14 +67,8 @@ public class BookServiceImpl implements BookService {
 		int userSeq = customUserDetails.getUserSeq();
 		List<Integer> bookIds = new ArrayList<>();
 
+		//fastapi로 추천 요청
 		try {
-			//fastapi로 추천 요청
-			// 요청 본문 생성
-			Map<String, Object> requestMap = new HashMap<>();
-
-			Gson gson = new Gson();
-			String jsonRequestBody = gson.toJson(requestMap);
-
 			// FastAPI 엔드포인트 URL
 			String url = fastApiUrl + "/api/v1/f/recommendations/" + userSeq;
 
@@ -128,8 +119,8 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public ResponseEntity<? super ListBookSearchResponseDto> listBookSearch(String keyword) {
 		try {
-			List<BookSummaryDto> SearchBookList = bookRepository.findByTitleContains(keyword);
-			for (BookSummaryDto book : SearchBookList) {
+			List<BookSummaryDto> searchBookList = bookRepository.findByTitleContains(keyword);
+			for (BookSummaryDto book : searchBookList) {
 				String key = MakeKeyUtil.page(book.getBookId(), 0, true);
 				if (amazonS3.doesObjectExist(bucket, key)) {
 					String imageUrl = amazonS3.getUrl(bucket, key).toString();
@@ -144,8 +135,8 @@ public class BookServiceImpl implements BookService {
 					}
 				}
 			}
-			logger.info("책 검색 목록 : " + SearchBookList);
-			return ListBookSearchResponseDto.success(SearchBookList);
+			logger.info("책 검색 목록 : " + searchBookList);
+			return ListBookSearchResponseDto.success(searchBookList);
 
 		} catch (Exception e) {
 			logger.error(ResponseMessage.DATABASE_ERROR);
@@ -246,7 +237,7 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public ResponseEntity<? super ListBookChoiceResponseDto> listBookChoice() {
 		//첫 선택 책 id
-		Integer[] books = new Integer[]{121, 34, 3, 37, 122, 39, 9, 42, 43, 20, 88, 57, 26, 123, 28, 80};
+		Integer[] books = new Integer[] {121, 34, 3, 37, 122, 39, 9, 42, 43, 20, 88, 57, 26, 123, 28, 80};
 		ArrayList<Integer> bookIds = new ArrayList<>(Arrays.asList(books));
 
 		try {
@@ -288,7 +279,7 @@ public class BookServiceImpl implements BookService {
 			bookIds.forEach(bookId -> {
 				reviewRepository.insertReviewNative(bookId, userSeq, true);
 				logger.info("User {}'s review for book {} created.", userSeq, bookId);
-				});
+			});
 			return ChoiceBookResponseDto.success();
 
 		} catch (Exception e) {

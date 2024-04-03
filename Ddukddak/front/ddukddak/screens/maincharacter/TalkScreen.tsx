@@ -43,7 +43,8 @@ const CloudAnimation = ({ children }: { children: React.ReactNode }) => {
       Animated.loop(cloudAnimation).start();
     };
     animateClouds();
-    return () => {};
+    return () => {
+    };
   }, [cloudAnimationValue]);
   const cloud1TranslateY = cloudAnimationValue.interpolate({
     inputRange: [0, 1],
@@ -79,6 +80,7 @@ function TalkScreen({ route }: TalkScreenProps) {
   const [subName, setSubName] = useState<string>();
   const [subBasic, setSubBasic] = useState<string>();
   const [subTalk, setSubTalk] = useState<string>();
+  const [isSoundPlayed, setIsSoundPlayed] = useState(false);
 
   // 음... 상태
   const [isWaiting, setIsWaiting] = useState(false);
@@ -104,11 +106,13 @@ function TalkScreen({ route }: TalkScreenProps) {
   const loadTalk = async (bookId: number) => {
     try {
       const result = await getTalkDetail(bookId);
+      console.log(result);
       //   name 캐릭터 이름 , basic 기본 이미지, talk 말하는 이미지
       setSubName(result.subName);
       setSubBasic(result.subBasic);
       setSubTalk(result.subTalk);
       setCharacterScript(result.welcomeComment);
+
       playAudio(result.welcomeCommentSound);
     } catch (error) {
       console.error('load Talk :', error);
@@ -128,8 +132,8 @@ function TalkScreen({ route }: TalkScreenProps) {
         setDisplayedCharacterScript((prevScript) => prevScript + characterScript?.charAt(index));
         index++;
       } else {
+        setIsSoundPlayed(false);
         clearTimeout(timerId);
-
       }
     }
 
@@ -258,9 +262,11 @@ function TalkScreen({ route }: TalkScreenProps) {
 
     try {
       const response = await triggerTalk(talkParams);
-
       // 정상적으로 답변이 전달되었을 때 캐릭터의 대화내용을 characterScript에 담아주고
       // characterTalking을 true로 바꾸면서 유저 말풍선을 끄고 캐릭터 말풍선을 렌더링
+      if (subTalk) {
+        setIsSoundPlayed(true);
+      }
       setCharacterScript(response.gptScript);
       setCharacterTalking(true);
 
@@ -325,8 +331,8 @@ function TalkScreen({ route }: TalkScreenProps) {
             />
           </CloudAnimation>
         </CloudAnimation>
-        {subBasic && (
-          <Image source={{ uri: subBasic }} style={styles.characterImage} />
+        {subBasic && subTalk && (
+          <Image source={{ uri: isSoundPlayed ? subTalk : subBasic }} style={styles.characterImage} />
         )}
 
         <View

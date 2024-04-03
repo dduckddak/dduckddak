@@ -77,7 +77,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 	private String bucket;
 
 	@Value("${fast-api.url}")
-	private String FastapiURL;
+	private String fastApiURL;
 
 	@Value("${eleven-labs.key}")
 	private String elevenLabsKey;
@@ -246,7 +246,7 @@ public class MakeBookServiceImpl implements MakeBookService {
 			CreateImageRequestDto createImageRequestDto = new CreateImageRequestDto
 				(userSeq, request.getMainPhoto(), request.getSubPhoto(), request.getBookId(), makeBookId);
 
-			HttpResponse<String> response = Unirest.post(FastapiURL + "/api/v1/f/makephoto/")
+			HttpResponse<String> response = Unirest.post(fastApiURL + "/api/v1/f/makephoto/")
 				.header("Content-Type", "application/json")
 				.body(gson.toJson(createImageRequestDto))
 				.asString();

@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
 
 		// 회원가입할때 firstLogin -> true,
 		// firstLogin 이 true 이면, 처음으로 로그인 하러 온 것
-		if (firstLogin == true) {
+		if (firstLogin) {
 			userEntity.setFirstLogin(false);
 			userRepository.save(userEntity);
 		}

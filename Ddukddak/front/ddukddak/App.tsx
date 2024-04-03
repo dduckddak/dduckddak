@@ -106,7 +106,7 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
     } else {
       await bgmStore.bgmSound?.playAsync();
     }
-    console.log(bgmStore.isPlaying)
+    console.log(bgmStore.isPlaying);
     bgmStore.setIsPlaying(!bgmStore.isPlaying);
   };
 
@@ -132,8 +132,8 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
             style={styles.buttonImage}
             source={
               bgmStore.isPlaying
-                ? require('./assets/images/button/sound_off.png')
-                : require('./assets/images/button/pengshu.png')
+                ? require('./assets/images/button/pengshu.png')
+                : require('./assets/images/button/sound_off.png')
             }
           />
         </TouchableOpacity>
@@ -160,8 +160,8 @@ function LogoRight({ isHomeScreen }: LogoRightProps) {
           style={styles.buttonImage}
           source={
             bgmStore.isPlaying
-              ? require('./assets/images/button/sound_off.png')
-              : require('./assets/images/button/pengshu.png')
+              ? require('./assets/images/button/pengshu.png')
+              : require('./assets/images/button/sound_off.png')
           }
         />
       </TouchableOpacity>

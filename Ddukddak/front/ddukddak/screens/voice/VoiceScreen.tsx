@@ -8,7 +8,9 @@ import {
   FlatList,
   Image,
   Animated,
-  Dimensions, Pressable, TouchableOpacity,
+  Dimensions,
+  Pressable,
+  TouchableOpacity,
 } from 'react-native';
 import GreenButton from '../../components/GreenButton';
 import { getVoices, previewVoice, deleteVoices } from '../../api/voiceApi';
@@ -215,9 +217,8 @@ function VoiceScreen() {
               style={({ pressed }) => [
                 styles.prelisten,
                 {
-                  opacity: pressed ? .3 : 1,
+                  opacity: pressed ? 0.3 : 1,
                 },
-
               ]}
             >
               <Text style={styles.buttonText}>미리듣기</Text>
@@ -226,9 +227,8 @@ function VoiceScreen() {
               onPress={() => promptDeleteVoice(item.voiceId)}
               style={({ pressed }) => [
                 {
-                  opacity: pressed ? .3 : 1,
+                  opacity: pressed ? 0.3 : 1,
                 },
-
               ]}
             >
               <Image
@@ -305,7 +305,7 @@ function VoiceScreen() {
 
       <GreenButton
         content="목소리 추가하기"
-        style={{ width: 220, paddingBottom: 40 }}
+        style={{ width: 260, paddingBottom: 40 }}
         onPress={() => navigation.navigate('addvoice' as never)}
       />
 

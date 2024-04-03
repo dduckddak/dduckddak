@@ -23,20 +23,20 @@ def hybrid_recommendations(user_seq, cf_weight=0.2, cb_weight=0.8, top_n=7):
         if book_id not in reviewed_books:
             combined_scores[book_id] = combined_scores.get(book_id, 0) + row['est_rating'] * (cf_weight if index < len(cf_books) else cb_weight)
 
-    # # 가중치 합산 점수가 높은 순으로 정렬하여 상위 N권 선택
-    # recommended_books = sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)[:top_n]
+    # 가중치 합산 점수가 높은 순으로 정렬하여 상위 N권 선택
+    recommended_books = sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)[:top_n]
 
-    # # 최종 추천된 책의 ID 목록 반환
-    # return [int(book_id) for book_id, _ in recommended_books]
+    # 최종 추천된 책의 ID 목록 반환
+    return [int(book_id) for book_id, _ in recommended_books]
             
-    # 가중치 합산 점수가 높은 순으로 정렬하여 상위 N권 선택 (여기서는 4권을 선택)
-    recommended_books = sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)[:4]
+    # # 가중치 합산 점수가 높은 순으로 정렬하여 상위 N권 선택 (여기서는 4권을 선택)
+    # recommended_books = sorted(combined_scores.items(), key=lambda x: x[1], reverse=True)[:4]
 
-    # 최종 추천된 책의 ID 목록 생성
-    final_recommendation_ids = [121, 122, 123] + [int(book_id) for book_id, _ in recommended_books]
+    # # 최종 추천된 책의 ID 목록 생성
+    # final_recommendation_ids = [121, 122, 123] + [int(book_id) for book_id, _ in recommended_books]
 
-    # 최종 추천된 책의 ID 목록 반환 (지정된 책 3권 + 추천된 상위 4권)
-    return final_recommendation_ids[:top_n]
+    # # 최종 추천된 책의 ID 목록 반환 (지정된 책 3권 + 추천된 상위 4권)
+    # return final_recommendation_ids[:top_n]
 
 # 사용자 ID 예시로 하이브리드 추천 실행
 # user_seq = 30

@@ -8,7 +8,11 @@ import {
   Image,
   Pressable,
 } from 'react-native';
-import { NavigationProp, ParamListBase, useFocusEffect } from '@react-navigation/native';
+import {
+  NavigationProp,
+  ParamListBase,
+  useFocusEffect,
+} from '@react-navigation/native';
 import { getLikeList, LikeBookListData } from '../../api/bookApi';
 import { BookSummary } from '../../types/types';
 
@@ -57,7 +61,7 @@ const LikeListScreen: React.FC<LikeListScreenProps> = ({ navigation }) => {
           style={styles.bookcover}
         />
         <Image source={{ uri: item.coverImage }} style={styles.bookImage} />
-        <Text style={styles.bookTitle}>{item.bookTitle}</Text>
+        <Text>{item.bookTitle}</Text>
       </View>
     </Pressable>
   );

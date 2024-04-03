@@ -288,7 +288,7 @@ function FairytaleScreen({ navigation }: { navigation: NavigationProp<any> }) {
           <View style={styles.ballontext}>
             <Text style={styles.text}>동화 뚝딱을 눌렀구나?</Text>
             <Text style={styles.text}>
-              나와함께 동화를 만들기위해{'\n'}
+              나와 함께 동화를 만들기위해{'\n'}
               {attachWaGwa(role)} {roles}의{'\n'}
               얼굴과 목소리 재료를{'\n'}
               구하러 떠나볼래?

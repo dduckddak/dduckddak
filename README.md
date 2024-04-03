@@ -1,6 +1,4 @@
-# 뚝딱뚝딱
-
-- 사진 넣을 자리
+<img  src="/Ddukddak/README_assets/뚝딱뚝딱.png" alt="" width="500px">
 
 > **2024.02.19 ~ 2024.04.04**
 
@@ -241,8 +239,8 @@
         <td><strong>API 명세서</strong></td>
     </tr>
     <tr align="center">
-        <td> <img src="README_assets/ERD_DDUKDDAK.png" width="500"></td>
-        <td> <img src="assets/api명세서.png"></td>
+        <td> <img src="/Ddukddak/README_assets/최종피그마.png" alt="" width="500px"></td>
+        <td> <img src="/Ddukddak/README_assets/API.gif" alt="" width="500px"></td>
     </tr>
 </table>
 <table>

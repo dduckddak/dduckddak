@@ -44,7 +44,7 @@ public class TalkServiceImpl implements TalkService {
 	private final TalkRepository talkRepository;
 
 	private final RedisTemplate<String, String> redisTemplate;
-	
+
 	private final AmazonS3 amazonS3;
 
 	@Value("${cloud.aws.s3.bucket}")
@@ -135,7 +135,7 @@ public class TalkServiceImpl implements TalkService {
 		String gptScript;
 
 		//사용자의 기존 쓰레드 정보를 레디스를 통해 얻어오고 없다면 생성해서 레디스에 저장
-		String threadKey = String.valueOf(userSeq) + "-" + String.valueOf(request.getBookId());
+		String threadKey = String.valueOf(userSeq) + "plus" + String.valueOf(request.getBookId());
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
 		String threadId = valueOperations.get(threadKey);

@@ -132,8 +132,8 @@
 
         listen [::]:443 ssl ipv6only=on; # managed by Certbot
         listen 443 ssl; # managed by Certbot
-        ssl_certificate /etc/letsencrypt/live/i10e103.p.ssafy.io/fullchain.pem; # managed by Certbot
-        ssl_certificate_key /etc/letsencrypt/live/i10e103.p.ssafy.io/privkey.pem; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/{my url}/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/{my url}/privkey.pem; # managed by Certbot
         include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
@@ -141,14 +141,14 @@
 
 
     server {
-        if ($host = i10e103.p.ssafy.io) {
+        if ($host = {my-url}) {
             return 301 https://$host$request_uri;
         } # managed by Certbot
 
 
             listen 80 ;
             listen [::]:80 ;
-        server_name i10e103.p.ssafy.io;
+        server_name {my url};
         return 404; # managed by Certbot
     }
 

@@ -272,6 +272,8 @@
     </tr>
 </table>
 
+### [발표자료]("/Ddukddak/README_assets/10기_특화PJT_발표자료_E203.pdf)
+
 ## 🧾컴포넌트
 
 ### FE
@@ -411,4 +413,4 @@
 
 ## ✅ 팀원소개
 
-<img  src="/Ddukddak/README_assets/팀원.PNG" alt="" width="500px">
+<img  src="/Ddukddak/README_assets/팀원.png" alt="" width="500px">

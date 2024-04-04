@@ -49,10 +49,10 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     textAlign: 'center',
-    fontWeight: 'bold',
-    height: 60,
+    fontFamily: 'im-hyemin-bold',
+    height: 65,
     textAlignVertical: 'center',
-    fontSize: 20,
+    fontSize: 30,
   },
 });
 

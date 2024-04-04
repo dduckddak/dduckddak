@@ -39,5 +39,26 @@ class S3Util:
             print("Credentials not available")
             return False
         
+    def get_file(self, object_key):
+        try:
+            s3_response_object = self.s3.get_object(Bucket=self.bucket_name, Key=object_key)
+            print(s3_response_object)
+            return s3_response_object['Body']
+        except Exception as e:
+            print(f"Error getting file: {e}")
+            return None
+        
+    def copy_file(self, source_key, destination_key):
+        copy_source = {
+            'Bucket': self.bucket_name,
+            'Key': source_key
+        }
+        try:
+            self.s3.copy(copy_source, self.bucket_name, destination_key)
+            return True
+        except Exception as e:
+            print(f"Error copying file: {e}")
+            return False
+        
     def generate_public_url(self, object_key):
         return f"https://{self.bucket_name}.s3.amazonaws.com/{object_key}"

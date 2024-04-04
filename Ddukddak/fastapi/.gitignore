@@ -31,3 +31,9 @@ archive.zip
 
 # key
 app/.env
+
+# test - sh
+app/result_img/*
+.test
+.venv
+stargan

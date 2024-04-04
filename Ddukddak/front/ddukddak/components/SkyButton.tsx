@@ -37,13 +37,18 @@ const styles = StyleSheet.create({
   },
   buttonstyle: {
     backgroundColor: '#DBF4FF',
-    borderRadius: 5,
-    elevation: 5,
+    borderRadius: 10,
+    elevation: 10,
+    shadowOpacity: 1,
+    height: 75,
+    justifyContent: 'center',
   },
   text: {
     color: 'rgb(45,45,45)',
     textAlign: 'center',
-    fontWeight: 'bold',
+    justifyContent: 'center',
+    fontFamily: 'im-hyemin-bold',
+    fontSize: 30,
   },
 });
 

@@ -22,7 +22,6 @@
         - Ubuntu `20.04 LTS`
         - Docker `25.0.0`
         - docker-compose `2.24.2`
-        - Openvidu `2.29.0`
         - Nginx `1.18.0(ubuntu)`
         - Https/SSL `Let's Encrypt`
 6. 세부사항
@@ -238,6 +237,28 @@
     open-ai:
       key: {Open AI key}
     ```
+
+  * Fast API 빌드
+
+  - env 파일 설정
+  ```
+  AWS_ACCESS_KEY_ID={my-acess-key}
+  AWS_SECRET_ACCESS_KEY={my-secret-access-key}
+
+  DB_HOST={db-host}
+  DB_PORT={db-port}
+  DB_USER={db-user}
+  DB_PASSWORD={db-pw}
+  DB_DATABASE={db-database}
+  ```
+
+  - uvicorn으로 fast api 서버 가동
+  ```bash
+  uvicorn main:app --reload --host=0.0.0.0 --port={port}
+  ```
+
+
+
 
 4) 프론트엔드 빌드
 

@@ -230,7 +230,75 @@
 </table>
 
 ## ✅ 활용기술, 기술 설명
-
+<table>    
+    <tr align="center" > 
+        <td><strong>추천 알고리즘 - 하이브리드 필터링</strong></td>
+    </tr>
+    <tr align="center">
+        <td> <img src="/Ddukddak/README_assets/hybrid.png" alt="" width="500px"> </td>
+    </tr>
+    <tr> 
+        <td>
+           1. 컨텐츠 기반 필터링 - 
+           사용자에게 수집한 데이터를 바탕으로 사용자별 키워드 점수를 계산 <br>
+           (TFIDF Vectorizer를 이용하여 책에서 자주 나오는 키워드들은 가중치를 비교적 낮게 설정) 후 <br>
+           높은 점수의 키워드를 가진 책들을 추천. <br>
+           2. 협업 필터링 - 
+           사용자간의 코사인 유사도를 계산 후 사용자 기준으로 코사인 유사도가 높은 집단을
+           만들어서 해당 집단에서 새로운 책에 긍정적인 리뷰를 하면 해당 책을 사용자에게 추천해줍니다. <br>
+           3. 두 알고리즘을 함께 이용하는 하이브리드 필터링을 통해 각 알고리즘의 장점은 가지고 <br>
+           단점은 보완시키는 방법을 이용함.
+        </td>
+</table>
+<table>    
+    <tr align="center" > 
+        <td><strong>얼굴 인식</strong></td>
+        <td><strong>사진 합성</strong></td>
+    </tr>
+    <tr align="center">
+        <td> <img src="/Ddukddak/README_assets/얼굴인식.png" alt="" width="500px"> </td>
+        <td> <img src="/Ddukddak/README_assets/사진합성.png" alt="" width="500px"> </td>
+    </tr>
+    <tr> 
+        <td width="500px">
+         dlib 라이브러리를 이용하여 <br> 
+         68개의 얼굴 랜드마크를 검출한 뒤 <br> 
+         사진에서 얼굴 부분만 인식하여 추출함.
+        </td>
+        <td width="500px">
+         OpenCV 이미지 처리 라이브러리를 이용하여 <br>
+         기존 동화책의 이미지에 얼굴 이미지를 <br> 
+         2개의 레이어를 통해서 합성함.
+        </td>
+</table>
+<table>    
+    <tr align="center" > 
+        <td><strong>음성 복제</strong></td>
+    </tr>
+    <tr align="center">
+        <td> <img src="/Ddukddak/README_assets/음성복제.png" alt="" width="500px"> </td>
+    </tr>
+    <tr> 
+        <td>
+         사용자의 목소리에서 음색이나 억양등 목소리 정보를 추출한 후 <br> 
+         기존의 학습된 목소리에 해당 목소리 정보를 추론 과정을 통해 입히는 방법인 제로샷 방식을 이용하여 사용자의 목소리를 복제함. <br>
+         -> 목소리 학습이 아닌 추론 방식으로 필요한 데이터의 양과 복제 시간을 크게 단축함.
+        </td>
+</table>
+<table>    
+    <tr align="center" > 
+        <td><strong>STT, TTS, 생성형 AI</strong></td>
+    </tr>
+    <tr align="center">
+        <td> <img src="/Ddukddak/README_assets/대화기술.png" alt="" width="500px"> </td>
+    </tr>
+    <tr> 
+        <td>
+         1. Whisper 모델을 이용하여 STT를 구현. 사용자의 음성 데이터를 텍스트로 변환합니다. <br>
+         2. Assistants API를 통해 사전에 설정된 스크립트를 기반으로 사용자의 말에 대한 대답을 생성합니다. <br>
+         3. 생성된 대답을 TTS 기술을 활용하여 음성으로 출력함.
+        </td>
+</table>
 ## ✅ 산출물
 
 <table>    
